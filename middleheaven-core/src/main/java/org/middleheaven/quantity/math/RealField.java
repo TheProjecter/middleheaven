@@ -3,15 +3,16 @@
  */
 package org.middleheaven.quantity.math;
 
+import java.util.Comparator;
 import java.util.Random;
 
-import org.middleheaven.quantity.math.structure.Field;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
+import org.middleheaven.quantity.math.structure.OrderedField;
 
 /**
  * The Field of Reals
  */
-public class RealField implements Field<Real> {
+public class RealField implements OrderedField<Real> {
 
 	
 	private static final RealField ME = new RealField();
@@ -82,5 +83,17 @@ public class RealField implements Field<Real> {
 	@Override
 	public Real random(Random random) {
 		return Real.valueOf(random.nextDouble());
+	}
+
+	@Override
+	public Comparator<Real> getComparator() {
+		return new Comparator<Real> (){
+
+			@Override
+			public int compare(Real a, Real b) {
+				return a.compareTo(b);
+			}
+
+		};
 	}
 }

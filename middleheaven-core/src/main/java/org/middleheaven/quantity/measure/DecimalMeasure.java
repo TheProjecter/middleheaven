@@ -82,15 +82,15 @@ public class DecimalMeasure<E extends Measurable> extends Measure<E,Real>
 
 
 	public DecimalMeasure<E> negate() {
-		return new DecimalMeasure<E>(this.amount.negate(),this.uncertainty, this.unit);
+		return new DecimalMeasure<E>(this.amount.negate(),this.absUncertainty, this.unit);
 	}
 	
 	public DecimalMeasure<E> over(Real other) {
-		return new DecimalMeasure<E>(this.amount.over(other), this.uncertainty.over(other), this.unit);
+		return new DecimalMeasure<E>(this.amount.over(other), this.absUncertainty.over(other), this.unit);
 	}
 
 	public  DecimalMeasure<E> times(Real other) {
-		return new DecimalMeasure<E>(this.amount.times(other), this.uncertainty.times(other), this.unit);
+		return new DecimalMeasure<E>(this.amount.times(other), this.absUncertainty.times(other), this.unit);
 	}
 
 	public DecimalMeasure<E>  one() {
@@ -113,18 +113,18 @@ public class DecimalMeasure<E extends Measurable> extends Measure<E,Real>
 
 	public <T extends Measurable > DecimalMeasure<T>  inverse() {
 		Unit<T> unit = SI.DIMENTIONLESS.over(this.unit);
-		return new DecimalMeasure<T>(this.amount.inverse(), this.uncertainty, unit);
+		return new DecimalMeasure<T>(this.amount.inverse(), this.absUncertainty, unit);
 	}
 	
 	public DecimalMeasure<E> plus(DecimalMeasure<E> other) throws IncompatibleUnitsException {
 		assertCompatible (other);
 		DecimalMeasure<E> convertedOther = other.convertTo(this.unit);
-		return new DecimalMeasure<E>(convertedOther.amount().plus(this.amount), this.uncertainty.plus(convertedOther.uncertainty) , this.unit.plus(convertedOther.unit()));
+		return new DecimalMeasure<E>(convertedOther.amount().plus(this.amount), this.absUncertainty.plus(convertedOther.absUncertainty) , this.unit.plus(convertedOther.unit()));
 	}
 	
 	public DecimalMeasure<E> minus(DecimalMeasure<E> other) throws IncompatibleUnitsException {
 		assertCompatible (other);
-		return new DecimalMeasure<E>(this.amount.minus(other.amount()),this.uncertainty.plus(other.uncertainty),this.unit.minus(other.unit()));
+		return new DecimalMeasure<E>(this.amount.minus(other.amount()),this.absUncertainty.plus(other.absUncertainty),this.unit.minus(other.unit()));
 	}
 
 	@Override
@@ -145,12 +145,12 @@ public class DecimalMeasure<E extends Measurable> extends Measure<E,Real>
 	
 	@Override
 	public DecimalMeasure<E> over(Real other, Unit<E> unit) {
-		return new DecimalMeasure<E>(this.amount.over(other), this.uncertainty.over(other), unit);
+		return new DecimalMeasure<E>(this.amount.over(other), this.absUncertainty.over(other), unit);
 	}
 
 	@Override
 	public DecimalMeasure<E> times(Real other, Unit<E> unit) {
-		return new DecimalMeasure<E>(this.amount.times(other), this.uncertainty.times(other), unit);
+		return new DecimalMeasure<E>(this.amount.times(other), this.absUncertainty.times(other), unit);
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class DecimalMeasure<E extends Measurable> extends Measure<E,Real>
 	 */
 	public <T extends Measurable> DecimalMeasure<T> sqrt(Unit<T> unit) {
 		Real r = Real.valueOf(Math.sqrt(this.amount.asNumber().doubleValue()));
-		Real u = Real.valueOf(Math.sqrt(this.uncertainty.asNumber().doubleValue()));
+		Real u = Real.valueOf(Math.sqrt(this.absUncertainty.asNumber().doubleValue()));
 		return new DecimalMeasure<T>(r, u, unit);  
 	}
 

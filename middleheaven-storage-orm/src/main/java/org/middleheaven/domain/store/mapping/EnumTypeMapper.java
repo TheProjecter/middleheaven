@@ -3,10 +3,9 @@
  */
 package org.middleheaven.domain.store.mapping;
 
+import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
-import org.middleheaven.storage.StorableEnum;
-import org.middleheaven.storage.StorableEnumUtils;
 import org.middleheaven.storage.types.TypeMapper;
 
 /**
@@ -16,10 +15,10 @@ public class EnumTypeMapper implements TypeMapper {
 
 	
 	
-	private Class<? extends StorableEnum> enumType;
+	private EnumModel enumModel;
 
-	public EnumTypeMapper(Class<? extends StorableEnum> enumType){
-		this.enumType = enumType;
+	public EnumTypeMapper(EnumModel enumModel){
+		this.enumModel = enumModel;
 	}
 	
 	/**
@@ -27,7 +26,7 @@ public class EnumTypeMapper implements TypeMapper {
 	 */
 	@Override
 	public String getMappedClassName() {
-		return enumType.getName();
+		return enumModel.getEnumType().getName();
 	}
 
 	/**
@@ -41,7 +40,7 @@ public class EnumTypeMapper implements TypeMapper {
 		if (value == null){
 			return null;
 		}
-		return StorableEnumUtils.valueForId(enumType, value);
+		return enumModel.getEnumFromValue(value);
 
 	}
 
@@ -54,7 +53,7 @@ public class EnumTypeMapper implements TypeMapper {
 		if (object == null){
 			row.getColumn(columns[0].getName()).setValue( null);
 		} else {
-			row.getColumn(columns[0].getName()).setValue( ((StorableEnum) object).getStorableValue());
+			row.getColumn(columns[0].getName()).setValue( enumModel.getPersistableValue(object));
 		}
 		
 

@@ -237,9 +237,8 @@ public class LinkedTreeNode<E> implements TreeNode<E>{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <C, P extends Pair<C, Enumerable<TreeNode<E>>>> Enumerable<P> groupBy(
-			Mapper<C, TreeNode<E>> classifier) {
-		return new IterableEnumerable<TreeNode<E>>(this).groupBy(classifier);
+	public <C> PairEnumerable<C, Enumerable<TreeNode<E>>> groupBy(Mapper<C, TreeNode<E>> mapper) {
+		return new IterableEnumerable<TreeNode<E>>(this).groupBy(mapper);
 	}
 
 	/**
@@ -250,5 +249,11 @@ public class LinkedTreeNode<E> implements TreeNode<E>{
 		return new IterableEnumerable<TreeNode<E>>(this).join(separator);
 	}
 
+	@Override
+	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, TreeNode<E>> mapper) {
+		return new IterableEnumerable<TreeNode<E>>(this).pairMap(mapper);
+	}
+
+	
 
 }

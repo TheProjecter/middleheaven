@@ -174,13 +174,19 @@ class EmptyEnumerable<T> implements Enumerable<T> {
 		return seed;
 	}
 
+	@Override
+	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, T> mapper) {
+		EmptyEnumerable<Pair<K, V>> instance = getInstance();
+		return new PairEnumerableAdapter<K, V>(instance);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <C, P extends Pair<C, Enumerable<T>>> Enumerable<P> groupBy(
-			Mapper<C, T> classifier) {
-		return getInstance();
+	public <C> PairEnumerable<C, Enumerable<T>> groupBy(Mapper<C, T> mapper) {
+		EmptyEnumerable<Pair<C,Enumerable<T>>> instance = getInstance();
+		return new PairEnumerableAdapter<C, Enumerable<T>>(instance);
 	}
 
 	/**
@@ -206,5 +212,7 @@ class EmptyEnumerable<T> implements Enumerable<T> {
 	public <U> Enumerable<U> cast(Class<U> newType) {
 		return ME;
 	}
+
+
 
 }

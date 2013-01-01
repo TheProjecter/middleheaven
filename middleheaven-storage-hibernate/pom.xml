@@ -41,10 +41,14 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.neodatis</groupId>
-			<artifactId>neodatis-odb</artifactId>
-			<version>1.9-beta-1</version>
-			<scope>provided</scope>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-storage-orm</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.1.9.Final</version>
 		</dependency>
 	</dependencies>
 

@@ -5,6 +5,8 @@ package org.middleheaven.util.collections;
 
 import java.util.Iterator;
 
+import org.middleheaven.util.function.Mapper;
+
 /**
  * 
  */
@@ -23,6 +25,8 @@ public class IterableEnumerable<T> extends AbstractEnumerable<T> {
 	public Iterator<T> iterator() {
 		return (Iterator<T>) collection.iterator();
 	}
+	
+
 
 
 

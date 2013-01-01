@@ -181,6 +181,14 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 		public DomainModel getModel() {
 			return model;
 		}
+
+
+		@Override
+		public EditableEnumModel getEnumModel(Class enumType, Class persistableType) {
+			SimpleEnumModel enumModel = new SimpleEnumModel(enumType, persistableType);
+			model.addEnumModel(enumModel);
+			return enumModel;
+		}
 	
 	}
 }

@@ -15,8 +15,8 @@ import org.middleheaven.ui.UIDimension;
 import org.middleheaven.ui.UIDimensionUnit;
 import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
+import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.UITreeCriteria;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
@@ -48,14 +48,10 @@ public abstract class VaadinUIComponent implements UIComponent {
 	
 	private VaadinClientApplication getApplication(){
 		if (app == null){
-			app = (VaadinClientApplication)UITreeCriteria.search("/").execute(this).first();
+			app = UISearch.absolute(this).self().first(VaadinClientApplication.class);
 		}
 		return app;
 	}
-	
-//	public AttributeContext getAttributeContext(){
-//		return  getApplication().getServletWebContext().getAttributes();
-//	}
 	
 	public Culture getCulture(){
 		return  getApplication().getCulture();

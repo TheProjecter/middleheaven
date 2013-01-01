@@ -12,4 +12,6 @@ public interface FieldElement<F extends FieldElement<F>> extends GroupMultiplica
 	 * {@inheritDoc}
 	 */
 	public Field<F> getAlgebricStructure();
+	
+	public F abs();
 }

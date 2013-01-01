@@ -200,6 +200,11 @@ class RealPairComplex extends Complex {
 		return Hash.hash(this.real).hash(this.imaginary).hashCode();
 	}
 
+	@Override
+	public Complex abs() {
+		return magnitude().toComplex();
+	}
+
 
 
 

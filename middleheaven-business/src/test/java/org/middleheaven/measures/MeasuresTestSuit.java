@@ -46,7 +46,7 @@ public class MeasuresTestSuit {
 	}
 	
 	@Test
-	public void testMeasureOperations(){
+	public void testExactMeasureOperations(){
 		
 		DecimalMeasure<Distance> threeM = DecimalMeasure.exact(Real.valueOf(3), SI.METER);
 		DecimalMeasure<Distance> sixM = DecimalMeasure.exact(Real.valueOf(6), SI.METER);
@@ -65,6 +65,22 @@ public class MeasuresTestSuit {
 		// assume the first operand unit
 		assertEquals( SI.METER , threeM.plus(mM).unit());
 		assertEquals( SI.MILI(SI.METER) , mM.plus(threeM).unit());
+		
+	}
+	
+	@Test
+	public void testMeasureOperations(){
+		DecimalMeasure<Distance> threeM = DecimalMeasure.measure(Real.valueOf(3), Real.fraction(1, 5), SI.METER);
+		DecimalMeasure<Distance> sixM = DecimalMeasure.measure(Real.valueOf(6), Real.fraction(1, 4), SI.METER);
+		DecimalMeasure<Distance> fiveExactM = DecimalMeasure.exact(Real.valueOf(5), SI.METER);
+		
+		assertEquals( DecimalMeasure.measure(Real.valueOf(9), Real.fraction(9, 20), SI.METER) , threeM.plus(sixM));
+		
+		
+		assertEquals( DecimalMeasure.measure(Real.valueOf(8), Real.fraction(1,5), SI.METER) , fiveExactM.plus(threeM));
+		assertEquals( DecimalMeasure.measure(Real.valueOf(15), Real.valueOf(1), SI.METER.raise(2)) , fiveExactM.times(threeM));
+		
+		assertEquals( DecimalMeasure.measure(Real.valueOf(4), Real.valueOf(1), SI.METER) , fiveExactM);
 		
 	}
 	
@@ -141,14 +157,11 @@ public class MeasuresTestSuit {
 		s.minus(s);
 		
 		Unit<Velocity> v = m.over(s);
+		
+		assertEquals("m" , m.symbol());
+			
 		assertEquals("ms^-1" , v.symbol());
 		
-		
-	    //m = v.times(s);
-	    assertEquals("m" , m.symbol());
-	    
-	    // assert v not changed
-	    assertEquals("ms^-1" , v.symbol());
 		
 	}	
 	

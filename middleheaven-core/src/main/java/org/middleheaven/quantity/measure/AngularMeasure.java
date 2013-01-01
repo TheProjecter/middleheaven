@@ -103,16 +103,16 @@ public class AngularMeasure extends DecimalMeasure<Angle>   {
 	}
 
 	public AngularMeasure negate() {
-		return new AngularMeasure (this.amount.negate(),this.uncertainty, this.unit);
+		return new AngularMeasure (this.amount.negate(),this.absUncertainty, this.unit);
 	}
 
 
 	public AngularMeasure  over(Real other) {
-		return new AngularMeasure (this.amount.over(other), this.uncertainty.over(other), this.unit);
+		return new AngularMeasure (this.amount.over(other), this.absUncertainty.over(other), this.unit);
 	}
 
 	public AngularMeasure  times(Real other) {
-		return new AngularMeasure (this.amount.times(other), this.uncertainty.times(other), this.unit);
+		return new AngularMeasure (this.amount.times(other), this.absUncertainty.times(other), this.unit);
 	}
 
 	public AngularMeasure   one() {
@@ -125,12 +125,12 @@ public class AngularMeasure extends DecimalMeasure<Angle>   {
 
 	public AngularMeasure  plus(AngularMeasure  other) throws IncompatibleUnitsException {
 		assertCompatible (other);
-		return new AngularMeasure (other.amount().plus(this.amount), this.uncertainty.plus(other.uncertainty) , this.unit.plus(other.unit()));
+		return new AngularMeasure (other.amount().plus(this.amount), this.absUncertainty.plus(other.absUncertainty) , this.unit.plus(other.unit()));
 	}
 
 	public AngularMeasure  minus(AngularMeasure  other) throws IncompatibleUnitsException {
 		assertCompatible (other);
-		return new AngularMeasure (other.amount().minus(this.amount),this.uncertainty.plus(other.uncertainty),this.unit.minus(other.unit()));
+		return new AngularMeasure (other.amount().minus(this.amount),this.absUncertainty.plus(other.absUncertainty),this.unit.minus(other.unit()));
 	}
 
 	public AngularMeasure toRadians(){
@@ -182,13 +182,13 @@ public class AngularMeasure extends DecimalMeasure<Angle>   {
 			
 			cycles = cycles.add(BigDecimal.ONE);
 
-			return new AngularMeasure(Real.valueOf(amount.plus(Real.valueOf(cycles.multiply(top)))) , this.uncertainty , this.unit);
+			return new AngularMeasure(Real.valueOf(amount.plus(Real.valueOf(cycles.multiply(top)))) , this.absUncertainty , this.unit);
 
 		} else if (this.amount.compareTo(range.end())>=0){
 			// out of range
 			BigDecimal cycles = this.amount.asNumber().divideToIntegralValue(top);
 
-			return new AngularMeasure(Real.valueOf(amount.minus(Real.valueOf(cycles.multiply(top)))) , this.uncertainty , this.unit);
+			return new AngularMeasure(Real.valueOf(amount.minus(Real.valueOf(cycles.multiply(top)))) , this.absUncertainty , this.unit);
 
 		} else {
 			return this;
@@ -199,12 +199,12 @@ public class AngularMeasure extends DecimalMeasure<Angle>   {
 
 	@Override
 	public AngularMeasure over(Real other, Unit<Angle> unit) {
-		return new AngularMeasure(this.amount.over(other), this.uncertainty.over(other), unit);
+		return new AngularMeasure(this.amount.over(other), this.absUncertainty.over(other), unit);
 	}
 
 	@Override
 	public AngularMeasure times(Real other, Unit<Angle> unit) {
-		return new AngularMeasure(this.amount.times(other), this.uncertainty.times(other), unit);
+		return new AngularMeasure(this.amount.times(other), this.absUncertainty.times(other), unit);
 	}
 
 

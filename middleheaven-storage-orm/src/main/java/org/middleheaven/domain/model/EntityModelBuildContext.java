@@ -12,6 +12,8 @@ public interface EntityModelBuildContext extends ModelSetItemBuilder<EditableDom
 	 * {@inheritDoc}
 	 */
 	public EditableDomainEntityModel getEditableModelOf(Class<?> type);
+
+	public EditableEnumModel getEnumModel(Class enumType, Class persistableType);
 	
 
 

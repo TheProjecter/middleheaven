@@ -242,7 +242,16 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <C, P extends Pair<C, Enumerable<T>>> Enumerable<P> groupBy(final Mapper<C, T> mapper) {
+	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, T> mapper) {
+		return new PairEnumerableAdapter<K, V>(this.map(mapper));
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <C> PairEnumerable<C, Enumerable<T>> groupBy(final Mapper<C, T> mapper) {
 		Map<C, EnhancedArrayList<T>> result = new HashMap<C,EnhancedArrayList<T>>();
 		for (Iterator<T> it = iterator();it.hasNext();){
 			T object = it.next();
@@ -256,26 +265,8 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 			items.add(object);
 		}
 		
-		return CollectionUtils.asEnumerable(result).map(new Mapper<P, Pair<C, EnhancedArrayList<T>>>(){
+		return new MapPairEnumerable<C, Enumerable<T>> (result);
 
-			@Override
-			public P apply(final Pair<C, EnhancedArrayList<T>> obj) {
-				return (P) new Pair<C, Enumerable<T>> (){
-
-					@Override
-					public C getKey() {
-						return obj.getKey();
-					}
-
-					@Override
-					public Enumerable<T> getValue() {
-						return obj.getValue();
-					}
-					
-				};
-			}
-			
-		});
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package org.middleheaven.quantity.unit;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.middleheaven.quantity.measure.Measurable;
@@ -70,14 +71,13 @@ public class CompositeUnit<E extends Measurable> extends Unit<E>{
 	}
 	
 
-	private HashMap<String,UnitPower> units = new HashMap<String,UnitPower>();
+	private Map<String,UnitPower> units = new LinkedHashMap<String,UnitPower>();
 	
 	private Dimension<E> currentDimention = Dimension.DIMENTIONLESS.simplify();
 	
 	CompositeUnit(){}
 	CompositeUnit(CompositeUnit<E> other){
-		//	clone 
-		this.units = (HashMap) other.units.clone();
+		this.units =  new LinkedHashMap<String,UnitPower>(other.units);
 		this.currentDimention = other.currentDimention;
 
 	}

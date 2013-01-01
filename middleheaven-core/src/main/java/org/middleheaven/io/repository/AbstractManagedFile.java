@@ -14,6 +14,7 @@ import org.middleheaven.util.collections.AbstractEnumerableAdapter;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.IterableEnumerable;
 import org.middleheaven.util.collections.Pair;
+import org.middleheaven.util.collections.PairEnumerable;
 import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
@@ -446,10 +447,15 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <C, P extends Pair<C, Enumerable<ManagedFile>>> Enumerable<P> groupBy(
-			Mapper<C, ManagedFile> classifier) {
-		return new ManagedFileEnumerable().groupBy(classifier);
+	public <C> PairEnumerable<C, Enumerable<ManagedFile>> groupBy(Mapper<C, ManagedFile> mapper) {
+		return new ManagedFileEnumerable().groupBy(mapper);
 	}
+	
+	@Override
+	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, ManagedFile> mapper) {
+		return new ManagedFileEnumerable().pairMap(mapper);
+	}
+
 
 	/**
 	 * {@inheritDoc}

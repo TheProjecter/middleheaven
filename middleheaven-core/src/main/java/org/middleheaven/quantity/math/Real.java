@@ -1,7 +1,8 @@
 package org.middleheaven.quantity.math;
 
-import org.middleheaven.quantity.math.structure.Field;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
+import org.middleheaven.quantity.math.structure.OrderedField;
+import org.middleheaven.quantity.math.structure.OrderedFieldElement;
 import org.middleheaven.util.Incrementable;
 import org.middleheaven.util.NaturalIncrementable;
 import org.middleheaven.util.collections.Range;
@@ -11,7 +12,7 @@ import org.middleheaven.util.collections.Range;
  * Represents an element of |R  (the real numbers set) 
  * 
  */
-public abstract class Real extends Numeral<Real> implements  Comparable<Numeral<? super Real>> ,Incrementable <Real>, NaturalIncrementable<Real>{
+public abstract class Real extends Numeral<Real> implements OrderedFieldElement<Real>, Comparable<Numeral<? super Real>> ,Incrementable <Real>, NaturalIncrementable<Real>{
 
 	private static final long serialVersionUID = 5613604361361447882L;
 
@@ -184,7 +185,7 @@ public abstract class Real extends Numeral<Real> implements  Comparable<Numeral<
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Field<Real> getAlgebricStructure() {
+	public OrderedField<Real> getAlgebricStructure() {
 		return RealField.getInstance();
 	}
 	

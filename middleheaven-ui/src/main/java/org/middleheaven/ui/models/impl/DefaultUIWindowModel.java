@@ -3,7 +3,7 @@ package org.middleheaven.ui.models.impl;
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.AbstractUIModel;
 import org.middleheaven.ui.UIClient;
-import org.middleheaven.ui.UITreeCriteria;
+import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
 import org.middleheaven.ui.events.UIWindowEvent;
 import org.middleheaven.ui.models.UIWindowModel;
@@ -14,7 +14,7 @@ public class DefaultUIWindowModel extends AbstractUIModel implements UIWindowMod
 	
 	@Override
 	public void onClosed(UIPrespectiveEvent event) {
-		UIClient client =UITreeCriteria.search("/").execute(event.getSource()).first(UIClient.class);
+		UIClient client = UISearch.absolute(event.getSource()).self().first(UIClient.class);
 		client.exit();
 	}
 

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.util.StringUtils;
+import org.middleheaven.util.function.Function;
 
 /**
  * 
@@ -22,12 +23,30 @@ public class UISearch {
 	public static class UISearchExecutor {
 
 
-		private UIClient client;
+		private UIComponent pivot;
 
-		public UISearchExecutor (UIClient client){
-			this.client = client;
+		public UISearchExecutor (UIComponent pivot){
+			this.pivot = pivot;
 		}
+		
+		static final Function<List<UIComponent>, UIComponent> PARENT = new Function<List<UIComponent>, UIComponent>(){
 
+			@Override
+			public List<UIComponent> apply(UIComponent c) {
+				return Collections.singletonList(c.getUIParent());
+			}
+			
+		};
+		
+		static final Function<List<UIComponent>, UIComponent> CHILDREN = new Function<List<UIComponent>, UIComponent>(){
+
+			@Override
+			public List<UIComponent> apply(UIComponent c) {
+				return c.getChildrenComponents();
+			}
+			
+		};
+		
 		public UIQuery search(String pattern){
 
 
@@ -90,7 +109,7 @@ public class UISearch {
 
 			LinkedList<UIComponent> matches = new LinkedList<UIComponent>();
 			LinkedList<UIComponent> candidades = new LinkedList<UIComponent>();
-			candidades.add(this.client);
+			candidades.add(this.pivot);
 
 			doSearch(data, candidades, matches);
 
@@ -109,7 +128,7 @@ public class UISearch {
 				UIComponent c = candidades.removeFirst();
 
 				if (data.matches(c)){
-					matches.add(c);
+					applySpecial(data, c , matches);
 					
 					if( data.isUnique()){
 						return;
@@ -125,6 +144,30 @@ public class UISearch {
 			}
 
 		}
+		
+		private void applySpecial(Data data, UIComponent c, List<UIComponent> matches) {
+			if (data.specials.isEmpty()){
+				matches.add(c);
+				return;
+			}
+			
+			List<UIComponent> src = new LinkedList<UIComponent>();
+			src.add(c);
+			
+			List<UIComponent> res = new LinkedList<UIComponent>();
+
+			for (Function<List<UIComponent>, UIComponent> op : data.specials){
+				 for (UIComponent comp : src) {
+					 res.addAll(op.apply(comp));
+				 }
+				
+				 src = res;
+				 res = new LinkedList<UIComponent>();
+			}
+			
+			matches.addAll(src);
+		}
+		
 		private static  enum State{
 
 			TYPE,
@@ -141,6 +184,7 @@ public class UISearch {
 			public String familly;
 			public String id;
 			public Map<String, String> properties = new HashMap<String,String>();
+			private LinkedList<Function<List<UIComponent>, UIComponent>> specials = new LinkedList<Function<List<UIComponent>, UIComponent>>();
 
 			public boolean isUnique(){
 				return !StringUtils.isEmptyOrBlank(id) || "UIClient".equals(type);
@@ -155,9 +199,14 @@ public class UISearch {
 					this.id = value;
 					break;
 				case FAMILLY:
-					this.id = familly;
+					this.familly = value;
 					break;
-
+				case SPECIAL:
+					if( value.equalsIgnoreCase("parent")){
+						specials.add(PARENT);
+					} else if( value.equalsIgnoreCase("children")){
+						specials.add(CHILDREN);
+					}
 				}
 			}
 
@@ -166,7 +215,7 @@ public class UISearch {
 			 * @return
 			 */
 			public boolean matches(UIComponent c) {
-				return this.matchType(c) && this.matchId(c);
+				return this.matchType(c) && this.matchId(c) && this.matchFamilly(c);
 			}
 
 			/**
@@ -194,6 +243,19 @@ public class UISearch {
 				
 				return true;
 			}
+			
+	
+			private boolean matchFamilly(UIComponent c) {
+				if(!StringUtils.isEmptyOrBlank(familly)){
+					return c.getFamily().equals(this.familly);
+				}
+				
+				return true;
+			}
+		}
+
+		public UIQuery self() {
+			return new ListUIQuery(Collections.singletonList(pivot));
 		}
 
 	}
@@ -235,8 +297,12 @@ public class UISearch {
 
 	}
 
-	public static UISearchExecutor on(UIComponent c){
+	public static UISearchExecutor absolute(UIComponent c){
 		return new UISearchExecutor(searchClient(c));
+	}
+	
+	public static UISearchExecutor relative(UIComponent c){
+		return new UISearchExecutor(c);
 	}
 
 	public interface UISearchFilter {

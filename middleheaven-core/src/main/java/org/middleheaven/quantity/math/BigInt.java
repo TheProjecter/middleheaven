@@ -1,8 +1,8 @@
 package org.middleheaven.quantity.math;
 
-import org.middleheaven.quantity.math.structure.Field;
-import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
+import org.middleheaven.quantity.math.structure.OrderedField;
+import org.middleheaven.quantity.math.structure.OrderedFieldElement;
 import org.middleheaven.util.Incrementable;
 import org.middleheaven.util.NaturalIncrementable;
 import org.middleheaven.util.collections.Range;
@@ -13,7 +13,7 @@ import org.middleheaven.util.collections.Range;
  * 
  *
  */
-public abstract class BigInt extends Numeral<BigInt> implements FieldElement<BigInt> ,  Comparable<Numeral<? super BigInt>>, DiscreetOrderable<BigInt> ,NaturalIncrementable<BigInt> , Incrementable <BigInt>{
+public abstract class BigInt extends Numeral<BigInt> implements OrderedFieldElement<BigInt>, Comparable<Numeral<? super BigInt>>, DiscreetOrderable<BigInt> ,NaturalIncrementable<BigInt> , Incrementable <BigInt>{
 
 
 	private static final long serialVersionUID = 8636156681654308959L;
@@ -65,7 +65,7 @@ public abstract class BigInt extends Numeral<BigInt> implements FieldElement<Big
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Field<BigInt> getAlgebricStructure() {
+	public OrderedField<BigInt> getAlgebricStructure() {
 		return BigIntField.getInstance();
 	}
 }

@@ -15,16 +15,17 @@ import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
+import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.domain.model.IdentityFieldDataTypeModel;
 import org.middleheaven.model.annotations.Id;
 import org.middleheaven.model.annotations.NotNull;
 import org.middleheaven.model.annotations.Version;
 import org.middleheaven.persistance.DataStoreSchemaName;
+import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataColumnModelBean;
 import org.middleheaven.persistance.model.EditableDataSet;
-import org.middleheaven.storage.StorableEnum;
 import org.middleheaven.storage.annotations.Column;
 import org.middleheaven.storage.annotations.Columns;
 import org.middleheaven.storage.annotations.Dataset;
@@ -360,11 +361,15 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 			return map.getTypeMapper();
 
 		} else if (pa.getValueType().isEnum()) {
-			if (StorableEnum.class.isAssignableFrom(pa.getValueType())){
-				return new EnumTypeMapper((Class<? extends StorableEnum>) pa.getValueType());
-			} else {
-				throw new IllegalStateException("Cannot persist " + pa.getValueType().getName() + " as it is not a StorableEnum" );
-			}
+		
+				Maybe<EnumModel> model = domainModel.getEmumModel((Class<? extends Enum>)pa.getValueType());
+				
+				if (model.isAbsent()){
+					throw new IllegalModelStateException("No model defined for enum " + pa.getValueType());
+				}
+				
+				return new EnumTypeMapper(model.get());
+
 		} else {
 
 			String typeName;

@@ -14,6 +14,7 @@ import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.Pair;
+import org.middleheaven.util.collections.PairEnumerable;
 import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
@@ -353,16 +354,20 @@ class ManagedFileDecorator implements ManagedFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <C, P extends Pair<C, Enumerable<ManagedFile>>> Enumerable<P> groupBy(
-			Mapper<C, ManagedFile> classifier) {
-		return original.groupBy(classifier);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String join(String separator) {
 		return original.join(separator);
+	}
+
+	@Override
+	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(
+			Mapper<Pair<K, V>, ManagedFile> mapper) {
+		return original.pairMap(mapper);
+	}
+
+	@Override
+	public <C> PairEnumerable<C, Enumerable<ManagedFile>> groupBy(
+			Mapper<C, ManagedFile> mapper) {
+		return original.groupBy(mapper);
 	}
 
 	

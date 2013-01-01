@@ -21,7 +21,6 @@ import org.middleheaven.ui.UIEnvironment;
 import org.middleheaven.ui.UIEnvironmentType;
 import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UIService;
-import org.middleheaven.ui.UITreeCriteria;
 import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
@@ -60,7 +59,7 @@ public class StandardHtmlClientRenderingProcessor extends UIClientRenderingProce
 		try {
 			String windowId = parseWindowName(context);
 			
-			UIComponent window = UISearch.on(client).search("#" + windowId).first();
+			UIComponent window = UISearch.absolute(client).search("#" + windowId).first();
 					
 			if (window == null){
 				return new Outcome(BasicOutcomeStatus.NOT_FOUND , HttpStatusCode.NOT_FOUND);
@@ -78,7 +77,7 @@ public class StandardHtmlClientRenderingProcessor extends UIClientRenderingProce
 				// the command id
 				String gid = context.getAttributes().getAttribute("$ui_gid", String.class);
 				
-				UIComponent d = UISearch.on(client).search("#" + gid).first();
+				UIComponent d = UISearch.absolute(client).search("#" + gid).first();
 				
 				if (d != null){
 					UIActionHandlerLocator.getLocator(context.getAttributes()).handle(action).from(d);

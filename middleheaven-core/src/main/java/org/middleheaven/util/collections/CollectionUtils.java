@@ -218,7 +218,18 @@ public class CollectionUtils {
 		} if (a.size()!=b.size()){
 			return false;
 		} else {
-			return equalContents(a.entrySet(), b.entrySet());
+	
+			
+			for (Map.Entry entryA : a.entrySet()){
+				
+				if (!b.containsKey(entryA.getKey()) || !b.get(entryA.getKey()).equals(entryA.getValue())){
+					return false;
+				}
+				
+			}
+				
+			
+			return true;
 		}
 
 	}

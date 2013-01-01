@@ -13,6 +13,10 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.util.collections.Pair;
+import org.middleheaven.util.collections.PairEnumerable;
+import org.middleheaven.util.function.Mapper;
 
 /**
  * {@link ManagedFileRepository} backed by a set for {@link ManagedFile}s.
@@ -152,7 +156,8 @@ public class SetManagedFileRepository extends AbstractManagedRepository  {
 		protected int childrenCount() {
 			return 0;
 		}
-		
+
+	
 	}
 
 

@@ -135,6 +135,12 @@ public class LongInteger extends BigInt {
 	public int compareTo(Numeral<? super BigInt> o) {
 		return this.asNumber().compareTo(o.asNumber());
 	}
+	
+	@Override
+	public int compareTo(BigInt other) {
+		return this.asNumber().compareTo(other.asNumber());
+	}
+
 
 	@Override
 	public BigInt toBigInt() {
@@ -158,6 +164,12 @@ public class LongInteger extends BigInt {
 	public int hashCode() {
 		return Hash.hash(this.value).hashCode();
 	}
+
+	@Override
+	public BigInt abs() {
+		return new LongInteger(this.value < 0 ? -this.value : this.value);
+	}
+
 
 
 

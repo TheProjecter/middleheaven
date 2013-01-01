@@ -3,6 +3,7 @@ package org.middleheaven.util.criteria;
 import java.util.Collection;
 
 import org.middleheaven.util.QualifiedName;
+import org.middleheaven.util.collections.CollectionUtils;
 
 class CollectionFieldInSetCriteria implements FieldInSetCriterion {
 
@@ -56,8 +57,39 @@ class CollectionFieldInSetCriteria implements FieldInSetCriterion {
 	}
 
 	@Override
-	public FieldValueHolder valueHolder() {
-		return null; //new SingleObjectValueHolder(values,null);
+	public CollectionFieldValueHolder valueHolder() {
+		return new CollectionFieldValueHolder(){
+
+			@Override
+			public boolean isEmpty() {
+				return values.isEmpty();
+			}
+
+			@Override
+			public boolean equalsValue(FieldValueHolder valueHolder) {
+				if (valueHolder instanceof CollectionFieldValueHolder) {
+					return CollectionUtils.equalContents(values, ((CollectionFieldValueHolder) valueHolder).getValue());
+				}
+				
+				return false;
+			}
+
+			@Override
+			public String getParam(String string) {
+				return null;
+			}
+
+			@Override
+			public void setParam(String string, String param) {
+
+			}
+
+			@Override
+			public Collection getValue() {
+				return values;
+			}
+			
+		};
 	}
 
 	@Override

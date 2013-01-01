@@ -231,6 +231,14 @@ public class BigDecimalReal extends Real{
 		}
 		return this.asNumber().compareTo(o.asNumber());
 	}
+	
+	@Override
+	public int compareTo(Real o) {
+		if (BigDecimalReal.class.isInstance(o)){
+			return this.compareToSame(BigDecimalReal.class.cast(o));
+		}
+		return this.asNumber().compareTo(o.asNumber());
+	}
 
 	@Override
 	public BigInt toBigInt() {
@@ -312,6 +320,13 @@ public class BigDecimalReal extends Real{
 	public Real previous() {
 		return this.minus(valueOf(Integer.valueOf(1)));
 	}
+
+	@Override
+	public Real abs() {
+		return new BigDecimalReal(this.numerator.abs(), this.denominator.abs());
+	}
+
+
 
 
 }

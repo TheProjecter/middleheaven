@@ -90,42 +90,36 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		UIComponent layoutui = wui.getChildrenComponents().get(0);
 		assertNotNull(layoutui);
 	
-		List<UIComponent> components = UITreeCriteria.search("/").execute(layoutui)
-		.list();
-		
+		List<UIComponent> components = UISearch.absolute(layoutui).self().list();
+
 		assertFalse(components.isEmpty());
 		assertEquals(client, components.get(0));
 		
-		components = UITreeCriteria.search("..").execute(layoutui)
-		.list();
+		components = UISearch.relative(layoutui).search(":parent").list(); 
 		
 		assertFalse(components.isEmpty());
 		assertEquals(wui, components.get(0));
 		
-		components = UITreeCriteria.search(".").execute(layoutui)
-		.list();
+		components = UISearch.relative(layoutui).self().list();
 		
 		assertFalse(components.isEmpty());
 		assertEquals(layoutui, components.get(0));
 	
-		components = UITreeCriteria.search("./../..").execute(layoutui)
-		.list();
+		components = UISearch.relative(layoutui).search(":parent:parent").list(); 
 		
 		assertFalse(components.isEmpty());
 		assertEquals(client, components.get(0));
 		
 		
-		components = UITreeCriteria.search("frameA").execute(layoutui)
-		.list();
+		components = UISearch.absolute(layoutui).search("#frameA").list();
 		
 		UIComponent frameA = components.get(0);
 		assertFalse(components.isEmpty());
 		assertEquals("frameA", frameA.getGID());
 		
 		
-		components = UITreeCriteria.search("frameB").execute(layoutui)
-		.list();
-		
+		components = UISearch.absolute(layoutui).search("#frameB").list();
+
 		assertFalse(components.isEmpty());
 		
 		UIComponent frameB = components.get(0);
@@ -161,7 +155,7 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		
 		;
 		
-		List<UIComponent> components = UISearch.on(client).search("UIClient").list();
+		List<UIComponent> components = UISearch.absolute(client).search("UIClient").list();
 		
 		assertFalse(components.isEmpty());
 		assertEquals(client, components.get(0));
@@ -184,13 +178,13 @@ public class XmlUITest extends MiddleHeavenTestCase {
 //		assertEquals(client, components.get(0));
 		
 		
-		components =UISearch.on(layoutui).search("#frameA").list(); 
+		components =UISearch.absolute(layoutui).search("#frameA").list(); 
 		
 		UIComponent frameA = components.get(0);
 		assertFalse(components.isEmpty());
 		assertEquals("frameA", frameA.getGID());
 		
-		components = UISearch.on(layoutui).search("#frameB").list(); 
+		components = UISearch.absolute(layoutui).search("#frameB").list(); 
 		
 		assertFalse(components.isEmpty());
 		

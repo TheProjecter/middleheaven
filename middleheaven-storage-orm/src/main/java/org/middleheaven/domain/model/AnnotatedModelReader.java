@@ -1,5 +1,7 @@
 package org.middleheaven.domain.model;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -8,7 +10,9 @@ import java.util.Date;
 import java.util.Map;
 
 import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.ReflectionException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
+import org.middleheaven.core.reflection.inspection.EnumIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.reflection.metaclass.MetaClass;
 import org.middleheaven.core.reflection.metaclass.ReflectionMetaClass;
@@ -70,6 +74,12 @@ public class AnnotatedModelReader implements DomainModelReader {
 	@Override
 	public void read(Class<?> type, EntityModelBuildContext context) {
 		
+		if (type.isEnum()) {
+			
+			readEnum((Class<? extends Enum>) type, context);
+			return;
+		}
+		
 		if (!isEntityType(type)){
 			return;
 		}
@@ -129,6 +139,35 @@ public class AnnotatedModelReader implements DomainModelReader {
 			}
 		}
 
+	}
+
+
+	private void readEnum(Class<? extends Enum> enumType, EntityModelBuildContext context) {
+		
+		
+		// find @DescriminatorValue
+		
+		Method m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
+		
+		if (m == null){
+			throw new IllegalModelStateException("Enum types must have a method anotated with @Discriminator");
+		}
+		
+		EditableEnumModel model = context.getEnumModel(enumType, m.getReturnType());
+		
+		for (Object value : EnumIntrospector.of(enumType).getValues()){
+			
+			try {
+				model.addValueMaping(value, m.invoke(value));
+			} catch (IllegalArgumentException e) {
+				throw ReflectionException.manage(e, enumType);
+			} catch (IllegalAccessException e) {
+				throw ReflectionException.manage(e, enumType);
+			} catch (InvocationTargetException e) {
+				throw ReflectionException.manage(e, enumType);
+			}
+		}
+		
 	}
 
 

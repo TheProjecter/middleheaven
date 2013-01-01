@@ -130,6 +130,8 @@ public interface Enumerable<T> extends Iterable<T>{
 	 */
 	public <C> Enumerable<C> map(Mapper<C,T> mapper);
 	
+	public <K, V, P extends Pair<K,V>> PairEnumerable<K,V> pairMap(Mapper<Pair<K,V>,T> mapper);
+	
 	public <C> Enumerable<C> mapAll(Mapper<Enumerable<C>,T> mapper);
 	
 	public T reduce(T seed, BinaryOperator<T> operator);
@@ -143,7 +145,7 @@ public interface Enumerable<T> extends Iterable<T>{
 	 * @param mapper   
      * @return a {@link Enumerable} of {@link Pair} of keys and values
 	 */
-	public <C, P extends Pair<C,Enumerable<T>>> Enumerable<P> groupBy(Mapper<C,T> mapper);
+	public <C> PairEnumerable<C, Enumerable<T>> groupBy(Mapper<C,T> mapper);
 
 	/**
 	 * Converters all elements to a string separated by a given separator. 

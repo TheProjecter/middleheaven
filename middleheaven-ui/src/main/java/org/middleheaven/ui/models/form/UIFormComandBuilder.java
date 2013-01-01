@@ -9,7 +9,7 @@ import org.middleheaven.ui.NamingContainer;
 import org.middleheaven.ui.UIActionHandler;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UITreeCriteria;
+import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.events.UIActionEvent;
 
 /**
@@ -53,7 +53,7 @@ public class UIFormComandBuilder {
 			@Override
 			public void handleAction(UIActionEvent event) {
 			
-				UIClient client = (UIClient) UITreeCriteria.search("/").execute(event.getSource()).first();
+				UIClient client = UISearch.absolute(event.getSource()).self().first(UIClient.class);
 				
 				UIComponent nextWindow = ((NamingContainer)client).findContainedComponent(id);
 				

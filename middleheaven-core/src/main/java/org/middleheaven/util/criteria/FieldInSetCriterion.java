@@ -8,5 +8,5 @@ public interface FieldInSetCriterion extends FieldCriterion{
 
 	boolean useCriteria();
 
-
+	public CollectionFieldValueHolder valueHolder();
 }
