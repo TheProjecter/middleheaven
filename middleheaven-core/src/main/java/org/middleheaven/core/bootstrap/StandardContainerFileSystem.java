@@ -51,4 +51,20 @@ public class StandardContainerFileSystem implements FileContext{
 	public ManagedFile getAppLibraryRepository() {
 		 return rootFolder.retrive("/lib");
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile getAppWebRootRepository() {
+		 return rootFolder.retrive("/webapp");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile getAppWebRestrictedRootRepository() {
+		 return rootFolder.retrive("/webapp/WEB-INF");
+	}
 }

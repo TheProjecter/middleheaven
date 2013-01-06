@@ -20,11 +20,26 @@ public interface FileContext {
     public ManagedFile getEnvironmentDataRepository();
     
     /**
+     * The top most application folder. If the application is packaged as an war file, this is the same as {@link #getAppWebRootRepository()}.
      * 
-     * @return ManagedFile representing the aaplication's reference folder 
+     * @return ManagedFile representing the top most folder of the aplication's reference 
      */
     public ManagedFile getAppRootRepository();
 
+    /**
+     * The web application folder. If the application is packaged as an war file, this is the same as {@link #getAppRootRepository()}.
+     * 
+     * @return ManagedFile representing the web application folder root.
+     */
+    public ManagedFile getAppWebRootRepository();
+    
+    /**
+     * The web application folder that is not acessible by the web client.  If the application is packaged as an war file, this should point to the WEB-INF folder.
+     * 
+     * @return ManagedFile representing the web application folder root.
+     */
+    public ManagedFile getAppWebRestrictedRootRepository();
+    
     /**
      * 
      * @return ManagedFile representing a folder where to read application configuration

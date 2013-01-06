@@ -11,6 +11,8 @@ public class EditableContainerFileRepositoryManager implements FileContext {
 	private ManagedFile appDataRepository;
 	private ManagedFile appLogRepository;
 	private ManagedFile appRootRepository;
+	private ManagedFile appWebRootRepository;
+	private ManagedFile appWebRestrictedRootRepository;
 	private ManagedFile environmentConfigRepository;
 	private ManagedFile environmentDataRepository;
 
@@ -86,6 +88,35 @@ public class EditableContainerFileRepositoryManager implements FileContext {
 	 */
 	public void setAppLibraryRepository(ManagedFile appLibraryRepository) {
 		this.appLibraryRepository = appLibraryRepository;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile getAppWebRootRepository() {
+		return this.appWebRootRepository;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile getAppWebRestrictedRootRepository() {
+		return this.appWebRestrictedRootRepository;
+	}
+	/**
+	 * Atributes {@link ManagedFile}.
+	 * @param appWebRootRepository the appWebRootRepository to set
+	 */
+	public void setAppWebRootRepository(ManagedFile appWebRootRepository) {
+		this.appWebRootRepository = appWebRootRepository;
+	}
+	/**
+	 * Atributes {@link ManagedFile}.
+	 * @param appWebRestrictedRootRepository the appWebRestrictedRootRepository to set
+	 */
+	public void setAppWebRestrictedRootRepository(
+			ManagedFile appWebRestrictedRootRepository) {
+		this.appWebRestrictedRootRepository = appWebRestrictedRootRepository;
 	}
 	
 	
