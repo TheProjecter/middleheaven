@@ -22,6 +22,7 @@ import org.middleheaven.application.StandardApplicationServiceActivator;
 import org.middleheaven.core.bootstrap.activation.ActivatorDependencyResolver;
 import org.middleheaven.core.bootstrap.activation.AnnotationBasedDependencyResolver;
 import org.middleheaven.core.dependency.DependencyGraph;
+import org.middleheaven.core.dependency.DependencyGraphEdge;
 import org.middleheaven.core.dependency.DependencyGraphNode;
 import org.middleheaven.core.dependency.DependencyInicilizer;
 import org.middleheaven.core.reflection.inspection.Introspector;
@@ -43,6 +44,7 @@ import org.middleheaven.core.wiring.SytemPropertyManager;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.CultureModelLocalizationService;
+import org.middleheaven.graph.Graph;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.PropertiesFile;
 import org.middleheaven.logging.BroadcastLoggingService;
@@ -50,6 +52,7 @@ import org.middleheaven.logging.LogServiceDelegatorLogger;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.logging.LoggingService;
 import org.middleheaven.quantity.time.clocks.StopWatch;
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 
 /**
@@ -295,8 +298,7 @@ public abstract class AbstractBootstrap {
 				"middleheaven.profiles.active", String.class);
 
 		if (profiles != null) {
-			String[] all = StringUtils.split(profiles, ',');
-			wiringService.getActiveProfiles().add(all);
+			wiringService.getActiveProfiles().add(Splitter.on(',').trim().split(profiles).into(new LinkedList<String>()));
 		}
 
 		logger.debug("Register environment services");
@@ -311,13 +313,14 @@ public abstract class AbstractBootstrap {
 		readExtentions(extentions);
 
 		// configurate container with chain of extentions
-		BootstrapChain chain = new BootstrapChain(logger, extentions,
-				environment);
+		BootstrapChain chain = new BootstrapChain(logger, extentions);
 
 		logger.debug("Configuring context");
 
 		logger.debug("Inicialize service discovery");
 
+		environment.preConfigurate(context);
+		
 		// config any specific environment activators
 		preConfig(context);
 
@@ -357,7 +360,9 @@ public abstract class AbstractBootstrap {
 		wiringService.refresh();
 
 		doAfterStart(context);
-
+		
+		environment.posConfigurate(context);
+		
 		// inform the end of the bootstrap
 		bootstrapService.fireBootupEnd();
 
@@ -365,6 +370,8 @@ public abstract class AbstractBootstrap {
 
 		logger.info("Starting environment");
 
+
+	
 		// start the environment. the ui is available.
 		environment.start();
 
@@ -463,14 +470,15 @@ public abstract class AbstractBootstrap {
 
 
 		Map<ServiceSpecification, Service> servicesMap = new HashMap<ServiceSpecification, Service>();
-		Map<Service, DependencyGraph> graphMap = new HashMap<Service, DependencyGraph>();
+		Map<Service, DependencyGraph> serviceGraphMapping = new HashMap<Service, DependencyGraph>();
 				
+		// add all services specifications targets to map and inicialize the seed graphs
 		for (Service s : services) {
 			servicesMap.put(s.getServiceSpecification(), s);
 			
 			if (s.getDependencies().isEmpty()) {
 				// is seed
-				graphMap.put(s, new DependencyGraph());
+				serviceGraphMapping.put(s, new DependencyGraph());
 			}
 		}
 
@@ -487,33 +495,85 @@ public abstract class AbstractBootstrap {
 
 		};
 
+		// Create DependencyGraph
+		
 		for (Service s : services) {
-			for (ServiceSpecification ss : s.getDependencies()) {
+			for (ServiceSpecification dependencySpecification : s.getDependencies()) {
 
-				Service target = servicesMap.get(ss);
+				Service dependencyService = servicesMap.get(dependencySpecification);
 
-				DependencyGraph graph = graphMap.get(target);
+				DependencyGraph targetGraph = serviceGraphMapping.get(dependencyService);
+				DependencyGraph serviceGraph = serviceGraphMapping.get(s);
 				
-				if (graph == null){
-					for (DependencyGraph g : graphMap.values()){
-						g.addDependency(new DependencyGraphNode(target, ini),
-								new DependencyGraphNode(s, ini), !ss.isOptional());
+				
+				final DependencyGraphNode dependency = new DependencyGraphNode(dependencyService, ini);
+				if (targetGraph == null){
+					for (DependencyGraph g : serviceGraphMapping.values()){
+							for (Graph.Vertex<DependencyGraphNode,DependencyGraphEdge> vertex : g.getVertices()){
+								if (vertex.getObject().equals(dependency)){
+									// this is the graph
+
+									if (serviceGraph != null && !serviceGraph.equals(g)) {
+										// need merge
+									} else {
+										g.addDependency(dependency, new DependencyGraphNode(s, ini), !dependencySpecification.isOptional());
+										serviceGraphMapping.put(s, g);
+									}
+								
+								}
+							}
 					}
 				} else {
-					graph.addDependency(new DependencyGraphNode(target, ini),
-							new DependencyGraphNode(s, ini), !ss.isOptional());
+					if (serviceGraph != null && !serviceGraph.equals(targetGraph)) {
+						// need merge
+						
+						if (targetGraph.isEmpty()){
+							serviceGraph.addDependency(
+									dependency,
+									new DependencyGraphNode(s, ini), !dependencySpecification.isOptional()
+							);
+							serviceGraphMapping.put(dependencyService, serviceGraph);
+							
+						} else {
+							DependencyGraph mergedGraph = serviceGraph.merge(targetGraph);
+							
+							List<Service> keyServices = new LinkedList<Service>();
+							
+							for (Map.Entry<Service, DependencyGraph> entry : serviceGraphMapping.entrySet()){
+								if (entry.getValue().equals(targetGraph) || entry.getValue().equals(serviceGraph)){
+									keyServices.add(entry.getKey());
+								}
+							}
+							
+							serviceGraphMapping.values().remove(serviceGraph);
+							serviceGraphMapping.values().remove(targetGraph);
+							
+							for (Service sk : keyServices){
+								serviceGraphMapping.put(sk, mergedGraph);
+							}
+						}
+						
+					} else {
+						targetGraph.addDependency(
+								dependency,
+								new DependencyGraphNode(s, ini), !dependencySpecification.isOptional()
+						);
+						serviceGraphMapping.put(s, targetGraph);
+					}
 				}
-				
-				
+
 			}
 		}
 
-		for (Map.Entry<Service, DependencyGraph> entry : graphMap.entrySet()){
-			
-			ini.inicialize(new DependencyGraphNode(entry.getKey(), ini));
-			
-			entry.getValue().resolve();
-			
+	
+		for (Map.Entry<Service, DependencyGraph> entry : serviceGraphMapping.entrySet()){
+			DependencyGraph graph = entry.getValue();
+			if (graph.isEmpty()){
+				// there is no vertice in the graph so inicilize the mapped service directly
+				ini.inicialize(new DependencyGraphNode(entry.getKey(), ini));
+			} else {
+				graph.resolve();
+			}
 		}
 
 		for (Iterator<Service> it = services.iterator(); it.hasNext();) {
@@ -535,9 +595,7 @@ public abstract class AbstractBootstrap {
 		if (file.exists()) {
 			Properties p = PropertiesFile.from(file).toProperties();
 
-			String[] all = StringUtils.split(p.getProperty("middleheaven.bootstrap.extentions"), ",");
-
-			for (String extention : all) {
+			for (String extention : Splitter.on(",").split(p.getProperty("middleheaven.bootstrap.extentions"))) {
 				extentions.add(Introspector
 						.of(BootstrapContainerExtention.class).load(extention)
 						.newInstance());

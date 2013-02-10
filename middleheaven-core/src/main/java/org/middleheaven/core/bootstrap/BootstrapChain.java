@@ -8,12 +8,10 @@ public class BootstrapChain {
 
 	List<BootstrapContainerExtention> extentions;
 	private int current=0;
-	private BootstrapEnvironment container;
 	private Logger logger;
 	
-	public BootstrapChain(Logger logger, List<BootstrapContainerExtention> extentions, BootstrapEnvironment container){
+	public BootstrapChain(Logger logger, List<BootstrapContainerExtention> extentions){
 		this.extentions  = extentions;
-		this.container = container;
 		this.logger = logger;
 	}
 	
@@ -35,9 +33,7 @@ public class BootstrapChain {
 
 			}
 			
-		} else {
-			container.configurate(context);
-		}
+		} 
 	}
 
 }

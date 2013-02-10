@@ -16,8 +16,10 @@ import java.util.jar.Manifest;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.Version;
+import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.ParamsMap;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Predicate;
@@ -82,7 +84,7 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 //			fileWatchChannelProcessor.start();
 //		}
 
-		libraryFolder.forEach(new Block<ManagedFile>(){
+		libraryFolder.children().forEach(new Block<ManagedFile>(){
 
 			@Override
 			public void apply(ManagedFile file) {
@@ -144,16 +146,17 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 	
 	private void parseAndAddModules(String applicationId, String applicationModulesSignature, String applicationModulesDepends, ClassLoader cloader, Collection<Module> modules) {
 
-		String[] types = StringUtils.split(applicationModulesSignature.trim(), ',');
-
+		
 		if (applicationModulesSignature.trim().length() == 0){
 			throw new IllegalStateException("No modules found");
 		}
 		
-	
+		Enumerable<String> types = Splitter.on(',').trim().split(applicationModulesSignature.trim());
+		final Splitter splitter = Splitter.on(":").trim();
+		
 		for (String type : types){
 			
-			String[] parts = StringUtils.split(type.trim(), ':');
+			String[] parts = splitter.split(type.trim()).intoArray(new String[3]);
 			
 			ModuleActivator m =  Introspector.of(ModuleActivator.class).load(parts[2],cloader).newInstance();
 			
@@ -161,19 +164,22 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 			
 			modules.add(module);
 			
-			String[] depends =  applicationModulesDepends == null ? new String[0] : StringUtils.split(applicationModulesDepends.trim(), ',');
-			
-			for (String depend : depends){
-				String[] defs = StringUtils.split(depend.trim(), ':');
-				// TODO control corret number of params 
-				ModuleVersion mv = new ModuleVersion(defs[0], Version.valueOf(defs[1]));
-				
-				boolean required = true;
-				if (defs.length == 3) {
-					required = defs[2].equalsIgnoreCase("required");
-				} 
-				module.addDependency(new ModuleDependency(mv, required));
+			if (applicationModulesDepends != null){
+		
+				for (String depend : Splitter.on(',').split(applicationModulesDepends.trim())){
+					
+					String[] defs = splitter.split(depend.trim()).intoArray(new String[3]);
+					// TODO control corret number of params 
+					ModuleVersion mv = new ModuleVersion(defs[0], Version.valueOf(defs[1]));
+					
+					boolean required = true;
+					if (defs.length == 3) {
+						required = defs[2].equalsIgnoreCase("required");
+					} 
+					module.addDependency(new ModuleDependency(mv, required));
+				}
 			}
+			
 		}
 
 		

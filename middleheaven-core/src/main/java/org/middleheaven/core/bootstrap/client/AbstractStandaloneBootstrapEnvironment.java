@@ -30,7 +30,7 @@ public abstract class AbstractStandaloneBootstrapEnvironment extends AbstractBoo
 	
 
 	@Override
-	public void configurate(BootstrapContext context) {
+	public void preConfigurate(BootstrapContext context) {
 		//no-op
 	}
 	

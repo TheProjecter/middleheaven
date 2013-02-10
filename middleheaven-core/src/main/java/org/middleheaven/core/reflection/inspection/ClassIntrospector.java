@@ -23,6 +23,8 @@ import org.middleheaven.core.reflection.NoSuchClassReflectionException;
 import org.middleheaven.core.reflection.NoSuchMethodReflectionException;
 import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.util.StringUtils;
+import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 
 
@@ -283,11 +285,11 @@ public class ClassIntrospector<T> extends Introspector{
 		return Reflector.getReflector().isEnhanced(type);
 	}
 
-	public Class<?>[] getImplementedInterfaces() {
-		return type.getInterfaces(); 
+	public Enumerable<Class<?>> getImplementedInterfaces() {
+		return CollectionUtils.asEnumerable(type.getInterfaces()); 
 	}
 
-	public Class<?>[] getDeclaredInterfaces() {
+	public Enumerable<Class<?>> getDeclaredInterfaces() {
 		List<Class<?>> all = new LinkedList<Class<?>>();
 		Class<?> superType = type;
 		while (superType!=null && !superType.equals(Object.class)){
@@ -298,7 +300,7 @@ public class ClassIntrospector<T> extends Introspector{
 		}
 
 		Class<?>[] result = new Class<?>[all.size()]; 
-		return all.toArray(result);
+		return CollectionUtils.asEnumerable(all.toArray(result));
 	}
 
 	/**

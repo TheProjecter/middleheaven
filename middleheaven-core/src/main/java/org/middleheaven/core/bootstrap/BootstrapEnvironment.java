@@ -26,10 +26,16 @@ public interface BootstrapEnvironment  {
     public ManagedFileRepositoryProvider getManagedFileRepositoryProvider();
     
     /**
-     * 
+     * Called by the Bootstrap to give the environment a change configurate it self before any thing else.
      * @param context the bootstrat context.
      */
-    public void configurate(BootstrapContext context);
+    public void preConfigurate(BootstrapContext context);
+    
+    /**
+     * Called by the Bootstrap to give the environment a change configurate it self after all other configrations where done.
+     * @param context the bootstrat context.
+     */
+    public void posConfigurate(BootstrapContext context);
     
     public void start();
     public void stop();

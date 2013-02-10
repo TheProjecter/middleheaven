@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
 import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.util.classification.LogicComposedClassifier;
+import org.middleheaven.util.classification.LogicComposedPredicate;
 import org.middleheaven.util.classification.LogicOperator;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Block;
@@ -15,8 +15,8 @@ public abstract class MemberIntrospectionCriteriaBuilder<T, M> {
 
 	protected Comparator<M> comparator = null;
 	private IntrospectionCriteriaBuilder<T> builder;
-	protected final LogicComposedClassifier<M> logicClassifier =
-		new LogicComposedClassifier<M>(LogicOperator.and());
+	protected final LogicComposedPredicate<M> logicClassifier =
+		new LogicComposedPredicate<M>(LogicOperator.and());
 	
 	protected MemberIntrospectionCriteriaBuilder(IntrospectionCriteriaBuilder<T> builder) {
 		this.builder = builder;

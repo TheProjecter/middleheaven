@@ -110,7 +110,7 @@ public class Module {
 	}
 
 	/**
-	 * Obtains {@link Collection<ModuleDependency>}.
+	 * Obtains a collection of {@link ModuleDependency}.
 	 * @return the dependencies
 	 */
 	public Collection<ModuleDependency> getDependencies() {

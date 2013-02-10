@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.core.services.Service;
-import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.core.services.ServiceNotAvailableException;
 import org.middleheaven.core.services.ServiceSpecification;
-import org.omg.IOP.TransactionService;
 
 
 /**
@@ -29,10 +27,19 @@ public abstract class AbstractBootstrapEnvironment implements BootstrapEnvironme
 	}
 	
 	/**
+	 * @param context
+	 * @param service
+	 */
+	protected void addService(BootstrapContext context, Service service) {
+		context.registerService(service);
+        addService(service);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Service provideService(ServiceSpecification spec) {
+	public final Service provideService(ServiceSpecification spec) {
 		
 		Service service = services.get(spec.getServiceContractType().getName());
 		
@@ -46,6 +53,23 @@ public abstract class AbstractBootstrapEnvironment implements BootstrapEnvironme
 			}
 		}
 		
+		service = resolverRequestedService(spec);
+		
+		if (service != null){
+			return service;
+		}
+		
 		throw new ServiceNotAvailableException(spec.getServiceContractType().getName());
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void posConfigurate(BootstrapContext context) {
+	
+	}
+	
+	
+	protected abstract Service resolverRequestedService(ServiceSpecification spec);
 }

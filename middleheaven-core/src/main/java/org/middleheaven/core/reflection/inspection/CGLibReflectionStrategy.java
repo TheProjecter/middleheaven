@@ -108,18 +108,34 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 	public <T> T proxyType(Class<?> facadeType, ProxyHandler handler, Class<T> proxyInterface, Class<?>... adicionalInterfaces) {
 		try{
 			
-			Class[] interfaces = new Class[adicionalInterfaces.length + 1];
-			interfaces[0] = proxyInterface;
-			
-			for (int i =0; i < adicionalInterfaces.length; i++){
-				interfaces[i+1] = adicionalInterfaces[i];
+			if (facadeType.isInterface()){
+				Class[] interfaces = new Class[adicionalInterfaces.length + 2];
+				interfaces[0] = facadeType;
+				interfaces[1] = proxyInterface;
+				for (int i =0; i < adicionalInterfaces.length; i++){
+					interfaces[i+1] = adicionalInterfaces[i];
+				}
+				
+				return proxyInterface.cast(Enhancer.create(
+						Object.class,
+						interfaces,
+						new ProxyHandlerInterceptor(facadeType,handler)
+				));
+			} else {
+				Class[] interfaces = new Class[adicionalInterfaces.length + 1];
+				interfaces[0] = proxyInterface;
+
+				for (int i =0; i < adicionalInterfaces.length; i++){
+					interfaces[i+1] = adicionalInterfaces[i];
+				}
+				
+				return proxyInterface.cast(Enhancer.create(
+						facadeType,
+						interfaces,
+						new ProxyHandlerInterceptor(facadeType,handler)
+				));
 			}
 			
-			return proxyInterface.cast(Enhancer.create(
-					facadeType,
-					interfaces,
-					new ProxyHandlerInterceptor(facadeType,handler)
-			));
 		}catch (RuntimeException e){
 			throw new ReflectionException(e);
 		}

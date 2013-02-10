@@ -3,10 +3,9 @@
  */
 package org.middleheaven.core.dependency;
 
-import java.util.List;
-
 import org.middleheaven.graph.DirectGraph;
 import org.middleheaven.graph.EdgeTraversalEvent;
+import org.middleheaven.graph.Graph;
 import org.middleheaven.graph.GraphTranverseListener;
 import org.middleheaven.graph.TopologicOrderTransversor;
 import org.middleheaven.graph.VertexTraversalEvent;
@@ -54,21 +53,18 @@ public class DependencyGraph extends DirectGraph<DependencyGraphEdge, Dependency
 		t.addListener(new GraphTranverseListener<DependencyGraphNode, DependencyGraphEdge>() {
 
 			@Override
-			public void beginEdgeTraversed(
-					EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
-				
+			public void beginEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
+				//no-op
 			}
 
 			@Override
-			public void endEdgeTraversed(
-					EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
-				
+			public void endEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
+				//no-op
 			}
 
 			@Override
-			public void endVertex(
-					VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
-				
+			public void endVertex(VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
+				//no-op
 			}
 
 			@Override
@@ -80,5 +76,26 @@ public class DependencyGraph extends DirectGraph<DependencyGraphEdge, Dependency
 		
 		t.transverse(this, null);
 		
+	}
+
+	/**
+	 * @param targetGraph
+	 * @return
+	 */
+	public DependencyGraph merge(DependencyGraph other) {
+		DependencyGraph result = new DependencyGraph(this);
+		
+		for(Graph.Edge<DependencyGraphNode,DependencyGraphEdge> edge : other.getEdges()){
+			result.addDependency(edge.getSourceVertex().getObject(), edge.getTargetVertex().getObject());
+		}
+		
+		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return this.getVertices().isEmpty();
 	}
 }
