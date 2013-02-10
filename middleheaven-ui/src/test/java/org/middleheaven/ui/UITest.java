@@ -17,9 +17,7 @@ public class UITest extends MiddleHeavenTestCase{
 		GenericUIComponent root =  (GenericUIComponent)GenericUIComponent.getInstance(UIClient.class, null);
 		
 		UIComponent frame = root.addComponent(UIView.class, null);
-		
-		frame.setUIModel(new AbstractUIContainerModel());
-		
+
 		TestRenderKit rk = new TestRenderKit();
 		RenderingContext context = new RenderingContext(rk);
 		

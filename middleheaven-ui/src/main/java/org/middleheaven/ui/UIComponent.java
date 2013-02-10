@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.middleheaven.ui.components.UIInput;
 import org.middleheaven.ui.rendering.RenderKit;
+import org.middleheaven.util.property.Property;
 
 
 /**
@@ -35,18 +36,7 @@ public interface UIComponent extends  Displayable {
      */
     public boolean isRendered();
     
-    /**
-     * The {@link UIModel} that represents this component data.
-     * @param model this component's UIModel 
-     */
-    public void setUIModel(UIModel model);
-    
-    /**
-     * The {@link UIModel} that represents this component data.
-     * @return model this component's UIModel 
-     */
-    public UIModel getUIModel();
-    
+
     /**
      * 
      * @return component rendering type
@@ -82,41 +72,16 @@ public interface UIComponent extends  Displayable {
     public int getChildrenCount();
     
     /**
-     * Add a component
-     * @param component component to add
-     */
-    public void addComponent(UIComponent component);
-    
-    /**
-     * Remove a component
-     * @param component component to remove
-     */
-    public void removeComponent(UIComponent component);
-    
-    /**
      * The visible property.
      * @param visible <code>true</code> if the component is visible to the user, <code>false</code> otherwise.
-     *
      */
-    public void setVisible(boolean visible);
-    
-    /**
-     * 
-     * @return <code>true</code> if the component is visible to the user, <code>false</code> otherwise.
-     */
-    public boolean isVisible();
+    public Property<Boolean> getVisibleProperty();
     
     /**
      * The enable property. Only {@link UIInput}
      * @param enabled <code>true</code> if the component can interact with the user, <code>false</code> otherwise.
      */
-    void setEnabled(boolean enabled);
-    
-    /**
-     * 
-     * @return <code>true</code> if the component can interact with the user, <code>false</code> otherwise.
-     */
-    public boolean isEnabled();
+    public Property<Boolean> getEnableProperty();
     
     
     /**

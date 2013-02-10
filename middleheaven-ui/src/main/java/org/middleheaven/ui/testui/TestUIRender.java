@@ -15,12 +15,11 @@ public class TestUIRender extends UIRender {
 		Class<UIComponent> type = component.getComponentType();
 		
 		TestUIComponent t=  new TestUIComponent(component.getComponentType(), component.getFamily());
-		
-		t.setUIModel(component.getUIModel());
+
 		t.setGID(component.getGID());
 		t.setUIParent(parent);
 
-		return Introspector.of(type).newProxyInstance(new TestUIProxyHandler(t), type);
+		return Introspector.of(type).newProxyInstance(new TestUIProxyHandler(t));
 	}
 
 }

@@ -1,9 +1,10 @@
 package org.middleheaven.ui.components;
 
-import org.middleheaven.ui.models.UIProgressModel;
+import org.middleheaven.util.property.Property;
+
 
 public interface UIProgress extends UIOutput {
 
+	public Property<Integer> getMaximumProperty();
 	
-	public UIProgressModel getUIModel();
 }

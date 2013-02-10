@@ -16,5 +16,6 @@ elementFormDefault="qualified"
     	<attribute name="type" type="string" use="required"></attribute>
     	<attribute name="name" type="string"></attribute>
     	<attribute name="familly" type="string"></attribute>
+    	<attribute name="layoutConstraint" type="string"></attribute>
     </complexType>
 </schema>

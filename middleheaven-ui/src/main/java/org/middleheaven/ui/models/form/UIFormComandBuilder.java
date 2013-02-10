@@ -6,7 +6,7 @@ package org.middleheaven.ui.models.form;
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.MethodUIActionHandler;
 import org.middleheaven.ui.NamingContainer;
-import org.middleheaven.ui.UIActionHandler;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UISearch;
@@ -17,7 +17,7 @@ import org.middleheaven.ui.events.UIActionEvent;
  */
 public class UIFormComandBuilder {
 
-	private AbstractSheetSetUIFormModel abstractSheetSetUIFormModel;
+	//private AbstractSheetSetUIFormModel abstractSheetSetUIFormModel;
 	private String name;
 	private TextLocalizable caption;
 
@@ -27,8 +27,8 @@ public class UIFormComandBuilder {
 	 * @param caption 
 	 * @param abstractSheetSetUIFormModel
 	 */
-	UIFormComandBuilder(String name, TextLocalizable caption, AbstractSheetSetUIFormModel abstractSheetSetUIFormModel) {
-		this.abstractSheetSetUIFormModel = abstractSheetSetUIFormModel;
+	UIFormComandBuilder(String name, TextLocalizable caption) {
+		//this.abstractSheetSetUIFormModel = abstractSheetSetUIFormModel;
 		this.name = name;
 		this.caption = caption;
 	}
@@ -36,8 +36,8 @@ public class UIFormComandBuilder {
 	/**
 	 * 
 	 */
-	public void handleWith(UIActionHandler handler) {
-		this.abstractSheetSetUIFormModel.addHandler(name, caption , handler);
+	public void handleWith(CommandListener handler) {
+		//this.abstractSheetSetUIFormModel.addHandler(name, caption , handler);
 	}
 	
 	public void handleWithMethod(Object instance, String methodName) {
@@ -48,10 +48,10 @@ public class UIFormComandBuilder {
 	 * @param id the GID of the window to show
 	 */
 	public void navigateTo(final String id) {
-		this.handleWith(new UIActionHandler() {
+		this.handleWith(new CommandListener() {
 			
 			@Override
-			public void handleAction(UIActionEvent event) {
+			public void onCommand(UIActionEvent event) {
 			
 				UIClient client = UISearch.absolute(event.getSource()).self().first(UIClient.class);
 				

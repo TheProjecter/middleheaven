@@ -1,10 +1,12 @@
 package org.middleheaven.ui.components;
 
 import org.middleheaven.ui.UIPrespective;
-import org.middleheaven.ui.models.UIWindowModel;
 
 public interface UIWindow extends UIPrespective{
 
+	public void addUIWindowListener(UIWindowsListener listener);
+	public void removeUIWindowListener(UIWindowsListener listener);
+
+	public Iterable<UIWindowsListener> getUIWindowListeners();
 	
-	public UIWindowModel getUIModel();
 }

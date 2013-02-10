@@ -3,7 +3,8 @@
  */
 package org.middleheaven.ui.components;
 
-import org.middleheaven.ui.models.UIImageModel;
+import org.middleheaven.util.property.Property;
+
 
 /**
  * The ouput for an image.
@@ -12,7 +13,8 @@ public interface UIImage extends UIOutput {
 
 	/**
 	 * 
-	 * {@inheritDoc}
+	 * @return
 	 */
-	public UIImageModel getUIModel();
+	public Property<String> getImageNameProperty();
+	
 }

@@ -11,7 +11,7 @@ import org.middleheaven.ui.events.UIActionEvent;
 /**
  * 
  */
-public class MethodUIActionHandler implements UIActionHandler {
+public class MethodUIActionHandler implements CommandListener {
 
 	public static  MethodUIActionHandler newInstance(Object instance,Method method){
 		return new MethodUIActionHandler(instance, method);
@@ -48,7 +48,7 @@ public class MethodUIActionHandler implements UIActionHandler {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void handleAction(UIActionEvent event) {
+	public void onCommand(UIActionEvent event) {
 		
 		Class<?>[] types = method.getParameterTypes();
 		Object[] args =  new Object[types.length];

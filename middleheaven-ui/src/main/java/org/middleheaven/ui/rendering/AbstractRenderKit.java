@@ -9,6 +9,7 @@ import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.components.UILayoutManager;
 
 /**
  * Base implementation for {@link RenderKit} classes.
@@ -113,34 +114,33 @@ public abstract class AbstractRenderKit extends RenderKit {
 		// copy family
 		renderedComponent.setFamily(component.getFamily());
 		
-		if (parent != null && !parent.equals(renderedComponent.getUIParent())){
+		if (parent != null && !(parent == renderedComponent.getUIParent() || parent.equals(renderedComponent.getUIParent()))){
 			throw new IllegalStateException("The rendered should set the parent component");
 		}
 
-		
-		//copy models
-		renderedComponent.setUIModel(component.getUIModel());
+		// TODO copy state
 		
 		// if the component renders its children components then there is nothing else to do
 		// otherwise render the children components and add them to it.
-		if (!render.isChildrenRenderer(  context,  parent,  component)){
-			// does it need a container
-			if (renderedComponent.isType(UIContainer.class)  
-					&& ((UIContainer)renderedComponent).getUIContainerLayout() != null 
-					&& !((UIContainer)renderedComponent).getUIContainerLayout().isRendered()){
-				// render layout
-				UILayout layout = (UILayout)this.renderComponent(context, component , ((UIContainer)component).getUIContainerLayout());
-				((UIContainer)renderedComponent).setUIContainerLayout(layout);
-			}
+		if (component.isType(UIContainer.class)&& renderedComponent.isType(UIContainer.class)) {
+			if (!render.isChildrenRenderer(  context,  parent,  component)){
+				// does it need a container
+				if (((UIContainer)renderedComponent).getUIContainerLayout() != null 
+						&& !((UIContainer)renderedComponent).getUIContainerLayout().isRendered()){
+					// render layout
+					UILayout layout = (UILayout)this.renderComponent(context, component , ((UIContainer)component).getUIContainerLayout());
+					((UIContainer)renderedComponent).setUIContainerLayout(layout);
+				}
 
-			for (UIComponent child : component.getChildrenComponents()){
-				UIComponent rchild = renderComponent(context,renderedComponent,child);
+				for (UIComponent child : component.getChildrenComponents()){
+					UIComponent rchild = renderComponent(context,renderedComponent,child);
 
-				renderedComponent.addComponent(rchild);
-			}
+					((UIContainer)renderedComponent).addComponent(rchild);
+				}
 
-		} 
-
+			} 
+		}
+	
 
 		if (this.theme!=null){
 			this.theme.applyTheme(renderedComponent);

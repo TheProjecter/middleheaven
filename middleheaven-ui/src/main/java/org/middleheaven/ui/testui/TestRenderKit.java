@@ -52,7 +52,7 @@ public class TestRenderKit extends AbstractRenderKit {
 
 			@Override
 			public void show(UIComponent component) {
-				component.setVisible(true);
+				component.getVisibleProperty().set(true);
 			}
 
 

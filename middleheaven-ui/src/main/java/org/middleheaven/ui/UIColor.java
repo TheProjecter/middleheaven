@@ -8,18 +8,26 @@ public final class UIColor implements Serializable {
 
 	private static final double FACTOR = 0.7;
 
+	private static final int BITS_IN_BYTE = 8;
+	private static final int DOUBLE_BITS_IN_BYTE = 16;
+	private static final int TRIPLE_BITS_IN_BYTE = 24;
+	
+	private static final int BLACK = 0x00FFFFFF;
+	
+	private static final int MAX_UNSINGED_BYTE = 255;
+	
 	private int argb;
 
 	public static UIColor white(){
-		return rgba(255,255,255,255);
+		return rgba(MAX_UNSINGED_BYTE,MAX_UNSINGED_BYTE,MAX_UNSINGED_BYTE,MAX_UNSINGED_BYTE);
 	}
 	
 	public static UIColor black(){
-		return rgba(0,0,0,255);
+		return rgba(0,0,0,MAX_UNSINGED_BYTE);
 	}
 	
 	public static UIColor rgb(int r, int g, int b){
-		return rgba(r,g,b,255);
+		return rgba(r,g,b,MAX_UNSINGED_BYTE);
 	}
 	
 	public static UIColor hvs(double hue, double value, double saturation){
@@ -49,7 +57,7 @@ public final class UIColor implements Serializable {
 		int[] irgb = new int [3];
 		
 		for (int i =0; i < 3;i++){
-			irgb[i] = (int)(255* (rgb[i] + m));
+			irgb[i] = (int)(MAX_UNSINGED_BYTE* (rgb[i] + m));
 		}
 		
 		return rgb(irgb[0],irgb[1],irgb[2]);
@@ -62,7 +70,7 @@ public final class UIColor implements Serializable {
 	
 	private UIColor(int r, int g, int b, int alpha){
 		testColorValueRange(r,g,b,alpha);
-		argb = b | g << 8 | r << 16 | alpha << 24;
+		argb = b | g << BITS_IN_BYTE | r << DOUBLE_BITS_IN_BYTE | alpha << TRIPLE_BITS_IN_BYTE;
 	}
 	
 	public UIColor(int argb){
@@ -101,7 +109,7 @@ public final class UIColor implements Serializable {
 		int inverse = (int)(1.0/(1.0-FACTOR));
 
 		// if is black
-		if ( (argb & 0x00FFFFFF) == 0) {
+		if ( (argb & BLACK) == 0) {
 			return new UIColor(inverse, inverse, inverse,this.getAlpha());
 		}
 
@@ -117,9 +125,9 @@ public final class UIColor implements Serializable {
 		if ( b > 0 && b < inverse ) b = inverse;
 
 		return new UIColor(
-				Math.min((int)(r/FACTOR), 255),
-				Math.min((int)(g/FACTOR), 255),
-				Math.min((int)(b/FACTOR), 255),
+				Math.min((int)(r/FACTOR), MAX_UNSINGED_BYTE),
+				Math.min((int)(g/FACTOR), MAX_UNSINGED_BYTE),
+				Math.min((int)(b/FACTOR), MAX_UNSINGED_BYTE),
 				this.getAlpha()
 		);
 
@@ -129,23 +137,23 @@ public final class UIColor implements Serializable {
 		boolean rangeError = false;
 		String badComponentString = "";
 		int badValue =0;
-		
-		if ( a < 0 || a > 255) {
+
+		if ( a < 0 || a > MAX_UNSINGED_BYTE) {
 			rangeError = true;
 			badComponentString = badComponentString + " Alpha";
 			badValue = a;
 		}
-		if ( r < 0 || r > 255) {
+		if ( r < 0 || r > MAX_UNSINGED_BYTE) {
 			rangeError = true;
 			badComponentString = badComponentString + " Red";
 			badValue = r;
 		}
-		if ( g < 0 || g > 255) {
+		if ( g < 0 || g > MAX_UNSINGED_BYTE) {
 			rangeError = true;
 			badComponentString = badComponentString + " Green";
 			badValue = g;
 		}
-		if ( b < 0 || b > 255) {
+		if ( b < 0 || b > MAX_UNSINGED_BYTE) {
 			rangeError = true;
 			badComponentString = badComponentString + " Blue";
 			badValue = b;
@@ -193,7 +201,7 @@ public final class UIColor implements Serializable {
 	}
 	
 	public UIColor opaque(){
-		return new UIColor(this.getRed(),this.getGreen(),this.getBlue(),255);
+		return new UIColor(this.getRed(),this.getGreen(),this.getBlue(),MAX_UNSINGED_BYTE);
 	}
 	
 	public UIColor transparent(){
@@ -224,7 +232,7 @@ public final class UIColor implements Serializable {
 	
 	public double getValue(){
 		
-		return round(Math.max(Math.max(this.getRed(),this.getGreen()), this.getBlue())/255d);
+		return round(Math.max(Math.max(this.getRed(),this.getGreen()), this.getBlue())/(1d * MAX_UNSINGED_BYTE));
 	}
 	
 	private double round(double value) {
@@ -245,9 +253,9 @@ public final class UIColor implements Serializable {
 	 * @see http://en.wikipedia.org/wiki/HSL_color_space
 	 */
 	public double getHue(){
-		double r = this.getRed()/255d;
-		double g = this.getGreen()/255d;
-		double b = this.getBlue()/255d;
+		double r = this.getRed()/(1d * MAX_UNSINGED_BYTE);
+		double g = this.getGreen()/(1d * MAX_UNSINGED_BYTE);
+		double b = this.getBlue()/(1d * MAX_UNSINGED_BYTE);
 		
 		/*
 		double a = 0.5 * (2 * r  - g - b);
@@ -281,9 +289,9 @@ public final class UIColor implements Serializable {
 	}
 	
 	public double getSaturation(){
-		double r = this.getRed()/255d;
-		double g = this.getGreen()/255d;
-		double b = this.getBlue()/255d;
+		double r = this.getRed()/(1d * MAX_UNSINGED_BYTE);
+		double g = this.getGreen()/(1d * MAX_UNSINGED_BYTE);
+		double b = this.getBlue()/(1d * MAX_UNSINGED_BYTE);
 		
 //		double a = 0.5 * (2 * r - g - b);
 //		double beta = Math.cbrt(3) * (g - b) / 2;

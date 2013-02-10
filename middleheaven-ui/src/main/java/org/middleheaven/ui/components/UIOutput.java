@@ -2,12 +2,15 @@ package org.middleheaven.ui.components;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
-import org.middleheaven.ui.models.UIOutputModel;
+import org.middleheaven.util.property.Property;
 
-public interface UIOutput extends UIComponent{
+public interface UIOutput extends UIComponent {
 
-	
-	public UIReadState getReadState();
-	public UIOutputModel getUIModel();
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public Property<UIReadState> getReadStateProperty();
+
+
 }

@@ -8,6 +8,5 @@ public class UIPrespectiveEvent extends UIEvent {
 	public UIPrespectiveEvent(UIComponent source) {
 		super(source);
 	}
-
 	
 }

@@ -77,8 +77,6 @@ public class XmlUITest extends MiddleHeavenTestCase {
 
 		UIClient client = env.getClient();
 		
-		assertNotNull("UIModel is null",client.getUIModel());
-		
 		RenderKit kit = new TestRenderKit();
 		
 		RenderingContext context = new RenderingContext(kit);
@@ -113,6 +111,7 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		
 		components = UISearch.absolute(layoutui).search("#frameA").list();
 		
+		assertFalse("#frameA not found" ,components.isEmpty());
 		UIComponent frameA = components.get(0);
 		assertFalse(components.isEmpty());
 		assertEquals("frameA", frameA.getGID());
@@ -120,7 +119,7 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		
 		components = UISearch.absolute(layoutui).search("#frameB").list();
 
-		assertFalse(components.isEmpty());
+		assertFalse("#frameB not found" ,components.isEmpty());
 		
 		UIComponent frameB = components.get(0);
 		assertEquals("frameB", frameB.getGID());
@@ -136,8 +135,6 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		UIEnvironment env = xmlBuilder.buildFrom(new File("./src/test/java/org/middleheaven/ui/ui.xml"));
 
 		UIClient client = env.getClient();
-		
-		assertNotNull("UIModel is null",client.getUIModel());
 		
 		RenderKit kit = new TestRenderKit();
 		
@@ -180,13 +177,16 @@ public class XmlUITest extends MiddleHeavenTestCase {
 		
 		components =UISearch.absolute(layoutui).search("#frameA").list(); 
 		
+		assertFalse("#frameA not found" ,components.isEmpty());
+		
 		UIComponent frameA = components.get(0);
 		assertFalse(components.isEmpty());
 		assertEquals("frameA", frameA.getGID());
 		
 		components = UISearch.absolute(layoutui).search("#frameB").list(); 
 		
-		assertFalse(components.isEmpty());
+
+		assertFalse("#frameb not found" ,components.isEmpty());
 		
 		UIComponent frameB = components.get(0);
 		assertEquals("frameB", frameB.getGID());

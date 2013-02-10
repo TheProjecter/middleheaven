@@ -8,11 +8,11 @@ import org.middleheaven.ui.events.UIActionEvent;
 /**
  * 
  */
-public interface UIActionHandler {
+public interface CommandListener {
 
 	/**
 	 * 
 	 * @param event
 	 */
-	public void handleAction(UIActionEvent event);
+	public void onCommand(UIActionEvent event);
 }

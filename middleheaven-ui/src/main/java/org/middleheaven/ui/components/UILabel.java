@@ -1,9 +1,9 @@
 package org.middleheaven.ui.components;
 
-import org.middleheaven.ui.UIMessageModel;
-
+/**
+ * Represent a label used to display text.
+ */
 public interface UILabel extends UIMessage {
 
-	
-	public UIMessageModel getUIModel();
+
 }

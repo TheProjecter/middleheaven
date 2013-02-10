@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.util.validation.Validator;
 
 /**
@@ -28,7 +27,6 @@ public class UIFieldDescription  implements Serializable {
 	private Class<?> uiType;
 	private String family;
 	private String group;
-	private UIModel model;
 	
 	public UIFieldDescription (){
 		
@@ -197,24 +195,6 @@ public class UIFieldDescription  implements Serializable {
 	}
 
 
-	/**
-	 * Obtains {@link UIModel}.
-	 * @return the model
-	 */
-	public UIModel getUIModel() {
-		return model;
-	}
-
-
-
-	/**
-	 * Atributes {@link UIModel}.
-	 * @param model the model to set
-	 */
-	public void setUIModel(UIModel model) {
-		this.model = model;
-	}
-	
 	
 	
 }

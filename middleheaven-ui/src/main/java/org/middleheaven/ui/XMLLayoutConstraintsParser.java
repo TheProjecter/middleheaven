@@ -3,8 +3,7 @@
  */
 package org.middleheaven.ui;
 
-import org.middleheaven.ui.models.UILayoutModel;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel;
+import org.middleheaven.ui.layout.UIBorderLayoutConstraint;
 
 /**
  * 
@@ -12,13 +11,13 @@ import org.middleheaven.ui.models.impl.UIBorderLayoutModel;
 public class XMLLayoutConstraintsParser {
 
 	
-	public static UILayoutConstraint parseConstraint(String layoutConstraint, UILayoutModel layoutModel) {
+	public static UILayoutConstraint parseConstraint(String layoutConstraint, String layoutFamilly) {
 		
 		
-		if (layoutModel instanceof UIBorderLayoutModel) {
-			return UIBorderLayoutModel.UIBorderLayoutConstraint.valueOf(layoutConstraint.toUpperCase());
+		if ("border".equalsIgnoreCase(layoutFamilly)) {
+			return UIBorderLayoutConstraint.valueOf(layoutConstraint.toUpperCase());
 		} else {
-			throw new IllegalArgumentException("'" + layoutConstraint + "' is not a valid constraint for model " + layoutModel.getClass());
+			throw new IllegalArgumentException("'" + layoutConstraint + "' is not a valid constraint for layout familly " + layoutFamilly);
 		}
 	}
 }

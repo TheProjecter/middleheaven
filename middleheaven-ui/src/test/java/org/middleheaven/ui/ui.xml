@@ -5,32 +5,13 @@ xmlns:xsi="http://www.middleheaven.org/ui-schema"
 xsi:schemaLocation="http://www.middleheaven.org/ui-schema.xsd"
 >
 	<uic type="client">
-		<model>
-			
-		</model>
-		<uic name="login" type="window" >
-			<uic type="layout" familly="tabs">
-				<uic name="frameA" type="view" >
-					<model>
-						<text>Frame A</text>
-					</model>
-					<uic name="labelA" type="label" >
-						<model>
-							<text>Olá Mundo</text>
-						</model>
-					</uic>
+		<uic name="login" type="window" layout="tabs">
+				<uic name="frameA" type="view" title="Frame A">
+					<uic name="labelA" type="label" text="Olá Mundo" />
 				</uic>
-				<uic name="frameB" type="view" >
-					<model>
-						<text>Frame B</text>
-					</model>
-					<uic name="labelB" type="label" >
-						<model>
-							<text>Olá Mundo Lado B</text>
-						</model>
-					</uic>
+				<uic name="frameB" type="view" title="Frame B">
+					<uic name="labelB" type="label" text="Olá Mundo Lado B" />
 				</uic>
-			</uic>
 		</uic>
 		
 	</uic>

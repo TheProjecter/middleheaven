@@ -1,36 +1,31 @@
 package org.middleheaven.ui;
 
 import java.io.File;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.middleheaven.core.annotations.Shared;
 import org.middleheaven.core.reflection.NoSuchClassReflectionException;
 import org.middleheaven.core.reflection.PropertyAccessor;
-import org.middleheaven.core.reflection.PropertyBagProxyHandler;
-import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.BindConfiguration;
 import org.middleheaven.core.wiring.Binder;
-import org.middleheaven.core.wiring.BindingNotFoundException;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.xml.XMLException;
 import org.middleheaven.io.xml.XMLObjectContructor;
 import org.middleheaven.io.xml.XMLUtils;
+import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.AbstractUIFieldInputModel;
-import org.middleheaven.ui.models.UIClientModel;
-import org.middleheaven.ui.models.UIFieldInputModel;
-import org.middleheaven.ui.models.UIFlowLayoutModel;
-import org.middleheaven.ui.models.UILayoutModel;
-import org.middleheaven.ui.models.UIWindowModel;
-import org.middleheaven.ui.models.impl.DefaultUIWindowModel;
-import org.middleheaven.ui.models.impl.SimpleUIClientModel;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel;
 import org.middleheaven.util.StringUtils;
+import org.middleheaven.util.coersion.TypeCoercing;
 import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.util.function.Block;
+import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.function.Predicate;
+import org.middleheaven.util.property.Property;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,7 +35,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 	WiringService wiringContext;
 	private UIEnvironmentType targetUIEnvironmentType;
-	
+
 	public XMLUIComponentBuilder(WiringService wiringContext , UIEnvironmentType targetUIEnvironmentType){
 		this.wiringContext = wiringContext;
 		this.targetUIEnvironmentType = targetUIEnvironmentType;
@@ -63,7 +58,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 	@Override
 	protected void constructFrom(Document document) 
-	throws ManagedIOException,XMLException {
+			throws ManagedIOException,XMLException {
 
 		// create environment and client
 		Element element = document.getDocumentElement();
@@ -81,7 +76,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 			Node child = clients.item(i);
 			if (child.getNodeName().equals("uic")){
 
-				
+
 				UIComponent uiclient = (build(targetUIEnvironmentType, child,null));
 
 				env.setClient((UIClient)uiclient);
@@ -105,122 +100,98 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 	private UIComponent build (UIEnvironmentType envType, Node node , UIComponent parent){
 
-		String type = XMLUtils.getStringAttribute("type", node);
-		String familly = XMLUtils.getStringAttribute("familly", node, "default");
-		String name = XMLUtils.getStringAttribute("name", node, "");
-		String layoutConstraint = XMLUtils.getStringAttribute("layoutConstraint", node, "");
+		Maybe<String> type = XMLUtils.getStringAttribute("type", node);
+
+		if (type.isAbsent()){
+			throw new IllegalStateException("Type is mandatory");
+		}
+
+		Maybe<String> familly = XMLUtils.getStringAttribute("familly", node, "default");
+
+		final Map<String, Maybe<String>> propertiesValues = new HashMap<String, Maybe<String>>(); 
+
+
+		Maybe<String> gid = XMLUtils.getStringAttribute("gid", node, "");
+		Maybe<String> name = XMLUtils.getStringAttribute("name", node , "");
+
+		propertiesValues.put("name", name);
+		propertiesValues.put("title", XMLUtils.getStringAttribute("title", node, ""));
+		propertiesValues.put("text", XMLUtils.getStringAttribute("text", node, ""));
+		propertiesValues.put("visible", XMLUtils.getStringAttribute("visible", node, ""));
+		propertiesValues.put("enable", XMLUtils.getStringAttribute("enable", node, ""));
+
+		Maybe<String> layout = XMLUtils.getStringAttribute("layout", node, "");
+
+		Maybe<String> layoutConstraint = XMLUtils.getStringAttribute("layoutConstraint", node, "");
 
 		if ("default".equals(familly)){
 			familly = null;
 		}
 
-		Class<UIComponent> uiClass = resolveClass(type);
+		Class<UIComponent> uiTypeClass = resolveClass(type.get());
 
-		UIComponent uiComponent =  GenericUIComponent.getInstance(uiClass, familly);
-		
-		if (!uiClass.isInstance(uiComponent)){
+		UIComponent uiComponent =  GenericUIComponent.getInstance(uiTypeClass, familly.or(""));
+
+		if (!uiTypeClass.isInstance(uiComponent)){
 			throw new IllegalStateException("Incompatible ui types");
 		}
-		
-		if (!name.isEmpty()){
-			uiComponent.setGID(name);
+
+		if (gid.isPresent()){
+			uiComponent.setGID(gid.get());
+		} else if (name.isPresent()){
+			uiComponent.setGID(name.get());
+		}
+
+		if (uiComponent.isType(UIContainer.class)){
+			UILayout myLayout;
+			if (layout.isPresent()){
+				myLayout =  GenericUIComponent.getInstance(UILayout.class, layout.get());
+
+
+			} else if (uiComponent.isType(UIClient.class)){
+				myLayout =  GenericUIComponent.getInstance(UILayout.class, "client");
+
+				((UIContainer)uiComponent).setUIContainerLayout(myLayout);
+			} else {
+				myLayout =  GenericUIComponent.getInstance(UILayout.class, "border");
+
+				((UIContainer)uiComponent).setUIContainerLayout(myLayout);
+			}
+
+			((UIContainer)uiComponent).setUIContainerLayout(myLayout);
 		}
 
 		uiComponent.setUIParent(parent);
-		if (parent!=null){
-			if (layoutConstraint.length() > 0 && parent instanceof UILayout){
-				((UILayout)parent).addComponent(uiComponent, XMLLayoutConstraintsParser.parseConstraint(layoutConstraint, (UILayoutModel) parent.getUIModel()));
+		if (parent != null && parent.isType(UIContainer.class)){
+			UIContainer container = (UIContainer) parent;
+
+			if (layoutConstraint.isPresent() ){
+
+				UILayout parentLayout = container.getUIContainerLayout();
+
+				container.addComponent(uiComponent, XMLLayoutConstraintsParser.parseConstraint(layoutConstraint.get(), parentLayout.getFamily()));
 			} else {
-				parent.addComponent(uiComponent);
+				container.addComponent(uiComponent);
 			}
-			
+
 		}
 
-		// model read model from xml 
 
-		Node modelNode = XMLUtils.getChildNode("model", node);
-		UIModel uiModel = null;
-		Class<? extends UIModel> uiModelClass = null;
+		// read properties
 
-		// is model node is defined
-		if (modelNode!=null){
-			// if class attribute is defined
-			String modelClass = XMLUtils.getStringAttribute("class", modelNode, "");
-			if (!modelClass.isEmpty()){
-				ClassIntrospector<UIModel> modelIntrospector = Introspector.of(UIModel.class).load(modelClass);
-				uiModelClass = modelIntrospector.getIntrospected();
-				try{
-					uiModel = wiringContext.getInstance(uiModelClass);
-				} catch (BindingNotFoundException e){
-					uiModel = modelIntrospector.newInstance();
-					wiringContext.addConfiguration(new ModelBinderConfiguration(uiModelClass, uiModel));
+		getProperties(uiTypeClass, uiComponent).forEach(new Block<Property>(){
+
+			@Override
+			public void apply(Property prop) {
+
+				final Maybe<String> maybe = propertiesValues.get(prop.getName());
+				if (maybe != null && maybe.isPresent()){
+					prop.set(TypeCoercing.coerce(maybe.get() , prop.getValueType()));
 				}
-				
-				
-			}	
-		}
 
-		// is not model is yet defined
-		if (uiModel==null){
-			try {
-				// infer class from contract
-				uiModelClass = (Class<? extends UIModel>) uiClass.getMethod("getUIModel", new Class[0]).getReturnType();
-				
-				if (uiComponent instanceof UILayout){
-					
-					if ("border".equals(familly)){
-						uiModel = new UIBorderLayoutModel();
-					} else if ("flow".equals(familly)){
-						uiModel = new UIFlowLayoutModel();
-					} 
-					
-				}
-				
-		
-			} catch (SecurityException e) {
-				throw new ReflectionException(e);
-			} catch (NoSuchMethodException e) {
-				throw new ReflectionException(e);
 			}
 
-
-			if (uiModel == null){
-				try {
-					
-					// load
-					if (UIClientModel.class.isAssignableFrom(uiModelClass)){
-						
-						uiModel = new SimpleUIClientModel();
-						
-					} else if (UIWindowModel.class.isAssignableFrom(uiModelClass)) { 
-						uiModel = new DefaultUIWindowModel();
-					} else if (UIFieldInputModel.class.isAssignableFrom(uiModelClass)){
-						uiModel = new AbstractUIFieldInputModel(){};
-					} else {
-						uiModel = Introspector.of(uiModelClass).newProxyInstance(new PropertyBagProxyHandler());
-					}
-					
-			
-			} catch (SecurityException e) {
-				throw new ReflectionException(e);
-			} 
-			}
-			
-
-		}
-		uiComponent.setUIModel(uiModel);
-
-		// inject attributes
-
-		Enumerable<PropertyAccessor> properties = Introspector.of(uiModelClass).inspect().properties().retriveAll();
-				
-		for (PropertyAccessor p : properties){
-			Node pnode = XMLUtils.getChildNode(p.getName().toString(), modelNode);
-			if (pnode!=null){
-				Object obj = pnode.getFirstChild().getNodeValue();
-				p.setValue(uiModel, obj);
-			}
-		}
+		});
 
 		// children
 
@@ -236,21 +207,21 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 		return uiComponent;
 	}
 
-	
+
 	private static class ModelBinderConfiguration <T> implements BindConfiguration{
 		Class<T> uiModelClass;
 		T uiModel;
-		
+
 		public  ModelBinderConfiguration(Class<T> uiModelClass , T uiModel){
 			this.uiModel = uiModel;
 			this.uiModelClass = uiModelClass;
 		}
-		
+
 		@Override
 		public void configure(Binder binder) {
 			binder.bind(uiModelClass).in(Shared.class).toInstance(uiModel);
 		}
-		
+
 	}
 	public static class BuildedUIEnvironment extends UIEnvironment{
 
@@ -264,6 +235,30 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 			return true; // TODO verify agains type
 		}
 
+	}
+
+	private Enumerable<Property> getProperties(Class<UIComponent> uiTypeClass, final UIComponent component){
+		return Introspector.of(uiTypeClass).inspect().properties().retriveAll().filter(new Predicate<PropertyAccessor>(){
+
+			@Override
+			public Boolean apply(PropertyAccessor obj) {
+				return Property.class.isAssignableFrom(obj.getValueType());
+			}
+
+		}).map(new Mapper<Property, PropertyAccessor>(){
+
+			@Override
+			public Property apply(PropertyAccessor obj) {
+				Property  p = (Property)obj.getValue(component);
+
+				if (p == null){
+					throw new IllegalStateException("Property " + obj.getDeclaringClass() + "." + obj.getName() + " is null");
+				}
+
+				return p;
+			}
+
+		});
 	}
 
 }

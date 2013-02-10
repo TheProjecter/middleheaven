@@ -1,11 +1,10 @@
 package org.middleheaven.ui.components;
 
-import org.middleheaven.ui.UIReadState;
-import org.middleheaven.ui.models.UIInputModel;
+import org.middleheaven.util.property.Property;
 
 public interface UIInput extends UIOutput {
 
-	public UIInputModel getUIModel();
-	public void setReadState(UIReadState state);
+
+	public Property<String> getNameProperty();
 
 }

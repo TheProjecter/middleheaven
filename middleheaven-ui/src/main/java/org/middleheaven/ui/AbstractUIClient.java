@@ -5,29 +5,32 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.middleheaven.ui.models.UIClientModel;
+import org.middleheaven.process.AttributeContext;
+import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public abstract class AbstractUIClient implements UIClient , NamingContainer {
 
 	private String family;
 	private String id;
 	private Map<String, UIComponent> components = new LinkedHashMap<String, UIComponent>();
-	
-	private UIClientModel uiModel;
 
-	public AbstractUIClient(){}
-	
-	@Override
-	public void setUIModel(UIModel model) {
-		if (!(model instanceof UIClientModel)){
-			throw new IllegalArgumentException("Expected a " + UIClientModel.class + " received " + model.getClass());
-		}
-		this.uiModel = (UIClientModel)model;
+	private final Property<Boolean> visible = ValueProperty.writable("visible", true);
+	private final Property<Boolean> enable = ValueProperty.writable("enable", true);
+
+	public AbstractUIClient(){
+		visible.set(true);
+		enable.set(true);
+
+	}
+
+	public Property<Boolean> getEnableProperty(){
+		return enable;
 	}
 	
-	@Override
-	public UIClientModel getUIModel() {
-		return uiModel;
+	public Property<Boolean> getVisibleProperty(){
+		return visible;
 	}
 
 	/**
@@ -37,17 +40,17 @@ public abstract class AbstractUIClient implements UIClient , NamingContainer {
 	public boolean isType(Class<? extends UIComponent> type) {
 		return type.isAssignableFrom(this.getComponentType());
 	}
-	
+
 	public UIComponent findContainedComponent(String componentID){
 		return components.get(componentID);
 	}
-	
+
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
 		components.put(component.getGID(), component);
 	}
-	
+
 	@Override
 	public void removeComponent(UIComponent component) {
 		components.remove(component.getGID());
@@ -85,24 +88,8 @@ public abstract class AbstractUIClient implements UIClient , NamingContainer {
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
 	public boolean isRendered() {
 		return true;
-	}
-
-	@Override
-	public boolean isVisible() {
-		return true;
-	}
-
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		//no-op
 	}
 
 	@Override
@@ -123,16 +110,10 @@ public abstract class AbstractUIClient implements UIClient , NamingContainer {
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
-		// no-op
-	}
-
-	
-	@Override
 	public void setDisplayableSize(UISize size) {
 		throw new UnsupportedOperationException("Can not change " + this.getClass().getSimpleName() + " size");
 	}
-	
+
 
 
 	@Override
@@ -140,5 +121,55 @@ public abstract class AbstractUIClient implements UIClient , NamingContainer {
 		return UIPosition.pixels(0,0);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isSplashWindowUsed() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveMainWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveSplashWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIContainerLayout(UILayout component) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayout getUIContainerLayout() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addComponent(UIComponent component,
+			UILayoutConstraint layoutConstrain) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
 
 }

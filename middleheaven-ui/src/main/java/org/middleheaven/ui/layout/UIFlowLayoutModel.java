@@ -1,4 +1,4 @@
-package org.middleheaven.ui.models;
+package org.middleheaven.ui.layout;
 
 import org.middleheaven.ui.ComponentAggregationEvent;
 import org.middleheaven.ui.UISize;
@@ -6,18 +6,18 @@ import org.middleheaven.ui.UISize;
 /**
  * Flow Layout
  */
-public class UIFlowLayoutModel implements UILayoutModel {
+public class UIFlowLayoutModel  {
 
 	
 	public UIFlowLayoutModel (){}
 	
-	@Override
+
 	public void componentAdded(ComponentAggregationEvent event) {}
 
-	@Override
+
 	public void componentRemoved(ComponentAggregationEvent event) {}
 
-	@Override
+
 	public UISize getLayoutablePreferedSize(UISize layoutable) {
 		return layoutable;
 	}

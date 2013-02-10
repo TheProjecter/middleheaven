@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.function.Function;
 
@@ -89,14 +90,15 @@ public class UISearch {
 
 					String properties = pattern.substring(i+1, pos);
 
-					String[] all = StringUtils.split(properties, ",");
-
-					for (String s : all){
-
-						String[] parts = StringUtils.split(s, "=");
-
-						data.properties.put(parts[0].trim(), parts[1].trim());
-					}
+					
+					Map<String, String> parsedProps = Splitter
+							.on(',').trim()
+							.withKeyValueSeparator("=").trim()
+							.split(properties)
+							.into(new HashMap<String,String>());
+					
+					data.properties.putAll(parsedProps);
+					
 					i = pos;
 					state = State.TYPE; // default
 					break;
@@ -297,10 +299,20 @@ public class UISearch {
 
 	}
 
+	/**
+	 * Executes the search directly from the top component ( the {@link UIClient} type component)
+	 * @param c the component that belongs in the composition of the {@link UIClient}.
+	 * @return
+	 */
 	public static UISearchExecutor absolute(UIComponent c){
 		return new UISearchExecutor(searchClient(c));
 	}
 	
+	/**
+	 * Executes the search relative to the given component
+	 * @param c any component in the ui composition.
+	 * @return
+	 */
 	public static UISearchExecutor relative(UIComponent c){
 		return new UISearchExecutor(c);
 	}

@@ -7,8 +7,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.UILayoutModel;
+import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.rendering.RenderKit;
+import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 /**
  * Generic, {@link RenderKit} agnostic representation of a {@link UIComponent}.
@@ -24,16 +27,17 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	private String id;
 	private String familly; 
 	private Class<T> renderType;
-	private UIModel model;
 	private UIComponent parent;
-	private boolean visible = true;
-	private boolean enable = true;
+
 
 	private UIDimension x = UIDimension.pixels(0);
 	private UIDimension y = UIDimension.pixels(0);
 
 	private UIDimension height;
 	private UIDimension width;
+
+	private Property<Boolean> visible = ValueProperty.writable("visible", true);
+	private Property<Boolean> enable  = ValueProperty.writable("enable", true);
 	
 	/**
 	 * 
@@ -55,9 +59,9 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	 * Constructor.
 	 */
 	public GenericUIComponent(){
-		this.id = Integer.toString(nextID++);
+		this.id = Integer.toHexString(nextID++);
 	}
-	
+
 	/**
 	 * 
 	 * Constructor.
@@ -105,29 +109,17 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	
 	@Override
 	public void addComponent(UIComponent component, UILayoutConstraint constraint) {
-		children.add(component);
-		
-		if ( this.model instanceof UILayoutModel){
-			((UILayoutModel) model).componentAdded(new ComponentAggregationEvent(component, constraint));
-		} 
+		children.add(component); // TODO layoutcontraint
 	}
 	
 	@Override
 	public void addComponent(UIComponent component) {
 		children.add(component);
-		
-		if ( this.model instanceof UILayoutModel){
-			((UILayoutModel) model).componentAdded(new ComponentAggregationEvent(component, null));
-		} 
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
 		children.remove(component);
-		
-		if ( this.model instanceof UILayoutModel){
-			((UILayoutModel) model).componentRemoved(new ComponentAggregationEvent(component, null));
-		} 
 	}
 
 	@Override
@@ -165,10 +157,6 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 		return renderType;
 	}
 
-	@Override
-	public UIModel getUIModel() {
-		return model;
-	}
 
 	@Override
 	public UIComponent getUIParent() {
@@ -176,22 +164,8 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return this.enable;
-	}
-
-	@Override
 	public boolean isRendered() {
 		return false;
-	}
-
-	@Override
-	public boolean isVisible() {
-		return this.visible;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enable = enabled;
 	}
 
 	@Override
@@ -204,21 +178,12 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 		this.id = id;
 	}
 
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = model;
-	}
 
 	@Override
 	public void setUIParent(UIComponent parent) {
 		this.parent = parent;
 	}
 
-	@Override
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-	
 
 	@Override
 	public UISize getDisplayableSize() {
@@ -234,6 +199,22 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	public void setDisplayableSize(UISize size) {
 		this.width = size.getWidth();
 		this.height = size.getHeight();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
 	}
 
 

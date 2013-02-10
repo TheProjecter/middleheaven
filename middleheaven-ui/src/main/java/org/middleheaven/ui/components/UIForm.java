@@ -1,6 +1,8 @@
 package org.middleheaven.ui.components;
 
-import org.middleheaven.ui.models.UIFormModel;
+import java.util.List;
+
+import org.middleheaven.ui.models.form.UIFormSheetModel;
 
 
 public interface UIForm extends UIContainer{
@@ -8,5 +10,7 @@ public interface UIForm extends UIContainer{
 	
 	public UICommandSet getCommandSet();
 	
-	public UIFormModel getUIModel();
+	public List<UIFormSheetModel> getFormSheets();
+	
+	
 }
