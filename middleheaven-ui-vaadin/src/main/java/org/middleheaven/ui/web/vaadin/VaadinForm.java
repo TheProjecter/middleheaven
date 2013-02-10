@@ -3,15 +3,17 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.UIFormModel;
+import org.middleheaven.ui.models.form.UIFormSheetModel;
 
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
@@ -38,11 +40,6 @@ public class VaadinForm extends VaadinUIComponentContainer implements UIForm{
 		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
-	public UIFormModel getUIModel(){
-		return (UIFormModel) super.getUIModel();
-	}
-
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -62,6 +59,14 @@ public class VaadinForm extends VaadinUIComponentContainer implements UIForm{
 			Panel component = (Panel) this.getComponent();
 			component.setContent((ComponentContainer) ((VaadinUIComponent)layout).getComponent());
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UIFormSheetModel> getFormSheets() {
+		return Collections.emptyList();
 	}
 
 }

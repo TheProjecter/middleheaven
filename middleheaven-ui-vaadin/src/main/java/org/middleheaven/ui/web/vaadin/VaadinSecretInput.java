@@ -25,9 +25,11 @@ public class VaadinSecretInput extends VaadinFieldUIComponent implements UISecre
 		
 		component.addListener(new TextChangeListener(){
 
+			private static final long serialVersionUID = -3455283661579334779L;
+
 			@Override
 			public void textChange(TextChangeEvent event) {
-				getUIModel().setValue(event.getText());
+				VaadinSecretInput.this.getValueProperty().set(event.getText());
 			}
 			
 		});

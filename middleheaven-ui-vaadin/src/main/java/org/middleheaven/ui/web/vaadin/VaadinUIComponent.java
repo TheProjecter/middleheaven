@@ -13,10 +13,11 @@ import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIDimension;
 import org.middleheaven.ui.UIDimensionUnit;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UISize;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
@@ -28,11 +29,13 @@ public abstract class VaadinUIComponent implements UIComponent {
 	
 	private Component component;
 	private String gid;
-	protected UIModel model;
 	private String family;
 	protected UIComponent parent;
 	private Class<? extends UIComponent> type;
 
+	private final Property<Boolean> visible;
+	private final Property<Boolean> enabled;
+			
 	private VaadinClientApplication app;
 
 	/**
@@ -44,7 +47,36 @@ public abstract class VaadinUIComponent implements UIComponent {
 	public VaadinUIComponent(Component component, Class<? extends UIComponent> type){
 		this.component = component;
 		this.type = type;
+		
+		 visible = BindedProperty.bind("visible", component);
+		 enabled = BindedProperty.bind("enabled", component);
+		 
+		 copyModel();
 	}
+	
+	/**
+	 * 
+	 */
+	protected abstract void copyModel();
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enabled;
+	}
+
 	
 	private VaadinClientApplication getApplication(){
 		if (app == null){
@@ -211,29 +243,6 @@ public abstract class VaadinUIComponent implements UIComponent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setUIModel(UIModel model) {
-		this.model = model;
-		copyModel();
-	}
-
-	/**
-	 * 
-	 */
-	protected abstract void copyModel();
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public UIModel getUIModel() {
-		return model;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public String getFamily() {
 		return family;
 	}
@@ -276,54 +285,6 @@ public abstract class VaadinUIComponent implements UIComponent {
 	@Override
 	public int getChildrenCount() {
 		return 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addComponent(UIComponent component) {
-		
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void removeComponent(UIComponent component) {
-		
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setVisible(boolean visible) {
-		this.component.setVisible(visible);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isVisible() {
-		return this.component.isVisible();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isEnabled() {
-		return this.component.isEnabled();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.component.setEnabled(enabled);
 	}
 
 	/**

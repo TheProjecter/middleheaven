@@ -3,12 +3,10 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import java.util.Locale;
-
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommandSet;
-import org.middleheaven.ui.models.UIFieldInputModel;
+import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 import com.vaadin.ui.HorizontalLayout;
@@ -39,8 +37,7 @@ public class VaddinFormRender extends AbstractVaadinRender {
 		
 		VaadinForm form = new VaadinForm();
 		form.setUIParent(parent);
-		form.setUIModel(component.getUIModel());
-		
+	
 		for (UIComponent c : component.getChildrenComponents()){
 			
 			if (c.isType(UICommandSet.class)){
@@ -50,7 +47,7 @@ public class VaddinFormRender extends AbstractVaadinRender {
 				
 				form.addComponent(v);
 			} else {
-				String name = ((UIFieldInputModel)c.getUIModel()).getName();
+				String name = ((UIField)c).getNameProperty().get();
 				
 				HorizontalLayout h = new HorizontalLayout();
 				

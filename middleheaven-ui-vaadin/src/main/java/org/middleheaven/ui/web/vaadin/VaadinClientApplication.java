@@ -12,14 +12,17 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.middleheaven.global.Culture;
+import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.web.server.ServletWebContext;
 import org.middleheaven.ui.SceneNavigator;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
+import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.models.UIClientModel;
+import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
@@ -33,7 +36,6 @@ public class VaadinClientApplication extends Application implements UIClient{
 
 	
 	private String gid;
-	private UIClientModel model;
 	private String family;
 	private Map <String, VaadinUIComponent> components = new LinkedHashMap<String,VaadinUIComponent>();
 	private ServletWebContext renderingContext;
@@ -62,7 +64,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 		setLocale(((WebApplicationContext)getContext()).getBrowser().getLocale());
 		
 
-		VaadinUIComponent component = (VaadinUIComponent)this.getUIModel().resolveMainWindow(this, getServletWebContext().getAttributes());
+		VaadinUIComponent component = (VaadinUIComponent)this.resolveMainWindow(this, getServletWebContext().getAttributes());
 		
 		final Window window = (Window) component.getComponent();
 		
@@ -138,23 +140,6 @@ public class VaadinClientApplication extends Application implements UIClient{
 	@Override
 	public void setGID(String id) {
 		this.gid = id;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIClientModel) model;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public UIClientModel getUIModel() {
-		return this.model;
 	}
 
 	/**
@@ -241,38 +226,6 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setVisible(boolean visible) {
-		throw new UnsupportedOperationException("Not supported");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isVisible() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setEnabled(boolean enabled) {
-		throw new UnsupportedOperationException("Read only property.");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public boolean isType(Class<? extends UIComponent> type) {
 		return type.isAssignableFrom(this.getComponentType());
 	}
@@ -281,7 +234,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void exit() {
+	public void terminate() {
 		//no-op
 	}
 
@@ -299,6 +252,73 @@ public class VaadinClientApplication extends Application implements UIClient{
 	@Override
 	public SceneNavigator getSceneNavigator() {
 		return navigator;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return ValueProperty.readOnly("visible", true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return ValueProperty.readOnly("enable", true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIContainerLayout(UILayout component) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayout getUIContainerLayout() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addComponent(UIComponent component,
+			UILayoutConstraint layoutConstrain) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isSplashWindowUsed() {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveMainWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveSplashWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 

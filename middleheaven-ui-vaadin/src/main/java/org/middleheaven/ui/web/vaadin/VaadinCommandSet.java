@@ -3,9 +3,11 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.UICommandModel;
+import org.middleheaven.util.property.Property;
 
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
@@ -24,11 +26,7 @@ public class VaadinCommandSet extends VaadinUIComponentContainer implements UICo
 	public VaadinCommandSet() {
 		super(new Panel(new HorizontalLayout()), UICommandSet.class);
 	}
-
-	public UICommandModel getUIModel(){
-		return (UICommandModel) super.getUIModel();
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -48,5 +46,45 @@ public class VaadinCommandSet extends VaadinUIComponentContainer implements UICo
 			Panel component = (Panel) this.getComponent();
 			component.setContent((ComponentContainer) ((VaadinUIComponent)layout).getComponent());
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTextProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 }

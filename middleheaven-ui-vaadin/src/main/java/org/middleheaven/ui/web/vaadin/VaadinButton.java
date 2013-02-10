@@ -3,14 +3,18 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.ui.UIActionHandler;
+import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UISearch.UISearchFilter;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.events.UIActionEvent;
-import org.middleheaven.ui.models.UICommandModel;
+import org.middleheaven.util.function.Block;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -24,7 +28,11 @@ public class VaadinButton extends VaadinUIComponent implements UICommand{
 
 	
 	
+	private final EventListenersSet<CommandListener> commandListeners = EventListenersSet.newSet(CommandListener.class);
 	private transient UIForm form;
+	
+	private final Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
+	private final Property<String> name = ValueProperty.writable("name", String.class);
 	
 	/**
 	 * Constructor.
@@ -33,12 +41,16 @@ public class VaadinButton extends VaadinUIComponent implements UICommand{
 	 */
 	public VaadinButton(Component component) {
 		super(component, UICommand.class);
-	}
+		
+		text.onChange(new Block<TextLocalizable>(){
 
-	public UICommandModel getUIModel(){
-		return (UICommandModel) super.getUIModel();
+			@Override
+			public void apply(TextLocalizable text) {
+				getComponent().setCaption(localize(text));
+			}
+			
+		});
 	}
-
 	
 	protected UIForm getForm (){
 		
@@ -67,46 +79,61 @@ public class VaadinButton extends VaadinUIComponent implements UICommand{
 	 */
 	@Override
 	protected void copyModel() {
-		
 
 		Button component = (Button) this.getComponent();
-		final UICommandModel uiModel = this.getUIModel();
-		
-		if (uiModel.getText() != null){
-			component.setCaption(this.localize(uiModel.getText()));
-		}
-		
-		if (uiModel.getHandlers() == null || uiModel.getHandlers().isEmpty()){
-			
-			for (UICommandModel commandModel  : getForm().getUIModel().getActions()){
-				
-				if (commandModel.getName().equals(uiModel.getName())){
-					this.model = commandModel;
-					break;
-				}
-			}
-		}
-			
-		
+
 		component.addListener(new ClickListener(){
+
+			private static final long serialVersionUID = 8681925013276524813L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-		
-					final UICommandModel commandModel = getUIModel();
-					
-					UIActionEvent uiEvent = new UIActionEvent( commandModel.getName(), VaadinButton.this);
-					
-					for (UIActionHandler handler : commandModel.getHandlers()){
-					
-						handler.handleAction(uiEvent);
-					}
-			
-				
+				commandListeners.broadcastEvent().onCommand(new UIActionEvent( getNameProperty().get(), VaadinButton.this));
+
 			}
 			
 		});
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTextProperty() {
+		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		return name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener commandListener) {
+		commandListeners.addListener(commandListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener commandListener) {
+		commandListeners.removeListener(commandListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		return commandListeners;
 	}
 
 }

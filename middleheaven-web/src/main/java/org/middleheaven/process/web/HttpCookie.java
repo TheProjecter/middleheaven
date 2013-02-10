@@ -110,7 +110,9 @@ public class HttpCookie {
 	}
 
 	private static boolean equalsIgnoreCase(String s, String t) {
-		if (s == t) return true;
+		if (s == t) {
+			return true;
+		}
 		if ((s != null) && (t != null)) {
 			return s.equalsIgnoreCase(t);
 		}
@@ -118,7 +120,9 @@ public class HttpCookie {
 	}
 
 	private static boolean equals(String s, String t) {
-		if (s == t) return true;
+		if (s == t) {
+			return true;
+		}
 		if ((s != null) && (t != null)) {
 			return s.equals(t);
 		}

@@ -11,6 +11,7 @@ public enum CommonHttpServerContainers implements HttpServerContainerName {
 	UNKNOW,
 	TOMCAT,
 	JETTY, 
-	WEBLOGIC 
+	WEBLOGIC,
+	APPENGINE
 	
 }

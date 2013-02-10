@@ -3,11 +3,13 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import org.middleheaven.ui.ComponentAggregationEvent;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel.UIBorderLayoutConstraint;
+import org.middleheaven.ui.components.UILayoutManager;
+import org.middleheaven.ui.layout.UIBorderLayoutManager;
+import org.middleheaven.ui.layout.UIBorderLayoutConstraint;
 import org.middleheaven.ui.web.vaadin.BorderLayout.Constraint;
 
 /**
@@ -30,10 +32,10 @@ class VaadinBorderLayout extends VaadinUILayout {
 	@Override
 	public void addComponent(UIComponent component) {
 		
-		final UIBorderLayoutModel model = (UIBorderLayoutModel) this.getUIModel();
-	
-		addComponent(component, model.getBorderConstraintFor(component));
-	
+//		final UIBorderLayout model = (UIBorderLayout) this.getUIModel();
+//	
+//		addComponent(component, model.getBorderConstraintFor(component));
+//	
 	}
 	
 	/**
@@ -73,7 +75,4 @@ class VaadinBorderLayout extends VaadinUILayout {
 
 
 
-
-	
-	
 }

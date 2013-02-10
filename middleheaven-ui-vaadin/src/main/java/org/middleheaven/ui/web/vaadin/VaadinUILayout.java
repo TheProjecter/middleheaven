@@ -6,7 +6,7 @@ package org.middleheaven.ui.web.vaadin;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.UILayoutModel;
+import org.middleheaven.ui.components.UILayoutManager;
 
 import com.vaadin.ui.Component;
 
@@ -15,6 +15,25 @@ import com.vaadin.ui.Component;
  */
 public abstract class VaadinUILayout extends VaadinUIComponentContainer implements UILayout {
 
+	
+	UILayoutManager manager;
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayoutManager getLayoutManager() {
+		return manager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setLayoutManager(UILayoutManager layoutManager) {
+		this.manager = manager;
+	}
+	
 	/**
 	 * Constructor.
 	 * @param component
@@ -34,10 +53,6 @@ public abstract class VaadinUILayout extends VaadinUIComponentContainer implemen
 	}
 
 	
-	public UILayoutModel getUIModel(){
-		return (UILayoutModel) super.getUIModel();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */

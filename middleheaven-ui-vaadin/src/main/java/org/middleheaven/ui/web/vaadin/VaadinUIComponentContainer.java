@@ -11,6 +11,7 @@ import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.components.UILayoutManager;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

@@ -26,9 +26,11 @@ public class VaadinTextInput extends VaadinFieldUIComponent implements UITextFie
 		
 		component.addListener(new TextChangeListener(){
 
+			private static final long serialVersionUID = -3590065398661472455L;
+
 			@Override
 			public void textChange(TextChangeEvent event) {
-				getUIModel().setValue(event.getText());
+				VaadinTextInput.this.getValueProperty().set(event.getText());
 			}
 			
 		});

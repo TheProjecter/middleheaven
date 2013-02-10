@@ -8,6 +8,7 @@ import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UIImage;
 import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.components.UISecretField;
 import org.middleheaven.ui.components.UITextField;
 import org.middleheaven.ui.components.UIView;
@@ -93,13 +94,13 @@ public class VaadinRenderKit extends AbstractRenderKit {
 			@Override
 			public void dispose(UIComponent component) {
 				//no-op
-				component.setVisible(false);
+				component.getVisibleProperty().set(false);
 			}
 
 
 			@Override
 			public void show(UIComponent component) {
-				component.setVisible(true);
+				component.getVisibleProperty().set(true);
 			}
 
 		};

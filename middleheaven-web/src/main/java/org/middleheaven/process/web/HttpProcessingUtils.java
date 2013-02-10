@@ -241,63 +241,84 @@ public final class HttpProcessingUtils {
 	 * @return [os, version, base]
 	 */
 	private static OSRawInfo getOS(String userAgent) {
+		
+		final String BOT = "Bot";
+		
 		if (getBotName(userAgent) != null) {
-			return new OSRawInfo("Bot", "Bot", "Bot");
+			return new OSRawInfo(BOT, BOT, BOT);
 		}
 
 		int pos;
+		
+		final String WINDOWS_NAME = "Windows";
+		
 		if ((pos = userAgent.indexOf("Windows-NT")) > -1) {
-			return new OSRawInfo("Win", getVersionNumber(userAgent, pos + 8),"Windows");
+			return new OSRawInfo("Win", getVersionNumber(userAgent, pos + 8),WINDOWS_NAME);
 		} else if (userAgent.indexOf("Windows NT") > -1) {
 			// The different versions of Windows NT are decoded in the verbosity
 			// level 2
 			// ie: Windows NT 5.1 = Windows XP
 			if ((pos = userAgent.indexOf("Windows NT 5.1")) > -1) {
-				return new OSRawInfo("WinXP", getVersionNumber(userAgent, pos + 7),"Windows");
+				return new OSRawInfo("WinXP", getVersionNumber(userAgent, pos + 7),WINDOWS_NAME);
 			} else if ((pos = userAgent.indexOf("Windows NT 5.0")) > -1) {
-				return new OSRawInfo("Win2000", getVersionNumber(userAgent, pos + 7),"Windows");
+				return new OSRawInfo("Win2000", getVersionNumber(userAgent, pos + 7),WINDOWS_NAME);
 			} else if ((pos = userAgent.indexOf("Windows NT 5.2")) > -1) {
-				return new OSRawInfo("Win2003", getVersionNumber(userAgent, pos + 7),"Windows");
+				return new OSRawInfo("Win2003", getVersionNumber(userAgent, pos + 7),WINDOWS_NAME);
 			} else if ((pos = userAgent.indexOf("Windows NT 4.0")) > -1) {
-				return new OSRawInfo("WinNT4", getVersionNumber(userAgent, pos + 7),"Windows");
+				return new OSRawInfo("WinNT4", getVersionNumber(userAgent, pos + 7),WINDOWS_NAME);
 			}
 
-			return new OSRawInfo("WinNT4", "NT", "Windows");
+			return new OSRawInfo("WinNT4", "NT", WINDOWS_NAME);
 
 		} else if (userAgent.indexOf("Win") > -1) {
-			if (userAgent.indexOf("Windows") > -1) {
+			if (userAgent.indexOf(WINDOWS_NAME) > -1) {
 				if ((pos = userAgent.indexOf("Windows 98")) > -1
 						|| (pos = userAgent.indexOf("Windows_98")) > -1) {
-					return new OSRawInfo("Win98",getVersionNumber(userAgent, pos + 7), "Windows");
+					return new OSRawInfo("Win98",getVersionNumber(userAgent, pos + 7), WINDOWS_NAME);
 				} else if ((pos = userAgent.indexOf("Windows 2000")) > -1) {
 					return new OSRawInfo("Win2000", getVersionNumber(userAgent,
-							pos + 7), "Windows");
+							pos + 7), WINDOWS_NAME);
 				} else if ((pos = userAgent.indexOf("Windows 95")) > -1) {
-					return new OSRawInfo("Win95",getVersionNumber(userAgent, pos + 7), "Windows");
+					return new OSRawInfo("Win95",getVersionNumber(userAgent, pos + 7), WINDOWS_NAME);
 				} else if ((pos = userAgent.indexOf("Windows 9x")) > -1) {
-					return new OSRawInfo("Win9x",getVersionNumber(userAgent, pos + 7), "Windows");
+					return new OSRawInfo("Win9x",getVersionNumber(userAgent, pos + 7), WINDOWS_NAME);
 				} else if ((pos = userAgent.indexOf("Windows ME")) > -1) {
-					return new OSRawInfo("WinME",getVersionNumber(userAgent, pos + 7), "Windows");
+					return new OSRawInfo("WinME",getVersionNumber(userAgent, pos + 7), WINDOWS_NAME);
 				} else if ((pos = userAgent.indexOf("Windows 3.1")) > -1) {
-					return new OSRawInfo("Win31",getVersionNumber(userAgent, pos + 7), "Windows");
+					return new OSRawInfo("Win31",getVersionNumber(userAgent, pos + 7), WINDOWS_NAME);
 				}
 			}
 
 			return null;
-		} else if ((pos = userAgent.indexOf("Mac OS X")) > -1) {
-			return new OSRawInfo("MacOSX", getVersionNumber(userAgent, pos + 6),"Mac");
-		} else if ((pos = userAgent.indexOf("Mac_PowerPC")) > -1) {
-			return new OSRawInfo("MacPPC", getVersionNumber(userAgent, pos + 3),"Mac");
-		} else if ((pos = userAgent.indexOf("FreeBSD")) > -1) {
-			return new OSRawInfo("FreeBSD", getVersionNumber(userAgent, pos + 7),"FreeBSD");
-		} else if ((pos = userAgent.indexOf("Linux")) > -1) {
-			return new OSRawInfo("Linux", getVersionNumber(userAgent, pos + 5),"Linux");
-		} else if ((pos = userAgent.indexOf("Unix")) > -1) {
-			return new OSRawInfo("Linux", getVersionNumber(userAgent, pos + 4),"Unix");
-		} else if ((pos = userAgent.indexOf("SunOS")) > -1) {
-			return new OSRawInfo("SunOS", getVersionNumber(userAgent, pos + 5),"SunOS");
 		} else {
-			return null;
+			final String MAC = "Mac";
+			if ((pos = userAgent.indexOf("Mac OS X")) > -1) {
+				return new OSRawInfo("MacOSX", getVersionNumber(userAgent, pos + 6),MAC);
+			} else if ((pos = userAgent.indexOf("Mac_PowerPC")) > -1) {
+				return new OSRawInfo("MacPPC", getVersionNumber(userAgent, pos + 3),MAC);
+			} else {
+				final String FREEBDS = "FreeBSD";
+				if ((pos = userAgent.indexOf(FREEBDS)) > -1) {
+					return new OSRawInfo(FREEBDS, getVersionNumber(userAgent, pos + 7),FREEBDS);
+				} else {
+					final String LINUX = "Linux";
+					if ((pos = userAgent.indexOf(LINUX)) > -1) {
+						return new OSRawInfo(LINUX, getVersionNumber(userAgent, pos + 5),LINUX);
+					} else {
+						final String UNIX = "Unix";
+						if ((pos = userAgent.indexOf(UNIX)) > -1) {
+							return new OSRawInfo(LINUX, getVersionNumber(userAgent, pos + 4),UNIX);
+						} else {
+							final String SUNOS = "SunOS";
+							if ((pos = userAgent.indexOf(SUNOS)) > -1) {
+								return new OSRawInfo(SUNOS, getVersionNumber(userAgent, pos + 5),SUNOS);
+							} else {
+								return null;
+							}
+						}
+					}
+				}
+			}
 		}
 
 	}
