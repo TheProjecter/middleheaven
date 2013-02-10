@@ -2,7 +2,7 @@ package org.middleheaven.quantity.money.rate;
 
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.money.Currency;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.quantity.time.DateTimeHolder;
 
 public class RealCurrencyRate implements CurrencyRate{
@@ -34,7 +34,7 @@ public class RealCurrencyRate implements CurrencyRate{
 	}
 
 
-	public Money convert(Money other){
+	public CentsMoney convert(CentsMoney other){
 		if (!other.unit().equals(this.originalCurrency)){
 			throw new IllegalArgumentException(
 					"Currency rate for " + targetCurency + 
@@ -43,7 +43,7 @@ public class RealCurrencyRate implements CurrencyRate{
 			);
 		}
 		
-		return  Money.money(other.amount().times(rate),this.targetCurency);
+		return  CentsMoney.valueOf(other.amount().times(rate),this.targetCurency);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import org.middleheaven.quantity.measurables.Velocity;
 import org.middleheaven.quantity.measurables.Volume;
 import org.middleheaven.quantity.measure.AngularMeasure;
 import org.middleheaven.quantity.measure.DecimalMeasure;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.quantity.unit.Dimension;
 import org.middleheaven.quantity.unit.IncompatibleDimentionException;
 import org.middleheaven.quantity.unit.IncompatibleUnitsException;
@@ -207,8 +207,8 @@ public class MeasuresTestSuit {
 	@Test(expected=IncompatibleUnitsException.class)
 	public void testAdditionMoneyDifferentCurrency(){
 
-		Money t = Money.money(330, "USD");
-		Money c = Money.money(330, "EUR");
+		CentsMoney t = CentsMoney.valueOf(330, "USD");
+		CentsMoney c = CentsMoney.valueOf(330, "EUR");
 		
 	    // can only add money of the same currency
 		// raise exception
@@ -219,43 +219,8 @@ public class MeasuresTestSuit {
 	@Test(expected=IllegalArgumentException.class)
 	public void testWrongIsoCode(){
 
-		Money.money(330, "EU"); // eu is not a iso code
+		CentsMoney.valueOf(330, "EU"); // eu is not a iso code
 
-	}
-	
-	@Test
-	public void testMoneyOperations (){
-		
-		Money a = Money.money(100, "USD");
-		Money b = Money.money(230, "USD");
-		Money t = Money.money(330, "USD");
-		
-		Money c = Money.money(330, "EUR");
-		
-		Money m = a.plus(b);
-
-		assertEquals(t, m);
-		
-		// money are equal if both amount and currency are equal
-		assertFalse(t.equals(c));
-
-		// multiply by a real
-		Real n = Real.valueOf(3);
-		Money y = t.over(n);
-		assertEquals (Money.money(110, "USD"), y);
-		
-		/*
-		Scalar L = Scalar.scalar(20, SI.HOUR); 
-		Scalar q = a.over(L);
-		assertEquals ("5.00 USDh^-1" , q.toString());
-		
-		Duration h = Duration.hours(2); 
-		Scalar total = h.times(q);
-		Money ten = Money.money(10, "USD");
-		assertEquals ("10.00 USD" , total.toString());
-		assertEquals (ten , total);
-		*/
-		
 	}
 	
 

@@ -1,7 +1,7 @@
 package org.middleheaven.quantity.money.rate;
 
 import org.middleheaven.quantity.money.Currency;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.quantity.time.DateTimeHolder;
 
 public interface CurrencyRate {
@@ -18,5 +18,5 @@ public interface CurrencyRate {
 	 */
 	public boolean isTimeStamped();
 	
-	public Money convert(Money other);
+	public CentsMoney convert(CentsMoney other);
 }
