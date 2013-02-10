@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 
+ * An {@link Edge} is a (possible directional) relation between 2 {@link Vertex}.
+ * 
  *   [V1] ---[E]--->[V2] 
  * 
  * @param <E>
@@ -15,7 +17,10 @@ import java.util.List;
 public interface Graph<E, V> {
 
 	/**
+	 * 
 	 * A graph edge.
+	 * An {@link Edge} is a (possible directional) relation between 2 {@link Vertex}.
+	 * 
 	 * @param <E> the type of object at the edge 
 	 */
 	public static interface Edge<V, E> {
@@ -29,7 +34,7 @@ public interface Graph<E, V> {
 	}
 	
 	/**
-	 * A graph vertex.
+	 * A graph vertex. A vertex is a "point" in the graph.
 	 * @param <V> the type of object at the vertex.
 	 */
 	public static interface Vertex<V, E> {
@@ -41,6 +46,13 @@ public interface Graph<E, V> {
 		
 	}
 	
+	/**
+	 * Add an edge to the Graph
+	 * @param edgeObject
+	 * @param sourceVertex
+	 * @param targetVertex
+	 * @param cost
+	 */
 	void addEdge( E edgeObject, V sourceVertex, V targetVertex, double cost);
 	void removeVertex(Vertex<V,E> vertex);
 	void removeEdge(Edge<V,E> edge);

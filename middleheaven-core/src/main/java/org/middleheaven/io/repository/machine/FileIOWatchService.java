@@ -162,7 +162,7 @@ public class FileIOWatchService implements WatchService {
 
 				this.folder = folder;
 
-				folder.forEach(new Block<ManagedFile>(){
+				folder.children().forEach(new Block<ManagedFile>(){
 
 					@Override
 					public void apply(ManagedFile file) {
@@ -188,7 +188,7 @@ public class FileIOWatchService implements WatchService {
 					final Set<ManagedFile> allFiles = new HashSet<ManagedFile>();
 					final Set<ManagedFile> newFiles = new HashSet<ManagedFile>();
 
-					folder.forEach(new Block<ManagedFile>(){
+					folder.children().forEach(new Block<ManagedFile>(){
 
 						@Override
 						public void apply(ManagedFile object) {
@@ -253,7 +253,7 @@ public class FileIOWatchService implements WatchService {
 
 					// iterate all files 
 
-					folder.forEach(new Block<ManagedFile>(){
+					folder.children().forEach(new Block<ManagedFile>(){
 
 						@Override
 						public void apply(ManagedFile file) {

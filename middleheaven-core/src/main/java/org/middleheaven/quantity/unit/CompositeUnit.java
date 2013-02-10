@@ -1,6 +1,5 @@
 package org.middleheaven.quantity.unit;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;

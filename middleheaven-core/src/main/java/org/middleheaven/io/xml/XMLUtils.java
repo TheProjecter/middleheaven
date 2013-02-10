@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.middleheaven.global.text.ISO8601Format;
+import org.middleheaven.util.StringUtils;
+import org.middleheaven.util.function.Maybe;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -97,20 +99,20 @@ public class XMLUtils {
      * @return
      * @throws XMLAttributemissingException
      */
-    public static final String getStringAttribute(String attribName , Node el, String defaultValue) throws XMLAttributemissingException{
+    public static final Maybe<String> getStringAttribute(String attribName , Node el, String defaultValue) throws XMLAttributemissingException{
         Node val = el.getAttributes().getNamedItem(attribName);
         if (val==null || val.getTextContent().isEmpty()){
             if (defaultValue == null){
                 throw new XMLAttributemissingException(attribName ,  el.getLocalName());
             }else{
-                return defaultValue;
+                return StringUtils.maybe(defaultValue);
             }
         }else {
-            return val.getTextContent();
+            return StringUtils.maybe(val.getTextContent());
         }
     }
 
-    public static final String getStringAttribute(String attribName , Node el) throws XMLAttributemissingException{
+    public static final Maybe<String> getStringAttribute(String attribName , Node el) throws XMLAttributemissingException{
         return getStringAttribute(attribName,el,null);
     }
 

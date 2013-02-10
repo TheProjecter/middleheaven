@@ -16,26 +16,39 @@ public class BigDecimalReal extends Real{
 
 	private static final long serialVersionUID = 1L;
 
+	private static final int SCALE = 22;
+	
+	
 	// Ratio pattern like implementation to adjourn the 
 	// division as much as possible.
-	private BigDecimal numerator;
-	private BigDecimal denominator;
+	private BigDecimal numerator; // only contains integer value
+	private BigDecimal denominator; // only contains integer value
 
 	BigDecimalReal (String value){
 		this(new BigDecimal(value));
 	}
 
-	BigDecimalReal (long value){
-		this(new BigDecimal(value));
+    BigDecimalReal (long value){
+		this(BigDecimal.valueOf(value), BigDecimal.ONE);
 	}
 
-	BigDecimalReal (BigDecimal value){
-		this( value , BigDecimal.ONE);
+	private BigDecimalReal (BigDecimal value){
+		final BigDecimal scale = BigDecimalMath.intPower(BigDecimal.TEN, value.scale(), 0);
+		this.numerator = value.multiply( scale);
+		this.denominator = scale;	
 	}
 
-	BigDecimalReal (BigDecimal numerator,BigDecimal denominator){
-		this.numerator = numerator;
-		this.denominator = denominator;
+	private BigDecimalReal (BigDecimal numerator,BigDecimal denominator){
+		
+		BigDecimal gcd = BigDecimalMath.gcd ( numerator, denominator);
+
+		if (gcd.signum() !=0 ){
+			this.numerator = numerator.divide(gcd);
+			this.denominator = denominator.divide(gcd);
+		} else {
+			this.numerator = numerator;
+			this.denominator = denominator;
+		}
 	}
 
 	public BigDecimal asNumber() {
@@ -43,9 +56,16 @@ public class BigDecimalReal extends Real{
 		? BigDecimal.ZERO 
 				: denominator.compareTo(BigDecimal.ONE) == 0
 				? numerator 
-						: numerator.divide(denominator, SCALE, RoundingMode.HALF_EVEN);
+					: numerator.divide(denominator, SCALE, RoundingMode.HALF_EVEN);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isInteger() {
+		return this.numerator.signum() == 0 || this.numerator.divideAndRemainder(denominator)[1].compareTo(BigDecimal.ONE) == 0;
+	}
 
 	@Override
 	public boolean isZero() {
@@ -87,7 +107,6 @@ public class BigDecimalReal extends Real{
 	}
 
 	private BigDecimalReal simplify() {
-
 		if (denominator.compareTo(BigDecimal.ONE) == 0 || numerator.signum()==0){
 			return this; // is zero or divided by 1
 		}
@@ -106,9 +125,9 @@ public class BigDecimalReal extends Real{
 		} catch (ArithmeticException e){
 			return this;
 		}
-
 	}
 
+	
 	private BigDecimal[] multipliers (BigDecimal d1 , BigDecimal d2){
 		int compare = d1.compareTo(d2);
 		BigDecimal[] division;
@@ -139,33 +158,36 @@ public class BigDecimalReal extends Real{
 	}
 
 	private BigDecimalReal times(BigDecimal otherNumerator, BigDecimal otherDenominator){
-		return new BigDecimalReal(
-				this.numerator.multiply(otherNumerator),
-				this.denominator.multiply(otherDenominator)
-		).simplify();
+		if (otherNumerator.compareTo(BigDecimal.ZERO) ==0){
+			return new BigDecimalReal(0);
+		}
+		else {
+			return new BigDecimalReal(
+					this.numerator.multiply(otherNumerator),
+					this.denominator.multiply(otherDenominator)
+			).simplify();
+		}
 	}
 
 	@Override
 	public Real over(Real other) {
+		
+		if (other.isZero()){
+			throw new ArithmeticException("Division by zero");
+		}
+		
 		// times the inverse
 		if (other instanceof BigDecimalReal){
-			if (((BigDecimalReal)other).numerator.signum()==0){
-				throw new ArithmeticException("Division by zero");
-			}
 			return times( ((BigDecimalReal)other).denominator,((BigDecimalReal)other).numerator);
 		} else {
-			BigDecimal value = new BigDecimal(other.toString());
-			if (value.signum()==0){
-				throw new ArithmeticException("Division by zero");
-			}
-			return times( BigDecimal.ONE , value);
+			return times( BigDecimal.ONE , new BigDecimal(other.toString()));
 		}
 	}
 
 
 	@Override
 	public String toString() {
-		return this.asNumber().toString();
+		return this.numerator.toString() + "/" + this.denominator.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -194,7 +216,6 @@ public class BigDecimalReal extends Real{
 		return this.times(Real.valueOf(n));
 	}
 
-
 	private int compareToSame(BigDecimalReal other){
 
 		BigDecimal denominatorProduct = denominator.multiply(other.numerator);
@@ -203,8 +224,6 @@ public class BigDecimalReal extends Real{
 		return numeratorProduct.compareTo(denominatorProduct);
 
 	}
-
-
 
 	/**
 	 * 
@@ -256,8 +275,7 @@ public class BigDecimalReal extends Real{
 	}
 
 
-	final int SCALE = 22;
-	
+
 	@Override
 	public Real arctan() {
 		return new BigDecimalReal(
@@ -325,8 +343,6 @@ public class BigDecimalReal extends Real{
 	public Real abs() {
 		return new BigDecimalReal(this.numerator.abs(), this.denominator.abs());
 	}
-
-
 
 
 }

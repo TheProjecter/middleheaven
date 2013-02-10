@@ -7,7 +7,7 @@ import org.middleheaven.global.Culture;
 import org.middleheaven.quantity.math.BigInt;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.measure.DecimalMeasure;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.quantity.unit.SI;
 
 public class TestFormatter {
@@ -25,21 +25,21 @@ public class TestFormatter {
 	public void quantityMoneyFormatter(){
 		QuantityFormatter formatterPtBR = new QuantityFormatter(Culture.valueOf("pt", "BR"));
 		
-		assertEquals("R$ 3.000,68" ,formatterPtBR.format(Money.money("3000.68", "BRL")));
-		assertEquals("US$ 3.000,68" ,formatterPtBR.format(Money.money("3000.68", "USD")));
-		assertEquals("EUR 3.000,68" ,formatterPtBR.format(Money.money("3000.68", "EUR")));
+		assertEquals("R$ 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "BRL")));
+		assertEquals("US$ 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "USD")));
+		assertEquals("EUR 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "EUR")));
 		
 		QuantityFormatter formatterPtPT = new QuantityFormatter(Culture.valueOf("pt", "PT"));
 		
-		assertEquals("3.000,68 BRL" ,formatterPtPT.format(Money.money("3000.68", "BRL")));
-		assertEquals("3.000,68 USD" ,formatterPtPT.format(Money.money("3000.68", "USD")));
-		assertEquals("3.000,68 �" ,formatterPtPT.format(Money.money("3000.68", "EUR")));
+		assertEquals("3.000,68 BRL" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "BRL")));
+		assertEquals("3.000,68 USD" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "USD")));
+		assertEquals("3.000,68 �" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "EUR")));
 		
 		QuantityFormatter formatterEnUS = new QuantityFormatter(Culture.valueOf("en", "US"));
 		
-		assertEquals("BRL3,000.68" ,formatterEnUS.format(Money.money("3000.68", "BRL")));
-		assertEquals("$3,000.68" ,formatterEnUS.format(Money.money("3000.68", "USD")));
-		assertEquals("EUR3,000.68" ,formatterEnUS.format(Money.money("3000.68", "EUR")));
+		assertEquals("BRL3,000.68" ,formatterEnUS.format(CentsMoney.valueOf("3000.68", "BRL")));
+		assertEquals("$3,000.68" ,formatterEnUS.format(CentsMoney.valueOf("3000.68", "USD")));
+		assertEquals("EUR3,000.68" ,formatterEnUS.format(CentsMoney.valueOf("3000.68", "EUR")));
 		
 		
 	}

@@ -10,7 +10,8 @@ import java.util.Map;
 import org.middleheaven.util.collections.CollectionUtils;
 
 /**
- * 
+ * Representation of a service metadata. This class does not represent the service it self or an instance of it, but 
+ * the metada to obtain the service instance, and the caracteristics of that instance.
  */
 public final class Service {
 
@@ -75,6 +76,10 @@ public final class Service {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int hashCode(){
 		return contractInterface.getName().hashCode();
 	}
@@ -89,7 +94,7 @@ public final class Service {
 
 
 	private boolean equalsService(Service other) {
-		return this.contractInterface.getName().equals(other.contractInterface) && CollectionUtils.equalContents(this.params, other.params);
+		return this.contractInterface.getName().equals(other.contractInterface.getName()) && CollectionUtils.equalContents(this.params, other.params);
 	}
 
 	/**

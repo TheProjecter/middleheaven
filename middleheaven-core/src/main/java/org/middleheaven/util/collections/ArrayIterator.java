@@ -1,13 +1,21 @@
 package org.middleheaven.util.collections;
 
-
-public final class ArrayIterator<T> extends IndexBasedIterator<T> {
+/**
+ * An iterator based on a raw array.
+ * @param <T> the array items type.
+ */
+final class ArrayIterator<T> extends IndexBasedIterator<T> {
 
 	private T[] array;
 
+	/**
+	 * 
+	 * Constructor.
+	 * @param array
+	 */
 	public ArrayIterator(T[] array) {
 		super();
-		this.array = array;
+		this.array = CollectionUtils.duplicateArray(array);
 	}
 
 	@Override

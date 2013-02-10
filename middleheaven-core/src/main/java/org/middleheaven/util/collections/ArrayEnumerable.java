@@ -25,4 +25,27 @@ public class ArrayEnumerable<T> extends AbstractEnumerable<T> {
 		return new ArrayIterator<T>(array);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T getFirst() {
+		return array.length == 0 ? null : array[0];
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T getLast() {
+		return array.length == 0 ? null : array[array.length - 1];
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T[] intoArray(T[] array) {
+		return this.array;
+	}
 }

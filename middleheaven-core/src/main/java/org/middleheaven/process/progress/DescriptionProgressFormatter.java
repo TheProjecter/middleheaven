@@ -4,7 +4,9 @@ public class DescriptionProgressFormatter extends ProgressFormatter {
 
     public String format(Progress progress) {
         CharSequence s = progress.getCurrentStepDescription();
-        if (s==null) return " ";
+        if (s==null) {
+        	return " ";
+        }
         return s.toString();
     }
     

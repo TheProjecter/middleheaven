@@ -30,6 +30,14 @@ public interface Enumerable<T> extends Iterable<T>{
 	public <L extends Collection<T>> L into(L collection);
 	
 	/**
+	 * Adds the contents of the enumerable into the given array.
+	 * If the arrays as the proper lenght, its is populated and returned. Otherwise a new array is created with the proper length and returned.
+	 * @param collection the given collection.
+	 * @return the given collection
+	 */
+	public T[] intoArray(T[] array);
+	
+	/**
 	 * 
 	 * @param newType
 	 * @return
@@ -52,6 +60,11 @@ public interface Enumerable<T> extends Iterable<T>{
 	 * @return the fist element in the {@link Enumerable} or <code>null</code> if the {@link Enumerable} is empty.
 	 */
 	public T getFirst();
+	
+	/**
+	 * @return the last element in the {@link Enumerable} or <code>null</code> if the {@link Enumerable} is empty.
+	 */
+	public T getLast();
 	
 	/**
 	 * Returns an enumerable in the order atributed by the given comparator.

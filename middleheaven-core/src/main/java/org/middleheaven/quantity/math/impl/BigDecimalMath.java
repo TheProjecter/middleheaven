@@ -197,7 +197,9 @@ class BigDecimalMath {
         BigDecimal xWhole = x.setScale(0, BigDecimal.ROUND_DOWN);
 
         // If there isn't a whole part, compute and return e^x.
-        if (xWhole.signum() == 0) return expTaylor(x, scale);
+        if (xWhole.signum() == 0){
+        	return expTaylor(x, scale);
+        }
 
         // Compute the fraction part of x.
         BigDecimal xFraction = x.subtract(xWhole);
@@ -493,8 +495,8 @@ class BigDecimalMath {
      */
     protected static BigDecimal arctanTaylor(BigDecimal x, int scale) {
 
-        int     sp1     = scale + 1;
-        int     i       = 3;
+        int sp1 = scale + 1;
+        int i = 3;
         boolean addFlag = false;
 
         BigDecimal power = x;

@@ -8,7 +8,7 @@ import org.middleheaven.global.Culture;
 import org.middleheaven.quantity.Quantity;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.measure.DecimalMeasure;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 
 public class QuantityFormatter implements Formatter<Quantity<?>>{
 
@@ -20,8 +20,8 @@ public class QuantityFormatter implements Formatter<Quantity<?>>{
 
 	@Override
 	public String format(Quantity<?> object) {
-		if (object instanceof Money){
-			return formatMoney((Money)object);
+		if (object instanceof CentsMoney){
+			return formatMoney((CentsMoney)object);
 		} else if (object instanceof org.middleheaven.quantity.math.BigInt ){
 			return formatInteger((org.middleheaven.quantity.math.BigInt)object);
 		} else if (object instanceof Real ){
@@ -53,7 +53,7 @@ public class QuantityFormatter implements Formatter<Quantity<?>>{
 		return format.format(object.asNumber());
 	}
 
-	private String formatMoney(Money object) {
+	private String formatMoney(CentsMoney object) {
 		NumberFormat format = NumberFormat.getCurrencyInstance(culture.toLocale());
 		Currency currency = Currency.getInstance(object.currency().toString());
 		format.setCurrency(currency);

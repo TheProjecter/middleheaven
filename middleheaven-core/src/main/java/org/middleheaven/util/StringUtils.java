@@ -97,17 +97,6 @@ public class StringUtils {
 		}
 		return builder.toString();
 	}
-	
-	public static String join(String separator, Iterable<?> original){
-		StringBuilder builder = new StringBuilder();
-		for (Iterator<?> it = original.iterator();it.hasNext();){
-			builder.append(it.next().toString()).append(separator);
-		}
-		if(builder.length()>0){
-			builder.delete(builder.length()-separator.length(), builder.length());
-		}
-		return builder.toString();
-	}
 
 	public static String concatIfNotEmptyPrefix(CharSequence prefix, CharSequence content, CharSequence separator ){
 		if (isEmptyOrBlank(prefix)){
@@ -219,62 +208,62 @@ public class StringUtils {
 		return writer.toString();
 	}
 
-	/**
-	 * Splits a CharSequence in the format paramname1=value1;paramname2=value2;...  
-	 * @param charSequence
-	 * @return
-	 */
-	public static Map<String,String> splitParams(CharSequence charSequence){
-		String[] paramPairs = split(charSequence, ";");
+//	/**
+//	 * Splits a CharSequence in the format paramname1=value1;paramname2=value2;...  
+//	 * @param charSequence
+//	 * @return
+//	 */
+//	public static Map<String,String> splitParams(CharSequence charSequence){
+//		String[] paramPairs = split(charSequence, ";");
+//
+//		if (paramPairs.length==0){
+//			return Collections.emptyMap();
+//		}
+//		HashMap<String, String> paramsMap = new HashMap<String, String>();
+//		for (String s : paramPairs){
+//			String[] p = split(s,"=");
+//			paramsMap.put(p[0], p[1]);
+//		}
+//		return paramsMap;
+//	}
 
-		if (paramPairs.length==0){
-			return Collections.emptyMap();
-		}
-		HashMap<String, String> paramsMap = new HashMap<String, String>();
-		for (String s : paramPairs){
-			String[] p = split(s,"=");
-			paramsMap.put(p[0], p[1]);
-		}
-		return paramsMap;
-	}
+//	public static String[] split(CharSequence charSequence, char delimiter){
+//		return split(charSequence , Character.toString(delimiter));
+//	}
 
-	public static String[] split(CharSequence charSequence, char delimiter){
-		return split(charSequence , Character.toString(delimiter));
-	}
-
-	/**
-	 * Split the given char sequence into an array of strings using the delimiter has would String.split() do.
-	 * However if the delimiter is not found the char sequence the char sequence it self will be returned
-	 * @param charSequence
-	 * @param delimiter
-	 * @return
-	 */
-	public static String[] split(CharSequence charSequence, String delimiter){
-		if (delimiter==null){
-			throw new IllegalArgumentException("parameter `delimiter` is required");
-		}
-		if (charSequence==null){
-			return new String[0];
-		}
-
-		String source = charSequence.toString();
-
-		if (source.indexOf(delimiter)<0){
-			// return the original sequence
-			return new String[]{source};
-		}
-
-		if (delimiter.equals(".")){
-			return source.split("\\.");
-		}else  if (delimiter.equals(" ")){
-			return source.split("\\s");
-		} else {
-			return source.split(delimiter);
-		}
-
-		
-
-	}
+//	/**
+//	 * Split the given char sequence into an array of strings using the delimiter has would String.split() do.
+//	 * However if the delimiter is not found the char sequence the char sequence it self will be returned
+//	 * @param charSequence
+//	 * @param delimiter
+//	 * @return
+//	 */
+//	public static String[] split(CharSequence charSequence, String delimiter){
+//		if (delimiter==null){
+//			throw new IllegalArgumentException("parameter `delimiter` is required");
+//		}
+//		if (charSequence==null){
+//			return new String[0];
+//		}
+//
+//		String source = charSequence.toString();
+//
+//		if (source.indexOf(delimiter)<0){
+//			// return the original sequence
+//			return new String[]{source};
+//		}
+//
+//		if (delimiter.equals(".")){
+//			return source.split("\\.");
+//		}else  if (delimiter.equals(" ")){
+//			return source.split("\\s");
+//		} else {
+//			return source.split(delimiter);
+//		}
+//
+//		
+//
+//	}
 
 	// TODO put in a StringFormat
 	public static String capitalizeFirst(String text) {
@@ -485,7 +474,7 @@ public class StringUtils {
 	}
 
 	/**
-	 * Returns an absent {@link Maybe} if {@link this#isEmptyOrBlank(CharSequence)} returns <code>true</code>, otherwise returns a {@link Maybe} with the given string inside.
+	 * Returns an absent {@link Maybe} if {@code this#isEmptyOrBlank(CharSequence)} returns <code>true</code>, otherwise returns a {@link Maybe} with the given string inside.
 	 * @param value a given {@link String}.
 	 */
 	public static Maybe<String> maybe(String value) {

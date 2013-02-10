@@ -5,6 +5,7 @@ package org.middleheaven.global.text;
 
 import java.io.Serializable;
 
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 
 /**
@@ -46,7 +47,7 @@ public abstract class TextLocalizable implements Serializable{
 		if (qualifiedString.indexOf(":")<0){
 			return new TransaltedTextLocalizable(qualifiedString , "", "", params);
 		} else {
-			String[] str = StringUtils.split(qualifiedString, ":");
+			String[] str = Splitter.on(":").split(qualifiedString).intoArray(new String[2]);
 			
 			return valueOf(str[0] , str.length > 1 ? str[1] : "", params);
 		}

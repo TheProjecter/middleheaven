@@ -40,13 +40,13 @@ public class TestIntrospector {
 	@Test
 	public void testInterfaces(){
 		
-		Class<?>[] i = Introspector.of(SomeObject.class).getImplementedInterfaces();
+		Enumerable<Class<?>> i = Introspector.of(SomeObject.class).getImplementedInterfaces();
 		
-		assertEquals(1, i.length);
+		assertEquals(1, i.size());
 		
 		i = Introspector.of(SomeObject.class).getDeclaredInterfaces();
 		
-		assertEquals(1, i.length);
+		assertEquals(1, i.size());
 	}
 	
 	

@@ -16,5 +16,11 @@ public class TestBootstrapEnvironment extends AbstractStandaloneBootstrapEnviron
     }
 
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Service resolverRequestedService(ServiceSpecification spec) {
+		return null;
+	}
 }

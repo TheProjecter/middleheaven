@@ -106,5 +106,9 @@ public final class Maybe<T> {
 	public int hashCode(){
 		return this.value == null ? 0: value.hashCode();
 	}
+	
+	public String toString(){
+		return String.valueOf(value);
+	}
 
 }

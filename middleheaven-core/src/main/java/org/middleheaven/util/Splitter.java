@@ -3,6 +3,8 @@
  */
 package org.middleheaven.util;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.middleheaven.util.collections.CollectionUtils;
@@ -26,6 +28,7 @@ public class Splitter {
 		
 
 	}
+
 
 	private static class KeyValueSplitterImpl  implements KeyValueSplitter{
 		
@@ -171,6 +174,7 @@ public class Splitter {
 	}
 	
 	public Enumerable<String> split(CharSequence charSequence){
+		
 		if(charSequence == null){
 			throw new IllegalArgumentException("Argument is null");
 		}
@@ -191,9 +195,7 @@ public class Splitter {
 		}
 		
 		
-		res = res.map(transform).filter(filter);
+		return res.map(transform).filter(filter);
 		
-		
-		return res;
 	}
 }

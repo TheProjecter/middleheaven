@@ -60,16 +60,16 @@ public class ReflectionTest {
 		.withAccess(MemberAccess.PUBLIC , MemberAccess.PROTECTED)
 		.retriveAll();
 		
-		assertEquals(34,m.size());
+		assertEquals(44,m.size());
 	}
 	
-	@Test(expected=UnsupportedOperationException.class)
+
 	public void testwrongProxyClass(){
 		
 		Cloneable obj = Introspector.of(Date.class).newProxyInstance(new TestMethodHandler(), Cloneable.class);
 
-		assertTrue(obj instanceof Cloneable);
-		assertTrue(obj instanceof Date);
+		assertTrue("Is not a Clonable",obj instanceof Cloneable);
+		assertTrue("Is not a Date", obj instanceof Date);
 	}
 	
 	@Test
@@ -77,8 +77,8 @@ public class ReflectionTest {
 		
 		Cloneable obj = Introspector.of(CharSequence.class).newProxyInstance(new TestMethodHandler(), Cloneable.class);
 
-		assertTrue(obj instanceof Cloneable);
-		assertTrue(obj instanceof CharSequence);
+		assertTrue("Is not a Clonable",obj instanceof Cloneable);
+		assertTrue("Is not a CharSequence", obj instanceof CharSequence);
 	}
 	
 	public class TestMethodHandler  implements ProxyHandler {

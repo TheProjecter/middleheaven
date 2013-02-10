@@ -287,7 +287,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	/**
 	 * Given a TimePoint t , duration x > y iff t + x > t + y and duration x < y iff t + x < t + y 
 	 *  
-	 * {@link http://www.w3.org/TR/xmlschema-2/#duration-order}
+	 * For more information visit http://www.w3.org/TR/xmlschema-2/#duration-order.
 	 * @param other the Duration to compare with.
 	 * 
 	 * {@inheritDoc}

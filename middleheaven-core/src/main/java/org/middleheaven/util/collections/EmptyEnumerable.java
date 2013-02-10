@@ -213,6 +213,22 @@ class EmptyEnumerable<T> implements Enumerable<T> {
 		return ME;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T getLast() {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T[] intoArray(T[] array) {
+		return array;
+	}
+
 
 
 }

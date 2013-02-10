@@ -140,7 +140,15 @@ public class LinkedTreeNode<E> implements TreeNode<E>{
 	 */
 	@Override
 	public TreeNode<E> getFirst() {
-		return this.nodes.get(0);
+		return this.nodes.isEmpty() ? null : this.nodes.get(0);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TreeNode<E> getLast() {
+		return this.nodes.isEmpty() ? null : this.nodes.get(this.nodes.size()-1);
 	}
 
 	/**
@@ -228,8 +236,7 @@ public class LinkedTreeNode<E> implements TreeNode<E>{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <C> C mapReduce(C seed, Mapper<Enumerable<C>, TreeNode<E>> mapper,
-			BinaryOperator<C> operator) {
+	public <C> C mapReduce(C seed, Mapper<Enumerable<C>, TreeNode<E>> mapper, BinaryOperator<C> operator) {
 		return new IterableEnumerable<TreeNode<E>>(this).mapReduce(seed, mapper, operator);
 	}
 
@@ -252,6 +259,14 @@ public class LinkedTreeNode<E> implements TreeNode<E>{
 	@Override
 	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, TreeNode<E>> mapper) {
 		return new IterableEnumerable<TreeNode<E>>(this).pairMap(mapper);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TreeNode<E>[] intoArray(TreeNode<E>[] array) {
+		return new IterableEnumerable<TreeNode<E>>(this).intoArray(array);
 	}
 
 	

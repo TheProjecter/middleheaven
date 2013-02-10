@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
-import org.middleheaven.util.collections.ArrayIterator;
 import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.FilteredIterator;
@@ -31,7 +30,7 @@ public class ClassificationUtilsTest {
 	@Test 
 	public void testArrayIterator(){
 		
-		Iterator<Integer> it = new ArrayIterator<Integer>(new Integer[]{1 ,2 ,3 , 4});
+		Iterator<Integer> it = CollectionUtils.arrayIterator(1 ,2 ,3 , 4);
 		
 		Integer r = it.hasNext() ? it.next() : null;
 		
@@ -42,7 +41,7 @@ public class ClassificationUtilsTest {
 	@Test 
 	public void testFilteredIterator(){
 		
-		Iterator<Integer> it = new FilteredIterator<Integer>( new ArrayIterator<Integer>(new Integer[]{1 ,2 ,3 , 4}), predicate);
+		Iterator<Integer> it = new FilteredIterator<Integer>( CollectionUtils.arrayIterator(1 ,2 ,3 , 4), predicate);
 		
 		Integer r = it.hasNext() ? it.next() : null;
 		

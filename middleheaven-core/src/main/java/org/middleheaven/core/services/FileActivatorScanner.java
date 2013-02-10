@@ -82,7 +82,7 @@ public class FileActivatorScanner extends AbstractActivatorScanner {
 
 		if(root.getType().isFolder()){
 
-			root.forEach(new Block<ManagedFile>(){
+			root.children().forEach(new Block<ManagedFile>(){
 
 				@Override
 				public void apply(ManagedFile file) {

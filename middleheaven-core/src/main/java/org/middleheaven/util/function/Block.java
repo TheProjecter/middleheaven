@@ -5,5 +5,5 @@ package org.middleheaven.util.function;
  */
 public interface Block<T> {
 
-	public void apply(T object);
+	public void apply(T value);
 }

@@ -46,7 +46,7 @@ public class TopologicOrderTransversor extends AbstractGraphTransversor {
 					q.add(v);
 				}
 			}
-			
+
 			GraphTranverseListener broadcastEvent = this.getListenerSet().broadcastEvent();
 			
 			int iterations;

@@ -78,7 +78,7 @@ public class FieldValueCriterion implements FieldCriterion {
 	}
 	
 	public String toString(){
-		return this.fieldName.toString() + operator.toString() + valueHolder.toString();
+		return this.fieldName.toString() + "<" + operator.toString() + ">" + valueHolder.toString();
 		
 	}
 

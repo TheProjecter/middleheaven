@@ -11,10 +11,12 @@ import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.collections.AbstractEnumerableAdapter;
+import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.IterableEnumerable;
 import org.middleheaven.util.collections.Pair;
 import org.middleheaven.util.collections.PairEnumerable;
+import org.middleheaven.util.collections.TreeEnumerable;
 import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
@@ -212,7 +214,6 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	protected abstract ManagedFile doCreateFile();
 	protected abstract ManagedFile doCreateFolder();
 
-
 	/**
 	 * @return
 	 */
@@ -220,60 +221,29 @@ public abstract class AbstractManagedFile implements ManagedFile {
 		return new ManagedFileEnumerable();
 	}
 
-	@Override
-	public void forEachParent(Block<ManagedFile> walker) {
-		if(this.getParent()!=null){
-			walker.apply(this.getParent());
-			this.getParent().forEachParent(walker);
-		}
+	public TreeEnumerable<ManagedFile> asTreeEnumerable(){
+		return new TreeEnumerable<ManagedFile>(){
+
+			@Override
+			public void forEachParent(Block<ManagedFile> walker) {
+				
+				final ManagedFile parent = getParent();
+				if(parent!=null){
+					walker.apply(parent);
+					parent.asTreeEnumerable().forEachParent(walker);
+				}
+			}
+		
+			@Override
+			public void forEachRecursive(Block<ManagedFile> walker) {
+				for (ManagedFile file  : childrenIterable()){
+					walker.apply(file);
+					file.asTreeEnumerable().forEachRecursive(walker);
+				}
+			}
+			
+		};
 	}
-
-	@Override
-	public void forEachRecursive(Block<ManagedFile> walker) {
-		for (ManagedFile file  : this.childrenIterable()){
-			walker.apply(file);
-			file.forEachRecursive(walker);
-		}
-	}
-
-
-	@Override
-	public void forEach(Block<ManagedFile> walker) {
-		for (ManagedFile file  : this.childrenIterable()){
-			walker.apply(file);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Enumerable<ManagedFile> filter(Predicate<ManagedFile> predicate) {
-		return new IterableEnumerable<ManagedFile>(this.childrenIterable()).filter(predicate);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <C> Enumerable<C> map(Mapper<C, ManagedFile> classifier) {
-		return new IterableEnumerable<ManagedFile>(this.childrenIterable()).map(classifier);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <L extends Collection<ManagedFile>> L into(L collection) {
-		for (ManagedFile file  : this.childrenIterable()){
-			collection.add(file);
-		}
-
-		return collection;
-	}
-
 
 	/**
 	 * @return
@@ -319,159 +289,5 @@ public abstract class AbstractManagedFile implements ManagedFile {
 
 
 	}
-	
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <U> Enumerable<U> cast(Class<U> newType) {
-		return new ManagedFileEnumerable().cast(newType);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		return childrenCount();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isEmpty() {
-		return childrenCount() == 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagedFile getFirst() {
-		return this.childrenCount() == 0 ? null : this.childrenIterable().iterator().next();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Enumerable<ManagedFile> sort(Comparator<ManagedFile> comparable) {
-		return new ManagedFileEnumerable().sort(comparable);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Enumerable<ManagedFile> sort() {
-		return new ManagedFileEnumerable().sort();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Enumerable<ManagedFile> reject(Predicate<ManagedFile> predicate) {
-		return new ManagedFileEnumerable().reject(predicate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int count(ManagedFile object) {
-		return new ManagedFileEnumerable().count(object);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int count(Predicate<ManagedFile> predicate) {
-		return new ManagedFileEnumerable().count(predicate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean every(Predicate<ManagedFile> predicate) {
-		return new ManagedFileEnumerable().every(predicate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean any(Predicate<ManagedFile> predicate) {
-		return new ManagedFileEnumerable().any(predicate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagedFile find(Predicate<ManagedFile> predicate) {
-		return new ManagedFileEnumerable().find(predicate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <C> Enumerable<C> mapAll(Mapper<Enumerable<C>, ManagedFile> mapper) {
-		return new ManagedFileEnumerable().mapAll(mapper);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagedFile reduce(ManagedFile seed,
-			BinaryOperator<ManagedFile> operator) {
-		return new ManagedFileEnumerable().reduce(seed, operator);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <C> C mapReduce(C seed, Mapper<Enumerable<C>, ManagedFile> mapper,
-			BinaryOperator<C> operator) {
-		return new ManagedFileEnumerable().mapReduce(seed, mapper, operator);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public <C> PairEnumerable<C, Enumerable<ManagedFile>> groupBy(Mapper<C, ManagedFile> mapper) {
-		return new ManagedFileEnumerable().groupBy(mapper);
-	}
-	
-	@Override
-	public <K, V, P extends Pair<K, V>> PairEnumerable<K, V> pairMap(Mapper<Pair<K, V>, ManagedFile> mapper) {
-		return new ManagedFileEnumerable().pairMap(mapper);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String join(String separator) {
-		throw new UnsupportedOperationException("Not implememented yet");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Iterator<ManagedFile> iterator() {
-		throw new UnsupportedOperationException("Not implememented yet");
-	}
-
 
 }

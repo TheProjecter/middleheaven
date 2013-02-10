@@ -16,10 +16,18 @@ import org.middleheaven.util.collections.TreeEnumerable;
 /**
  * A common abstract for all types of files : disk files, url addresses, uploaded files, email attachments, etc ...
  */
-public interface ManagedFile extends TreeEnumerable<ManagedFile> , Watchable , ContentSource, Enumerable<ManagedFile>{
+public interface ManagedFile extends Watchable , ContentSource {
 
-	
+	/**
+	 * the {@link ManagedFileRepository} where this file belongs.
+	 * @return
+	 */
 	public ManagedFileRepository getRepository();
+	
+	public TreeEnumerable<ManagedFile> asTreeEnumerable();
+	
+	public Enumerable<ManagedFile> children();
+	
 	
 	/**
 	 * This file's path
@@ -109,22 +117,22 @@ public interface ManagedFile extends TreeEnumerable<ManagedFile> , Watchable , C
     public abstract ManagedFile retrive(ManagedFilePath path) throws ManagedIOException;
     
 	/**
-	 * If {@ this} is of type {@link ManagedFileType#VIRTUAL} create and return a {@ ManagedFile} file on the URL pointed by {@code this}.
+	 * If {@code this} is of type {@link ManagedFileType#VIRTUAL} create and return a {@link ManagedFile} file on the URL pointed by {@code this}.
 	 * The new file substitutes {@code this} on its parent.
-	 * If {@ this} is not of type {@link ManagedFileType#VIRTUAL} and {@ this} is of type {@link ManagedFileType#FILE} {@ this } is returned.
+	 * If {@code this} is not of type {@link ManagedFileType#VIRTUAL} and {@code this} is of type {@link ManagedFileType#FILE} {@ this } is returned.
 	 * Else an {@link UnsupportedOperationException} is thrown;
 	 * @return the created file
-	 * @throws UnsupportedOperationException if {@ this} is not of VIRTUAL or FILE type, or this operation is not implemented on the target class.
+	 * @throws UnsupportedOperationException if {@code this} is not of VIRTUAL or FILE type, or this operation is not implemented on the target class.
 	 */
 	public ManagedFile createFile() throws UnsupportedOperationException;
     
 	/**
-	 * If {@ this} is of type {@link ManagedFileType#VIRTUAL} create and return a {@ ManagedFile} folder on the URL pointed by {@code this}.
+	 * If {@code this} is of type {@link ManagedFileType#VIRTUAL} create and return a {@ ManagedFile} folder on the URL pointed by {@code this}.
 	 * The new file substitutes {@code this} on its parent.
-	 * If {@ this} is not of type {@link ManagedFileType#VIRTUAL} and {@ this} is of type {@link ManagedFileType#FOLDER} {@ this } is returned.
+	 * If {@code this} is not of type {@link ManagedFileType#VIRTUAL} and {@code this} is of type {@link ManagedFileType#FOLDER} {@ this } is returned.
 	 * Else an {@link UnsupportedOperationException} is thrown;
 	 * @return the created folder
-	 * @throws UnsupportedOperationException if {@ this} is not of VIRTUAL or FOLDER type, or this operation is not implemented on the target class.
+	 * @throws UnsupportedOperationException if {@code this} is not of VIRTUAL or FOLDER type, or this operation is not implemented on the target class.
 	 */
 	public ManagedFile createFolder() throws UnsupportedOperationException;
 
@@ -140,8 +148,6 @@ public interface ManagedFile extends TreeEnumerable<ManagedFile> , Watchable , C
      * @return <code>true</code> if its possible to write to this file.
      */
     public boolean isWriteable();
-    
-
 
     /**
      * Copies the content of this file to another file

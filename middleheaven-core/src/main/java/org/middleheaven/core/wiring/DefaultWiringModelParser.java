@@ -93,7 +93,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 		ClassIntrospector<T> introspector = Introspector.of(type);
 
-		final Class<?>[] interfaces = Introspector.of(type).getDeclaredInterfaces();
+		final Enumerable<Class<?>> interfaces = Introspector.of(type).getDeclaredInterfaces();
 
 
 		ProfilesBag profiles = new ProfilesBag();
@@ -108,10 +108,10 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 				if ("service".equals(scopeName)){
 					if (!type.isInterface()){
-						if (interfaces.length == 0){
+						if (interfaces.isEmpty()){
 							throw new IllegalStateException("A @Service must be declared on an annotation or the type must implement an interface");
 						}
-						model.addContractType(interfaces[0]);
+						model.addContractType(interfaces.getFirst());
 					}
 
 				}

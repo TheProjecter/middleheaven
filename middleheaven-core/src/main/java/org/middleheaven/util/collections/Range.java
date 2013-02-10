@@ -406,13 +406,21 @@ public class Range<T, I> extends AbstractEnumerable<T> implements RandomEnumerab
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public T getFirst() {
-		 return this.start();
+		 return excludeStart ? (T)this.incrementor.increment(this.start()) : this.start();
 	}
 
 
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public T getLast() {
+		 return this.excludeEnd ? (T)this.incrementor.reverse().increment(this.end()) :  this.end();
+	}
 
 
 

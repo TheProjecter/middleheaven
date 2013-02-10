@@ -60,7 +60,24 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 			return object.toString();
 		}
 
+		public int hashCode(){
+			return object == null ? 0 : object.hashCode();
+		}
+		
+		public boolean equals(Object other){
+			return other instanceof BeanEdge && equalsEdge((BeanEdge) other); 
+		}
 
+		/**
+		 * @param other
+		 * @return
+		 */
+		private boolean equalsEdge(BeanEdge other) {
+			return object == null && this.object.equals (other.object) 
+					&& this.sourceVertex.equals(other.sourceVertex) 
+					&& this.targetVertex.equals(other.targetVertex)
+					&& Double.compare(this.cost, other.cost) == 0; 
+		}
 	}
 
 	private class BeanVertex<Va, Ea> implements Vertex<Va, Ea> {
@@ -102,10 +119,24 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 		public List<org.middleheaven.graph.Graph.Edge<Va, Ea>> getIncidentEdges() {
 			return incidentEdges;
 		}
+		
+		public int hashCode(){
+			return object == null ? 0 : object.hashCode();
+		}
+		
+		public boolean equals(Object other){
+			return other instanceof BeanVertex && equalsVertex((BeanVertex) other); 
+		}
 
+		/**
+		 * @param other
+		 * @return
+		 */
+		private boolean equalsVertex(BeanVertex other) {
+			return this.object != null && this.object.equals (other.object); 
+		}
 
 	}
-
 
 	private final Map<V, Vertex<V, E>> vertexes = new HashMap<V, Vertex<V, E>>();
 	private final Set<Edge<V, E>> edges = new HashSet<Edge<V, E>>();
@@ -122,18 +153,16 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 	public DirectGraph(DirectGraph<E, V> other) {
 
 		for (Vertex<V,E> v : other.vertexes.values()){
-
 			for (Edge<V,E> edge: v.getOutjacentEdges()){
 				this.addEdge(edge.getObject(), v.getObject(), edge.getTargetVertex().getObject(), edge.getCost());
 			}
-
 		}
 
 	}
 
 	@Override
 	public Collection<org.middleheaven.graph.Graph.Vertex<V, E>> getVertices() {
-		return vertexes.values();
+		return new HashSet<org.middleheaven.graph.Graph.Vertex<V, E>>(vertexes.values());
 	}
 
 
@@ -148,6 +177,8 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 		this.addEdge(edgeObject, sourceVertex, targetVertex,1);
 		
 	}
+	
+
 	@Override
 	public void addEdge(E edgeObject,
 			V sourceVertex,
@@ -237,9 +268,7 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 				}
 			}
 
-
-			int iterations;
-			for (iterations = 0; !q.isEmpty(); iterations++ ){
+			while (!q.isEmpty()){
 
 				Vertex<V, E> v = q.remove();
 
@@ -363,7 +392,7 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 					q.add(toVisit.iterator().next());
 				}
 
-				for (int iterations = 0; !q.isEmpty(); iterations++ ){
+				while(!q.isEmpty()){
 
 					Vertex<V, E> v = q.remove();
 
@@ -374,10 +403,8 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 
 						for (Edge<V, E> e : v.getOutjacentEdges() ){
 
-
-
 							Vertex<V, E> w = e.getTargetVertex();
-							
+						
 							current.addEdge(e.getObject(), v.getObject(), w.getObject(), e.getCost());
 							
 							double cvw = e.getCost();
@@ -399,14 +426,9 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 								infoW.prev = v;
 								infoW.connectingEdge = e;
 							}
-
-
 						}
-
 					}
-
 				}
-
 			}
 		}
 
@@ -456,7 +478,7 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 			Set<Vertex<V, E>> toVisit = new HashSet<Graph.Vertex<V,E>>(all);
 			Set<Vertex<V, E>> visited = new HashSet<Graph.Vertex<V,E>>();
 
-			for (int iterations = 0; !q.isEmpty(); iterations++ ){
+			while(!q.isEmpty()){
 
 				Vertex<V, E> v = q.remove();
 
@@ -479,7 +501,6 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 
 						VertexInfo infoV = manager.info(v);
 
-
 						if (Double.compare(infoV.dist, Double.MAX_VALUE) == 0){
 							continue;
 						}
@@ -488,7 +509,6 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 							infoW.prev = v;
 							infoW.connectingEdge = e;
 						}
-
 
 					}
 					visitor.onEndVertex(v);
@@ -500,14 +520,14 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 				throw new CycleFoundException();
 			}
 
-
 		}
-
 
 		visitor.onEndGraph(this);
 
 
 	}
+	
+
 
 
 

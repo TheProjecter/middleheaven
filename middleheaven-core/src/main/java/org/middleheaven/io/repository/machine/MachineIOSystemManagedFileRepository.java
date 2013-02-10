@@ -13,6 +13,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.watch.WatchService;
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.collections.TransformedCollection;
@@ -46,9 +47,9 @@ class MachineIOSystemManagedFileRepository extends AbstractManagedRepository imp
 		try {
 			String separator = File.separator;
 			if ( separator.equals("\\")) {
-				parts = StringUtils.split(systemFile.getCanonicalPath().replace('\\', '/') , "/");
+				parts = Splitter.on('/').split(systemFile.getCanonicalPath().replace('\\', '/')).intoArray(new String[0]);
 			} else {
-				parts = StringUtils.split(systemFile.getCanonicalPath() , File.separator);
+				parts =  Splitter.on(File.separator).split(systemFile.getCanonicalPath()).intoArray(new String[0]);
 			}
 			return new ArrayManagedFilePath(this, parts[0], Arrays.copyOfRange(parts, 1, parts.length ));
 		} catch (IOException e) {

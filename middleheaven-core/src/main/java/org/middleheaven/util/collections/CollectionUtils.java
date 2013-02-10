@@ -19,9 +19,33 @@ import java.util.Set;
 public class CollectionUtils {
 
 	/**
+	 * An iterator based on a raw array.
+	 * @param <T> the array items type.
+	 * @param array
+	 * @return
+	 */
+	public static <T> Iterator <T> arrayIterator(T ... array){
+		return new ArrayIterator<T>(array);
+	}
+	
+	/**
+	 * Produces a copy of the given array;
+	 * @param array the array to copy.
+	 * @param <T> Any type
+	 * @return the copy of the given array;
+	 */
+	public static <T> T[] duplicateArray (T[] array){
+		@SuppressWarnings("unchecked")
+		T[] copy = (T[]) Array.newInstance(array.getClass().getComponentType() , array.length);
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+
+	/**
 	 * Merges two arrays of {@link Mergable} objects.
 	 * @param a first array
 	 * @param b secound array
+	 * @param <T> any implementation of {@link Mergable}.
 	 * @return an array with all merges done.
 	 */
 	public static <T extends Mergable<T>> T[] merge(T[] a, T[] b){
@@ -30,9 +54,9 @@ public class CollectionUtils {
 		} else if (b == null || b.length ==0){
 			return a;
 		}
-		
+
 		Object newArray = Array.newInstance(a[0].getClass(), a.length+b.length);
-		
+
 		int position =0; 
 		outter: for (T i : a){
 			for (T j : b){
@@ -43,18 +67,36 @@ public class CollectionUtils {
 				}
 			}
 		}
-		
+
 		if (position == 0){
 			return (T[]) Array.newInstance(a[0].getClass(),0);
 		} else {
 			Object result = Array.newInstance(a[0].getClass(),position);
-			
+
 			System.arraycopy(newArray, 0, result, 0, position);
 			return (T[])result;
 		}
-		
+
 	}
-	
+
+	public static <T> T[] ensureMinLength(T[] array, int length){
+
+		if (array.length >= length){
+			return array;
+		}
+
+		return (T[])Array.newInstance(array.getClass().getComponentType(),length);
+	}
+
+	public static <T> T[] ensureExactLength(T[] array, int length){
+
+		if (array.length == length){
+			return array;
+		}
+
+		return (T[])Array.newInstance(array.getClass().getComponentType(),length);
+	}
+
 	/**
 	 * Merges two lists of {@link Mergable} objects.
 	 * @param a first list
@@ -67,9 +109,9 @@ public class CollectionUtils {
 		} else if (b.isEmpty()){
 			return a;
 		}
-		
 
-		
+
+
 		List<T> result = new LinkedList<T>();
 		outter: for (T i : a){
 			for (T j : b){
@@ -79,39 +121,39 @@ public class CollectionUtils {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
-	 * Converts an array of objects in an {@link EnhancedList}.
+	 * Converts an array of objects in an {@link Enumerable}.
 	 * @param elements
 	 * @return
 	 */
 	public static <T> Enumerable<T> asEnumerable(T ... elements){
 		return new ArrayEnumerable<T>(elements);
 	}
-	
+
 	/**
-	 * Converts an array of objects in an {@link EnhancedList}.
+	 * Converts an array of objects in an {@link Enumerable}.
 	 * @param elements
 	 * @return
 	 */
 	public static <T> Enumerable<T> asEnumerable(Iterable<T> elements){
 		return new IterableEnumerable<T>(elements);
 	}
-	
-	
+
+
 	/**
-	 * Converts an array of objects in an {@link EnhancedList}.
+	 * Converts an array of objects in an {@link Enumerable}.
 	 * @param elements
 	 * @return
 	 */
 	public static <K, V> Enumerable<Pair<K,V>> asEnumerable(Map<K,V> map){
 		return new MapEnumerable<K,V>(map);
 	}
-	
-	
+
+
 	/**
 	 * Ensures the given is sortable, i.e. is a List and implements {@link RandomAccess}. If not
 	 * it will be copied to a collection that is sortable.
@@ -119,26 +161,24 @@ public class CollectionUtils {
 	 * @return
 	 */
 	public static <T> List<T> ensureSortable(Collection<T> collection){
-		
+
 		if (collection == null){
 			return null;
 		}
-		
+
 		if(collection instanceof RandomAccess && collection instanceof List && !collection.getClass().getName().toLowerCase().contains("unmodifiable")){
 			return (List<T>)collection;
 		}
-		
+
 		return new ArrayList<T>(collection);
 	}
-	
-	
+
+
 	public static <T> Iterator <T> singleIterator(T object){
 		return new SingleIterator<T>(object);
 	}
 
-	public static <T> Iterator <T> arrayIterator(T[] array){
-		return new ArrayIterator<T>(array);
-	}
+
 
 	private static class SingleIterator<T> implements Iterator<T>{
 
@@ -186,8 +226,8 @@ public class CollectionUtils {
 		} if (c1.size()!=c2.size()){
 			return false;
 		}
-	
-		
+
+
 		if (!(c2 instanceof Set) && (c1 instanceof Set || c1.size() > c2.size())) {
 			//swap
 			Collection<? extends T> tmp = c1;
@@ -218,17 +258,17 @@ public class CollectionUtils {
 		} if (a.size()!=b.size()){
 			return false;
 		} else {
-	
-			
+
+
 			for (Map.Entry entryA : a.entrySet()){
-				
+
 				if (!b.containsKey(entryA.getKey()) || !b.get(entryA.getKey()).equals(entryA.getValue())){
 					return false;
 				}
-				
+
 			}
-				
-			
+
+
 			return true;
 		}
 
@@ -246,7 +286,7 @@ public class CollectionUtils {
 		if (c1.isEmpty() || c2.isEmpty()){
 			return Collections.emptySet();
 		}
-		
+
 		if (!(c2 instanceof Set) && (c1 instanceof Set || c1.size() > c2.size())) {
 			//swap
 			Collection<T> tmp = c1;
@@ -260,64 +300,64 @@ public class CollectionUtils {
 				result.add(obj);
 			}
 		}
-		
+
 		return result;
 	}
 
 
 	@SuppressWarnings("unchecked")
 	public static <T> T[] addToArray(T[] array1,T[] array2) {
-		
+
 		Class<?> componentType = array1.getClass().getComponentType();
-		
+
 		Object newArray = Array.newInstance(componentType, array1.length+array2.length);
-		
+
 		System.arraycopy(array1, 0, newArray, 0, array1.length);
 		System.arraycopy(array2, 0, newArray, array1.length,array2.length);
-		
+
 		return (T[]) newArray;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> T[] appendToArrayEnd(T[] array,T element , T ... elements) {
-		
+
 		Class<?> componentType = array.getClass().getComponentType();
-		
+
 		Object newArray = Array.newInstance(componentType, array.length+1+elements.length);
-		
+
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		Array.set(newArray, array.length , element);
 		System.arraycopy(elements, 0, newArray, array.length +1,elements.length);
-		
+
 		return (T[]) newArray;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> T[] appendToArrayBegining(T[] array,T element , T ... elements) {
-		
+
 		Class<?> componentType = array.getClass().getComponentType();
-		
+
 		Object newArray = Array.newInstance(componentType, array.length+1+elements.length);
-		
-	
+
+
 		Array.set(newArray, 0 , element);
 		if (elements.length > 0){
 			System.arraycopy(elements, 0, newArray, 1,elements.length);
 			System.arraycopy(array, 0, newArray, elements.length, array.length);
 		} else {
 			System.arraycopy(array, 0, newArray, 1, array.length);
-			
+
 		}
-		
+
 		return (T[]) newArray;
 	}
-	
-	
+
+
 
 
 	@SuppressWarnings("unchecked")
 	public static <T> T[] newArray(Class<T> arrayType, int length) {
-		
+
 		Object newArray = Array.newInstance(arrayType, length);
 		return (T[]) newArray;
 	}
@@ -368,7 +408,7 @@ public class CollectionUtils {
 		} else {
 			return new ArrayList<T>(collection);
 		}
-		
+
 	}
 
 	/**

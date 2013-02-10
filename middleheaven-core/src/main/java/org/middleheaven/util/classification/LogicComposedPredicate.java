@@ -14,21 +14,21 @@ import org.middleheaven.util.function.Predicate;
  * Logic filter. Determines the acceptance of an object  by logically concatenate the results of filter terms
  * @author  Sergio M. M. Taborda
  */
-public class LogicComposedClassifier<T> implements Predicate<T>{
+public class LogicComposedPredicate<T> implements Predicate<T>{
 
     protected final List<Predicate<T>> filters = new ArrayList<Predicate<T>>();
 	protected LogicOperator logicOperator = LogicOperator.AND;
 
-    public LogicComposedClassifier(LogicComposedClassifier<T> other){
+    public LogicComposedPredicate(LogicComposedPredicate<T> other){
         this.filters.addAll(other.filters);
         this.logicOperator = other.logicOperator;
     }
 
-    public LogicComposedClassifier(LogicOperator operator){
+    public LogicComposedPredicate(LogicOperator operator){
         setOperator(operator);
     }
 
-    public LogicComposedClassifier( Predicate<T> a ,LogicOperator operator, Predicate<T> b){
+    public LogicComposedPredicate( Predicate<T> a ,LogicOperator operator, Predicate<T> b){
         setOperator(operator);
         filters.add(a);
         filters.add(b);
@@ -38,7 +38,7 @@ public class LogicComposedClassifier<T> implements Predicate<T>{
         return filters.size();
     }
 
-    public LogicComposedClassifier<T> add(Predicate<T> filter){
+    public LogicComposedPredicate<T> add(Predicate<T> filter){
         filters.add(filter);
         return this;
     }

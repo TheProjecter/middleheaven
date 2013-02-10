@@ -22,6 +22,14 @@ public class ProfilesBag implements Iterable<String>{
 		profiles.addAll(Arrays.asList(profile));
 	}
 	
+	public void add(Collection<String> profiles){
+		profiles.addAll(profiles);
+	}
+	
+	public void remove(Collection<String> profiles){
+		profiles.removeAll(profiles);
+	}
+	
 	public void remove(String ... profile){
 		profiles.removeAll(Arrays.asList(profile));
 	}

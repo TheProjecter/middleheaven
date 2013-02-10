@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.middleheaven.util.Joiner;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.classification.NegatedPredicate;
 import org.middleheaven.util.function.BinaryOperator;
@@ -39,6 +40,23 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 		});
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T[] intoArray(T[] array) {
+
+		array = CollectionUtils.ensureExactLength(array, size());
+		
+		int i =0;
+		for (T t : this){
+			array[i] = t;
+			i++;
+		}
+		
+		return array;
+	}
+	
 	// final 
 	
 	/**
@@ -97,7 +115,7 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 	 */
 	@Override
 	public final String join(String separator) {
-		return StringUtils.join(separator, this);
+		return Joiner.with(separator).join(this);
 
 	}
 	
@@ -202,6 +220,21 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 		Iterator<T> it = this.iterator();
 		return it.hasNext() ? it.next() : null;
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public T getLast() {
+		Iterator<T> it = this.iterator();
+		T last = null;
+		while(it.hasNext()){
+			last = it.next();
+		}
+		return last;
+	}
+
 
 	/**
 	 * {@inheritDoc}

@@ -6,6 +6,7 @@ import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.io.repository.watch.Watchable;
+import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.collections.CollectionUtils;
 
@@ -178,7 +179,7 @@ public class ArrayManagedFilePath implements ManagedFilePath , Watchable {
 	 */
 	@Override
 	public ManagedFilePath resolve(String name) {
-		String[] names = StringUtils.split(name, "/");
+		String[] names = Splitter.on("/").split(name).intoArray(new String[0]);
 		
 		return new ArrayManagedFilePath(this.repository, this.root,  CollectionUtils.addToArray(this.names, names));
 	}
@@ -218,8 +219,8 @@ public class ArrayManagedFilePath implements ManagedFilePath , Watchable {
 	 */
 	@Override
 	public ManagedFilePath resolveSibling(String name) {
-		String[] names = StringUtils.split(name, "/");
-	
+		String[] names = Splitter.on("/").split(name).intoArray(new String[0]);
+		
 		String[] all = new String[this.names.length-1+names.length];
 		
 		System.arraycopy(this.names, 0, all, 0, this.names.length -1); // do not copy the last

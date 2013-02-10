@@ -1,5 +1,6 @@
 package org.middleheaven.events;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -11,7 +12,7 @@ import org.middleheaven.core.reflection.inspection.Introspector;
  * 
  * @param <L> Listener class
  */
-public class EventListenersSet<L> {
+public class EventListenersSet<L> implements Iterable<L>{
 
 	private final Set<L> listeners = new CopyOnWriteArraySet<L>();
 	private L listener;
@@ -53,6 +54,14 @@ public class EventListenersSet<L> {
 			return null;
 		}
 		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<L> iterator() {
+		return this.listeners.iterator();
 	}
 
 }

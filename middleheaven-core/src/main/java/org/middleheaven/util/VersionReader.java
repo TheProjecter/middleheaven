@@ -45,13 +45,15 @@ public class VersionReader {
             }
         }
 
-        if (entry==null) return null;
+        if (entry==null){
+        	return null;
+        }
 
         return fromResource(jarFile.getInputStream(entry));
     }
 
     public static Version fromString(String versionStr){
-        String[] parts =StringUtils.split(versionStr.trim(),".");
+        String[] parts = Splitter.on('.').trim().split(versionStr.trim()).intoArray(new String[0]);;
         Version version = new Version(false);
         try{
             if (parts.length>0){

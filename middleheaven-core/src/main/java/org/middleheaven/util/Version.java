@@ -43,7 +43,7 @@ public final class Version implements Comparable<Version>, Serializable{
 		if (StringUtils.isEmptyOrBlank(number)) {
 			throw new IllegalArgumentException("Argument is mandatory");
 		}
-		String[] pars = StringUtils.split(number, ".");
+		String[] pars = Splitter.on(".").split(number).intoArray(new String[0]);
 		
 		String tag = null;
 		if (pars.length > 4){

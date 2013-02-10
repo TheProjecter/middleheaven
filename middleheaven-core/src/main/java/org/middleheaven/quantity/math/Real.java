@@ -189,4 +189,5 @@ public abstract class Real extends Numeral<Real> implements OrderedFieldElement<
 		return RealField.getInstance();
 	}
 	
+	public abstract boolean isInteger();
 }

@@ -30,6 +30,10 @@ public class ReflectionBean implements MetaBean {
 	}
 	
 	
+	public String toString(){
+		return String.valueOf(bean);
+	}
+	
 	@Override
 	public MetaClass getMetaClass() {
 		return metaClass;
