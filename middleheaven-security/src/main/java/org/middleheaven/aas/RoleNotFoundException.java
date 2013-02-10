@@ -1,6 +1,5 @@
-package org.middleheaven.aas.old;
+package org.middleheaven.aas;
 
-import org.middleheaven.aas.AccessException;
 
 public class RoleNotFoundException extends AccessException {
 

@@ -1,4 +1,4 @@
-package org.middleheaven.aas.old;
+package org.middleheaven.aas;
 
 public class SignatureException extends RuntimeException {
 
