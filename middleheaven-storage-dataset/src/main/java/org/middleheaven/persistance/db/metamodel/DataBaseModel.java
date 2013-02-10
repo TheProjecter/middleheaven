@@ -6,8 +6,6 @@ package org.middleheaven.persistance.db.metamodel;
  */
 public interface DataBaseModel extends Iterable<DataBaseObjectModel> {
 
-	public DataBaseObjectModel getDataBaseObjectModel(String name,
-			DataBaseObjectType type);
-
+	public DataBaseObjectModel getDataBaseObjectModel(String name, DataBaseObjectType type);
 
 }

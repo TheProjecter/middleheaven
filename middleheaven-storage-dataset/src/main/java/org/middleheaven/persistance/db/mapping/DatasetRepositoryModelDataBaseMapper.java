@@ -37,7 +37,7 @@ public class DatasetRepositoryModelDataBaseMapper implements DataBaseMapper {
 				
 				table.setName(dsModel.getHardName());
 				
-				mapper.tableMappings.put(dsModel.getName(), table);
+				mapper.tableMappings.put(dsModel.getName().toLowerCase(), table);
 				
 				
 				dsModel.columns().forEach(new Block<DatasetColumnModel>(){
@@ -94,7 +94,7 @@ public class DatasetRepositoryModelDataBaseMapper implements DataBaseMapper {
 	 */
 	@Override
 	public DBTableModel getTableForDataSet(String datasetName) {
-		return tableMappings.get(datasetName);
+		return tableMappings.get(datasetName.toLowerCase());
 	}
 
 

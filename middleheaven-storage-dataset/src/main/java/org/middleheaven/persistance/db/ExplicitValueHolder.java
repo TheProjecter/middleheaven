@@ -34,5 +34,9 @@ public class ExplicitValueHolder implements ValueHolder {
 	public DBColumnModel getModel() {
 		return model;
 	}
+	
+	public String toString(){
+		return String.valueOf(value);
+	}
 
 }

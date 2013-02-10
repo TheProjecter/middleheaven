@@ -102,7 +102,7 @@ public abstract class RDBMSDialect {
 	}
 
 	protected void writeEditionHardname(Clause buffer ,DBColumnModel model){
-		writeEditionHardname(buffer, model.getTableModel().getName(), model.getLogicName());
+		writeEditionHardname(buffer, model.getTableModel().getName(), model.getName().getDesignation());
 	}
 
 	protected void writeEditionHardname(Clause buffer , String tableName, String columnName){
@@ -306,6 +306,7 @@ public abstract class RDBMSDialect {
 								col.setSize(columns.getInt(9));
 							}
 
+							col.setLogicName(columns.getString(4));
 							col.setNullable("YES".equals(columns.getString(18)));
 							tm.addColumn(col);
 						}

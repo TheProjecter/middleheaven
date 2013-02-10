@@ -53,4 +53,9 @@ public interface DataStoreSchema {
 	 */
 	public Sequence<Long> getSequence(String sequenceName) throws SequenceNotFoundException;
 	
+	
+	public boolean isReadable();
+	
+	public boolean isWritable();
+	
 }

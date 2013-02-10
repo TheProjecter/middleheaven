@@ -135,9 +135,9 @@ public class DataSetCriteria {
 
 	/**
 	 * Copies this criteria with a new start and max count
-	 * @param startAt
-	 * @param maxCount2
-	 * @return
+	 * @param startAt the index of the first result
+	 * @param maxCount the maximum size of elements to return
+	 * @return a {@link DataSetCriteria} that provides the same query than this, but limits the result rows index between startAt and startAt + maxCcunt
 	 */
 	public DataSetCriteria limit(int startAt, int maxCount) {
 		throw new UnsupportedOperationException("Not implememented yet");

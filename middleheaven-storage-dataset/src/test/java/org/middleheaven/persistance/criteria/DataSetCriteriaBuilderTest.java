@@ -23,14 +23,13 @@ import org.middleheaven.persistance.DataStoreSchemaName;
 import org.middleheaven.persistance.DataStoreSchemaNotFoundException;
 import org.middleheaven.persistance.ModelNotEditableException;
 import org.middleheaven.persistance.criteria.building.DataSetCriteriaBuilder;
-import org.middleheaven.persistance.db.RDBMSDataStoreProvider;
 import org.middleheaven.persistance.db.datasource.EmbeddedDSProvider;
 import org.middleheaven.persistance.db.mapping.DataBaseMapper;
 import org.middleheaven.persistance.db.mapping.ModelParsingException;
 import org.middleheaven.persistance.model.DataSetDefinition;
 import org.middleheaven.persistance.model.DataSetDefinitions;
 import org.middleheaven.persistance.model.TypeDefinition;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
 import org.middleheaven.util.QualifiedName;
 
@@ -54,7 +53,7 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 		
 		TypeDefinition<Integer> OwnerID();
 		TypeDefinition<String> Model();
-		TypeDefinition<Money> Value();
+		TypeDefinition<CentsMoney> Value();
 		TypeDefinition<Integer> Year();
 		
 	}
@@ -64,7 +63,7 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 		Rent $ = DataSetDefinitions.define(Rent.class);
 		
 		TypeDefinition<Integer> PersonID();
-		TypeDefinition<Money> Income();
+		TypeDefinition<CentsMoney> Income();
 		TypeDefinition<Date> Date();
 	}
 
@@ -75,8 +74,7 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 	 */
 	@Override
 	protected void setupWiringBundles(WiringService service) {
-	//	classSet.addActivator(DataPersistanceServiceActivator.class);
-	//	classSet.addActivator(AutoCommitTransactionServiceActivator.class);
+
 	}
 	
 	@Wire 
@@ -115,8 +113,8 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 
 		
 		
-		RDBMSDataStoreProvider dsProvider = new RDBMSDataStoreProvider(eds.getDataSource() , mapper);
-		dataPersistanceService.addProvider(dsProvider);
+		
+		dataPersistanceService.addProvider(eds.getDataStoreProvider());
 		
 
 		DataStoreSchema schema = dataPersistanceService.getDataStoreSchema(DataStoreSchemaName.name("testdb" , "public"));

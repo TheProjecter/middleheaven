@@ -28,6 +28,26 @@ public enum ColumnValueType {
 	/**A boolean value with values TRUE and FALSE.*/
 	LOGIC;
 	
+	public boolean isCompatible(ColumnValueType other){
+		if (this == other){
+			return true;
+		}
+		switch (this){
+		case TEXT:
+			return other == MEMO || other == CLOB;
+		case MEMO:
+			return other == TEXT || other == CLOB;
+		case CLOB:
+			return other == TEXT || other == MEMO;
+		case INTEGER:
+			return other == SMALL_INTEGER;
+		case SMALL_INTEGER:
+			return other == INTEGER;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

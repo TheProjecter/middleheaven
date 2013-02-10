@@ -11,6 +11,10 @@ import org.middleheaven.core.bootstrap.BootstapListener;
 import org.middleheaven.core.bootstrap.BootstrapEvent;
 import org.middleheaven.core.bootstrap.BootstrapService;
 import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.persistance.DataStoreName;
+import org.middleheaven.persistance.DataStoreProvider;
+import org.middleheaven.persistance.db.DataSourceNameResolver;
+import org.middleheaven.persistance.db.RDBMSDataStoreProvider;
 
 /**
  * {@link DataSourceProvider} thaht embedes a HSQL implementation.
@@ -137,5 +141,41 @@ public class EmbeddedDSProvider implements DataSourceProvider{
 	public void stop(){
 		started.set(false);
 		ds.stop();
+	}
+
+	/**
+	 * @return
+	 */
+	public DataSourceService getDataService() {
+		return new OneProviderDataSourceService(this);
+	}
+
+	/**
+	 * @return
+	 */
+	public DataStoreProvider getDataStoreProvider() {
+		return new EmbededRDBMSDataStoreProvider(this.getDataService());
+	}
+	
+	
+	private class EmbededRDBMSDataStoreProvider extends RDBMSDataStoreProvider {
+
+		/**
+		 * Constructor.
+		 * @param dsService
+		 * @param dataSourceNameResolver
+		 */
+		protected EmbededRDBMSDataStoreProvider(DataSourceService dsService) {
+			super(dsService, new DataSourceNameResolver(){
+
+				@Override
+				public String resolveDataSourceName(DataStoreName name) {
+					throw new UnsupportedOperationException("Not implememented yet");
+				}
+				
+			});
+		}
+		
+		
 	}
 }

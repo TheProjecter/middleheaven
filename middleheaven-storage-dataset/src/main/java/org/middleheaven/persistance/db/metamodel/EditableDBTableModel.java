@@ -13,7 +13,7 @@ import org.middleheaven.util.collections.Enumerable;
 
 public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 
-	private String name;
+	private String tableHardName;
 	private Map<String, EditableColumnModel> columns = new LinkedHashMap<String, EditableColumnModel>();
 	private Map<String, ColumnModelGroup> uniqueGroups = new HashMap<String, ColumnModelGroup> ();
 	private ColumnModelGroup keyGroup = new ColumnModelGroup();
@@ -47,7 +47,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	}
 	
 	public EditableDBTableModel(String name) {
-		this.name = name;
+		this.tableHardName = name;
 		this.keyGroup.setName("keyGroup");
 	}
 	
@@ -111,7 +111,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	 */
 	@Override
 	public String getName() {
-		return name;
+		return tableHardName;
 	}
 	
 	/**
@@ -135,14 +135,14 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	 */
 	public EditableDBTableModel differenceTo(EditableDBTableModel other) {
 		// Create a table model with the columns that eBeanColumnModeler this model that not exist on the other 
-		EditableDBTableModel res = new EditableDBTableModel(this.name);
+		EditableDBTableModel res = new EditableDBTableModel(this.tableHardName);
 		
 		outter: 
 		for (DBColumnModel c : this.columns.values()){
 			// find a match in this columns set 
 			for (Entry<String, EditableColumnModel> entry : other.columns.entrySet()){
 				// must do a case insensitive search
-				if (entry.getKey().equalsIgnoreCase(c.getLogicName())){ 
+				if (entry.getValue().getName().getDesignation().equalsIgnoreCase(c.getName().getDesignation())){ 
 					continue outter;
 				}
 			}
@@ -161,7 +161,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	 */
 	@Override
 	public boolean equals(Object other){
-		return other instanceof DBTableModel && ((DBTableModel) other).getName().equalsIgnoreCase(this.name);
+		return other instanceof DBTableModel && ((DBTableModel) other).getName().equalsIgnoreCase(this.tableHardName);
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	 */
 	@Override
 	public int hashCode(){
-		return Hash.hash(this.name).hashCode();
+		return Hash.hash(this.tableHardName).hashCode();
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.tableHardName = name;
 	}
 
 

@@ -7,7 +7,7 @@ import org.middleheaven.util.collections.Enumerable;
 
 
 /**
- * 
+ * Holds the meta data for the all datasets
  */
 public interface DatasetRepositoryModel {
 

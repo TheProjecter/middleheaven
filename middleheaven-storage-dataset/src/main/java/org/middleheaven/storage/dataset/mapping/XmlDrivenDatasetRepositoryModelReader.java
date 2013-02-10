@@ -5,7 +5,9 @@ package org.middleheaven.storage.dataset.mapping;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -16,6 +18,7 @@ import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
+import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.persistance.db.mapping.ModelParsingException;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.xml.sax.Attributes;
@@ -111,7 +114,9 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 		private EditableDatasetRepositoryModel model;
 	
 		private EditableDatasetModel atual;
-
+		private Set<String> actualLogicNames;
+		private Set<String> actualHardNames;
+		
 		private ClassIntrospector<EditableDatasetModel> inspectorDataSet;
 		private ClassIntrospector<EditableDatasetColumnModel> inspectorColumn;
 		private ClassIntrospector<UserType> inspectorUserType;
@@ -147,10 +152,9 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 			      
 			  
 			    	if (tag.equals("dataset")) {
-			    		if (atual == null) {
-			    			
+			    		
 			    			String name = attributes.getValue(attributes.getIndex("name"));
-			    			// case sentistive
+			    			// case sensitive
 			    			atual = model.getDataSetModel(name);
 			    			
 			    			if (atual == null){
@@ -159,6 +163,9 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 			    				model.addDatasetModel(atual);
 			    			}
 			    			
+			    			actualHardNames = new HashSet<String>();
+			    			actualLogicNames = new HashSet<String>();
+			    			
 			    			for (int i=0; i < attributes.getLength() ; i++) {
 			    				PropertyAccessor pa = inspectorDataSet.inspect().properties().named(attributes.getLocalName(i)).retrive();
 			    				
@@ -166,9 +173,7 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 				    				pa.setValue(atual, attributes.getValue(i) /*.toLowerCase()*/);
 				    			}
 			    			}
-			    			
-			    		
-			    		}
+
 			    	} else if (tag.equals("column")) {
 			    		String name = attributes.getValue(attributes.getIndex("name"));
 		    			
@@ -183,17 +188,40 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 			    		for (int i=0; i < attributes.getLength() ; i++) {
 			    			final String attributeName = attributes.getLocalName(i);
 			    			
-			    			if ("type".equals(attributeName)){
+			    			final String attributeValue = attributes.getValue(i);
+							if ("type".equals(attributeName)){
 			    				PropertyAccessor pa = inspectorColumn.inspect().properties().named("valueType").retrive();
 				    			
 			    				if (pa != null){
-			    					pa.setValue(cm, this.typesMapping.get(attributes.getValue(i)));
+			    					final ColumnValueType value = this.typesMapping.get(attributeValue);
+									if (pa.getValue(cm) == null){
+			    						pa.setValue(cm, value);
+			    					} else {
+			    						
+			    						final ColumnValueType oldValue = (ColumnValueType)pa.getValue(cm);
+										if (!oldValue.isCompatible(value)){
+			    							throw new IllegalModelStateException("Incompatible types " + value + " is not compatible with " + oldValue + " for field " + cm.getHardName());
+			    						} else {
+			    							pa.setValue(cm, value);
+			    						}
+			    						
+			    					}
 			    				}
 			    			} else {
 			    				PropertyAccessor pa = inspectorColumn.inspect().properties().named(attributeName).retrive();
 				    			
 				    			if (pa != null){
-			    					pa.setValue(cm, attributes.getValue(i) /*.toLowerCase()*/);
+			    					pa.setValue(cm, attributeValue /*.toLowerCase()*/);
+				    			}
+				    			
+				    			if ("hardname".equals(attributeName)){
+				    				if (!actualHardNames.add(attributeValue)){
+				    					throw new IllegalModelStateException("Hardname " + attributeValue + " is duplicated in " + atual.getHardName());
+				    				}
+				    			} else if ("name".equals(attributeName)){
+				    				if (!actualLogicNames.add(attributeValue)){
+				    					throw new IllegalModelStateException("Name " + attributeValue + " is duplicated in " + atual.getHardName());
+				    				}
 				    			}
 			    			}
 							

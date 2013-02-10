@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package org.middleheaven.persistance.db.datasource;
 
 import java.sql.Array;
@@ -18,9 +21,9 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 
-public class DelegatingConnection implements Connection {
+class DelegatingConnection implements Connection {
 
-	private Connection original;
+    Connection original;
 
 	public DelegatingConnection (Connection original){
 		this.original = original;
@@ -31,15 +34,27 @@ public class DelegatingConnection implements Connection {
 	}
 
 	public void close() throws SQLException {
-		original.close();
+		// no-op
 	}
 
 	public void commit() throws SQLException {
-		original.commit();
+		//no-op
+	}
+	
+	public void rollback() throws SQLException {
+		//no-op
 	}
 
-	public Array createArrayOf(String typeName, Object[] elements)
-			throws SQLException {
+	public void rollback(Savepoint savepoint) throws SQLException {
+		//no-op
+	}
+
+	public void setAutoCommit(boolean autoCommit) throws SQLException {
+		original.setAutoCommit(autoCommit);
+	}
+
+
+	public Array createArrayOf(String typeName, Object[] elements)throws SQLException {
 		return original.createArrayOf(typeName, elements);
 	}
 
@@ -188,17 +203,6 @@ public class DelegatingConnection implements Connection {
 		original.releaseSavepoint(savepoint);
 	}
 
-	public void rollback() throws SQLException {
-		original.rollback();
-	}
-
-	public void rollback(Savepoint savepoint) throws SQLException {
-		original.rollback(savepoint);
-	}
-
-	public void setAutoCommit(boolean autoCommit) throws SQLException {
-		original.setAutoCommit(autoCommit);
-	}
 
 	public void setCatalog(String catalog) throws SQLException {
 		original.setCatalog(catalog);

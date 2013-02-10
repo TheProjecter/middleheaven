@@ -201,7 +201,7 @@ public class DataColumnModelBean implements DataColumnModel {
 	}
 
 	/**
-	 * Atributes {@link boolean}.
+	 * Marks this column as the version identifier
 	 * @param version the version to set
 	 */
 	public void setVersion(boolean version) {

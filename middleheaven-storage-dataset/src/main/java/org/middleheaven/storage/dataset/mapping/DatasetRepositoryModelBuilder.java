@@ -31,7 +31,7 @@ public final class DatasetRepositoryModelBuilder {
 		return this;
 	}
 	
-	public DatasetRepositoryModel read(){
+	public DatasetRepositoryModel build(){
 		
 		if (readers.isEmpty()){
 			throw new IllegalStateException("No DatasetRepositoryModelReaders configured. Please add at least one DatasetRepositoryModelReader");

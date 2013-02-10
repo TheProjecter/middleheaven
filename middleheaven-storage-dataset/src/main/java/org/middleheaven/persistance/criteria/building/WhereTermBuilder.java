@@ -18,7 +18,7 @@ public interface WhereTermBuilder {
 	ConditionTermComparisonOperatorBuilder column(TypeDefinition<?> date);
 	
 	/**
-	 * @return
+	 * @return the {@link ConditionaRestrictionlBuilder}
 	 */
 	ConditionaRestrictionlBuilder or();
 
@@ -34,7 +34,7 @@ public interface WhereTermBuilder {
 
 
 	/**
-	 * @return
+	 * @return the {@link ColumnSetBuilder}
 	 */
 	ColumnSetBuilder groupBy();
 }

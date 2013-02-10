@@ -3,10 +3,12 @@ package org.middleheaven.persistance.db.metamodel;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.QualifiedName;
+import org.middleheaven.util.StringUtils;
 
 public class EditableColumnModel implements DBColumnModel {
 
 	private String name;
+	private String hardName;
 	private ColumnValueType type;
 	
 
@@ -23,9 +25,12 @@ public class EditableColumnModel implements DBColumnModel {
 	private String uniqueGroup;
 	private boolean key;
 
-	public EditableColumnModel(String name, ColumnValueType type) {
+	public EditableColumnModel(String hardName, ColumnValueType type) {
 		super();
-		this.name = name;
+		if (StringUtils.isEmptyOrBlank(hardName)){
+			throw new IllegalArgumentException("Hardname cannot be null nor empty");
+		}
+		this.hardName = hardName;
 		this.type = type;
 	}
 
@@ -34,6 +39,7 @@ public class EditableColumnModel implements DBColumnModel {
 	 * @param cm base {@link DBColumnModel} to copy.
 	 */
 	public EditableColumnModel(DBColumnModel cm) {
+		this(cm.getName().getDesignation(), cm.getType());
 		this.uniqueGroup = cm.getUniqueGroupName();
 		this.indexed = cm.isIndexed();
 		this.key = cm.isKey();
@@ -41,9 +47,7 @@ public class EditableColumnModel implements DBColumnModel {
 		this.nullable = cm.isNullable();
 		this.size = cm.getSize();
 		this.precision = cm.getPrecision();
-		this.type = cm.getType();
 		this.version = cm.isVersion();
-		
 	}
 
 	public DBTableModel getTableModel() {
@@ -129,7 +133,7 @@ public class EditableColumnModel implements DBColumnModel {
 	}
 	
 	public String toString(){
-		return tableModel.getName() + "." + this.name;
+		return tableModel.getName() + "." + this.hardName;
 	}
 
 
@@ -163,7 +167,7 @@ public class EditableColumnModel implements DBColumnModel {
 
 	@Override
 	public QualifiedName getName() {
-		return QualifiedName.qualify(this.tableModel.getName() , this.name);
+		return QualifiedName.qualify(this.tableModel.getName() , this.hardName);
 	}
 
 	public void setIndexGroup(String indexGroup) {

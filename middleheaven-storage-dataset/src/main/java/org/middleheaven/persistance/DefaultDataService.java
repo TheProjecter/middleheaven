@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
+
 /**
  * 
  */
@@ -22,7 +24,6 @@ class DefaultDataService implements DataService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void addProvider(DataStoreProvider provider) {
 		providers.add(provider);
 	}
@@ -30,7 +31,6 @@ class DefaultDataService implements DataService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void removeProvider(DataStoreProvider provider) {
 		providers.remove(provider);
 	}
@@ -89,15 +89,11 @@ class DefaultDataService implements DataService {
 			} else {
 				return schemas.get(name);
 			}
-			
-			
-			
+
 		} catch (DataStoreNotFoundException e){
 			throw new DataStoreSchemaNotFoundException(e);
 			
 		}
-		
-		
 	}
 
 	/**
@@ -107,11 +103,14 @@ class DefaultDataService implements DataService {
 		// no-op
 	}
 
-
-
-
-
-
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void registerDataStore(DataStoreName name, DatasetRepositoryModel dataSetModel) {
+		for (DataStoreProvider p : providers) {
+			p.registerDataStore(name, dataSetModel);
+		}
+	}
 
 }

@@ -37,7 +37,9 @@ import org.middleheaven.persistance.criteria.LogicConstraint;
 import org.middleheaven.persistance.criteria.building.ColumnNameValueLocator;
 import org.middleheaven.persistance.criteria.building.ColumnValueConstraint;
 import org.middleheaven.persistance.criteria.building.ExplicitValueLocator;
+import org.middleheaven.persistance.db.datasource.DataSourceService;
 import org.middleheaven.persistance.db.mapping.DataBaseMapper;
+import org.middleheaven.persistance.db.mapping.DatasetRepositoryModelDataBaseMapper;
 import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.persistance.db.metamodel.DBColumnModel;
 import org.middleheaven.persistance.db.metamodel.DBTableModel;
@@ -49,6 +51,7 @@ import org.middleheaven.persistance.db.metamodel.EditableDataBaseModel;
 import org.middleheaven.persistance.db.metamodel.SequenceModel;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.sequence.Sequence;
+import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.classification.LogicOperator;
 import org.middleheaven.util.collections.Enumerable;
@@ -63,11 +66,14 @@ import org.middleheaven.util.function.Mapper;
 public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 
-	private final DataSource datasource;
-	private final RDBMSDialect dialect;
-	private final DataBaseMapper mapper;
-	
+	private DataSourceService dsService;
+	private DataSourceNameResolver dataSourceNameResolver;
+
 	private final Map<DataStoreSchemaName , Map < String , NamedQueryExecutor>> executors = new HashMap<DataStoreSchemaName , Map < String , NamedQueryExecutor>>();
+
+
+	private final Map<DataStoreName , DataStore> stores = new HashMap<DataStoreName , DataStore>();
+
 
 	/**
 	 * 
@@ -75,189 +81,34 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 	 * @param datasource the source of data.
 	 * @param mapper the database mapper.
 	 */
-	public RDBMSDataStoreProvider (DataSource datasource , DataBaseMapper mapper){
-		this.datasource = datasource;
-		this.mapper = mapper;
-		this.dialect = RDBMSDialectFactory.getDialect(this.datasource);
+	protected RDBMSDataStoreProvider (DataSourceService dsService, DataSourceNameResolver dataSourceNameResolver){
+		this.dsService = dsService;
+		this.dataSourceNameResolver = dataSourceNameResolver;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void registerDataStore(DataStoreName name, DatasetRepositoryModel dataSetModel) {
 
-	protected SearchPlan plan(DataSetCriteria criteria) {
+		String dataSourceName = dataSourceNameResolver.resolveDataSourceName(name);
 
-		SearchPlan plan = new SearchPlan();
-		plan.setCountOnly(false); // TODO determine
-		plan.setDistinct(criteria.isDistinct());
-		plan.setFowardOnly(true);
-		plan.setReadOnly(true);
-		plan.setMaxCount(criteria.getMaxCount());
-		plan.setOffSet(criteria.getOffset());
-		plan.setReadOnly(true);
-		plan.setResultColumns(criteria.getResultColumns());
-		plan.setConstraints(criteria.getDataSetRestrictions());
-		plan.setOrdering(criteria.getOrderConstraints());
-		plan.setGrouping(criteria.getGroupConstraint());
-		
-		for (RelatedDataSet rd : criteria.getRelatedDataSets()){
+		DataSource datasource = dsService.getDataSource(dataSourceName);
 
-			TableRelation relation = new TableRelation(new LogicConstraint(rd.getRelationConstraint().getOperator()) , rd.getRelationOperator());
-			relation.setSourceTableModel(mapper.getTableForDataSet(rd.getSourceDataSetModel().getName()));
-			plan.add(relation);
-			
-			if (!rd.getRelationConstraint().getConstraints().isEmpty()){
-				relation = new TableRelation(new LogicConstraint(rd.getRelationConstraint().getOperator()) , rd.getRelationOperator());
-				
-				
-				for (DataSetConstraint c : rd.getRelationConstraint().getConstraints()){
+		RDBMSDialect dialect = RDBMSDialectFactory.getDialect(datasource);
 
-					if (c instanceof ColumnValueConstraint) {
-						QualifiedName q = ( (ColumnValueConstraint) c).getLeftValuelocator().getName();
+		DataBaseMapper mapper = DatasetRepositoryModelDataBaseMapper.newInstance(dataSetModel);
 
-						if (q != null){
+		DataStore ds = new RDBMSDataStore(name , mapper, dialect, datasource);
 
-							relation.setSourceTableModel(mapper.getTableColumnModel(q).getTableModel());
-						}
+		this.stores.put(name, ds);
 
-						q = ( (ColumnValueConstraint) c).getRightValueLocator().getName();
-
-						if (q != null){
-
-							relation.setTargetTableModel(mapper.getTableColumnModel(q).getTableModel());
-						}
-						
-						
-						relation.getRelationConstraint().addConstraint(rd.getRelationConstraint());
-						
-					} else {
-						throw new IllegalStateException("Should not happen");
-					}
-
-				}
-				
-				plan.add(relation);
-			}
-
-		}
-
-
-		return plan;
 	}
 
 	protected long countSearchPlan(SearchPlan plan) {
 		// TODO 
 		return 0;
-	}
-
-	protected DataRowStream executeSearchPlan(SearchPlan plan) {
-		ResultSet rs = null;
-		Connection con = null;
-		try {
-
-			con = this.datasource.getConnection();
-
-			RetriveDataBaseCommand command = dialect.createSelectCommand(plan, mapper);
-			Logger.onBook("SQL").trace(command.toString());
-
-			command.execute( mapper, con, null);
-			rs = command.getResult();
-
-			// if dialect does not support offset
-			if (!dialect.supportsOffSet()) {
-
-				try {
-					rs.absolute(plan.getOffSet() + 1);
-
-				} catch (SQLFeatureNotSupportedException e){
-					// iterate manually  until we arrive to the offset
-					int off = 1;
-					while (off < plan.getOffSet() && rs.next()) {
-						//iterate
-						off++;
-					}
-				}
-
-			}
-
-		} catch (SQLException e) {
-			close(con);
-			throw dialect.handleSQLException(e);
-		}
-
-
-		if (plan.isFowardOnly() && plan.isReadOnly()) {
-			// fastlane
-			try {
-				return  ResultSetDataRowStream.newInstance(rs, mapper, plan, dialect);
-			} catch (SQLException e) {
-				throw dialect.handleSQLException(e);
-			} 
-
-		} else {
-
-			try {
-				// load all objects onto a list
-
-				DataRow sourceRow = ResultSetDataRow.newInstance(rs, dialect);
-
-				if (dialect.supportsCountLimit()) {
-					ListDataRowStream stream = new ListDataRowStream();
-
-					while (rs.next()) {
-						stream.addRow(new HashDataRow(sourceRow));
-					}
-					return stream;
-				} else {
-
-					ListDataRowStream stream = new ListDataRowStream(plan.getMaxCount());
-
-					int count = 0;
-					while (rs.next() && count < plan.getMaxCount()) {
-
-						stream.addRow(new HashDataRow(sourceRow));
-
-						count++;
-
-					}
-					return stream;
-				}
-			} catch (SQLException e) {
-				throw dialect.handleSQLException(e);
-			} finally {
-				try {
-					rs.close();
-					this.close(con);
-				} catch (SQLException e) {
-					throw dialect.handleSQLException(e);
-				}
-			}
-
-		}
-
-	}
-
-	private void executeCommand(DataBaseCommand command) {
-
-		Connection con = null;
-		try {
-			con = this.datasource.getConnection();
-
-			command.execute(mapper, con, null);
-
-		} catch (SQLException e) {
-			Logger.onBookFor(this.getClass()).trace("SQL : {0}", command.getSQL());
-			throw dialect.handleSQLException(e);
-		} finally {
-			close(con);
-		}
-	}
-
-	private void close(Connection con) {
-		try {
-			if (con != null) {
-				con.close();
-			}
-		} catch (SQLException e) {
-			throw dialect.handleSQLException(e);
-		}
 	}
 
 
@@ -266,11 +117,14 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 	 */
 	@Override
 	public DataStore getDataStore(DataStoreName name) throws DataStoreNotFoundException {
-		if (isProviderDataStore(name)){
-			return new RDBMSDataStore(DataStoreName.name(name.getName()));
+
+		DataStore ds = this.stores.get(name);
+
+		if (ds == null) {
+			throw new DataStoreNotFoundException();
 		}
 
-		throw new DataStoreNotFoundException();
+		return ds;
 	}
 
 
@@ -279,9 +133,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 	 */
 	@Override
 	public boolean isProviderDataStore(DataStoreName name) {
-
-		return dialect.existsDatabase(name.getName(), this.datasource );
-
+		return this.stores.containsKey(name);
 	}
 
 
@@ -289,10 +141,43 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 
 		private DataStoreName name;
+		private final DataBaseMapper mapper;
+		private final DataSource datasource;
+		private final RDBMSDialect dialect;
 
-		public RDBMSDataStore (DataStoreName name){
+		public RDBMSDataStore (DataStoreName name,  DataBaseMapper mapper, RDBMSDialect dialect , DataSource datasource){
 			this.name = name;
+			this.mapper = mapper;
+			this.dialect = dialect;
+			this.datasource = datasource;
 		}
+
+		private void executeCommand(DataBaseCommand command) {
+
+			Connection con = null;
+			try {
+				con = datasource.getConnection();
+
+				command.execute(mapper, con, null);
+
+			} catch (SQLException e) {
+				Logger.onBookFor(this.getClass()).trace("SQL : {0}", command.getSQL());
+				throw dialect.handleSQLException(e);
+			} finally {
+				close(con);
+			}
+		}
+
+		private void close(Connection con) {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				throw dialect.handleSQLException(e);
+			}
+		}
+
 
 		/**
 		 * {@inheritDoc}
@@ -316,7 +201,67 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				 */
 				@Override
 				public DataQuery query(DataSetCriteria criteria) {
-					return new RDBMSDataQuery(this, plan(criteria));
+					return new RDBMSDataQuery(RDBMSDataStore.this, this, plan(criteria));
+				}
+
+				protected SearchPlan plan(DataSetCriteria criteria) {
+
+					SearchPlan plan = new SearchPlan();
+					plan.setCountOnly(false); // TODO determine
+					plan.setDistinct(criteria.isDistinct());
+					plan.setFowardOnly(true);
+					plan.setReadOnly(true);
+					plan.setMaxCount(criteria.getMaxCount());
+					plan.setOffSet(criteria.getOffset());
+					plan.setReadOnly(true);
+					plan.setResultColumns(criteria.getResultColumns());
+					plan.setConstraints(criteria.getDataSetRestrictions());
+					plan.setOrdering(criteria.getOrderConstraints());
+					plan.setGrouping(criteria.getGroupConstraint());
+
+					for (RelatedDataSet rd : criteria.getRelatedDataSets()){
+
+						TableRelation relation = new TableRelation(new LogicConstraint(rd.getRelationConstraint().getOperator()) , rd.getRelationOperator());
+						relation.setSourceTableModel(mapper.getTableForDataSet(rd.getSourceDataSetModel().getName()));
+						plan.add(relation);
+
+						if (!rd.getRelationConstraint().getConstraints().isEmpty()){
+							relation = new TableRelation(new LogicConstraint(rd.getRelationConstraint().getOperator()) , rd.getRelationOperator());
+
+
+							for (DataSetConstraint c : rd.getRelationConstraint().getConstraints()){
+
+								if (c instanceof ColumnValueConstraint) {
+									QualifiedName q = ( (ColumnValueConstraint) c).getLeftValuelocator().getName();
+
+									if (q != null){
+
+										relation.setSourceTableModel(mapper.getTableColumnModel(q).getTableModel());
+									}
+
+									q = ( (ColumnValueConstraint) c).getRightValueLocator().getName();
+
+									if (q != null){
+
+										relation.setTargetTableModel(mapper.getTableColumnModel(q).getTableModel());
+									}
+
+
+									relation.getRelationConstraint().addConstraint(rd.getRelationConstraint());
+
+								} else {
+									throw new IllegalStateException("Should not happen");
+								}
+
+							}
+
+							plan.add(relation);
+						}
+
+					}
+
+
+					return plan;
 				}
 
 				/**
@@ -324,7 +269,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				 */
 				@Override
 				public DataSet getDataSet(String name) throws DataSetNotFoundException {
-					return new RDBMSDataSet(this, name);
+					return new RDBMSDataSet(RDBMSDataStore.this, this, name);
 				}
 
 				/**
@@ -332,7 +277,96 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				 */
 				@Override
 				public void updateModel() throws ModelNotEditableException {
-					updatePhysicalModel(schemaName);
+
+					EditableDataBaseModel dbModel = new EditableDataBaseModel();
+
+					for (DBTableModel tm  : mapper.getTableModels()){
+						if (tm.isEmpty()){
+							throw new IllegalModelStateException("Table " + tm.getName() + " has no columns");
+						}
+						dbModel.addDataBaseObjectModel(EditableDBTableModel.valueOf(tm));
+					}
+
+
+					dialect.extendsDatabaseModel(dbModel);
+
+					DataBaseModel existingDBModel = dialect.readDataBaseModel(getName().getName(), datasource);
+
+
+					for (DataBaseObjectModel dbObject : dbModel) {
+
+						DataBaseObjectModel existingModel = existingDBModel.getDataBaseObjectModel(
+								dbObject.getName(), 
+								dbObject.getType()
+								);
+
+						if (existingModel != null) {
+							// alter objets
+							if (dbObject.getType().equals(DataBaseObjectType.TABLE)) {
+
+								EditableDBTableModel newModel = (EditableDBTableModel) dbObject;
+								EditableDBTableModel oldModel = (EditableDBTableModel) existingModel;
+
+								EditableDBTableModel diff = newModel.differenceTo(oldModel);
+
+								// alter only creates, does not remove
+								if (!diff.isEmpty()) {
+									DataBaseCommand command = dialect.createAlterTableCommand(diff);
+									executeCommand(command);
+								}
+
+							}
+						} else {
+							// create object
+							try {
+								if (dbObject.getType().equals(DataBaseObjectType.TABLE)) {
+									EditableDBTableModel tm = (EditableDBTableModel) dbObject;
+
+									DataBaseCommand command = dialect.createCreateTableCommand(tm);
+
+									executeCommand(command);
+
+									// create Indexes	
+									// Group columns into the indexes 
+
+									final List<DataBaseCommand> indexComands = new LinkedList<DataBaseCommand>();
+
+									tm.columns().groupBy(new Mapper<String, DBColumnModel>(){
+
+										@Override
+										public String apply(DBColumnModel obj) {
+											return obj.getUniqueGroupName();
+										}
+
+									}).forEach( new Block<Pair<String,Enumerable<DBColumnModel>>>(){
+
+										@Override
+										public void apply(Pair<String,Enumerable<DBColumnModel>> entry) {
+
+											indexComands.add(dialect.createCreateIndexCommand(entry.getValue() , true));
+
+										}
+
+									});
+
+									for (DataBaseCommand idxCommand :  indexComands){
+										executeCommand(idxCommand);
+									}
+
+
+								} else if (dbObject.getType().equals(
+										DataBaseObjectType.SEQUENCE)) {
+									DataBaseCommand command = dialect
+											.createCreateSequenceCommand((SequenceModel) dbObject);
+									executeCommand(command);
+								}
+
+							} catch (TableAlreadyExistsException e) {
+								Logger.onBookFor(this.getClass()).info(
+										"Table {0} already exists.", dbObject.getName());
+							}
+						}
+					}
 
 				}
 
@@ -341,11 +375,11 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 						String sequenceName) throws SequenceNotFoundException {
 
 					DBTableModel tbModel = mapper.getTableForDataSet(sequenceName);
-					
+
 					if (tbModel  != null){
 						sequenceName = tbModel.getName();
 					}
-					
+
 					return dialect.getSequence(datasource, sequenceName);
 
 
@@ -354,36 +388,46 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				@Override
 				public void registerNamedCriteria(String name,
 						NamedQueryExecutor queryExecutor) {
-					
+
 					Map<String, NamedQueryExecutor> map = executors.get(schemaName);
-					
+
 					if (map == null){
 						map = new HashMap<String, NamedQueryExecutor>();
 						map.put(name, queryExecutor);
-						
+
 						executors.put(schemaName, map);
 					}
-					
+
 				}
 
 				@Override
 				public ParameterizedDataQuery namedQuery(String name) {
-					
+
 					Map<String, NamedQueryExecutor> map = executors.get(schemaName);
-					
+
 					if (map == null){
 						throw new IllegalArgumentException("Not query named " + name + " exists");
 					}
 
 					NamedQueryExecutor queryExecutor = map.get(name);
-					
+
 					if (queryExecutor == null){
 						throw new IllegalArgumentException("Not query named " + name + " exists");
 					}
 
 					return queryExecutor.execute(RDBMSDataStoreProvider.this);
-					
-					
+
+
+				}
+
+				@Override
+				public boolean isReadable() {
+					return true; // TODO check permitions
+				}
+
+				@Override
+				public boolean isWritable() {
+					return true; // TODO check permitions
 				}
 
 			};
@@ -393,109 +437,19 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 	}
 
 
-	private void updatePhysicalModel (DataStoreSchemaName name) throws ModelNotEditableException {
 
-		EditableDataBaseModel dbModel = new EditableDataBaseModel();
-
-		for (DBTableModel tm  : mapper.getTableModels()){
-			if (tm.isEmpty()){
-				throw new IllegalModelStateException("Table " + tm.getName() + " has no columns");
-			}
-			dbModel.addDataBaseObjectModel(EditableDBTableModel.valueOf(tm));
-		}
-
-
-		dialect.extendsDatabaseModel(dbModel);
-
-		DataBaseModel existingDBModel = dialect.readDataBaseModel(name.getDatabaseName(), datasource);
-
-
-		for (DataBaseObjectModel dbObject : dbModel) {
-
-			DataBaseObjectModel existingModel = existingDBModel.getDataBaseObjectModel(
-					dbObject.getName(), 
-					dbObject.getType()
-					);
-
-			if (existingModel != null) {
-				// alter objets
-				if (dbObject.getType().equals(DataBaseObjectType.TABLE)) {
-
-					EditableDBTableModel newModel = (EditableDBTableModel) dbObject;
-					EditableDBTableModel oldModel = (EditableDBTableModel) existingModel;
-
-					EditableDBTableModel diff = newModel.differenceTo(oldModel);
-
-					// alter only creates, does not remove
-					if (!diff.isEmpty()) {
-						DataBaseCommand command = dialect.createAlterTableCommand(diff);
-						executeCommand(command);
-					}
-
-				}
-			} else {
-				// create object
-				try {
-					if (dbObject.getType().equals(DataBaseObjectType.TABLE)) {
-						EditableDBTableModel tm = (EditableDBTableModel) dbObject;
-
-						DataBaseCommand command = dialect.createCreateTableCommand(tm);
-
-						executeCommand(command);
-
-						// create Indexes	
-						// Group columns into the indexes 
-
-						final List<DataBaseCommand> indexComands = new LinkedList<DataBaseCommand>();
-
-						tm.columns().groupBy(new Mapper<String, DBColumnModel>(){
-
-							@Override
-							public String apply(DBColumnModel obj) {
-								return obj.getUniqueGroupName();
-							}
-
-						}).forEach( new Block<Pair<String,Enumerable<DBColumnModel>>>(){
-
-							@Override
-							public void apply(Pair<String,Enumerable<DBColumnModel>> entry) {
-
-								indexComands.add(dialect.createCreateIndexCommand(entry.getValue() , true));
-
-							}
-
-						});
-
-						for (DataBaseCommand idxCommand :  indexComands){
-							executeCommand(idxCommand);
-						}
-
-
-					} else if (dbObject.getType().equals(
-							DataBaseObjectType.SEQUENCE)) {
-						DataBaseCommand command = dialect
-								.createCreateSequenceCommand((SequenceModel) dbObject);
-						executeCommand(command);
-					}
-
-				} catch (TableAlreadyExistsException e) {
-					Logger.onBookFor(this.getClass()).info(
-							"Table {0} already exists.", dbObject.getName());
-				}
-			}
-		}
-
-	}
 
 	private class RDBMSDataQuery implements DataQuery {
 
 
 		private DataStoreSchema dataStoreSchema;
 		private SearchPlan searchPlan;
+		private RDBMSDataStore rdbmsDataStore;
 
-		public RDBMSDataQuery (DataStoreSchema dataStoreSchema, SearchPlan searchPlan){
+		public RDBMSDataQuery (RDBMSDataStore rdbmsDataStore, DataStoreSchema dataStoreSchema, SearchPlan searchPlan){
 			this.dataStoreSchema = dataStoreSchema;
 			this.searchPlan = searchPlan;
+			this.rdbmsDataStore = rdbmsDataStore;
 		}
 
 		/**
@@ -504,6 +458,93 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		@Override
 		public DataRowStream getRowStream() {
 			return executeSearchPlan(searchPlan);
+		}
+
+		protected DataRowStream executeSearchPlan(SearchPlan plan) {
+			ResultSet rs = null;
+			Connection con = null;
+			try {
+
+				con = rdbmsDataStore.datasource.getConnection();
+
+				RetriveDataBaseCommand command = rdbmsDataStore.dialect.createSelectCommand(plan, rdbmsDataStore.mapper);
+				Logger.onBook("SQL").trace(command.toString());
+
+				command.execute( rdbmsDataStore.mapper, con, null);
+				rs = command.getResult();
+
+				// if dialect does not support offset
+				if (!rdbmsDataStore.dialect.supportsOffSet()) {
+
+					try {
+						rs.absolute(plan.getOffSet() + 1);
+
+					} catch (SQLFeatureNotSupportedException e){
+						// iterate manually  until we arrive to the offset
+						int off = 1;
+						while (off < plan.getOffSet() && rs.next()) {
+							//iterate
+							off++;
+						}
+					}
+
+				}
+
+			} catch (SQLException e) {
+				rdbmsDataStore.close(con);
+				throw rdbmsDataStore.dialect.handleSQLException(e);
+			}
+
+
+			if (plan.isFowardOnly() && plan.isReadOnly()) {
+				// fastlane
+				try {
+					return  ResultSetDataRowStream.newInstance(rs, rdbmsDataStore.mapper, plan, rdbmsDataStore.dialect);
+				} catch (SQLException e) {
+					throw rdbmsDataStore.dialect.handleSQLException(e);
+				} 
+
+			} else {
+
+				try {
+					// load all objects onto a list
+
+					DataRow sourceRow = ResultSetDataRow.newInstance(rs, rdbmsDataStore.dialect);
+
+					if (rdbmsDataStore.dialect.supportsCountLimit()) {
+						ListDataRowStream stream = new ListDataRowStream();
+
+						while (rs.next()) {
+							stream.addRow(new HashDataRow(sourceRow));
+						}
+						return stream;
+					} else {
+
+						ListDataRowStream stream = new ListDataRowStream(plan.getMaxCount());
+
+						int count = 0;
+						while (rs.next() && count < plan.getMaxCount()) {
+
+							stream.addRow(new HashDataRow(sourceRow));
+
+							count++;
+
+						}
+						return stream;
+					}
+				} catch (SQLException e) {
+					throw rdbmsDataStore.dialect.handleSQLException(e);
+				} finally {
+					try {
+						rs.close();
+						rdbmsDataStore.close(con);
+					} catch (SQLException e) {
+						throw rdbmsDataStore.dialect.handleSQLException(e);
+					}
+				}
+
+			}
+
 		}
 
 		/**
@@ -527,7 +568,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		 */
 		@Override
 		public DataQuery limit(int startAt, int maxCount) {
-			return new RDBMSDataQuery (this.dataStoreSchema, searchPlan.limit(startAt , maxCount));
+			return new RDBMSDataQuery (rdbmsDataStore,this.dataStoreSchema, searchPlan.limit(startAt , maxCount));
 		}
 
 	}
@@ -537,10 +578,12 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 		private String datasetName;
 		private DataStoreSchema schema;
+		private RDBMSDataStore rdbmsDataStore;
 
-		public RDBMSDataSet (DataStoreSchema dataStoreSchema, String datasetName){
+		public RDBMSDataSet (RDBMSDataStore rdbmsDataStore, DataStoreSchema dataStoreSchema, String datasetName){
 			this.schema = dataStoreSchema;
 			this.datasetName = datasetName;
+			this.rdbmsDataStore = rdbmsDataStore;
 		}
 
 		/**
@@ -561,10 +604,10 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
 
 			if (model != null) {
-				executeCommand(dialect.createInsertCommand(dataRows, model));
+				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createInsertCommand(dataRows, model));
 			}
 		}
 
@@ -579,7 +622,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
 
 			if (model != null) {
 
@@ -624,7 +667,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 
 
-				executeCommand(dialect.createDeleteCommand(deleteCriteria, model));
+				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createDeleteCommand(deleteCriteria, model));
 			}
 
 
@@ -635,10 +678,10 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		 */
 		@Override
 		public void delete(DataSetCriteria criteria) {
-			DBTableModel model = mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
 
 			if (model != null){
-				executeCommand(dialect.createDeleteCommand(criteria, model));
+				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createDeleteCommand(criteria, model));
 			}
 
 		}
@@ -652,14 +695,19 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
 
 			if (model != null) {
-				executeCommand(dialect.createUpdateCommand(dataRows, model));
+				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createUpdateCommand(dataRows, model));
 			}
 		}
 
+
+
 	}
+
+
+
 
 
 

@@ -4,7 +4,7 @@ import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.money.Currency;
-import org.middleheaven.quantity.money.Money;
+import org.middleheaven.quantity.money.CentsMoney;
 
 public class MoneyTypeMapper implements TypeMapper {
 
@@ -16,7 +16,7 @@ public class MoneyTypeMapper implements TypeMapper {
 	 */
 	@Override
 	public String getMappedClassName() {
-		return Money.class.getName();
+		return CentsMoney.class.getName();
 	}
 
 
@@ -31,7 +31,7 @@ public class MoneyTypeMapper implements TypeMapper {
 		
 		Currency c = (Currency) CurrencyTypeMapper.instance().read(row, aggregateParent, columns[1]);
 		
-		return Money.money(amount, c);
+		return CentsMoney.valueOf(amount, c);
 		
 	}
 
@@ -42,7 +42,7 @@ public class MoneyTypeMapper implements TypeMapper {
 	@Override
 	public void write(Object parent, Object object, DataRow row, DataColumnModel ... columns) {
 	
-		Money money = (Money) object;
+		CentsMoney money = (CentsMoney) object;
 		
 		RealTypeMapper.instance().write(null, money.amount(), row, columns[0]);
 		

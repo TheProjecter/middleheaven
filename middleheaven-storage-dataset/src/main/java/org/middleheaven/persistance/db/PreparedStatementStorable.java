@@ -1,10 +1,15 @@
 package org.middleheaven.persistance.db;
 
+import java.io.Reader;
+import java.io.StringReader;
+import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.sql.rowset.serial.SerialClob;
 
 import org.middleheaven.persistance.DataColumn;
 import org.middleheaven.persistance.DataRow;
@@ -79,21 +84,36 @@ public class PreparedStatementStorable {
 			}
 		}  else {
 			switch (cm.getType()){
+			case CLOB:
+//				if (value instanceof Reader){ // TODO handler jdbc driver that has no Clob methods
+//					ps.setClob(i, (Reader) value);
+//					break;
+//				} else {
+//					ps.setClob(i, new StringReader(value.toString()));
+//					break;
+//				}
+				ps.setString(i, value.toString());
+				break;
 			case TEXT:
 				ps.setString(i, value.toString());
 				break;
+			case SMALL_INTEGER:
 			case INTEGER:
 				if (value instanceof Long){
 					ps.setLong(i,((Long)value).longValue());
 				} else if (value instanceof Integer){
 					ps.setInt(i, ((Integer)value).intValue());
-				} 
+				} else if (value instanceof Short){
+					ps.setShort(i, ((Short)value).shortValue());
+				} else if (value instanceof Character){
+					ps.setInt(i, (int)((Character)value).charValue());
+				}
 				break;
 			case LOGIC:
 				ps.setBoolean(i, (Boolean)value);
 				break;
 			default:
-				throw new UnsupportedOperationException(value.getClass() + " cannot be set");
+				throw new UnsupportedOperationException(cm.getType() + " for valor of type " + value.getClass() + " cannot be set");
 			}
 
 		}

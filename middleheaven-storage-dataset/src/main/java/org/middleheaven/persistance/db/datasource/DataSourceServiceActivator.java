@@ -2,8 +2,6 @@ package org.middleheaven.persistance.db.datasource;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -18,6 +16,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.namedirectory.NameDirectoryService;
 import org.middleheaven.namedirectory.NameObjectEntry;
+import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Predicate;
 
@@ -37,9 +36,8 @@ import org.middleheaven.util.function.Predicate;
  */
 public class DataSourceServiceActivator extends ServiceActivator {
 
-	Map <String , DataSourceProvider> sources = new HashMap <String , DataSourceProvider>();
 
-	private HashDataSourceService dataSourceService;
+	private DataSourceServiceClosable dataSourceService;
 
 	private static final String JNDI_DATASOURCE_DIRECTORY = "java:/comp/env/jdbc/";
 
@@ -49,8 +47,7 @@ public class DataSourceServiceActivator extends ServiceActivator {
 	@Override
 	public void collectRequiredServicesSpecifications(Collection<ServiceSpecification> specs) {
 		specs.add(ServiceSpecification.forService(NameDirectoryService.class, true));
-
-
+		specs.add(ServiceSpecification.forService(TransactionService.class, true));
 	}
 	
 	/**
@@ -63,19 +60,25 @@ public class DataSourceServiceActivator extends ServiceActivator {
 	
 	@Override
 	public void activate(final ServiceContext serviceContext ) {
-
+		
+		TransactionService transactionService = serviceContext.getService(TransactionService.class);
+		
+		if (transactionService == null){
+			this.dataSourceService =  new HashDataSourceService();
+		} else {
+			this.dataSourceService =  new TransactionAwareDataSourceService(transactionService);	
+		}
+	
 		NameDirectoryService nameDirectoryService = serviceContext.getService(NameDirectoryService.class);
-
-
+		
 		if (nameDirectoryService != null){
-
 
 			for (NameObjectEntry entry : nameDirectoryService.listObjects(JNDI_DATASOURCE_DIRECTORY)){
 
 				if (entry.getObject() instanceof DataSource) {
 					NameDirectoryLookupDSProvider provider = NameDirectoryLookupDSProvider.provider(nameDirectoryService , JNDI_DATASOURCE_DIRECTORY + entry.getName());
 
-					sources.put(entry.getName(), provider );
+					dataSourceService.addDataSourceProvider(entry.getName(), provider );
 				}
 
 			}
@@ -84,7 +87,7 @@ public class DataSourceServiceActivator extends ServiceActivator {
 			// look for the datasource mapping file
 			ManagedFile folder =  serviceContext.getService(FileContextService.class).getFileContext().getAppConfigRepository();
 
-			folder.filter(new Predicate<ManagedFile>(){
+			folder.children().filter(new Predicate<ManagedFile>(){
 
 				@Override
 				public Boolean apply(ManagedFile file) {
@@ -120,7 +123,7 @@ public class DataSourceServiceActivator extends ServiceActivator {
 								Logger.onBookFor(this.getClass()).error("Error loading datasource file. Provider type not recognized");
 							}
 						}
-						sources.put(connectionParams.getProperty("datasource.name"), provider );
+						dataSourceService.addDataSourceProvider(connectionParams.getProperty("datasource.name"), provider );
 
 					} catch (ManagedIOException e) {
 						Logger.onBookFor(this.getClass()).error(e,"Error loading datasource file");
@@ -130,51 +133,13 @@ public class DataSourceServiceActivator extends ServiceActivator {
 						throw new AtivationException(e);
 					} 
 				}
-				
-				
 			});
-
-			
-
 		}
 
-
-		this.dataSourceService =  new HashDataSourceService();
-
+	
 		serviceContext.register(DataSourceService.class, this.dataSourceService);
 
 	}
-
-
-
-	private class HashDataSourceService implements DataSourceService{
-
-
-		public HashDataSourceService(){}
-
-		@Override
-		public DataSource getDataSource(String name) {
-
-			DataSourceProvider dsp = sources.get(name);
-			if (dsp==null){
-				throw new DataSourceProviderNotFoundException(name);
-			}
-			return dsp.getDataSource();
-		}
-
-		public void addDataSourceProvider(String name  , DataSourceProvider provider) {
-			sources.put(name, provider);
-		}
-
-		/**
-		 * 
-		 */
-		public void close(){
-
-		}
-	}
-
-
 
 	/**
 	 * {@inheritDoc}

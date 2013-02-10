@@ -1,26 +1,48 @@
 package org.middleheaven.domain.store;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.IdentifierEqExpression;
+import org.hibernate.cfg.Mappings;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.mapping.Column;
+import org.hibernate.mapping.Property;
+import org.hibernate.mapping.RootClass;
+import org.hibernate.mapping.SimpleValue;
+import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.CustomType;
+import org.hibernate.type.DateType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.LongType;
+import org.hibernate.type.StringType;
+import org.hibernate.type.TextType;
+import org.hibernate.type.TimeType;
+import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
 import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.criteria.FieldJuntionCriterion;
 import org.middleheaven.domain.criteria.IdentityCriterion;
 import org.middleheaven.domain.model.DomainModel;
+import org.middleheaven.domain.model.EntityFieldModel;
+import org.middleheaven.domain.model.EntityModel;
+import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.domain.query.ListQuery;
 import org.middleheaven.domain.query.Query;
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.persistance.criteria.LogicConstraint;
-import org.middleheaven.util.coersion.TypeCoercing;
+import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
+import org.middleheaven.storage.dataset.mapping.DatasetColumnModel;
+import org.middleheaven.storage.dataset.mapping.DatasetModel;
+import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
 import org.middleheaven.util.criteria.Criterion;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.criteria.FieldInSetCriterion;
@@ -28,13 +50,16 @@ import org.middleheaven.util.criteria.FieldValueCriterion;
 import org.middleheaven.util.criteria.LogicCriterion;
 import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.function.Function;
-import org.middleheaven.util.identity.Identity;
+import org.middleheaven.util.function.Maybe;
 
-public class HibernateDomainStore implements DomainStore {
+/**
+ * Impleemntation of {@link DomainStoreManager} using the Hiberante framework.
+ */
+public class HibernateDomainStore extends AbstractDomainStoreManager {
 	
 	private SessionFactory sessionFactory;
 	private InterceptorAdpater interceptor = new InterceptorAdpater();
-	
+
 	public class InterceptorAdpater extends EmptyInterceptor {
 		
 		private static final long serialVersionUID = -7018647411280423552L;
@@ -88,14 +113,20 @@ public class HibernateDomainStore implements DomainStore {
 
 	}
 	
-	public HibernateDomainStore (DomainModel domainModel){
-
+	public static HibernateDomainStore manage(DomainModel domainModel, DatasetRepositoryModel dataSetModels){
+		return new HibernateDomainStore(domainModel, dataSetModels);
+	}
+	
+	private HibernateDomainStore (DomainModel domainModel, DatasetRepositoryModel dataSetModels){
+		super(domainModel);
 
 		Configuration configuration = new Configuration()
-
-		
 		.setInterceptor(interceptor)
 	    .configure();
+		
+		Mappings mappings = configuration.createMappings();
+		
+		doMapping(domainModel, dataSetModels, mappings);
 		
 		
 		ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
@@ -106,6 +137,113 @@ public class HibernateDomainStore implements DomainStore {
 	}
 
 	
+	/**
+	 * @param domainModel
+	 * @param dataSetModels 
+	 * @param mappings
+	 */
+	private void doMapping(DomainModel domainModel, DatasetRepositoryModel dataSetModels, Mappings mappings) {
+		
+		for (DatasetModel model : dataSetModels.models()){
+			// TODO handle schema
+			Table table = mappings.addTable("schema", null, model.getHardName(), null, false);
+			
+			Map<String, Column> columns = new HashMap<String, Column>();
+			
+			for (DatasetColumnModel column : model.columns()){
+				Column col = new Column();
+				col.setName(column.getHardName());
+				col.setLength(column.getSize());
+				col.setPrecision(column.getPrecision());
+				col.setScale(column.getScale());
+				col.setNullable(column.isNullable());
+				//col.setSqlTypeCode(jdbcType);
+				//col.setSqlType(columnType);
+				
+				columns.put(column.getName(), col);
+				
+				table.addColumn(col);
+				mappings.addColumnBinding(column.getHardName(), col, table);
+			}
+			
+			EntityModel entityModel = domainModel.getModelFor(model.getName());
+			
+			RootClass clazz = new RootClass();
+			clazz.setEntityName(entityModel.getEntityName());
+			clazz.setJpaEntityName(entityModel.getEntityName());
+			
+//			Class javaClass = entityModel.getEntityClass().
+//			
+//			if (javaClass != null) {
+//			    clazz.setClassName(javaClass);
+//			    clazz.setProxyInterfaceName(javaClass);
+//			}
+			clazz.setLazy(false);
+			clazz.setTable(table);
+			
+			for (EntityFieldModel field : entityModel.fields() ) {
+				Property prop = new Property();
+				prop.setName(field.getName().getDesignation());
+				clazz.addProperty(prop);
+				
+				
+				SimpleValue value = new SimpleValue(mappings, table);
+				value.setTypeName(resolveHibernateTypeName(domainModel, field).getName());
+//				if(typeParams != null) {
+//				    value.setTypeParameters(typeParams);
+//				}
+				value.addColumn(columns.get(field.getName().getDesignation()));
+				prop.setValue(value);
+				
+				
+			}
+			
+		}
+		
+	}
+
+
+	/**
+	 * @param field
+	 * @return
+	 */
+	private Type resolveHibernateTypeName(DomainModel domainModel,EntityFieldModel field) {
+		
+		switch (field.getDataType()){
+		case DATE: 
+			return DateType.INSTANCE;
+		case DATETIME:
+			return TimestampType.INSTANCE;
+		case TIME:
+			return TimeType.INSTANCE;
+		case DECIMAL:
+		
+		case INTEGER:
+			return LongType.INSTANCE;
+			
+		case ENUM:
+			Maybe<EnumModel> enumModel = domainModel.getEmumModel(field.getValueType());
+			return new CustomType(new EnumType(enumModel.get()));
+		case LOGIC:
+			return BooleanType.INSTANCE;
+		case MEMO:
+			return TextType.INSTANCE;
+		case TEXT:
+			return StringType.INSTANCE;
+		case STATUS:
+			return IntegerType.INSTANCE;
+		
+		case ONE_TO_MANY:
+		case ONE_TO_ONE:
+		case MANY_TO_MANY:
+		case MANY_TO_ONE:
+		case UNKONW:
+		default:
+			throw new IllegalModelStateException("No type found for " + field.getName());
+		}
+	}
+
+
 	protected final <T> T inSession(Function <T, Session> block) {
 		Session session = null;
 
@@ -124,73 +262,6 @@ public class HibernateDomainStore implements DomainStore {
 		}
 	}
 	
-	@Override
-	public Identity getIdentityFor(final Object object) {
-		 return inSession(new Function<Identity, Session>(){
-
-			@Override
-			public Identity apply(Session session) {
-				
-				Serializable id = session.getIdentifier(object);
-				
-				return TypeCoercing.coerce(id, Identity.class); 
-			}
-			
-			
-		});
-	}
-
-	@Override
-	public <T> T store(final T obj) {
-		return inSession(new Function<T, Session>(){
-
-			@Override
-			public T apply(Session session) {
-				
-				session.save(obj);
-				
-				return obj;
-			}
-			
-			
-		});
-	}
-
-	@Override
-	public <T> void remove(final T obj) {
-	    inSession(new Function<T, Session>(){
-
-			@Override
-			public T apply(Session session) {
-				
-				session.delete(obj);
-				
-				return null;
-			}
-			
-			
-		});
-	}
-
-	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria) {
-		return createQuery(criteria, ReadStrategy.fowardReadOnly());
-	}
-
-	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy) {
-	
-		Session session = this.sessionFactory.getCurrentSession();
-		
-		Criteria hcriteria = session.createCriteria(criteria.getTargetClass());
-		
-				
-		interpreter(criteria, hcriteria);
-		 
-		return new ListQuery<T>(hcriteria.list());
-	
-		
-	}
 	
 	private <T> void interpreter(EntityCriteria<T> criteria , Criteria hcriteria) {
 		
@@ -248,11 +319,6 @@ public class HibernateDomainStore implements DomainStore {
 		
 	}
 
-	@Override
-	public <T> void remove(EntityCriteria<T> criteria) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void addStorageListener(DomainStoreListener listener) {
@@ -263,7 +329,117 @@ public class HibernateDomainStore implements DomainStore {
 	public void removeStorageListener(DomainStoreListener listener) {
 		interceptor.removeStorageListener(listener);
 	}
-	
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Query<T> createQuery(final EntityCriteria<T> criteria, ReadStrategy strategy, StorageUnit unit) {
+
+		return inSession(new Function<Query<T> , Session >(){
+
+			@Override
+			public Query<T> apply(Session session) {
+				Criteria hcriteria = session.createCriteria(criteria.getTargetClass());
+				
+				interpreter(criteria, hcriteria);
+				 
+				return new ListQuery<T>(hcriteria.list());
+			}
+			
+		});
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void deleteInstance(final EntityInstance instance) {
+		
+		 inSession(new Function<Object, Session>(){
+
+				@Override
+				public Object apply(Session session) {
+					
+					session.delete( ((HibernateEntityInstance) instance).getObject());
+					
+					return null;
+				}
+				
+				
+			});
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void insertInstance(final EntityInstance instance) {
+		
+		inSession(new Function<Object, Session>(){
+
+			@Override
+			public Object apply(Session session) {
+				Object obj = ((HibernateEntityInstance) instance).getObject();
+				
+				session.save(obj);
+				
+				return obj;
+			}
+			
+			
+		});
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void updateInstance(final EntityInstance instance) {
+		inSession(new Function<Object, Session>(){
+
+			@Override
+			public Object apply(Session session) {
+				Object obj = ((HibernateEntityInstance) instance).getObject();
+				
+				session.save(obj);
+				
+				return obj;
+			}
+			
+			
+		});
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected EntityInstance merge(Object object) {
+		return new HibernateEntityInstance(object);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void assignIdentity(EntityInstance p) {
+		// no-op
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void flatten(EntityInstance p, Set<EntityInstance> all) {
+		all.add(p);
+	}
+
+
 
 
 }
