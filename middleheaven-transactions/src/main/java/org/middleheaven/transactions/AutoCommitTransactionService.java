@@ -1,12 +1,14 @@
 package org.middleheaven.transactions;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import org.middleheaven.logging.Logger;
 import org.middleheaven.util.Hash;
 
 /**
@@ -14,8 +16,8 @@ import org.middleheaven.util.Hash;
  */
 public class AutoCommitTransactionService implements TransactionService {
 
-	Set<XAResource> xar = new HashSet<XAResource>();
-	ThreadLocal<Transaction> local = new ThreadLocal<Transaction>();
+	LinkedList<XAResource> xar = new LinkedList<XAResource>(); // order of insertion must be mantained
+	ThreadLocal<MyTransaction> local = new ThreadLocal<MyTransaction>();
 
 	/**
 	 * 
@@ -27,12 +29,20 @@ public class AutoCommitTransactionService implements TransactionService {
 	
 	@Override
 	public void enlistResource(XAResource xaResource) {
-		xar.add(xaResource);
+		final MyTransaction transaction = local.get();
+		if (transaction != null && transaction.isBegun ){
+			try {
+				xaResource.prepare(transaction.xid);
+			} catch (XAException e) {
+				throw new RuntimeException(e); // TODO handle better
+			}
+		}
+		xar.addFirst(xaResource);
 	}
 
 	@Override
 	public Transaction getTransaction() {
-		Transaction t  = local.get();
+		MyTransaction t  = local.get();
 		if (t ==null ){
 			t = new MyTransaction();
 			local.set(t);
@@ -85,22 +95,20 @@ public class AutoCommitTransactionService implements TransactionService {
 	private class  MyTransaction implements Transaction{
 
 		Xid xid;
+		boolean isBegun = false;
 		public MyTransaction(){
 			xid = new LongXid();
 		}
 
 		@Override
 		public void begin() {
-
-
 			try {
 				for (XAResource xa : xar){
-
 					xa.start(xid, 0);
-
 				}
-
+				isBegun = true;
 			} catch (XAException e) {
+				Logger.onBookFor(this.getClass()).error("Error beginning", e);
 				roolback();
 			}
 
@@ -114,11 +122,16 @@ public class AutoCommitTransactionService implements TransactionService {
 				}
 			
 				for (XAResource xa : xar){
-					xa.commit(xid, false);
+					xa.commit(xid, true);
+				}
+
+				for (XAResource xa : xar){
+					xa.end(xid, 0);
 				}
 
 				local.set(null);
 			} catch (XAException e) {
+				Logger.onBookFor(this.getClass()).error("Error commiting", e);
 				roolback();
 			}
 		}
@@ -130,13 +143,17 @@ public class AutoCommitTransactionService implements TransactionService {
 				try {
 					xa.rollback(xid);
 				} catch (XAException e) {
-					// log
+					Logger.onBookFor(this.getClass()).error("Error roolling back", e);
 				}
-				
 			}
 
-
-
+			for (XAResource xa : xar){
+				try {
+					xa.forget(xid);
+				} catch (XAException e) {
+					Logger.onBookFor(this.getClass()).error("Error roolling back", e);
+				}
+			}
 
 		};
 	}

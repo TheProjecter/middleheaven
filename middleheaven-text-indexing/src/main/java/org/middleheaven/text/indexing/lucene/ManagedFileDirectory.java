@@ -133,7 +133,7 @@ public abstract class ManagedFileDirectory extends Directory {
     
     
     // Exclude subdirs
-    Set<String> childrenNames = dir.filter(new Predicate<ManagedFile>(){
+    Set<String> childrenNames = dir.children().filter(new Predicate<ManagedFile>(){
 
 		@Override
 		public Boolean apply(ManagedFile file) {

@@ -11,7 +11,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.middleheaven.text.indexing.IndexableDocument;
-import org.middleheaven.util.StringUtils;
+import org.middleheaven.util.Splitter;
+import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.criteria.Criterion;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.criteria.FieldCriterion;
@@ -56,8 +57,8 @@ public class CriteriaInterpreter {
 		
 		if(CriterionOperator.CONTAINS.equals(op)){
 			
-			String[] words = StringUtils.split(fc.valueHolder().getValue().toString()," ");
-			if (words.length > 1){
+			Enumerable<String> words = Splitter.on(" ").split(fc.valueHolder().getValue().toString());
+			if (words.size() > 1){
 				// more than one word. use phrasequery
 				PhraseQuery q = new PhraseQuery();
 			
@@ -66,8 +67,8 @@ public class CriteriaInterpreter {
 				}
 				
 				masterQuery.add(q, op.isNegated() ? BooleanClause.Occur.MUST_NOT : BooleanClause.Occur.SHOULD);
-			} else {
-				Query q = new TermQuery(new Term(fc.getFieldName().getDesignation(), words[0] ));
+			} else if (words.size() == 1){
+				Query q = new TermQuery(new Term(fc.getFieldName().getDesignation(), words.getFirst() ));
 				masterQuery.add(q, op.isNegated() ? BooleanClause.Occur.MUST_NOT : BooleanClause.Occur.SHOULD);
 			}
 

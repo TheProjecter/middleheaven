@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.middleheaven.core.reflection.InterceptorProxyHandler;
 import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.inspection.Introspector;
@@ -61,7 +63,7 @@ public class AutoCommitTransactionServiceActivator extends ServiceActivator {
 	public void inactivate(ServiceContext serviceContext) {
 		serviceContext.unRegister(TransactionService.class);
 	}
-
+	
 	final TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
 
 	private class TransactionInterceptor implements WiringInterceptor {
@@ -81,6 +83,10 @@ public class AutoCommitTransactionServiceActivator extends ServiceActivator {
 		@SuppressWarnings("unchecked")
 		public Object proxyfy (final Object original, Class<?> type){
 
+			if (!type.isInterface()){
+				return original;
+			}
+			
 			Enumerable<Method> all = Introspector.of(original.getClass()).inspect()
 					.methods()
 					.notInheritFromObject()
