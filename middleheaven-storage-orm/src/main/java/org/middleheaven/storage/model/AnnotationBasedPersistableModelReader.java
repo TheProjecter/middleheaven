@@ -88,12 +88,11 @@ public class AnnotationBasedPersistableModelReader implements
 
 		fm.setNullable(!pa.isAnnotadedWith(NotNull.class));
 
-		Class<?> valueType = pa.getValueType();
 
 	//	fm.setValueType(valueType);
 
 		if(pa.isAnnotadedWith(Id.class)){
-			Id key = pa.getAnnotation(Id.class).get();
+		//	Id key = pa.getAnnotation(Id.class).get();
 
 			fm.setKey(true);
 			fm.setUnique(true);
@@ -106,8 +105,7 @@ public class AnnotationBasedPersistableModelReader implements
 		} else if (pa.isAnnotadedWith(ManyToOne.class)){
 
 			ManyToOne ref = pa.getAnnotation(ManyToOne.class).get();
-			String fieldName = ref.targetIdentityField();
-
+		//	String fieldName = ref.targetIdentityField();
 		//	mapAsManyToOne(fm,fieldName,valueType,builder);
 
 		} else if (pa.isAnnotadedWith(OneToOne.class)){
@@ -115,17 +113,15 @@ public class AnnotationBasedPersistableModelReader implements
 			OneToOne ref = pa.getAnnotation(OneToOne.class).get();
 			String fieldName = ref.targetIdentityField();
 
-			DefaultReferenceDataTypeModel model = new DefaultReferenceDataTypeModel(DataType.ONE_TO_ONE);
-
+		//	DefaultReferenceDataTypeModel model = new DefaultReferenceDataTypeModel(DataType.ONE_TO_ONE);
 		//	model.setTargetType(valueType);
-
 		//	 EditableDomainEntityModel targetModel = builder.getEditableModelOf(valueType);
 
-			if (fieldName.isEmpty()){
+		//	if (fieldName.isEmpty()){
 		//		fieldName = targetModel.identityFieldModel().getName().getName();
-			} else {
-				// TODO validate field exists
-			}
+		//	} else {
+		//		// TODO validate field exists
+		//	}
 
 		//	model.setTargetFieldType(this.resolveValidIdentityType(targetModel.getIdentityType()));
 

@@ -48,5 +48,20 @@ public interface DomainStoreManager {
 	public  void commit(StorageUnit unit);
 
 	public  void roolback(StorageUnit unit);
+	
+	
+	/**
+	 * Register a storage listener.
+	 * @param listener
+	 */
+	public void addStorageListener(DomainStoreListener listener);
+	
+	/**
+	 * Unregister a storage listener.
+	 * @param listener
+	 */
+	public void removeStorageListener(DomainStoreListener listener);
+
+	
 
 }

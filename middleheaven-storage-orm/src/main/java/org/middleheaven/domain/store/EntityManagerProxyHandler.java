@@ -38,7 +38,9 @@ public class EntityManagerProxyHandler implements ProxyHandler {
 				} else if(name.startsWith("set") && args.length>0) {
 					instance.getBean().set(name.substring(3).toLowerCase(), args[0]);
 					return null;
-				} else {
+				} else if(name.equals("toString")) {
+					return instance.getBean().toString();
+				}else {
 					return delegator.invokeSuper(self, args);  // execute the original method.
 				}			
 			

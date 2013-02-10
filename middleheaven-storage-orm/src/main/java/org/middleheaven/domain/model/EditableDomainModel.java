@@ -19,7 +19,7 @@ public class EditableDomainModel extends AbstractEditableModelSet<EntityModel> i
 	public EditableDomainModel(){}
 
 	@Override
-	public <E extends Enum> Maybe<EnumModel> getEmumModel(Class<E> type) {
+	public <E> Maybe<EnumModel> getEmumModel(Class<E> type) {
 		return Maybe.of(enumModels.get(type.getName()));
 	}
 

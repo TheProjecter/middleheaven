@@ -2,6 +2,8 @@ package org.middleheaven.domain.store;
 
 import java.util.Collection;
 
+import org.middleheaven.domain.criteria.EntityCriteria;
+
 
 /**
  * A unit of storage.
@@ -24,7 +26,8 @@ public interface StorageUnit {
 	
 	public void roolback();
 	
-	public void commitTo(EntityInstanceStorage dataStorage);
+	public void commitTo(StoreActionCommiter executer);
 
-	public Collection<EntityInstance> filter(Collection<EntityInstance> all, Class<?> type);
+	public <E> Collection<E> filter(Collection<E> all, EntityCriteria<E> c);
+
 }

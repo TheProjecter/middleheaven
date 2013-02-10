@@ -27,7 +27,7 @@ class DomainStoreResolver implements Resolver {
 	}
 	
 	
-	public class NamedEntityStore extends AbstractEntityStorageDecorator{
+	public class NamedEntityStore extends AbstractDomainStoreDecorator{
 		
 		private String name;
 

@@ -22,14 +22,10 @@ public class HashDomainStoreService implements DomainStoreService {
 	 */
 	private static class Info {
 
-		private EntityInstanceStorage dataStorage;
-		private DomainModel domainModel;
-		private IdentityManager identityManager;
+		private DomainStoreManager domainStoreManager;
 		
-		public Info (IdentityManager identityManager, EntityInstanceStorage dataStorage, DomainModel domainModel) {
-			this.identityManager = identityManager;
-			this.dataStorage = dataStorage;
-			this.domainModel = domainModel;
+		public Info (DomainStoreManager domainStoreManager) {
+			this.domainStoreManager = domainStoreManager;
 		}
 		
 	}
@@ -55,7 +51,8 @@ public class HashDomainStoreService implements DomainStoreService {
 	public DomainStore getStore(String name) {
 		
 		Map<String,DomainStore> stores = threadStore.get();
-		if (stores==null){
+		
+		if (stores == null){
 			stores = new HashMap<String,DomainStore>();
 			threadStore.set(stores);
 		}
@@ -69,8 +66,9 @@ public class HashDomainStoreService implements DomainStoreService {
 			}
 			
 			TransactionService ts = ServiceRegistry.getService(TransactionService.class);
-
-			store = new SessionAwareDomainStore(info.identityManager, info.dataStorage, info.domainModel);
+			DomainStoreManager manager =  info.domainStoreManager;
+			store = new SessionAwareDomainStore(manager);
+			
 			ts.enlistResource((SessionAwareDomainStore)store);
 			
 			stores.put(name, store);
@@ -80,11 +78,11 @@ public class HashDomainStoreService implements DomainStoreService {
 
 
 	@Override
-	public void registerStore(String name, IdentityManager identityManager, EntityInstanceStorage dataStorage, DomainModel domainModel) {
+	public void registerStore(String name, DomainStoreManager domainStoreManager) {
 		if(infos.isEmpty()){
 			this.firstEntityName = name;
 		}
-		this.infos.put(name, new Info(identityManager, dataStorage,domainModel));
+		this.infos.put(name, new Info(domainStoreManager));
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class TestSubject {
 	private Identity identity;  
 	
 	private Collection<TestFamillyMember> familly = new ArrayList<TestFamillyMember>();
-
+	
 	@Transient
 	private String transientField;
 	

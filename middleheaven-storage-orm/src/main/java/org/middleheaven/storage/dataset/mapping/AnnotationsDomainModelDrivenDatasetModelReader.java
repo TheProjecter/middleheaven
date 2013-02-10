@@ -11,6 +11,7 @@ import org.middleheaven.domain.model.DataTypeModel;
 import org.middleheaven.domain.model.DefaultReferenceDataTypeModel;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityModel;
+import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.domain.model.FieldModel;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.storage.annotations.Column;
@@ -26,18 +27,18 @@ import org.middleheaven.util.function.Maybe;
 /**
  * 
  */
-public class AnnotationsDomaniModelDrivenDatasetModelReader implements
+public class AnnotationsDomainModelDrivenDatasetModelReader implements
 DatasetRepositoryModelReader {
 
 
-	public static AnnotationsDomaniModelDrivenDatasetModelReader newInstance(ClassSet domainClasses, DomainModel domainModel){
-		return new AnnotationsDomaniModelDrivenDatasetModelReader( domainClasses,  domainModel);
+	public static AnnotationsDomainModelDrivenDatasetModelReader newInstance(ClassSet domainClasses, DomainModel domainModel){
+		return new AnnotationsDomainModelDrivenDatasetModelReader( domainClasses,  domainModel);
 	}
 
 	private final ClassSet domainClasses;
 	private final DomainModel domainModel;
 
-	private AnnotationsDomaniModelDrivenDatasetModelReader(ClassSet domainClasses, DomainModel domainModel){
+	private AnnotationsDomainModelDrivenDatasetModelReader(ClassSet domainClasses, DomainModel domainModel){
 		this.domainClasses = domainClasses;
 		this.domainModel = domainModel;
 	}
@@ -130,15 +131,13 @@ DatasetRepositoryModelReader {
 						columnModel.setScale(column.scale());
 						columnModel.setSize(column.length());
 
+					} else {
+						columnModel.setHardName(object.getName());
 					}
 
 					columnModel.setVersion(fieldModel.isVersion()); 
-
 					columnModel.setKey(fieldModel.isIdentity());
-
 					columnModel.setIndexed(object.isAnnotadedWith(Indexed.class) || fieldModel.isDiscriminator() || columnModel.isKey());
-
-
 					columnModel.setUnique(fieldModel.isUnique());
 					columnModel.setUniqueGroupName(fieldModel.getUniqueGroup());
 
@@ -150,7 +149,12 @@ DatasetRepositoryModelReader {
 						columnModel.setUniqueGroupName(StringUtils.maybe(maybeUnique.get().group()).or(columnModel.getName()));
 					} 
 
-					columnModel.setValueType(valueTypeOf(fieldModel));
+					ColumnValueType valueType = valueTypeOf(fieldModel , domainModel);
+					
+					if (columnModel.getValueType() != null && !columnModel.getValueType().isCompatible(valueType)){
+						throw new RuntimeException();
+					}
+					columnModel.setValueType(valueType);
 
 					dsModel.addDatasetColumnModel(columnModel);
 				}
@@ -166,15 +170,32 @@ DatasetRepositoryModelReader {
 
 	/**
 	 * @param fieldModel
+	 * @param domainModel2 
 	 * @return
 	 */
-	protected ColumnValueType valueTypeOf(FieldModel fieldModel) {
+	protected ColumnValueType valueTypeOf(FieldModel fieldModel, DomainModel domainModel) {
 		try {
 			switch (fieldModel.getDataType()){
 			case MANY_TO_ONE:
 			case ONE_TO_ONE:
 				DefaultReferenceDataTypeModel typeModel = (DefaultReferenceDataTypeModel)fieldModel.getDataTypeModel();
 				return valueTypeOf(typeModel.getTargetFieldDataType());
+			case STATUS:
+			case ENUM:
+				Maybe<EnumModel> maybeModel = domainModel.getEmumModel(fieldModel.getValueType());
+				if (maybeModel.isAbsent()){
+					return ColumnValueType.SMALL_INTEGER;
+				} else {
+					final Class<?> persistableType = maybeModel.get().getPersistableType();
+					if (String.class.isAssignableFrom(persistableType))
+					{
+						return ColumnValueType.TEXT;
+					}
+					else if (Number.class.isAssignableFrom(persistableType))
+					{
+						return ColumnValueType.SMALL_INTEGER;
+					}
+				}
 			default:
 				return valueTypeOf(fieldModel.getDataType());
 			}
@@ -192,9 +213,6 @@ DatasetRepositoryModelReader {
 			return ColumnValueType.DATETIME;
 		case DECIMAL:
 			return ColumnValueType.DECIMAL;
-		case STATUS:
-		case ENUM:
-			return ColumnValueType.SMALL_INTEGER;
 		case INTEGER:
 			return ColumnValueType.INTEGER;
 		case LOGIC:

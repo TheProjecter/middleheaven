@@ -38,6 +38,10 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 		};
 	}
 	
+	public String toString(){
+		return String.valueOf(bean);
+	}
+	
 	public MetaBean getBean(){
 		return bean;
 	}

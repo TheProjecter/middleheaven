@@ -10,6 +10,6 @@ import org.middleheaven.util.function.Maybe;
 public interface DomainModel extends ModelSet<EntityModel>{
 
 
-	public <E extends Enum> Maybe<EnumModel> getEmumModel(Class<E> type);
+	public <E> Maybe<EnumModel> getEmumModel(Class<E> type);
 	
 }

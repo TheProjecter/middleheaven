@@ -1,16 +1,18 @@
 package org.middleheaven.domain.store;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
+import org.middleheaven.domain.criteria.EntityCriteria;
+import org.middleheaven.storage.inmemory.EntityInstanceEntityCriteriaInterpreter;
 import org.middleheaven.util.identity.Identity;
 
 public class ArrayStorageUnit implements StorageUnit {
 
-	private final List<StoreAction> actions = new LinkedList<StoreAction>();
+	private final Collection<StoreAction> actions = new LinkedList<StoreAction>();
 
 	@Override
 	public void addAction(StoreAction action) {
@@ -19,14 +21,38 @@ public class ArrayStorageUnit implements StorageUnit {
 
 	@Override
 	public void simplify() {
-		// TODO implement ArrayStorageUnit.simplify
-
+	
+		if (actions.isEmpty()){
+			return;
+		}
+		
+		LinkedList<StoreAction> test = new LinkedList<StoreAction>(actions);
+		LinkedList<StoreAction> all = new LinkedList<StoreAction>();
+		
+		outter: while (!test.isEmpty()){
+			StoreAction action = test.removeFirst();
+			
+			for (Iterator<StoreAction> it = all.iterator(); it.hasNext(); ){
+				StoreAction a = it.next();
+				if (a.isRepeated(action)){
+					continue outter;
+				} else if (a.isContrary(action)){
+					it.remove();
+					continue outter;
+				}
+			}
+		
+			all.add(action);
+		}
+		
+		actions.clear();
+		actions.addAll(all);
 	}
 
 	@Override
-	public void commitTo(EntityInstanceStorage dataStorage) {
+	public void commitTo(StoreActionCommiter executer) {
 		for (StoreAction action : actions) {
-			action.execute(dataStorage);
+			executer.commit(action);
 		}
 		actions.clear();
 	}
@@ -36,29 +62,48 @@ public class ArrayStorageUnit implements StorageUnit {
 		actions.clear();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Collection<EntityInstance> filter(Collection<EntityInstance> all, Class<?> type) {
+	public <E> Collection<E> filter(Collection<E> all, EntityCriteria<E> c) {
+
 		if (actions.isEmpty()){
 			return all;
 		}
 		
-		Map<Identity, EntityInstance> result = new LinkedHashMap<Identity,EntityInstance>();
+		Class<?> type = c.getTargetClass();
 		
-		for (EntityInstance s : all){
-			result.put(s.getIdentity(), s);
+		Map<Identity, E> result = new LinkedHashMap<Identity, E>();
+		
+		// put all
+		for (E item : all){
+			EntityInstance s = (EntityInstance) item; 
+			result.put(s.getIdentity(), item);
 		}
 		
 		for (StoreAction action : actions){
-			if (type.isInstance(action.getStorable())){
-				if( action instanceof DeleteAction){
-					result.remove(action.getStorable().getIdentity());
+			final EntityInstance candidate = action.getStorable();
+			if (type.isInstance(candidate)){
+				
+				EntityInstance persisted = (EntityInstance) result.get(candidate.getIdentity());
+				
+				if (persisted == null){
+					//  if passes entity criteria, add it 
+					if (EntityInstanceEntityCriteriaInterpreter.interpret(c).apply(candidate)){
+						result.put(candidate.getIdentity(),  c.getTargetClass().cast(candidate));
+					}
 				} else {
-					result.put(action.getStorable().getIdentity(), action.getStorable());
+					if( action.getStoreActionType().isDelete()){ 
+						// if the instance will be deleted, remove it from the result
+						result.remove(candidate.getIdentity());
+					}
 				}
 			}
 		}
 		
 		return result.values();
 	}
+
 
 }

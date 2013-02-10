@@ -5,7 +5,7 @@ import org.middleheaven.domain.query.Query;
 import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
 
-abstract class AbstractEntityStorageDecorator implements DomainStore {
+abstract class AbstractDomainStoreDecorator implements DomainStore {
 
 	/**
 	 * Implement this method to retrieve the correct original EntityStore instance. 

@@ -120,9 +120,11 @@ public class EntityInstanceTypeMapper implements TypeMapper {
 
 			if (parent == null){
 				for (EntityInstanceField f : instance.getFields()){
-					EntityFieldTypeMapper mapper = this.fieldTypes.get(f.getModel().getName());
+					if (!f.getModel().isTransient()){
+						EntityFieldTypeMapper mapper = this.fieldTypes.get(f.getModel().getName());
 
-					mapper.write(object, f.getValue(), row, mapper.getColumns());
+						mapper.write(object, f.getValue(), row, mapper.getColumns());
+					}
 				}
 			} else {
 

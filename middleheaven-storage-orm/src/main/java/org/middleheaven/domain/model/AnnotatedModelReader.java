@@ -150,7 +150,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 		Method m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
 		
 		if (m == null){
-			throw new IllegalModelStateException("Enum types must have a method anotated with @Discriminator");
+			throw new IllegalModelStateException("Enum type " + enumType.getName() + " must have a method anotated with @Discriminator");
 		}
 		
 		EditableEnumModel model = context.getEnumModel(enumType, m.getReturnType());
@@ -285,6 +285,8 @@ public class AnnotatedModelReader implements DomainModelReader {
 
 		} else if( pa.getValueType().isEnum()) {
 			fm.setDataType(DataType.ENUM);
+		} else if (Collection.class.isAssignableFrom(pa.getValueType())){
+			fm.setDataType( DataType.ONE_TO_MANY);
 		}
 
 		if ( fm.getDataType() == null){

@@ -4,9 +4,7 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.query.Query;
-import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.transactions.XAResourceAdapter;
 import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
@@ -16,12 +14,11 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 	private final DomainStoreManager manager;
 	private final StorageUnit unit = new ArrayStorageUnit();
 	
-	private final EventListenersSet<DomainStoreListener> listeners = EventListenersSet.newSet(DomainStoreListener.class); 
-	
-	public SessionAwareDomainStore(IdentityManager identityManager,  EntityInstanceStorage storage, DomainModel domainModel) {
-		this.manager = new EntityInstanceStoreManager(identityManager, storage, domainModel);
-	}
 
+	public SessionAwareDomainStore(DomainStoreManager manager) {
+		this.manager = manager;
+	}
+	
 	public Identity getIdentityFor(Object object) {
 		return manager.getIdentityFor(object); 
 	}
@@ -37,7 +34,7 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 	}
 
 
-	@Override @SuppressWarnings("unchecked") // the merge method guarantees the same type
+	@Override  
 	public <T> T store(T obj) {
 		return manager.store(obj, unit);
 	}
@@ -58,31 +55,16 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 	// listeners
 	
 	@Override
-	public void addStorageListener(DomainStoreListener listener) {
-		listeners.addListener(listener);
+	public final void addStorageListener(DomainStoreListener listener) {
+		manager.addStorageListener(listener);
 	}
 
 	@Override
-	public void removeStorageListener(DomainStoreListener listener) {
-		listeners.removeListener(listener);
+	public final void removeStorageListener(DomainStoreListener listener) {
+		manager.removeStorageListener(listener);
 	}
 
-	void fireAddEvent(Object instance) {
 
-		listeners.broadcastEvent().onEntityAdded(new DomainChangeEvent(instance));
-
-	}
-
-	void fireRemovedEvent(Object instance) {
-		
-		listeners.broadcastEvent().onEntityRemoved(new DomainChangeEvent(instance));
-		
-	}
-
-	void fireUpdatedEvent(Object instance) {
-		listeners.broadcastEvent().onEntityChanged(new DomainChangeEvent(instance));
-		
-	}
 
     // XAResource 
 	

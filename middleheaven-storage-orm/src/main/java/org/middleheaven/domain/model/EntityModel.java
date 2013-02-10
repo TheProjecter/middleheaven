@@ -70,7 +70,8 @@ public interface EntityModel  {
 	public Enumerable<? extends EntityFieldModel> fields();
 
 	/**
-	 * @return
+	 * Identifies if the entity identity is assigned by user code.
+	 * @return <code>true</code> if the identity is assigned by user code, <code>false</code> if the system can assign an identity automaticly.
 	 */
 	public boolean isIdentityAssigned();
 
