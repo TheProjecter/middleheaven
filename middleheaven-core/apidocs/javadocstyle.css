@@ -1,184 +1,100 @@
-.code 
-{
-	border: 1px solid black;
-	background-color: #E8E8E8;
-	padding: 5px;
-}
+/* Javadoc style sheet */
 
-body 
-{
-	font: 12px Lucida Grande',Geneva,Verdana,Arial,sans-serif;
-	background-color: white;
-	color: black;
-}
+/* Define colors, fonts and other style attributes here to override the defaults */
 
+/* Page background color */
+body {
+	background-color: #FFFFFF;
+	background-image:url(resources/bkg_gradient.gif);
+	background-repeat: repeat-x;
+	margin:0 auto;
+	font-family:'Lucida Grande', Geneva, Verdana, Arial, sans-serif;
+	font-size:12px;
+	padding:0em 2em;
+	color:#333;
 
-/* Link colors */
-a 
-{
-	color:#00258C; // dark blue
-	text-decoration:none; 
-}
+ }
 
-a:hover 
-{
-	text-decoration:underline;
-}
+/* Common elements */
+
+font {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit; }
+
+hr { display: none; }
+
+a:link { color:#0066cc; }
+a:visited { color:#8b5caf; }
+a:hover { color:#6699cc; }
+
 
 /* Headings */
-h1 
-{ 
-	font-size:28px;
-	color:#0E60CC; 
+h1 {
+	font-size: 145%;
+	background-image:url(resources/h1_hdr.png);
+	background-repeat:no-repeat;
+	border-top:1px dotted #CCCCCC;
+	line-height:1.2em;
+	color:#182737;
+	font-size:2em;
+	padding:1.5em;
+	margin-top: 0px;
+	text-align:left;
 }
 
-/* Table colors */
 
-table
-{
-	border:none;
-}
+/* Default Table elements and colors */
 
-td
-{
-	border:none;
-	border-bottom:1px dotted black;
-}
+th, table { border-collapse:collapse;border-color: #E6E7E8; }
 
-th
-{
-	border:none;
+
+.TableHeadingColor     {
+	background:#000000 url(resources/bkg_blkheader.png) repeat-x scroll left top;
+	color:#FFFFFF;
+	font-size:12px;
+	font-weight:bold;
+	height:31px;
+	text-align:left;
+	padding:1.5em;
 }
 
 .TableHeadingColor th {
-    background-color: #00258C;
-    color: #D6F8FF;
-    font-size: 14px;
-    height: 26px;
+	padding-left: 10px;
 }
 
 
+.TableSubHeadingColor  { background: #EEEEFF } /* Light mauve */
+.TableRowColor { background: #FFFFFF; border-color: #E6E7E8;}
+.TableRowColor td { line-height: 175%; padding-left: 10px;}
 
-.TableSubHeadingColor  
-{ 
-	background: #D6F8FF; // pale blue
-
-} 
-.TableRowColor         
-{ 
-	background: white;
-}
-
-.TableRowColor a {
-    border-bottom: medium none;
-    color: #052AA3; //dack blue
-    font-weight: normal;
-}
-
-tr.TableRowColor:hover
-{
-	background:#D6F8FF;
-}
-
- 
 /* Font used in left-hand frame lists */
-.FrameTitleFont   
-{ 
-	font-size: 120%; 
-	font-weight:bold;
-}
-
-.FrameTitleFont a   
-{  
-	color: black;
-}
-
-.FrameHeadingFont 
-{ 
-	font-weight: bold;
-	font-size:95%;
-}
-
-.FrameItemFont    
-{ 
-	line-height:130%;
-	font-size: 95%; 
-}
-
-.FrameItemFont a
-{
-	color:#333;
-	text-decoration:none;
-}
-
-.FrameItemFont a[title^="class"]
-{
-	color:#333;
-	text-decoration:none;
-}
-
-.FrameItemFont a[title^="enum"]
-{
-	color:333;
-	text-decoration:none;
-}
-
-.FrameItemFont a[title^="interface"]
-{
-	color:#333;
-	text-decoration:none;
-}
-
-.FrameItemFont a:hover
-{
-	color: #052AA3; //dack blue
-	border-bottom:none;
-	text-decoration:none;
-}
+.FrameTitleFont   { font-size: 125%; font-family: Helvetica, Arial, sans-serif; font-weight: bold; margin-top: 1em; display: block; }
+.FrameHeadingFont { font-size: 125%; font-family: 'Lucida Grande', Geneva, Verdana, Arial, sans-serif; font-weight: bold; margin-top: 1em; display: block;  }
+.FrameItemFont    { font-size: 100%; font-family: Helvetica, Arial, sans-serif }
 
 /* Navigation bar fonts and colors */
-.NavBarCell1    
-{ 
-	background-color:white;
-	border:none;
-} 
 
-.NavBarCell1Rev 
-{ 
-	background-color:#D6F8FF;
-	border:1px solid #00258C;
-	padding:0;
-	margin:0;
-} 
-
-.NavBarCell1 a  
-{ 
-	color:#333;
-	text-decoration:none;
+.NavBarCell1    { background-color: #ffffff;
+	background-image:url(resources/bkgheader.png);
+	background-repeat: repeat-x scroll left top;
+	line-height:2em;
+	padding-left:6px;
+	padding-right:6px;
 }
 
-.NavBarCell2 a {
-    color: #00258C;
-    font-size: 90%;
+.NavBarFont1 {
+	color: white;
+}
+.NavBarCell1 a {
+	color: white;
 }
 
-.NavBarFont1Rev 
-{ 
+.NavBarCell1Rev { background-color:#FFFFFF; padding-left:6px; padding-right:6px;}
+.NavBarFont1    { color:#FFFFFF;}
+.NavBarFont1Rev { color:#243446;}
 
-}
+.NavBarCell2    { background-color:#FFFFFF;}
+.NavBarCell3    { background-color:#FFFFFF;}
 
-.NavBarCell2
-{
-	border:none;
-}
-
-.NavBarCell3    
-{ 
-	border:none;
-}
-
-/* Override sizes in font tags */
-font
-{
-	font: inherit !important;
-}
