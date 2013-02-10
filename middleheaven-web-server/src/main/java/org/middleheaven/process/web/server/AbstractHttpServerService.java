@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.middleheaven.aas.old.AccessDeniedException;
+import org.middleheaven.aas.AccessDeniedException;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.process.web.HttpProcessException;
 import org.middleheaven.process.web.HttpProcessIOException;

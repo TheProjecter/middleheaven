@@ -6,7 +6,7 @@ import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
-import org.middleheaven.util.collections.ArrayIterator;
+import org.middleheaven.util.collections.CollectionUtils;
 
 public class AbstractIterationTagSupport extends AbstractBodyTagSupport {
 
@@ -22,12 +22,13 @@ public class AbstractIterationTagSupport extends AbstractBodyTagSupport {
 		this.varName = varName;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void setItems(Object items){
 		if (items != null){
 			if(items instanceof Iterable){
 				this.iterator = ((Iterable)items).iterator();
 			} else if (items.getClass().isArray()){
-				this.iterator = new ArrayIterator<Object>((Object[]) items);
+				this.iterator =  CollectionUtils.arrayIterator((Object[])items);
 			}
 		}
 		

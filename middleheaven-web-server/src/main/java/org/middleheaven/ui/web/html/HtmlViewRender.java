@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UIViewModel;
+import org.middleheaven.ui.components.UIView;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -25,7 +25,7 @@ public class HtmlViewRender extends AbstractHtmlRender {
 	protected void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 		
 		
-		UIViewModel model = (UIViewModel) component.getUIModel();
+		UIView view = (UIView) component;
 
 		Writer writer = document.getBodyWriter();
 		
@@ -38,7 +38,7 @@ public class HtmlViewRender extends AbstractHtmlRender {
 		// render children
 		
 		for (UIComponent c : component.getChildrenComponents()){
-			((HtmlUIComponent) c).writeTo(document, context);
+			((GenericHtmlUIComponent) c).writeTo(document, context);
 		}
 		
 	

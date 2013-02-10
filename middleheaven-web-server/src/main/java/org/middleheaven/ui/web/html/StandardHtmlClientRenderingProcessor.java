@@ -14,7 +14,6 @@ import org.middleheaven.process.web.server.Outcome;
 import org.middleheaven.process.web.server.action.BasicOutcomeStatus;
 import org.middleheaven.process.web.server.action.TerminalOutcome;
 import org.middleheaven.ui.Rendering;
-import org.middleheaven.ui.UIActionHandlerLocator;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIEnvironment;
@@ -22,6 +21,7 @@ import org.middleheaven.ui.UIEnvironmentType;
 import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UIService;
 import org.middleheaven.ui.components.UIWindow;
+import org.middleheaven.ui.events.UIActionEvent;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.web.UIClientRenderingProcessor;
@@ -80,8 +80,10 @@ public class StandardHtmlClientRenderingProcessor extends UIClientRenderingProce
 				UIComponent d = UISearch.absolute(client).search("#" + gid).first();
 				
 				if (d != null){
-					UIActionHandlerLocator.getLocator(context.getAttributes()).handle(action).from(d);
 					
+					HtmlUICommand component = (HtmlUICommand)d;
+					component.fireEvent(new UIActionEvent(action, d));
+
 				}
 				
 				entry.getContent().setContentType("application/json");
@@ -101,7 +103,7 @@ public class StandardHtmlClientRenderingProcessor extends UIClientRenderingProce
 
 				HtmlDocument doc = HtmlDocument.newInstance(context.getContextPath(), context.getCulture());
 
-				((HtmlUIComponent) window).writeTo(doc, r);
+				((GenericHtmlUIComponent) window).writeTo(doc, r);
 
 				entry.getContent().setContentType("text/html; charset=UTF-8");
 				

@@ -7,10 +7,9 @@ import javax.servlet.jsp.JspException;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.ui.GenericUIComponent;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
-import org.middleheaven.ui.rendering.UIRender;
+import org.middleheaven.ui.web.Browser;
 import org.middleheaven.ui.web.html.HtmlDocument;
 import org.middleheaven.ui.web.html.HtmlUIComponent;
 import org.middleheaven.ui.web.tags.AbstractIterationTagSupport;
@@ -41,25 +40,31 @@ public abstract class AbstractUIComponentIterationTagSupport extends AbstractIte
 	
 	public UIComponent getUIComponent(){
 		UIComponent uic = GenericUIComponent.getInstance(getComponentType(), familly);
-		uic.setUIModel(this.getModel());
+
+		uic.getVisibleProperty().set(true);
+		uic.getEnableProperty().set(this.enabled);
+		
 		if(this.getId()!=null){
 			uic.setGID(this.getId());
 		}
+		
+		uic.setFamily(this.familly);
 		return uic;
 	}
 	
 	protected void doRender() throws IOException {
 		final TagContext tagContext = new TagContext(pageContext);
 		
-		prepareRender(tagContext);
+		UIComponent templateComponent = getUIComponent();
+		
+		prepareRender(tagContext, templateComponent);
 		
 		RenderKit renderKit = tagContext.getAttribute(ContextScope.REQUEST, RenderKit.class.getName(),RenderKit.class);
 		
-		UIRender render = renderKit.getRender(UISelectOne.class, familly);
-
+	
 		RenderingContext context = new RenderingContext(tagContext.getAttributes() , renderKit );
 		
-		UIComponent parent =null;
+		UIComponent parent = new Browser(renderKit.getSceneNavigator()); // TODO Fragment
 		try{
 			UIComponentTag parentTag = (UIComponentTag)this.getParent();
 			if(parentTag != null){
@@ -70,8 +75,8 @@ public abstract class AbstractUIComponentIterationTagSupport extends AbstractIte
 		}
 		
 		if(parent == null){
-			HtmlUIComponent html = (HtmlUIComponent)render.render(context, parent , getUIComponent());
-
+			HtmlUIComponent html = (HtmlUIComponent) renderKit.renderComponent(context, parent, templateComponent);
+			
 			HtmlDocument doc = HtmlDocument.newInstance(tagContext.getContextPath(), tagContext.getCulture());
 			
 			html.writeTo(doc,context);
@@ -81,7 +86,7 @@ public abstract class AbstractUIComponentIterationTagSupport extends AbstractIte
 	
 	}
 	
-	protected void prepareRender(TagContext attributeContext) {
+	protected void prepareRender(TagContext attributeContext, UIComponent templateComponent) {
 		//this.getModel().setEnabled(enabled);		
 	}
 

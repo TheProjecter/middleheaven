@@ -46,8 +46,9 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 			 // this is the content type + charset. eg: text/html;charset=UTF-
 			 int offset = type.lastIndexOf("charset=");
 			 String  encoding = null;
-			 if (offset != -1)
+			 if (offset != -1){
 				 encoding = extractContentTypeValue(type, offset + 8);
+			 }
 			 String  contentType = extractContentTypeValue(type, 0);
 
 			// if (factory.shouldParsePage(contentType)) {
@@ -77,23 +78,27 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 	 }
 
 	 private String  extractContentTypeValue(String  type, int startIndex) {
-		 if (startIndex < 0 )
+		 if (startIndex < 0 ){
 			 return null;
+		 }
 
 		 // Skip over any leading spaces
-		 while (startIndex < type.length() && type.charAt(startIndex) == ' ')
+		 while (startIndex < type.length() && type.charAt(startIndex) == ' '){			 
 			 startIndex++;
+		 }
 
-		 if (startIndex >= type.length())
+		 if (startIndex >= type.length()){
 			 return null;
+		 }
 
 		 int endIndex = startIndex;
 
 		 if (type.charAt(startIndex) == '"') {
 			 startIndex++;
 			 endIndex = type.indexOf('"', startIndex);
-			 if (endIndex == -1)
+			 if (endIndex == -1){
 				 endIndex = type.length();
+			 }
 		 } else {
 			 // Scan through until we hit either the end of the string or a
 			 // special character (as defined in RFC-). Note that we ignore '/'
@@ -102,31 +107,34 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 			 while (endIndex < type.length() && (ch = type.charAt(endIndex)) != ' ' && ch != ';'
 				 && ch != '(' && ch != ')' && ch != '[' && ch != ']' && ch != '<' && ch != '>'
 					 && ch != ':' && ch != ',' && ch != '=' && ch != '?' && ch != '@' && ch!= '"'
-						 && ch !='\\')
+						 && ch !='\\'){
 				 endIndex++;
+			 }
 		 }
 		 return type.substring(startIndex, endIndex);
 	 }
 
 	 /** Prevent content-length being set if page is parseable. */
 	 public void setContentLength(int contentLength) {
-		 if (!parseablePage) super.setContentLength(contentLength);
+		 if (!parseablePage){
+			 super.setContentLength(contentLength);
+		 }
 	 }
 
 	 /** Prevent content-length being set if page is parseable. */
 	 public void setHeader(String  name, String  value) {
-		 if (name.toLowerCase().equals("content-type")) { // ensure ContentType is always set through setContentType()
+		 if (name.equalsIgnoreCase("content-type")) { // ensure ContentType is always set through setContentType()
 			 setContentType(value);
-		 } else if (!parseablePage || !name.toLowerCase().equals("content-length")) {
+		 } else if (!parseablePage || !name.equalsIgnoreCase("content-length")) {
 			 super.setHeader(name, value);
 		 }
 	 }
 
 	 /** Prevent content-length being set if page is parseable. */
 	 public void addHeader(String  name, String  value) {
-		 if (name.toLowerCase().equals("content-type")) { // ensure ContentType is always set through setContentType()
+		 if (name.equalsIgnoreCase("content-type")) { // ensure ContentType is always set through setContentType()
 			 setContentType(value);
-		 } else if (!parseablePage || !name.toLowerCase().equals("content-length")) {
+		 } else if (!parseablePage || !name.equalsIgnoreCase("content-length")) {
 			 super.addHeader(name, value);
 		 }
 	 }

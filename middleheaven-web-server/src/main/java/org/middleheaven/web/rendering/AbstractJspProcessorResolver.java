@@ -3,7 +3,6 @@ package org.middleheaven.web.rendering;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.web.server.action.RequestResponseWebContext;
 import org.middleheaven.ui.UIClient;
-import org.middleheaven.ui.models.impl.SimpleUIClientModel;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.web.Browser;
 import org.middleheaven.ui.web.html.HtmlRenderKit;
@@ -31,7 +30,6 @@ public abstract class AbstractJspProcessorResolver implements RenderingProcessor
 		Browser browser = new Browser(renderKit.getSceneNavigator());
 		
 		
-		browser.setUIModel(new SimpleUIClientModel());
 		browser.setFamily(context.getAgent().getBrowserInfo().getBaseEngine());
 		
 		//TODO detect display size from cookies and javascript

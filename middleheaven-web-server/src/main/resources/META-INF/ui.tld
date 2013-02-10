@@ -11,7 +11,37 @@
 	<info>MiddleHeaven HTML UI Tag library</info>
 	<uri>http://www.middleheaven.org/taglibs/ui</uri>
 
-
+	<tag>
+	    <name>form</name>
+	    <tagclass>org.middleheaven.ui.web.html.tags.UIForm</tagclass>
+	    <bodycontent>JSP</bodycontent>
+	    <attribute>
+	      <name>id</name>
+	      <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	    <attribute>
+	      <name>model</name>
+	      <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	    <attribute>
+	      <name>action</name>
+	      <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	   	<attribute>
+	      <name>family</name>
+	      <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	    <attribute>
+	      <name>name</name>
+	      <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+	    </attribute>
+	</tag>
+	
 	<tag>
 	    <name>selectOne</name>
 	    <tagclass>org.middleheaven.ui.web.html.tags.UISelectOneTag</tagclass>

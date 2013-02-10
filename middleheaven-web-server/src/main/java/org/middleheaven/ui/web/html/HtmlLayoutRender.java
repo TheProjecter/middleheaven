@@ -38,7 +38,7 @@ public class HtmlLayoutRender extends AbstractHtmlRender {
 			.append(" class=\"mh-ui-layout-pane\"")
 			.append(">");
 			
-			((HtmlUIComponent) c).writeTo(document, context);
+			((GenericHtmlUIComponent) c).writeTo(document, context);
 			
 			writer.append("</div>");
 		}

@@ -6,11 +6,10 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIView;
-import org.middleheaven.ui.models.UIViewModel;
 import org.middleheaven.ui.rendering.RenderingContext;
-import org.middleheaven.util.StringUtils;
 
 /**
  * Html implementation of a Layout.
@@ -71,10 +70,11 @@ public class HtmlTabsLayoutRender extends AbstractHtmlRender {
 				String title = "tab " + Integer.toString(count+1);
 				
 				if (c.isType(UIView.class)) {
-					UIViewModel model = (UIViewModel) c.getUIModel();
+					UIView view = (UIView) c;
 					
-					if (model.getTitle() != null){
-						title = this.localize(model.getTitle(), document.getCulture());
+					final TextLocalizable textLocalizable = view.getTitleProperty().get();
+					if (textLocalizable != null){
+						title = this.localize(textLocalizable, document.getCulture());
 					}
 				}
 				
@@ -89,7 +89,7 @@ public class HtmlTabsLayoutRender extends AbstractHtmlRender {
 				body.append(" id=\"").append(component.getGID()).append("-").append(Integer.toString(count++)).append("\"");
 				body.append(">");
 				
-				((HtmlUIComponent) c).writeTo(document, context);
+				((GenericHtmlUIComponent) c).writeTo(document, context);
 				body.append("</div>");
 			}
 	

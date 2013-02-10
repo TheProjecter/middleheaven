@@ -24,7 +24,7 @@ public abstract class AbstractHtmlInputRender extends AbstractHtmlRender{
 	@Override
 	protected void init(UIComponent component) {
 		UIField comp = (UIField)component;
-		comp.setReadState(UIReadState.INPUT_ENABLED);
+		comp.getReadStateProperty().set(UIReadState.INPUT_ENABLED);
 	}
 
 }

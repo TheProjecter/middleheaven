@@ -6,7 +6,6 @@ import java.io.Writer;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -29,11 +28,10 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 
-		UIFieldInputModel model = (UIFieldInputModel) component.getUIModel();
 		UIField comp = (UIField)component;
 
 
-		UIReadState state = comp.getReadState();
+		UIReadState state = comp.getReadStateProperty().get();
 
 		if (state == null){
 			state = UIReadState.INPUT_ENABLED;
@@ -42,21 +40,23 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 		Writer writer = document.getBodyWriter();
 		
 		
-		String value = "";
-		if (model.getValue() != null){
-			if (model.getFormater() == null){
-				value = model.getValue().toString();
+		String strValue = "";
+		final Object value = comp.getValueProperty().get();
+		if (value != null ){
+			if (comp.getFormaterProperty().get() == null){
+				strValue = value.toString();
 			} else {
-				value =model.getFormater().format(model.getValue());
+				strValue = comp.getFormaterProperty().get().format(value);
 			}
 		}
 		
-	
+		String name = comp.getNameProperty().get();
+		
 		if (!state.isVisible()){
 			writer.append("<input ")
 			.append(" id=\"" + component.getGID() + "\"")
-			.append(" name=\"" + model.getName() + "\"")
-			.append(" value=\"" + value + "\"")
+			.append(" name=\"" + name + "\"")
+			.append(" value=\"" + strValue + "\"")
 			.append(" type=\"hidden\"")
 			.append(" class=\"mh-ui-input\"" )
 			.append(" uiType=\"").append("input").append("\"")
@@ -64,8 +64,8 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 		} else if (!state.isEditable()){
 			writer.append("<input ");
 			writer.append(" id=\"" + component.getGID() + "\"");
-			writer.append(" name=\"" + model.getName() + "\"");
-			writer.append(" value=\"" + value + "\"");
+			writer.append(" name=\"" + name + "\"");
+			writer.append(" value=\"" + strValue + "\"");
 			writer.append(" type=\"hidden\"");
 			writer.append("/>");
 			writer.append("<span class=\"readOnlyField\"");
@@ -73,13 +73,13 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 			.append(" class=\"mh-ui-input\"" )
 			.append(" uiType=\"").append("input").append("\"")
 			.append(">")
-			.append(model.getValue().toString())
+			.append(strValue)
 			.append("</span>");
 		} else {
 			writer.append("<input ");
 			writer.append(" id=\"" + component.getGID() + "\"");
-			writer.append(" name=\"" + model.getName() + "\"");
-			writer.append(" value=\"" + value + "\"")
+			writer.append(" name=\"" + name + "\"");
+			writer.append(" value=\"" + strValue + "\"")
 			.append(" class=\"mh-ui-input\"" )
 			.append(" uiType=\"").append("input").append("\"");
 			
@@ -88,8 +88,9 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 				writer.append(" disabled=\"disabled\" ");
 			}
 			
-			if (model.getMaxLength()  > 0 ){
-				writer.append(" maxlength=\"" + model.getMaxLength() + "\"");
+			final Integer maxLength = comp.getMaxLengthProperty().get();
+			if (maxLength  > 0 ){
+				writer.append(" maxlength=\"" + maxLength + "\"");
 			}
 			
 			writer.append("/>");

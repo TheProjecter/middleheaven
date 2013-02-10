@@ -3,9 +3,9 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 import java.io.Writer;
 
-
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UISelectionModel;
+import org.middleheaven.ui.components.UISelectOne;
+import org.middleheaven.ui.data.UIDataItem;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -18,32 +18,32 @@ public class HtmlDropDownRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 		
-		UISelectionModel model = (UISelectionModel) component.getUIModel();
+		UISelectOne selectOne = (UISelectOne) component;
 		
 		Writer writer = document.getBodyWriter();
 		
 		
 		writer.append("<select ")
 		.append(" id=\"" + component.getGID() + "\"")
-		.append(" name=\"" + model.getName() + "\"")
+		.append(" name=\"" + selectOne.getNameProperty().get() + "\"")
 		.append(" class=\"mh-ui-select-one\"" )
 		.append(" uiType=\"").append("select-one").append("\"")
 		.append(">");
 		
-		for (int i=0; i < model.getSize();i++){
+		for (int i=0; i < selectOne.getDataSize();i++){
 			
-			Object element = model.getElementAt(i);
+			UIDataItem element = selectOne.getElementAt(i);
 			writer.append("<option value=\"")
 			.append(element.toString())
 			.append("\" ");
 			
-			if(model.isSelectedIndex(i)){
+			if(selectOne.isSelectedIndex(i)){
 				writer.append(" selected=\"selected\"");
 			}
 			
 			writer
 			.append(" >")
-			.append(model.getFormater().format(element))
+			.append(selectOne.getFormaterProperty().get().format(element.get(0)))
 			.append("</option>");
 			
 			

@@ -13,15 +13,26 @@ import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.bootstrap.EditableContainerFileRepositoryManager;
 import org.middleheaven.core.reflection.ReflectionException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
+import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.io.repository.machine.MachineFiles;
 import org.middleheaven.logging.LoggingLevel;
-import org.middleheaven.logging.LoggingService;
 import org.middleheaven.logging.ServletContextLogListener;
+import org.middleheaven.mail.MailSendingService;
+import org.middleheaven.mail.service.JavaMailActivator;
 import org.middleheaven.namedirectory.NameDirectoryService;
 import org.middleheaven.namedirectory.jndi.JNDINamingDirectoryActivator;
+import org.middleheaven.persistance.DataService;
+import org.middleheaven.persistance.DataServiceActivator;
+import org.middleheaven.persistance.db.DataBaseService;
+import org.middleheaven.persistance.db.JDBCDataBaseServiceActivator;
+import org.middleheaven.persistance.db.datasource.DataSourceService;
+import org.middleheaven.persistance.db.datasource.DataSourceServiceActivator;
 import org.middleheaven.process.web.CommonHttpServerContainers;
+import org.middleheaven.transactions.AutoCommitTransactionService;
+import org.middleheaven.transactions.AutoCommitTransactionServiceActivator;
+import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.util.PropertiesBag;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.Version;
@@ -38,17 +49,40 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	}
 
 	@Override
-	public void configurate(BootstrapContext context) {
-		super.configurate(context);
+	public void preConfigurate(BootstrapContext context) {
+		super.preConfigurate(context);
 		
 		Boolean useNaming = context.getPropertyManagers().getProperty("catalina.useNaming", Boolean.class, Boolean.FALSE);
 		
 		if(useNaming.booleanValue()){
-			context.registerService(ServiceBuilder
-					.forContract(NameDirectoryService.class)
-					.activatedBy(new JNDINamingDirectoryActivator())
-					.newInstance()
-		    );
+			
+		    addService(context, ServiceBuilder
+								.forContract(NameDirectoryService.class)
+								.activatedBy(new JNDINamingDirectoryActivator())
+								.newInstance());
+		       
+
+		    addService(context,ServiceBuilder
+					.forContract(TransactionService.class)
+					.activatedBy(new AutoCommitTransactionServiceActivator())
+					.newInstance());
+					
+			  addService(context,ServiceBuilder
+					.forContract(DataSourceService.class)
+					.activatedBy(new DataSourceServiceActivator())
+					.newInstance());
+			  
+			  addService(context,ServiceBuilder
+					.forContract(DataService.class)
+					.activatedBy(new DataServiceActivator())
+					.newInstance());
+			  
+			  addService(context,ServiceBuilder
+					.forContract(DataBaseService.class)
+					.activatedBy(new JDBCDataBaseServiceActivator())
+					.newInstance());
+			
+
 		}
 
 		final ServletContext servletContext = this.getServletContext();
@@ -63,8 +97,26 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 		}
 		
 		context.getLoggingService().addLogListener(listener);
+		
+		
+		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Service resolverRequestedService(ServiceSpecification spec) {
+		
+		if (spec.getServiceContractType().equals(MailSendingService.class)){
+			return ServiceBuilder
+					.forContract(MailSendingService.class)
+					.activatedBy(new JavaMailActivator())
+					.newInstance();
+		}
+		
+		return null;
+	}
 
 
 	

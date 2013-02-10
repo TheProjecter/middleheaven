@@ -3,11 +3,9 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 import java.io.Writer;
 
-
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 public class HtmlSecretRender extends AbstractHtmlInputRender {
@@ -25,21 +23,25 @@ public class HtmlSecretRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 
-		UIFieldInputModel model = (UIFieldInputModel) component.getUIModel();
 		UIField comp = (UIField)component;
 
 
-		UIReadState state = comp.getReadState();
+		UIReadState state = comp.getReadStateProperty().get();
 
+		if (state == null){
+			state = UIReadState.INPUT_ENABLED;
+			
+		}
 		Writer writer = document.getBodyWriter();
 		
-		String value = model.getValue() == null ? "" : model.getValue().toString();  
+		String value = comp.getValueProperty().get() == null ? "" : comp.getValueProperty().get().toString();  
+		final String name = comp.getNameProperty().get();
 		
 		if (!state.isVisible()){
 			writer.append("<input ")
 			.append(" type=\"hidden\"")
 			.append(" id=\"" + component.getGID() + "\"")
-			.append(" name=\"" + model.getName() + "\"")
+			.append(" name=\"" + name + "\"")
 			.append(" value=\"" + value + "\"")
 			.append(" type=\"hidden\"")
 			.append(" class=\"mh-ui-input\"" )
@@ -48,7 +50,7 @@ public class HtmlSecretRender extends AbstractHtmlInputRender {
 		} else if (!state.isEditable()){
 			writer.append("<input ");
 			writer.append(" id=\"" + component.getGID() + "\"");
-			writer.append(" name=\"" + model.getName() + "\"");
+			writer.append(" name=\"" + name + "\"");
 			writer.append(" value=\"" + value + "\"");
 			writer.append(" type=\"hidden\"");
 			writer.append("/>");
@@ -57,12 +59,12 @@ public class HtmlSecretRender extends AbstractHtmlInputRender {
 			.append(" class=\"mh-ui-input\"" )
 			.append(" uiType=\"").append("input").append("\"")
 			.append(">")
-			.append(model.getValue().toString())
+			.append(value)
 			.append("</span>");
 		} else {
 			writer.append("<input ");
 			writer.append(" id=\"" + component.getGID() + "\"");
-			writer.append(" name=\"" + model.getName() + "\"");
+			writer.append(" name=\"" + name + "\"");
 			writer.append(" value=\"" + value + "\"")
 			.append(" type=\"password\"")
 			.append(" class=\"mh-ui-input\"" )
@@ -72,8 +74,9 @@ public class HtmlSecretRender extends AbstractHtmlInputRender {
 				writer.append(" disabled=\"disabled\" ");
 			}
 			
-			if (model.getMaxLength()  > 0 ){
-				writer.append(" maxlength=\"" + model.getMaxLength() + "\"");
+			final Integer maxLength = comp.getMaxLengthProperty().get();
+			if (maxLength  > 0 ){
+				writer.append(" maxlength=\"" + maxLength + "\"");
 			}
 			
 			writer.append("/>");

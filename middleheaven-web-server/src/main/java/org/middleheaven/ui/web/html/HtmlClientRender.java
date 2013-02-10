@@ -24,7 +24,6 @@ public class HtmlClientRender extends UIRender {
 		
 		Browser browser =  new Browser(context.getRenderKit().getSceneNavigator());
 		
-		browser.setUIModel(component.getUIModel());
 		browser.setUIParent(parent);
 
 		return browser;

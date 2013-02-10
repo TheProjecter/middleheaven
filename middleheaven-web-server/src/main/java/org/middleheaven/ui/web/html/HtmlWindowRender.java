@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UIWindowModel;
+import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -24,12 +24,12 @@ public class HtmlWindowRender extends AbstractHtmlRender  {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 	
-		UIWindowModel model = (UIWindowModel) component.getUIModel();
+		UIWindow window = (UIWindow) component;
 		
 		Writer head = document.getHeadWriter();
 		
-		if (model.getTitle() != null){
-			head.append(" <title>").append(this.localize(model.getTitle(), document.getCulture())).append("</title>");
+		if (window.getTitleProperty().get() != null){
+			head.append(" <title>").append(this.localize(window.getTitleProperty().get(), document.getCulture())).append("</title>");
 		}
 		
 		Writer body = document.getBodyWriter();
@@ -44,7 +44,7 @@ public class HtmlWindowRender extends AbstractHtmlRender  {
 		// render children
 		
 		for (UIComponent c : component.getChildrenComponents()){
-			((HtmlUIComponent) c).writeTo(document, context);
+			((GenericHtmlUIComponent) c).writeTo(document, context);
 		}
 		
 		

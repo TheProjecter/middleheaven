@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIMessageModel;
+import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -25,14 +25,14 @@ public class HtmlLabelRender extends AbstractHtmlRender {
 	protected void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 		
 		
-		UIMessageModel model = (UIMessageModel) component.getUIModel();
+		UILabel label = (UILabel) component;
 		Writer writer = document.getBodyWriter();
 		
 		writer.append("<label  ")
 		.append(" class=\"mh-ui-label\"" )
 		.append(" id=\"").append(component.getGID()).append("\"")
 		.append(">")
-		.append(this.localize(model.getText(), document.getCulture()))
+		.append(this.localize(label.getTextProperty().get(), document.getCulture()))
 		.append("</label>");
 
 	}

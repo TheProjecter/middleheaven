@@ -3,20 +3,17 @@ package org.middleheaven.ui.web.html.tags;
 import javax.servlet.jsp.JspException;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
-import org.middleheaven.ui.web.HtmlFieldInputModel;
-import org.middleheaven.ui.web.tags.TagContext;
 
 public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 
+	private static final long serialVersionUID = 2674939376659644287L;
+	
 	private Object value;
 	private String type;
 	private boolean required = false;
 	private boolean readOnly = false;
-	private UIFieldInputModel model;
 	private int maxLength;
 	private int minLength;
 	
@@ -28,10 +25,6 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 		this.minLength = minLength;
 	}
 
-	public void setModel(UIFieldInputModel model ){
-		this.model = model;
-	}
-	
 	public void setValue(Object value) {
 		this.value = value;
 	}
@@ -55,38 +48,25 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 		
 		UIField uic = (UIField)super.getUIComponent();
 		
-		uic.setReadState(UIReadState.computeFrom(this.getVisible(), this.getEnabled(), readOnly));
+		uic.getReadStateProperty().set(UIReadState.computeFrom(this.getVisible(), this.getEnabled(), readOnly));
+		uic.getRequiredProperty().set(this.required);
+		uic.getEnableProperty().set(this.getEnabled());
+		uic.getValueProperty().set(value);
+		uic.getMaxLengthProperty().set(this.maxLength);
+		
 		
 		return uic;
 	}
 	
 	public int doStartTag() throws JspException{
-		if(this.model==null){
-			this.model = new HtmlFieldInputModel();
-		}
-		
 		return EVAL_BODY_BUFFERED;
 	}
 	
-	protected void prepareRender(TagContext attributeContext) {
-		super.prepareRender(attributeContext);
-
-		model.setRequired(this.required);
-		model.setEnabled(this.getEnabled());
-		model.setValue(value);
-		model.setMaxLength(maxLength);
-
-	}
 	
 	@Override
 	public void releaseState() {
 		// no-op
 	}
 
-
-	@Override
-	public UIModel getModel() {
-		return model;
-	}
 
 }

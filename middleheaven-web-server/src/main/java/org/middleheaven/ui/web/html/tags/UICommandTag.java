@@ -5,10 +5,7 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.components.UICommand;
-import org.middleheaven.ui.models.UICommandModel;
-import org.middleheaven.ui.web.HtmlComandButtonModel;
 import org.middleheaven.ui.web.tags.TagContext;
 
 
@@ -18,7 +15,6 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 	private boolean validate;
 	private String caption;
 	private String content = "";
-	private UICommandModel model = new HtmlComandButtonModel();
 	private boolean enabled = true;
 	
 	
@@ -51,11 +47,13 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 
 	}
 	
-	protected void prepareRender(TagContext attributeContext) {
-		super.prepareRender(attributeContext);
+	protected void prepareRender(TagContext attributeContext,UIComponent templateComponent) {
+		super.prepareRender(attributeContext , templateComponent);
 		
-		model.setEnabled(enabled);
-		model.setText(TextLocalizable.valueOf(caption));
+		
+		UICommand command = (UICommand) templateComponent;
+		command.getEnableProperty().set(enabled);
+		command.getTextProperty().set(TextLocalizable.valueOf(caption));
 		
 	}
 	
@@ -63,14 +61,6 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 		
 		try {
 			
-			this.model.setEnabled(this.enabled);
-			
-			if (this.caption != null && !caption.trim().isEmpty() ){
-				this.model.setText(TextLocalizable.valueOf(caption));
-			} else {
-				this.model.setText(TextLocalizable.valueOf(this.content));
-			}
-	
 			UICommandSetTag commandSet = this.findAncestorTag(UICommandSetTag.class);
 
 			commandSet.addChildren(this.getUIComponent());
@@ -92,12 +82,5 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 		return UICommand.class;
 	}
 
-	@Override
-	public UIModel getModel() {
-		return model;
-	}
 
-	public void setModel(UICommandModel model ){
-		this.model = model;
-	}
 }

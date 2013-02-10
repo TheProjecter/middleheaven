@@ -6,12 +6,10 @@ import javax.servlet.jsp.JspException;
 
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.ui.GenericUIComponent;
-import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UIInputModel;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
-import org.middleheaven.ui.rendering.UIRender;
+import org.middleheaven.ui.web.Browser;
 import org.middleheaven.ui.web.html.HtmlDocument;
 import org.middleheaven.ui.web.html.HtmlUIComponent;
 import org.middleheaven.ui.web.tags.AbstractBodyTagSupport;
@@ -19,10 +17,13 @@ import org.middleheaven.ui.web.tags.TagContext;
 
 public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagSupport implements UIComponentTag{
 
+
+	private static final long serialVersionUID = 1865799329800955061L;
+	
 	private String familly;
-	private boolean enabled;
+	private boolean enabled = true;
 	private String name;
-	private boolean visible;
+	private boolean visible = true;
 	
 	
 	public void setVisible (boolean visible){
@@ -61,14 +62,15 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 	@Override
 	public UIComponent getUIComponent() {
 		UIComponent uic = GenericUIComponent.getInstance(getComponentType(), familly);
-		uic.setUIModel(this.getModel());
-		
-		uic.setVisible(this.visible);
-		uic.setEnabled(this.enabled);
+
+		uic.getVisibleProperty().set(this.visible);
+		uic.getEnableProperty().set(this.enabled);
 		
 		if(this.getId()!=null){
 			uic.setGID(this.getId());
 		}
+		
+		uic.setFamily(this.familly);
 		return uic;
 	}
 
@@ -76,15 +78,16 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		
 		final TagContext tagContext = new TagContext(pageContext);
 		
-		prepareRender(tagContext);
+		UIComponent templateComponent = getUIComponent();
+		
+		prepareRender(tagContext, templateComponent);
 		
 		RenderKit renderKit = tagContext.getAttribute(ContextScope.REQUEST, RenderKit.class.getName(),RenderKit.class);
 		
-		UIRender render = renderKit.getRender(this.getComponentType(), familly);
-
+		
 		RenderingContext context = new RenderingContext(tagContext.getAttributes() , renderKit );
 		
-		UIComponent parent =null;
+		UIComponent parent = new Browser(renderKit.getSceneNavigator()); // TODO Fragment
 		try{
 			UIComponentTag parentTag = (UIComponentTag)this.getParent();
 			if(parentTag != null){
@@ -93,8 +96,9 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		} catch (ClassCastException e){
 			
 		}
-		HtmlUIComponent html = (HtmlUIComponent)render.render(context, parent , getUIComponent());
 		
+		HtmlUIComponent html = (HtmlUIComponent) renderKit.renderComponent(context, parent,  templateComponent);
+
 		HtmlDocument doc = HtmlDocument.newInstance(tagContext.getContextPath(), tagContext.getCulture());
 		
 		html.writeTo(doc,context);
@@ -102,11 +106,8 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		doc.writeToResponse(pageContext.getOut());
 	}
 	
-	protected void prepareRender(TagContext attributeContext) {
-		if (this.getModel() instanceof UIInputModel){
-			((UIInputModel)this.getModel()).setEnabled(enabled);
-		}
-		
+	protected void prepareRender(TagContext attributeContext, UIComponent templateComponent) {
+
 	}
 
 	public int doEndTag() throws JspException{

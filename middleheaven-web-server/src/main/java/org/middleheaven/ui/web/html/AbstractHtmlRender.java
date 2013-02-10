@@ -16,7 +16,7 @@ import org.middleheaven.ui.rendering.UIRender;
  * 
  * 
  */
-public abstract class AbstractHtmlRender extends UIRender {
+public abstract class AbstractHtmlRender extends UIRender{
 
 
 	private static final long serialVersionUID = 2919032845952457519L;
@@ -38,16 +38,15 @@ public abstract class AbstractHtmlRender extends UIRender {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected final UIComponent build(RenderingContext context, UIComponent parent, UIComponent component) {
+	protected UIComponent build(RenderingContext context, UIComponent parent, UIComponent component) {
 		
-		HtmlUIComponent uic = new HtmlUIComponent(component, this);
-		
-		HtmlUIComponent ruic =  (HtmlUIComponent) Introspector.of(uic).newProxyInstance(new HTMLUIComponentProxyHandler(uic), uic.getComponentType());
+		GenericHtmlUIComponent uic = new GenericHtmlUIComponent(component, this);
+	 
+		HtmlUIComponent ruic =   Introspector.of(uic.getComponentType()).newProxyInstance(new HTMLUIComponentProxyHandler(uic), HtmlUIComponent.class);
 		
 		ruic.setUIParent(parent);
-		
+
 		init(ruic);
-		
 		
 		return ruic;
 	}

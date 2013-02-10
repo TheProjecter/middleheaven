@@ -23,9 +23,14 @@ public class FormTag extends AbstractBodyTagSupport {
 	boolean isUpload = false;
 	boolean hasIntegerFields = false;
 	boolean hasDecimalFields = false;
-
+	boolean javascriptValidation = false;
+	
 	private List<String> dateFieldsIDs = new LinkedList<String>();
 
+	public void setClientSideValidation(boolean validation){
+		this.javascriptValidation = validation;
+	}
+	
 	void setHasIntegerFields(boolean hasIntegerFields){
 		this.hasIntegerFields= hasIntegerFields;
 	}
@@ -33,7 +38,6 @@ public class FormTag extends AbstractBodyTagSupport {
 	void setHasDecimalFields(boolean hasDecimalFields){
 		this.hasDecimalFields= hasDecimalFields;
 	}
-
 
 	void addDatePickedFieldID(String id){
 		this.dateFieldsIDs.add(id);
@@ -49,7 +53,7 @@ public class FormTag extends AbstractBodyTagSupport {
 
 	public int doStartTag() throws JspException {
 		if (id==null){
-			super.id = Integer.toString(random.nextInt());
+			super.id = Integer.toHexString(random.nextInt());
 		}
 
 		action = UrlStringUtils.addContextPath(
@@ -111,6 +115,10 @@ public class FormTag extends AbstractBodyTagSupport {
 	}
 
 	private void writeValidationHookScript() throws JspTagException {
+		if (!this.javascriptValidation){
+			return;
+		}
+		
 		final String contextPath = ((HttpServletRequest)this.pageContext.getRequest()).getContextPath();
 
 		write("<script type=\"text/javascript\" encoding=\"ISO-8859-1\"");

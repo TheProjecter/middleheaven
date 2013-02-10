@@ -10,7 +10,6 @@ import org.middleheaven.global.Culture;
 import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -40,11 +39,11 @@ public class HtmlFormRender extends AbstractHtmlRender {
 		writer.append("<table>");
 		for (UIComponent c : component.getChildrenComponents()){
 			writer.append("<tr>");
-			HtmlUIComponent field = ((HtmlUIComponent) c);
+			GenericHtmlUIComponent field = ((GenericHtmlUIComponent) c);
 			
 			writer.append("<td class=\"mh-ui-form-label-column\">");
 			if (c instanceof UIField){
-				String name = ((UIFieldInputModel)c.getUIModel()).getName();
+				String name = ((UIField) c).getNameProperty().get();
 				final Culture culture = document.getCulture();
 				writer.append("<label class=\"mh-ui-label\" lang=\"").append(culture.getLanguage().toString())
 				.append(" for=\"").append(c.getGID()).append("\" >")

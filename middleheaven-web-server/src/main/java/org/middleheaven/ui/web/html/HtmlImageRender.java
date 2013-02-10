@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UIImageModel;
+import org.middleheaven.ui.components.UIImage;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -25,13 +25,13 @@ public class HtmlImageRender extends AbstractHtmlRender {
 	protected void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 		
 		
-		UIImageModel model = (UIImageModel) component.getUIModel();
+		UIImage image = (UIImage) component;
 		Writer writer = document.getBodyWriter();
 		
 		writer.append("<img  ")
 		.append(" class=\"mh-ui-image\"" )
 		.append(" id=\"").append(component.getGID()).append("\"")
-		.append(" src=\"").append(document.getContextPath()).append("/images/").append(model.getImageName()).append("\"")
+		.append(" src=\"").append(document.getContextPath()).append("/images/").append(image.getImageNameProperty().get()).append("\"")
 		.append("/>");
 
 	}

@@ -10,8 +10,8 @@ import java.util.Map;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel;
-import org.middleheaven.ui.models.impl.UIBorderLayoutModel.UIBorderLayoutConstraint;
+import org.middleheaven.ui.layout.UIBorderLayoutConstraint;
+import org.middleheaven.ui.layout.UIBorderLayoutManager;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -31,7 +31,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 		Writer body = document.getBodyWriter();
 
 		final UILayout uiLayout = (UILayout)component;
-		UIBorderLayoutModel model = (UIBorderLayoutModel) uiLayout.getUIModel();		
+		UIBorderLayoutManager layoutManager = (UIBorderLayoutManager) uiLayout.getLayoutManager();
 
 
 		Map<String, UIComponent> mapping = new HashMap<String, UIComponent>();
@@ -40,11 +40,11 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 			mapping.put(c.getGID(), c);
 		}
 
-		UIComponent north = mapping.get(model.getBorderComponentId(UIBorderLayoutConstraint.NORTH));
-		UIComponent west = mapping.get(model.getBorderComponentId(UIBorderLayoutConstraint.WEST));
-		UIComponent east = mapping.get(model.getBorderComponentId(UIBorderLayoutConstraint.EAST));
-		UIComponent center = mapping.get(model.getBorderComponentId(UIBorderLayoutConstraint.CENTER));
-		UIComponent south = mapping.get(model.getBorderComponentId(UIBorderLayoutConstraint.SOUTH));
+		UIComponent north = mapping.get(layoutManager.getBorderComponentId(UIBorderLayoutConstraint.NORTH));
+		UIComponent west = mapping.get(layoutManager.getBorderComponentId(UIBorderLayoutConstraint.WEST));
+		UIComponent east = mapping.get(layoutManager.getBorderComponentId(UIBorderLayoutConstraint.EAST));
+		UIComponent center = mapping.get(layoutManager.getBorderComponentId(UIBorderLayoutConstraint.CENTER));
+		UIComponent south = mapping.get(layoutManager.getBorderComponentId(UIBorderLayoutConstraint.SOUTH));
 
 
 		// horizontal or default
@@ -60,7 +60,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 
 		body.append("<div class=\"mh-ui-layout-border-north\">");
 		if (north != null){
-			((HtmlUIComponent) north).writeTo(document, context);
+			((GenericHtmlUIComponent) north).writeTo(document, context);
 		} else {
 			body.append("&nbsp;");
 		}
@@ -73,7 +73,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 		// west
 		body.append("<div  class=\"mh-ui-layout-border-west\">");
 		if (west != null) {
-			((HtmlUIComponent) west).writeTo(document, context);
+			((GenericHtmlUIComponent) west).writeTo(document, context);
 		} else {
 			body.append("&nbsp;");
 		}
@@ -83,7 +83,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 		body.append("<div  class=\"mh-ui-layout-border-center\">");
 
 		if (center != null) {
-			((HtmlUIComponent) center).writeTo(document, context);
+			((GenericHtmlUIComponent) center).writeTo(document, context);
 		} else {
 			body.append("&nbsp;");
 		}
@@ -94,7 +94,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 
 		body.append("<div  class=\"mh-ui-layout-border-east\">");
 		if (east != null) {
-			((HtmlUIComponent) east).writeTo(document, context);
+			((GenericHtmlUIComponent) east).writeTo(document, context);
 		} else {
 			body.append("&nbsp;");
 		}
@@ -109,7 +109,7 @@ public class HtmlBorderLayoutRender extends AbstractHtmlRender {
 
 		body.append("<div class=\"mh-ui-layout-border-south\">");
 		if (south != null){
-			((HtmlUIComponent) south).writeTo(document, context);
+			((GenericHtmlUIComponent) south).writeTo(document, context);
 		} else {
 			body.append("&nbsp;");
 		}

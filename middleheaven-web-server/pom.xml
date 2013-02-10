@@ -49,6 +49,22 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-storage-dataset</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-transactions</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>middleheaven</groupId>
 			<artifactId>middleheaven-web</artifactId>
 			<version>1.0.0</version>
@@ -77,6 +93,11 @@
 		<dependency>
 			<groupId>middleheaven</groupId>
 			<artifactId>middleheaven-crypto</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-mail</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>

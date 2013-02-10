@@ -21,7 +21,7 @@ public class Browser extends AbstractUIClient implements UIBrowser{
 	}
 
 	@Override
-	public void exit() {
+	public void terminate() {
 		// no-op
 	}
 	
@@ -37,4 +37,5 @@ public class Browser extends AbstractUIClient implements UIBrowser{
 		return navigator;
 	}
 
+	
 }

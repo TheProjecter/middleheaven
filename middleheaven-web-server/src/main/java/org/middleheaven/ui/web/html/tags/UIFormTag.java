@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package org.middleheaven.ui.web.html.tags;
 
 import java.util.LinkedList;
@@ -8,23 +11,34 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UIContainer;
+import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.web.tags.TagContext;
 
-public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
-
-	private String body;
+/**
+ * 
+ */
+public class UIFormTag extends AbstractUIComponentBodyTagSupport {
 	
-	private final List<UIComponent> children = new LinkedList<UIComponent>();
+	private static final long serialVersionUID = 5515115907731723591L;
 
+	private final List<UIComponent> children = new LinkedList<UIComponent>();
+	private String body;
+
+	private String action;
+	
+	public void setAction(String action){
+		this.action = action;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<? extends UIComponent> getComponentType() {
-		return UICommandSet.class;
+		return UIForm.class;
 	}
 	
-
-
 	public UIComponent getUIComponent() {
 		UIContainer uic = (UIContainer) super.getUIComponent();
 		
@@ -33,10 +47,6 @@ public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
 		}
 		
 		return uic;
-	}
-	
-	void addChildren(UIComponent child){
-		this.children.add(child);
 	}
 
 	public final int doAfterBody() throws JspException{
@@ -56,11 +66,9 @@ public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
 		attributeContext.setAttribute(ContextScope.RENDERING, "body", body);
 	}
 
+	
 	@Override
 	public void releaseState() {
 		this.children.clear();
 	}
-	
-
-
 }
