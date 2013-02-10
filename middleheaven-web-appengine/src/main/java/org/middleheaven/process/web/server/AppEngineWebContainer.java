@@ -5,8 +5,12 @@ package org.middleheaven.process.web.server;
 
 import javax.servlet.ServletContext;
 
-import org.middleheaven.application.ApplicationModulesResolver;
+import org.middleheaven.core.services.Service;
+import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.io.repository.ManagedFileRepositoryProvider;
+import org.middleheaven.process.web.CommonHttpServerContainers;
+import org.middleheaven.util.Splitter;
+import org.middleheaven.util.Version;
 import org.middleheaven.web.container.WebContainerBootstrapEnvironment;
 import org.middleheaven.web.container.WebContainerInfo;
 
@@ -53,8 +57,9 @@ public class AppEngineWebContainer extends WebContainerBootstrapEnvironment {
 	 */
 	@Override
 	public WebContainerInfo getWebContainerInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		String serverInfo = this.getServletContext().getServerInfo();
+	
+		return new WebContainerInfo(CommonHttpServerContainers.APPENGINE , Version.valueOf(Splitter.on('/').split(serverInfo).getLast()));
 	}
 
 	/**
@@ -62,8 +67,16 @@ public class AppEngineWebContainer extends WebContainerBootstrapEnvironment {
 	 */
 	@Override
 	public ManagedFileRepositoryProvider getManagedFileRepositoryProvider() {
-		// determine aapengine file system
+		// determine appengine file system
 		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Service resolverRequestedService(ServiceSpecification spec) {
+		return null;
 	}
 
 
