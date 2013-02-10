@@ -5,14 +5,15 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.UIMessageModel;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UIReadState;
-import org.middleheaven.ui.binding.BeanBinding;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILabel;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public class SLabel extends JLabel implements UILabel {
 
@@ -27,26 +28,15 @@ public class SLabel extends JLabel implements UILabel {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private final Property<Boolean> visible = BindedProperty.bind("visible", this);
+	private final Property<Boolean> enable = BindedProperty.bind("enable", this);
+	private final Property<TextLocalizable> text = STextProperty.bind(this);
+	
 	private String family;
 	private String id;
-	private UIMessageModel model;
 	private UIComponent parent;
 
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIMessageModel)model;
-		
-		
-		this.setText(SDisplayUtils.localize(this.model.getText()));
-		
-		BeanBinding.bind(this.model, this);
-	}
 	
-	@Override
-	public void addComponent(UIComponent component) {
-		//no-op
-	}
-
 	@Override
 	public List<UIComponent> getChildrenComponents() {
 		return Collections.emptyList();
@@ -73,11 +63,6 @@ public class SLabel extends JLabel implements UILabel {
 	}
 
 	@Override
-	public UIMessageModel getUIModel() {
-		return model;
-	}
-
-	@Override
 	public UIComponent getUIParent() {
 		return parent;
 	}
@@ -85,11 +70,6 @@ public class SLabel extends JLabel implements UILabel {
 	@Override
 	public boolean isRendered() {
 		return true;
-	}
-
-	@Override
-	public void removeComponent(UIComponent component) {
-		// nop-op
 	}
 
 	@Override
@@ -131,9 +111,36 @@ public class SLabel extends JLabel implements UILabel {
 		return UIPosition.pixels(this.getX(),this.getY());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public UIReadState getReadState() {
-		return UIReadState.OUTPUT_ONLY;
+	public Property<TextLocalizable> getTextProperty() {
+		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<UIReadState> getReadStateProperty() {
+		return ValueProperty.readOnly("readState", UIReadState.OUTPUT_ONLY);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
 	}
 	
 

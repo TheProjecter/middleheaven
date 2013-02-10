@@ -6,9 +6,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import org.middleheaven.ui.UIModel;
+import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
+import org.middleheaven.ui.components.UILayoutManager;
+import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public abstract class SDocumentInput extends SBaseFieldInput implements UIField{
 	
@@ -16,25 +19,12 @@ public abstract class SDocumentInput extends SBaseFieldInput implements UIField{
 	private static final long serialVersionUID = -1521785089966526395L;
 
 
-	private JTextComponent txtField;
+	private final JTextComponent txtField;
 
 	public SDocumentInput(JTextComponent txtField){
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.txtField = txtField;
 		this.add(txtField);
-		
-		
-	}
-	
-	protected void setupTextField(JTextComponent text){
-		
-	}
-	
-	public  Document getDocument(Document currentDocument){
-		return currentDocument;
-	}
-
-	private void setupDocument(){
 		
 		Document document = getDocument(this.txtField.getDocument());
 		
@@ -48,45 +38,48 @@ public abstract class SDocumentInput extends SBaseFieldInput implements UIField{
 
 			@Override
 			public void changedUpdate(DocumentEvent event) {
-				getUIModel().setValue(format(txtField.getText()));
+				getValueProperty().set(format(SDocumentInput.this.txtField.getText()));
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent event) {
-				getUIModel().setValue(format(txtField.getText()));
+				getValueProperty().set(format(SDocumentInput.this.txtField.getText()));
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent event) {
-				getUIModel().setValue(format(txtField.getText()));
+				getValueProperty().set(format(SDocumentInput.this.txtField.getText()));
 			}
 			
 		});
+	}
+	
+	protected void setupTextField(JTextComponent text){
+		
+	}
+	
+	public  Document getDocument(Document currentDocument){
+		return currentDocument;
 	}
 	
 	protected Object format(String raw){
 		return  raw;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void setUIModel(UIModel model) {
-		super.setUIModel((UIFieldInputModel) model);
-		setupDocument();
-		setupTextField(txtField);
-		this.txtField.setText((String)this.getUIModel().getValue());
+	public void setUIDataContainer(UIDataContainer container) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
-	
 
 	@Override
 	public boolean hasFocus() {
 		return txtField.hasFocus();
 	}
 
-	@Override
-	public boolean isRendered() {
-		return true;
-	}
-	
+
 	
 	
 }

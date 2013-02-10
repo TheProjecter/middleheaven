@@ -40,7 +40,7 @@ public class SLayoutRender extends SwingUIRender {
 				UIComponent renderedComponent = renderKit.renderComponent(context, s, comp);
 
 				if (renderedComponent instanceof UIView){
-					tabs.add(SDisplayUtils.localize(((UIView)renderedComponent).getUIModel().getTitle()), (JComponent)renderedComponent);
+					tabs.add(SDisplayUtils.localize(((UIView)renderedComponent).getTitleProperty().get()), (JComponent)renderedComponent);
 				} else {
 					tabs.add("", (JComponent)renderedComponent);
 				}
@@ -63,8 +63,7 @@ public class SLayoutRender extends SwingUIRender {
 				comp.setFamily("innerframe");
 				
 				UIComponent renderedComponent = renderKit.renderComponent(render,context, s, comp);
-				renderedComponent.setUIModel(comp.getUIModel());
-				
+
 				JInternalFrame iframe = (JInternalFrame)renderedComponent;
 				
 				iframe.setBounds(0, 0, 200, 200); // TODO how to change this size ? 

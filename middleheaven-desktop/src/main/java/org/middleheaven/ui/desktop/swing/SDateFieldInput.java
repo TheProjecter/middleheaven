@@ -11,15 +11,15 @@ import javax.swing.text.MaskFormatter;
 
 import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.components.UIDateField;
-import org.middleheaven.ui.models.UIFieldInputModel;
+import org.middleheaven.ui.components.UILayoutManager;
+import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.util.property.Property;
 
 public class SDateFieldInput extends SDocumentInput implements UIDateField {
 
 	private static final long serialVersionUID = -8779476270509974866L;
-	ParsableFormatter ff;
-	
+
 	public SDateFieldInput(){
 		super(new JFormattedTextField());
 	
@@ -30,8 +30,8 @@ public class SDateFieldInput extends SDocumentInput implements UIDateField {
 
 			@Override
 			public AbstractFormatter getFormatter(JFormattedTextField txt) {
-				if (ff!=null){
-					return new AbstractFormatterAdapter(ff);
+				if (getFormaterProperty() != null){
+					return new AbstractFormatterAdapter(getFormaterProperty().get());
 				} else {
 					try {
 						return new MaskFormatter("##/##/####");
@@ -44,16 +44,10 @@ public class SDateFieldInput extends SDocumentInput implements UIDateField {
 		});
 	}
 	
-	public void setUIModel(UIModel model){
-		ff = ((UIFieldInputModel)model).getFormater();
-		super.setUIModel(model);
-		
-	}
-	
 	protected Object format(String raw){
 		
 		try {
-			return  ff!=null ? ff.format(raw) : new SimpleDateFormat("dd/MM/yyyy").parse(raw);
+			return  getFormaterProperty() !=null ? getFormaterProperty().get().format(raw) : new SimpleDateFormat("dd/MM/yyyy").parse(raw);
 		} catch (ParseException e) {
 			return raw;
 		}
@@ -63,5 +57,14 @@ public class SDateFieldInput extends SDocumentInput implements UIDateField {
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UIDateField.class;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIDataContainer(UIDataContainer container) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
 	
 }

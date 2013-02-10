@@ -1,6 +1,8 @@
 package org.middleheaven.core.bootstrap.client;
 
+import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceNotAvailableException;
+import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.process.MapContext;
 import org.middleheaven.ui.UIClient;
@@ -9,7 +11,6 @@ import org.middleheaven.ui.UIEnvironmentType;
 import org.middleheaven.ui.UIService;
 import org.middleheaven.ui.components.UIDesktop;
 import org.middleheaven.ui.desktop.swing.SwingRenderKit;
-import org.middleheaven.ui.models.UIClientModel;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 
@@ -32,11 +33,9 @@ public class DesktopUIBootstrapEnvironment extends AbstractStandaloneBootstrapEn
 			
 			UIClient client = uiService.getUIClientRendering(UIEnvironmentType.DESKTOP).getComponent();
 
-			UIClientModel clientModel = (UIClientModel) client.getUIModel();
-
 			UIComponent mainWindow;
 			 if (client.getChildrenCount()>1){
-				mainWindow = clientModel.resolveMainWindow((UIDesktop)client,renderedContext);
+				mainWindow = client.resolveMainWindow((UIDesktop)client,renderedContext);
 			} else if (client.getChildrenCount()==0){
 				logger.error("No main window found");
 				return;
@@ -58,9 +57,7 @@ public class DesktopUIBootstrapEnvironment extends AbstractStandaloneBootstrapEn
 
 			UIClient client =  uiService.getUIClientRendering(UIEnvironmentType.DESKTOP).getComponent();
 			
-			final UIClientModel clientModel = client.getUIModel();
-			
-			UIComponent mainWindow = clientModel.resolveMainWindow((UIDesktop)client,renderedContext);
+			UIComponent mainWindow = client.resolveMainWindow((UIDesktop)client,renderedContext);
 
 			client.getSceneNavigator().dispose(mainWindow);
 			
@@ -75,6 +72,14 @@ public class DesktopUIBootstrapEnvironment extends AbstractStandaloneBootstrapEn
 	@Override
 	public String getName() {
 		return "desktop";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Service resolverRequestedService(ServiceSpecification spec) {
+		return null;
 	}
 
 

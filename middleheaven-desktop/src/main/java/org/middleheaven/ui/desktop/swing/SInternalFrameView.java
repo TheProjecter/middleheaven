@@ -1,8 +1,5 @@
 package org.middleheaven.ui.desktop.swing;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyVetoException;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -11,26 +8,34 @@ import javax.swing.JMenuBar;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
+import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
+import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.binding.BeanBinding;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
-import org.middleheaven.ui.events.UIFocusEvent;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
-import org.middleheaven.ui.models.UIViewModel;
 import org.middleheaven.util.collections.DelegatingList;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
 
 public class SInternalFrameView extends JInternalFrame implements UIView{
 
+	private static final long serialVersionUID = -7574540326870316945L;
+	
 	private String family;
 	private String id;
-	private UIViewModel model;
 	private UIComponent parent;
 
+	private final EventListenersSet<UIPrespectiveListener> prespectiveListeners = EventListenersSet.newSet(UIPrespectiveListener.class);
+	
+	private Property<TextLocalizable> title = STextProperty.bind(this);
+	private Property<Boolean> visible = BindedProperty.bind("visible", this);
+	private Property<Boolean> enable  = BindedProperty.bind("enable", this);
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -73,44 +78,31 @@ public class SInternalFrameView extends JInternalFrame implements UIView{
 
 			@Override
 			public void internalFrameOpened(InternalFrameEvent e) {
-				model.onOpened(new UIPrespectiveEvent(SInternalFrameView.this));
+				prespectiveListeners.broadcastEvent().onOpen(new UIPrespectiveEvent(SInternalFrameView.this));
 			}
 			
 			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
-				model.onClosed(new UIPrespectiveEvent(SInternalFrameView.this));
+				prespectiveListeners.broadcastEvent().onClosed(new UIPrespectiveEvent(SInternalFrameView.this));
 			}
 
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
-				model.onClosing(new UIPrespectiveEvent(SInternalFrameView.this));
+				prespectiveListeners.broadcastEvent().onClosing(new UIPrespectiveEvent(SInternalFrameView.this));
 			}
 
 			@Override
 			public void internalFrameDeiconified(InternalFrameEvent e) {
-				model.onDeiconified(new UIPrespectiveEvent(SInternalFrameView.this));
+				prespectiveListeners.broadcastEvent().onDeiconified(new UIPrespectiveEvent(SInternalFrameView.this));
 			}
 
 			@Override
 			public void internalFrameIconified(InternalFrameEvent e) {
-				model.onIconified(new UIPrespectiveEvent(SInternalFrameView.this));
+				prespectiveListeners.broadcastEvent().onIconified(new UIPrespectiveEvent(SInternalFrameView.this));
 			}
 
 
 		});
-	}
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIViewModel)model;
-
-		this.setTitle(SDisplayUtils.localize(this.model.getTitle()));
-		
-		BeanBinding.bind(this.model, this);
-	}
-	
-	@Override
-	public UIViewModel getUIModel() {
-		return model;
 	}
 
 	@Override
@@ -241,5 +233,53 @@ public class SInternalFrameView extends JInternalFrame implements UIView{
 	public void addComponent(UIComponent component,
 			UILayoutConstraint layoutConstrain) {
 		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTitleProperty() {
+		return title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addPrespectiveListener(UIPrespectiveListener listener) {
+		prespectiveListeners.addListener(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removePrespectiveListener(UIPrespectiveListener listener) {
+		prespectiveListeners.removeListener(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIPrespectiveListener> getPrecpectiveListeners() {
+		return prespectiveListeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
 	}
 }

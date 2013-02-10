@@ -5,13 +5,17 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
+import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
+import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
-import org.middleheaven.ui.models.UICommandModel;
+import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.util.collections.DelegatingList;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public class SToolbar extends JToolBar implements UICommandSet{
 
@@ -20,7 +24,6 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	
 	private String family;
 	private String id;
-	private UICommandModel model;
 	private UIComponent parent;
 	
 	public SToolbar(){
@@ -34,12 +37,7 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	public boolean isType(Class<? extends UIComponent> type) {
 		return type.isAssignableFrom(this.getComponentType());
 	}
-	
-	@Override
-	public UICommandModel getUIModel() {
-		return model;
-	}
-	
+
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
@@ -111,11 +109,6 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	}
 
 	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UICommandModel)model;
-	}
-
-	@Override
 	public void setUIParent(UIComponent parent) {
 		this.parent = parent;
 	}
@@ -140,6 +133,87 @@ public class SToolbar extends JToolBar implements UICommandSet{
 				(int)pixelSize.getWidth().getValue(),
 				(int)pixelSize.getHeight().getValue()
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTextProperty() {
+		return ValueProperty.readOnly("text", null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIContainerLayout(UILayout component) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayout getUIContainerLayout() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addComponent(UIComponent component,
+			UILayoutConstraint layoutConstrain) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 	

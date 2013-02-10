@@ -8,12 +8,17 @@ import java.awt.TrayIcon;
 
 import org.middleheaven.core.bootstrap.BootstrapService;
 import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.process.AttributeContext;
 import org.middleheaven.ui.AbstractUIClient;
 import org.middleheaven.ui.SceneNavigator;
+import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIException;
+import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UIDesktop;
+import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.util.property.Property;
 
 public class Desktop extends AbstractUIClient implements UIDesktop {
 
@@ -48,7 +53,7 @@ public class Desktop extends AbstractUIClient implements UIDesktop {
 	}
 
 	@Override
-	public void exit() {
+	public void terminate() {
 		
 		
 		BootstrapService service = ServiceRegistry.getService(BootstrapService.class);
@@ -62,6 +67,73 @@ public class Desktop extends AbstractUIClient implements UIDesktop {
 	@Override
 	public SceneNavigator getSceneNavigator() {
 		return navigator;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isSplashWindowUsed() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveMainWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIComponent resolveSplashWindow(UIClient client,
+			AttributeContext context) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIContainerLayout(UILayout component) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayout getUIContainerLayout() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addComponent(UIComponent component,
+			UILayoutConstraint layoutConstrain) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 

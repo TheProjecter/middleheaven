@@ -2,9 +2,10 @@ package org.middleheaven.ui.desktop.swing;
 
 import javax.swing.BoxLayout;
 
-import org.middleheaven.ui.UIComponent;
+import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.models.UIFieldInputModel;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	
@@ -16,18 +17,31 @@ public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 	}
 	
-	@Override
-	public UIFieldInputModel getUIModel() {
-		return (UIFieldInputModel)super.getUIModel();
+	private Property<Boolean> required = ValueProperty.writable("required", Boolean.class);
+	private Property<Integer> maxLength= ValueProperty.writable("maxLength", Integer.class);
+	private Property<Integer> minLength= ValueProperty.writable("minLength", Integer.class);
+	private Property<Object> value= ValueProperty.writable("value", Object.class);
+	private Property<ParsableFormatter> formatter = ValueProperty.writable("formatter", ParsableFormatter.class);
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Property<ParsableFormatter> getFormaterProperty() {
+		return formatter;
 	}
 	
-
-	@Override
-	public boolean isRendered() {
-		return true;
+	public Property<Boolean> getRequiredProperty(){
+		return required;
 	}
 	
-	
-	
+	public Property<Integer> getMaxLengthProperty(){
+		return maxLength;
+	}
+	public Property<Integer> getMinLengthProperty(){
+		return minLength;
+	}
+	public Property<Object> getValueProperty(){
+		return value;
+	}
 	
 }

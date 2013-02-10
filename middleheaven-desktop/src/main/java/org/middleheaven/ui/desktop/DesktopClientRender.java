@@ -5,7 +5,6 @@ import org.middleheaven.process.progress.BoundProgress;
 import org.middleheaven.process.progress.Progress;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.models.UIClientModel;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.rendering.UIRender;
@@ -39,15 +38,11 @@ public class DesktopClientRender  extends UIRender {
 		// parent is null has the client is a root element
 		RenderKit renderKit = context.getRenderKit();
 		
-		UIClientModel clientModel = (UIClientModel) component.getUIModel();
-		
-		dclient.setUIModel(clientModel);
-		
 		Progress progress = new BoundProgress(component.getChildrenCount());
 
 		context.setAttribute(ContextScope.RENDERING, "progress", progress);
 
-		UIComponent splash = clientModel.resolveSplashWindow((UIClient)component,context);
+		UIComponent splash = dclient.resolveSplashWindow((UIClient)component,context);
 		
 		// show progress
 		if (splash!=null){

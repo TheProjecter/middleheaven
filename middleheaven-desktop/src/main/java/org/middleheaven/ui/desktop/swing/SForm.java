@@ -2,6 +2,7 @@ package org.middleheaven.ui.desktop.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,12 +13,13 @@ import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.models.UIFormModel;
+import org.middleheaven.ui.components.UILayoutManager;
+import org.middleheaven.ui.models.form.UIFormSheetModel;
 
 /**
  * Form implementation in swing. 
  */
-public class SForm extends SBasePanel implements UIForm ,NamingContainer {
+public class SForm extends SBaseContainerPanel implements UIForm ,NamingContainer {
 
 	UICommandSet commandSet;
 	UILayout layout;
@@ -38,10 +40,7 @@ public class SForm extends SBasePanel implements UIForm ,NamingContainer {
 		this.add((Component)commandSet, BorderLayout.NORTH);
 		this.add((Component)layout, BorderLayout.CENTER);
 	}
-	
-	public UIFormModel getUIModel() {
-		return (UIFormModel) super.getUIModel();
-	}
+
 	
 	@Override
 	public UIComponent findContainedComponent(String componentID) {
@@ -70,7 +69,7 @@ public class SForm extends SBasePanel implements UIForm ,NamingContainer {
 		if (UICommand.class.isAssignableFrom(component.getComponentType())){
 			this.commandSet.addComponent(component);
 		} else {
-			this.layout.addComponent(component);
+			//this.layout.addComponent(component);
 		}
 	}
 	
@@ -90,6 +89,15 @@ public class SForm extends SBasePanel implements UIForm ,NamingContainer {
 	@Override
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UIForm.class;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<UIFormSheetModel> getFormSheets() {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 

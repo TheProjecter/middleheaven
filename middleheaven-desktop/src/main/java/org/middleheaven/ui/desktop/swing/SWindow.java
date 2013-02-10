@@ -1,7 +1,5 @@
 package org.middleheaven.ui.desktop.swing;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
@@ -10,27 +8,37 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
+import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
+import org.middleheaven.ui.UIPrespectiveListener;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIWindow;
-import org.middleheaven.ui.events.UIFocusEvent;
+import org.middleheaven.ui.components.UIWindowsListener;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
 import org.middleheaven.ui.events.UIWindowEvent;
-import org.middleheaven.ui.models.UIWindowModel;
 import org.middleheaven.util.collections.DelegatingList;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
 
 public class SWindow extends JFrame implements UIWindow{
 
+	private static final long serialVersionUID = -5653696867299909583L;
+	
+	private final EventListenersSet<UIPrespectiveListener> prespectiveListeners = EventListenersSet.newSet(UIPrespectiveListener.class);
+	private final EventListenersSet<UIWindowsListener> windowListeners = EventListenersSet.newSet(UIWindowsListener.class);
+	
+	private final Property<Boolean> visible = BindedProperty.bind("visible", this);
+	private final Property<Boolean> enable = BindedProperty.bind("enable", this);
+	private final Property<TextLocalizable> title = STextProperty.bind(this);
+	
 	private UIComponent parent;
 	private String id;
 	private String family;
-	private UIWindowModel model;
-	private UILayout layout;
-	
+
 	public SWindow(){
 
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -54,13 +62,13 @@ public class SWindow extends JFrame implements UIWindow{
 			@Override
 			public void windowOpened(WindowEvent event) {
 				//Invoked the first time a window is made visible.
-				model.onOpened(new UIPrespectiveEvent(SWindow.this));
+				prespectiveListeners.broadcastEvent().onOpen(new UIPrespectiveEvent(SWindow.this));
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent arg0) {
 				// Invoked when a window has been closed as the result of calling dispose on the window.
-				model.onClosed(new UIPrespectiveEvent(SWindow.this));
+				prespectiveListeners.broadcastEvent().onClosed(new UIPrespectiveEvent(SWindow.this));
 			}
 
 			@Override
@@ -68,7 +76,7 @@ public class SWindow extends JFrame implements UIWindow{
 				// Invoked when the user attempts to close the window from the window's system menu. 
 				// If the program does not explicitly hide or dispose the 
 				// window while processing this event, the window close operation will be cancelled. 
-				model.onClosing(new UIPrespectiveEvent(SWindow.this));
+				prespectiveListeners.broadcastEvent().onClosing(new UIPrespectiveEvent(SWindow.this));
 				if (!SWindow.this.isVisible()){
 					SWindow.this.dispose();
 				}
@@ -77,13 +85,13 @@ public class SWindow extends JFrame implements UIWindow{
 			@Override
 			public void windowDeiconified(WindowEvent event) {
 				// Invoked when a window is changed from a minimized to a normal state. 
-				model.onDeiconified(new UIPrespectiveEvent(SWindow.this));
+				prespectiveListeners.broadcastEvent().onDeiconified(new UIPrespectiveEvent(SWindow.this));
 			}
 
 			@Override
 			public void windowIconified(WindowEvent event) {
 				//Invoked when a window is changed from a normal to a minimized state. 
-				model.onIconified(new UIPrespectiveEvent(SWindow.this));
+				prespectiveListeners.broadcastEvent().onIconified(new UIPrespectiveEvent(SWindow.this));
 			}
 
 			
@@ -95,7 +103,7 @@ public class SWindow extends JFrame implements UIWindow{
 				// such as a highlighted title bar. 
 				// The active Window is always either the focused Window, or the first Frame or Dialog that is an owner 
 				// of the focused Window. 
-				model.onAtivated(new UIWindowEvent(SWindow.this));
+				windowListeners.broadcastEvent().onAtivated(new UIWindowEvent(SWindow.this));
 			}
 			
 			@Override
@@ -107,7 +115,7 @@ public class SWindow extends JFrame implements UIWindow{
 				// The active Window is always either the focused Window, or the first Frame or Dialog that is an 
 				// owner of the focused Window.
 				
-				model.onDeativated(new UIWindowEvent(SWindow.this));
+				windowListeners.broadcastEvent().onDeativated(new UIWindowEvent(SWindow.this));
 			}
 
 
@@ -177,11 +185,6 @@ public class SWindow extends JFrame implements UIWindow{
 	}
 
 	@Override
-	public UIWindowModel getUIModel() {
-		return model;
-	}
-
-	@Override
 	public UIComponent getUIParent() {
 		return parent;
 	}
@@ -199,14 +202,6 @@ public class SWindow extends JFrame implements UIWindow{
 	@Override
 	public void setGID(String id) {
 		this.id = id;
-	}
-
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIWindowModel) model;
-		
-		this.setTitle(SDisplayUtils.localize(this.model.getTitle()));
-
 	}
 
 	@Override
@@ -263,5 +258,76 @@ public class SWindow extends JFrame implements UIWindow{
 		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addPrespectiveListener(UIPrespectiveListener listener) {
+		prespectiveListeners.addListener(listener);
+	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removePrespectiveListener(UIPrespectiveListener listener) {
+		prespectiveListeners.removeListener(listener);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addUIWindowListener(UIWindowsListener listener) {
+		windowListeners.addListener(listener);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIPrespectiveListener> getPrecpectiveListeners() {
+		return prespectiveListeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeUIWindowListener(UIWindowsListener listener) {
+		windowListeners.removeListener(listener);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIWindowsListener> getUIWindowListeners(){
+		return windowListeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTitleProperty() {
+		return title;
+	}
+	
 }

@@ -1,25 +1,20 @@
 package org.middleheaven.ui.desktop.swing;
 
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UIModel;
+import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
-import org.middleheaven.ui.models.UIViewModel;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
-public class SPanelView extends SBasePanel implements UIView {
+public class SPanelView extends SBaseContainerPanel implements UIView {
 
 
 	private static final long serialVersionUID = 1L;
+	private Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
 
-	public void setUIModel(UIModel model){
-		super.setUIModel((UIViewModel)model);
-		
-	}
-	
-	public UIViewModel getUIModel(){
-		return (UIViewModel)super.getUIModel();
-	}
 
 	@Override
 	public <T extends UIComponent> Class<T> getComponentType() {
@@ -49,6 +44,38 @@ public class SPanelView extends SBasePanel implements UIView {
 	public void addComponent(UIComponent component,
 			UILayoutConstraint layoutConstrain) {
 		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addPrespectiveListener(UIPrespectiveListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removePrespectiveListener(UIPrespectiveListener listener) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIPrespectiveListener> getPrecpectiveListeners() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTitleProperty() {
+		return text;
 	}
 	
 

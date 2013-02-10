@@ -4,6 +4,7 @@ import org.middleheaven.ui.GenericUIComponent;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.rendering.UIRender;
 

@@ -1,18 +1,23 @@
 package org.middleheaven.ui.desktop.swing;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 
+import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.UIModel;
+import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
-import org.middleheaven.ui.binding.BeanBinding;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
-import org.middleheaven.ui.models.UICommandModel;
+import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.util.collections.DelegatingList;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public class SMenuBar extends JMenuBar implements UICommandSet {
 
@@ -20,18 +25,48 @@ public class SMenuBar extends JMenuBar implements UICommandSet {
 	
 	private String family;
 	private String id;
-	private UICommandModel model;
 	private UIComponent parent;
 	
 	public SMenuBar(){}
 
+	private Property<Boolean> visible = BindedProperty.bind("visible", this);
+	private Property<Boolean> enabled = BindedProperty.bind("enabled", this);
+	private Property<String> name = BindedProperty.bind("name", this);;
+	private Property<TextLocalizable> text = ValueProperty.readOnly("text", null);
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UICommandModel)model;
-		
-		BeanBinding.bind(this.model, this);
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enabled;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTextProperty() {
+		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		return name;
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -81,11 +116,6 @@ public class SMenuBar extends JMenuBar implements UICommandSet {
 	@Override
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UICommandSet.class;
-	}
-
-	@Override
-	public UICommandModel getUIModel() {
-		return model;
 	}
 
 	@Override
@@ -140,6 +170,56 @@ public class SMenuBar extends JMenuBar implements UICommandSet {
 				(int)pixelSize.getWidth().getValue(),
 				(int)pixelSize.getHeight().getValue()
 		);
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener listener) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener listener) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		return Collections.emptySet();
+	}
+
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIContainerLayout(UILayout component) {
+	
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayout getUIContainerLayout() {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addComponent(UIComponent component,
+			UILayoutConstraint layoutConstrain) {
 	}
 
 }

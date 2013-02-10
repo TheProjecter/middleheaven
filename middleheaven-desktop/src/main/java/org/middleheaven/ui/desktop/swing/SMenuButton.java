@@ -7,16 +7,18 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
-import org.middleheaven.ui.UIActionHandlerLocator;
+import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
-import org.middleheaven.ui.binding.BeanBinding;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UILabel;
-import org.middleheaven.ui.desktop.DesktopContext;
-import org.middleheaven.ui.models.UICommandModel;
+import org.middleheaven.ui.events.UIActionEvent;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public class SMenuButton extends JMenuItem implements UICommand {
 
@@ -24,9 +26,16 @@ public class SMenuButton extends JMenuItem implements UICommand {
 	
 	private String family;
 	private String id;
-	private UICommandModel model;
 	private UIComponent parent;
 
+	private final Property<Boolean> visible = BindedProperty.bind("visible" , this);
+	private final Property<Boolean> enable = BindedProperty.bind("enable" , this);
+	private final Property<String> name = BindedProperty.bind("name" , this);
+	private final Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
+	
+	private final EventListenersSet<CommandListener> commandListeners = EventListenersSet.newSet(CommandListener.class);
+	
+	
 	public SMenuButton(){
 		super ();
 		
@@ -34,7 +43,7 @@ public class SMenuButton extends JMenuItem implements UICommand {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				UIActionHandlerLocator.getLocator(DesktopContext.getDesktopContext().getAttributeContext()).handle(model.getName()).from(SMenuButton.this);
+				commandListeners.broadcastEvent().onCommand(new UIActionEvent(getName(), SMenuButton.this));
 			}
 			
 		});
@@ -48,19 +57,6 @@ public class SMenuButton extends JMenuItem implements UICommand {
 		return type.isAssignableFrom(this.getComponentType());
 	}
 	
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UICommandModel)model;
-		this.setText(SDisplayUtils.localize(this.model.getText()));
-		
-		BeanBinding.bind(this.model, this.getAction());
-	}
-	
-	@Override
-	public void addComponent(UIComponent component) {
-		//no-op
-	}
-
 	@Override
 	public List<UIComponent> getChildrenComponents() {
 		return Collections.emptyList();
@@ -87,11 +83,6 @@ public class SMenuButton extends JMenuItem implements UICommand {
 	}
 
 	@Override
-	public UICommandModel getUIModel() {
-		return model;
-	}
-
-	@Override
 	public UIComponent getUIParent() {
 		return parent;
 	}
@@ -99,11 +90,6 @@ public class SMenuButton extends JMenuItem implements UICommand {
 	@Override
 	public boolean isRendered() {
 		return true;
-	}
-
-	@Override
-	public void removeComponent(UIComponent component) {
-		// nop-op
 	}
 
 	@Override
@@ -141,6 +127,62 @@ public class SMenuButton extends JMenuItem implements UICommand {
 				(int)pixelSize.getWidth().getValue(),
 				(int)pixelSize.getHeight().getValue()
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTextProperty() {
+		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener commandListener) {
+		this.commandListeners.addListener(commandListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener commandListener) {
+		this.commandListeners.removeListener(commandListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		return this.commandListeners;
 	}
 
 

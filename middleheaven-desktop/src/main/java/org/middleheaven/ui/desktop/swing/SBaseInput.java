@@ -4,51 +4,22 @@ import java.util.Collections;
 import java.util.List;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
-import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIInput;
-import org.middleheaven.ui.models.UIInputModel;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
-public abstract class SBaseInput extends SBasePanel implements UIInput  {
+public abstract class SBaseInput extends SBaseOutputPanel implements UIInput  {
 
-	private UIInputModel model;
-	private UIReadState state = UIReadState.INPUT_ENABLED;
+	private static final long serialVersionUID = -6023436544771099799L;
 	
-	public SBaseInput(){}
+
+	private final Property<String> name = ValueProperty.writable("name", String.class);
 	
-	@Override
-	public void setReadState(UIReadState state) {
-		UIReadState oldState = this.state;
-		this.state = state;
-		firePropertyChange("readState", oldState, state);
+	public SBaseInput(){
 	}
 
-	@Override
-	public UIReadState getReadState() {
-		return state;
-	}
-
-
-	
-	@Override
-	public UIInputModel getUIModel() {
-		return model;
-	}
-	
-	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIInputModel) model;
-
-	}
-	
-	@Override
-	public void addComponent(UIComponent component) {
-		throw new UnsupportedOperationException( this.getClass().getName() + " is a leaf component");
-	}
-	
-	@Override
-	public void removeComponent(UIComponent component) {
-		throw new UnsupportedOperationException( this.getClass().getName() + " is a leaf component");
+	public Property<String> getNameProperty(){
+		return name;
 	}
 
 	@Override

@@ -7,8 +7,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -17,9 +15,9 @@ import javax.swing.JColorChooser;
 
 import org.middleheaven.ui.UIColor;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.components.UIColorField;
-import org.middleheaven.ui.models.UIInputModel;
+import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.util.function.Block;
 
 public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 
@@ -33,42 +31,34 @@ public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 		this.setBorder(BorderFactory.createEmptyBorder());
 		
 		button.setIcon(new ColorIcon(new Dimension(20,20)));
-	
+		this.add(button, BorderLayout.CENTER);
+		
 		button.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				color = JColorChooser.showDialog(SColorFieldInput.this, "Select color", color);
 				
-				getUIModel().setValue(new UIColor(color.getRGB()));
+				getValueProperty().set(new UIColor(color.getRGB()));
 			}
 			
 		});
-		this.add(button, BorderLayout.CENTER);
 		
-	}
-	
-	
-	public void setUIModel(UIModel model){
-		super.setUIModel(model);
-		
-		((UIInputModel)model).addPropertyChangeListener(new PropertyChangeListener(){
+		getValueProperty().onChange(new Block<Object>(){
 
 			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				UIColor uiColor = (UIColor)event.getNewValue();
+			public void apply(Object value) {
+				UIColor uiColor = (UIColor)value;
 				if (uiColor==null){
 					color = Color.WHITE;
 				} else {
 					color = new Color(uiColor.getRGB(), true);
 				}
 				button.repaint();
-				
 			}
 			
 		});
 	}
-	
 	
 	public class ColorIcon implements Icon{
 
@@ -105,6 +95,15 @@ public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 	@Override
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UIColorField.class;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIDataContainer(UIDataContainer container) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 	

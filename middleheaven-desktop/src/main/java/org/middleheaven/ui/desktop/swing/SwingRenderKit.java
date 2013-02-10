@@ -105,21 +105,25 @@ public class SwingRenderKit extends AbstractRenderKit {
 				} else if (component instanceof JDialog){
 					SwingUtils.ensureMinimumSize(((JDialog)component),null);
 				}
-				component.setVisible(true);
+				component.getVisibleProperty().set(true);
 			}
 
 			@Override
 			public void dispose(UIComponent component) {
 				if (component ==null){
 					return;
-				} else if (component instanceof JFrame){
+				} 
+				
+				component.getVisibleProperty().set(false);
+				
+				if (component instanceof JFrame){
 					((JFrame) component).dispose();
 				} else if (component instanceof JDialog){
 					((JDialog) component).dispose();
 				} else if (component instanceof JWindow){
 					((JWindow)component).dispose();
 				}
-				component.setVisible(false);
+			
 			}
 		};
 	}

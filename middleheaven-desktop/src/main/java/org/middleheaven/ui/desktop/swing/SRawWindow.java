@@ -1,26 +1,35 @@
 package org.middleheaven.ui.desktop.swing;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JWindow;
 
+import org.middleheaven.global.text.TextLocalizable;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
+import org.middleheaven.ui.UIPrespectiveListener;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIWindow;
-import org.middleheaven.ui.models.UIWindowModel;
+import org.middleheaven.ui.components.UIWindowsListener;
 import org.middleheaven.util.collections.DelegatingList;
+import org.middleheaven.util.property.BindedProperty;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 public class SRawWindow extends JWindow implements UIWindow{
 
 
 	private static final long serialVersionUID = -3684173828402031480L;
 	
-	UIWindowModel model;
+	private final Property<Boolean> visible = BindedProperty.bind("visible", this);
+	private final Property<Boolean> enable = BindedProperty.bind("enable", this);
+	private final Property<TextLocalizable> title = ValueProperty.writable("title", TextLocalizable.class);
+	
+	
 	private String family;
 	private String id;
 	private UIComponent parent;
@@ -37,11 +46,6 @@ public class SRawWindow extends JWindow implements UIWindow{
 		return type.isAssignableFrom(this.getComponentType());
 	}
 	
-	@Override
-	public UIWindowModel getUIModel() {
-		return model;
-	}
-
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
@@ -114,11 +118,6 @@ public class SRawWindow extends JWindow implements UIWindow{
 	}
 
 	@Override
-	public void setUIModel(UIModel model) {
-		this.model = (UIWindowModel) model;
-	}
-
-	@Override
 	public void setUIParent(UIComponent parent) {
 		this.parent = parent;
 	}
@@ -168,5 +167,77 @@ public class SRawWindow extends JWindow implements UIWindow{
 	public void addComponent(UIComponent component,
 			UILayoutConstraint layoutConstrain) {
 		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<TextLocalizable> getTitleProperty() {
+		return title;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addPrespectiveListener(UIPrespectiveListener listener) {
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removePrespectiveListener(UIPrespectiveListener listener) {
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIPrespectiveListener> getPrecpectiveListeners() {
+		return Collections.emptySet();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addUIWindowListener(UIWindowsListener listener) {
+	
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeUIWindowListener(UIWindowsListener listener) {
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<UIWindowsListener> getUIWindowListeners() {
+		return Collections.emptySet();
 	}
 }

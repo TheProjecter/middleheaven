@@ -3,20 +3,40 @@ package org.middleheaven.ui.desktop.swing;
 import javax.swing.JProgressBar;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIProgress;
-import org.middleheaven.ui.models.UIProgressModel;
+import org.middleheaven.util.function.Block;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
-public class SProgress extends SBasePanel implements UIProgress{
+public class SProgress extends SBaseOutputPanel implements UIProgress{
 
 
 	private static final long serialVersionUID = 7564245586904494636L;
 
+	private final Property<Integer> maximum = ValueProperty.writable("maximum", Integer.class);
+	
+	private final JProgressBar progressBar = new JProgressBar();
+	
 	public SProgress(){
-		JProgressBar progressBar = new JProgressBar();
+		
 		this.add(progressBar);
 		
-		progressBar.setIndeterminate(true);
+		maximum.onChange(new Block<Integer>(){
+
+			@Override
+			public void apply(Integer value) {
+				if (value == null){
+					progressBar.setIndeterminate(true);
+				} else {
+					progressBar.setIndeterminate(false);
+					progressBar.setMaximum(value);
+					progressBar.setMinimum(0);
+				}
+			}
+			
+		});
+		
+		
 	}
 	
 	@Override
@@ -24,13 +44,13 @@ public class SProgress extends SBasePanel implements UIProgress{
 		return (Class<T>) UIProgress.class;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public UIReadState getReadState() {
-		return UIReadState.OUTPUT_ONLY;
+	public Property<Integer> getMaximumProperty() {
+		return maximum;
 	}
 
-	
-	public UIProgressModel getUIModel(){
-		return (UIProgressModel)super.getUIModel();
-	}
+
 }

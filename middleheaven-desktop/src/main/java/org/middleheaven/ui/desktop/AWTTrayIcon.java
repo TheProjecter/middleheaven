@@ -7,26 +7,22 @@ import java.util.Collections;
 import java.util.List;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.UIModel;
 import org.middleheaven.ui.UIPosition;
+import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UIDesktopTrayIcon;
+import org.middleheaven.util.property.Property;
+import org.middleheaven.util.property.ValueProperty;
 
 class AWTTrayIcon extends TrayIcon implements UIDesktopTrayIcon{
 
 	private String id;
 	private UIComponent parent;
-	private UIModel uiModel;
 	private String family;
-	private boolean enabled = true;
-	
+	private final Property<Boolean> visible = ValueProperty.readOnly("visible", true);
+	private final Property<Boolean> enable = ValueProperty.readOnly("enable", true);
+
 	public AWTTrayIcon(Image image, String tooltip, PopupMenu popup) {
 		super(image, tooltip, popup);
-	}
-
-	@Override
-	public void addComponent(UIComponent component) {
-		//no-op
 	}
 	
 	@Override
@@ -55,40 +51,14 @@ class AWTTrayIcon extends TrayIcon implements UIDesktopTrayIcon{
 	}
 
 	@Override
-	public UIModel getUIModel() {
-		return this.uiModel;
-	}
-
-	@Override
 	public UIComponent getUIParent() {
 		return parent;
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	@Override
 	public boolean isRendered() {
 		return true;
 	}
-
-	@Override
-	public boolean isVisible() {
-		return true;
-	}
-
-	@Override
-	public void removeComponent(UIComponent component) {
-		// no-op
-	}
-
 
 
 	@Override
@@ -102,18 +72,8 @@ class AWTTrayIcon extends TrayIcon implements UIDesktopTrayIcon{
 	}
 
 	@Override
-	public void setUIModel(UIModel model) {
-		this.uiModel = model;
-	}
-
-	@Override
 	public void setUIParent(UIComponent parent) {
 		this.parent = parent;
-	}
-
-	@Override
-	public void setVisible(boolean visible) {
-		throw new UnsupportedOperationException("TrayIcon visibility is unmodifable");
 	}
 
 	@Override
@@ -137,6 +97,22 @@ class AWTTrayIcon extends TrayIcon implements UIDesktopTrayIcon{
 	@Override
 	public boolean isType(Class<? extends UIComponent> type) {
 		return type.isAssignableFrom(this.getComponentType());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getVisibleProperty() {
+		return visible;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getEnableProperty() {
+		return enable;
 	}
 
 }
