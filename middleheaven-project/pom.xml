@@ -53,13 +53,14 @@
 		<developer>
 			<id>staborda</id>
 			<name>Sergio Taborda</name>
-			<email>sergiotaborda@user.sourceforge.net</email>
+			<email>sergiotaborda(at)yahoo.com.br</email>
 			<url>http://sergiotaborda.javabuilding.com</url>
 			<organization></organization>
 			<roles>
 				<role>Creator</role>
 				<role>Project Leader</role>
 				<role>Architect</role>
+				<role>Designer</role>
 				<role>Developer</role>
 				<role>Programmer</role>
 			</roles>
@@ -75,13 +76,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>
-			scm:cvs:pserver:anonymous:@cvs.sourceforge.net:22:/cvsroot/middleheaven:middleheaven
-		</connection>
-		<developerConnection>
-			scm:cvs:ext:username@cvs.sourceforge.net:/cvsroot/middleheaven:middleheaven
-		</developerConnection>
-		<url>http://middleheaven.cvs.sourceforge.net/middleheaven/</url>
+		<connection>scm:svn:https://middleheaven.googlecode.com/svn/trunk/</connection>
+		<developerConnection>scm:svn:https://middleheaven.googlecode.com/svn/trunk/</developerConnection>
+		<url>http://middleheaven.googlecode.com/</url>
 	</scm>
 	<build>
 		<plugins>
@@ -94,6 +91,117 @@
 		            <target>1.6</target>
 		   		</configuration>
 		    </plugin> 
+		    
+		    <plugin> 
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId> 
+				<version>2.5</version> 
+				<configuration>
+					<outputDirectory>${basedir}/../middleheaven-core</outputDirectory>
+					<reportOutputDirectory>${basedir}/../middleheaven-core</reportOutputDirectory>
+					<javadocDirectory>${basedir}/resources</javadocDirectory>
+					<stylesheetfile>${basedir}/javadocstyle.css</stylesheetfile>
+					<excludePackageNames>org.middleheaven.test*</excludePackageNames>
+					<failOnError>false</failOnError>
+					<javadocVersion>1.6</javadocVersion>
+					<source>1.6</source>
+					<show>protected</show>
+					<groups>
+					  <group>
+					    <title>Core Toolbox</title>
+					    <packages>org.middleheaven.process.progress:org.middleheaven.core:org.middleheaven.core.*:org.middleheaven.graph:org.middleheaven.application:org.middleheaven.application.*:org.middleheaven.events:org.middleheaven.events.*:org.middleheaven.global:org.middleheaven.global.*:org.middleheaven.io:org.middleheaven.io.*:org.middleheaven.logging:org.middleheaven.logging.*:org.middleheaven.pagination:org.middleheaven.pagination.*:org.middleheaven.process:org.middleheaven.quantity:org.middleheaven.quantity.*:org.middleheaven.util:org.middleheaven.util.*:org.middleheaven.sequence:org.middleheaven.sequence.*:org.middleheaven.tool.*</packages>
+					  </group>
+					   <group>
+					    <title>Cache Toolbox</title>
+					    <packages>org.middleheaven.cache:org.middleheaven.cache.*</packages>
+					  </group>
+					  <group>
+					    <title>Chart Toolbox</title>
+					    <packages>org.middleheaven.chart:org.middleheaven.chart.*</packages>
+					  </group>
+					  <group>
+					    <title>Crypto Toolbox</title>
+					    <packages>org.middleheaven.crypto:org.middleheaven.crypto.*</packages>
+					  </group>
+					   <group>
+					    <title>Desktop UI Toolbox</title>
+					    <packages>org.middleheaven.ui.desktop:org.middleheaven.ui.desktop.*:org.middleheaven.core.bootstrap.client</packages>
+					  </group>
+					   <group>
+					    <title>Enterprise Toolbox</title>
+					    <packages>org.middleheaven.notification:org.middleheaven.notification.*</packages>
+					  </group>
+					  <group>
+					    <title>Image Toolbox</title>
+					    <packages>org.middleheaven.image:org.middleheaven.image.*</packages>
+					  </group>
+					   <group>
+					    <title>Licence Toolbox</title>
+					    <packages>org.middleheaven.licence:org.middleheaven.licence.*</packages>
+					  </group>
+					   <group>
+					    <title>Math Toolbox</title>
+					    <packages>org.middleheaven.quantity.math:org.middleheaven.quantity.math.*</packages>
+					  </group>
+					  <group>
+					    <title>Mail Toolbox</title>
+					    <packages>org.middleheaven.mail:org.middleheaven.mail.*</packages>
+					  </group>
+					  <group>
+					    <title>Name Directory Toolbox</title>
+					    <packages>org.middleheaven.namedirectory:org.middleheaven.namedirectory.*</packages>
+					  </group>
+					   <group>
+					    <title>Reports Toolbox</title>
+					    <packages>org.middleheaven.report:org.middleheaven.report.*</packages>
+					  </group>
+					   <group>
+					    <title>Security Toolbox</title>
+					    <packages>org.middleheaven.aas:org.middleheaven.aas.*</packages>
+					  </group>
+					  <group>
+					    <title>Dataset Toolbox</title>
+					    <packages>org.middleheaven.persistance:org.middleheaven.persistance.*:org.middleheaven.sequence.persistance.*</packages>
+					  </group>
+					   <group>
+					    <title>ORM Toolbox</title>
+					    <packages>org.middleheaven.domain:org.middleheaven.domain.*:org.middleheaven.model:org.middleheaven.model.*:org.middleheaven.storage:org.middleheaven.storage.*</packages>
+					  </group>
+					  <group>
+					    <title>Text Indexing Toolbox</title>
+					    <packages>org.middleheaven.text.indexing:org.middleheaven.text.indexing.*:org.middleheaven.util.criteria.text</packages>
+					  </group>
+					  <group>
+					    <title>Transactional Indexing Toolbox</title>
+					    <packages>org.middleheaven.transactions</packages>
+					  </group>
+					   <group>
+					    <title>UI Toolbox</title>
+					    <packages>org.middleheaven.ui:org.middleheaven.ui.*</packages>
+					  </group>
+					  <group>
+					    <title>Vaadin Rendering Toolbox</title>
+					    <packages>org.middleheaven.ui.web.vaadin</packages>
+					  </group>
+					   <group>
+					    <title>Web Toolbox</title>
+					    <packages>org.middleheaven.process.web</packages>
+					  </group>
+					   <group>
+					  <title>Web Server Toolbox</title>
+					    <packages>org.middleheaven.process.web.server:org.middleheaven.process.web.server.*:org.middleheaven.application.web.*:org.middleheaven.ui.web.*:org.middleheaven.web.*</packages>
+					  </group>
+					  <group>
+					   <title>Web Client Toolbox</title>
+					    <packages>org.middleheaven.process.web.client:org.middleheaven.process.web.client.*</packages>
+					  </group>
+					  <group>
+					    <title>Work Toolbox</title>
+					    <packages>org.middleheaven.work:org.middleheaven.work.*</packages>
+					  </group>
+					</groups>
+				</configuration> 
+			</plugin> 
 		</plugins>
 	</build>
 	<repositories>
@@ -105,7 +213,6 @@
 		</repository>
 	</repositories>
 	<dependencies>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -119,18 +226,7 @@
 			<version>1.1.1</version>
 			<scope>compile</scope>
 		</dependency>
-
-
 	</dependencies>
-	<distributionManagement>
-		<site>
-			<id>website</id>
-			<url>
-				scp://middleheaven.sourceforge.net/home/groups/m/mi/middleheaven/htdocs
-			</url>
-		</site>
-	</distributionManagement>
-	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -144,22 +240,7 @@
 					<template>maven-site.vm</template>
 			  </configuration>
 			</plugin> 
-			
-			<plugin> 
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId> 
-				<version>2.5</version> 
-				<configuration>
-					<outputDirectory>${basedir}</outputDirectory>
-					<reportOutputDirectory>${basedir}</reportOutputDirectory>
-					<stylesheetfile>${basedir}/javadocstyle.css</stylesheetfile>
-					<excludePackageNames>org.middleheaven.test*</excludePackageNames>
-					<javadocVersion>1.6</javadocVersion>
-					
-				</configuration> 
 				
-			</plugin> 
-			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
