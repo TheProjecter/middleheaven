@@ -13,9 +13,7 @@ public class MailException extends RuntimeException {
 			return new MailException(e);
 		}
 	}
-	
-	
-	
+
 	public MailException (Throwable cause){
 		super(cause);
 	}

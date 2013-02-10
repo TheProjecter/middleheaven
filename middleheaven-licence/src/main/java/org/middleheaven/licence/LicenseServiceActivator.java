@@ -1,4 +1,4 @@
-package org.middleheaven.license;
+package org.middleheaven.licence;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,9 +17,9 @@ import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceEvent;
-import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.core.services.ServiceEvent.ServiceEventType;
 import org.middleheaven.core.services.ServiceListener;
+import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.crypto.Base64CipherAlgorithm;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.logging.Logger;
@@ -64,7 +64,7 @@ public class LicenseServiceActivator extends ServiceActivator {
 		
 		final Collection<ManagedFile> licences = new HashSet<ManagedFile>();
 		
-		f.forEach(new Block<ManagedFile>(){
+		f.children().forEach(new Block<ManagedFile>(){
 
 			@Override
 			public void apply(ManagedFile file) {
@@ -76,8 +76,8 @@ public class LicenseServiceActivator extends ServiceActivator {
 		});
 
 		
-		f = frs.getAppConfigRepository();
-		f.forEach(new Block<ManagedFile>(){
+	    f = frs.getAppConfigRepository();
+		f.children().forEach(new Block<ManagedFile>(){
 
 			@Override
 			public void apply(ManagedFile file) {
@@ -91,7 +91,7 @@ public class LicenseServiceActivator extends ServiceActivator {
 		// search certificates
 		final Collection<ManagedFile> certifcates = new HashSet<ManagedFile>();
 		
-		f.forEach(new Block<ManagedFile>(){
+		f.children().forEach(new Block<ManagedFile>(){
 
 			@Override
 			public void apply(ManagedFile file) {

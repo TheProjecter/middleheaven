@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.middleheaven.license;
+package org.middleheaven.licence;
 
 
 /**

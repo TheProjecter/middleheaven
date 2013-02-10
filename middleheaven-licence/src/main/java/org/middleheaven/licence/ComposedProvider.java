@@ -1,4 +1,4 @@
-package org.middleheaven.license;
+package org.middleheaven.licence;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

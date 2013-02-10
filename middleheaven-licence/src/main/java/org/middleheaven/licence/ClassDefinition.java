@@ -1,4 +1,4 @@
-package org.middleheaven.license;
+package org.middleheaven.licence;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

@@ -5,4 +5,4 @@
  * This toolbox offer support for controlling resources throw licenses   
  * 
  */
-package org.middleheaven.license;
+package org.middleheaven.licence;

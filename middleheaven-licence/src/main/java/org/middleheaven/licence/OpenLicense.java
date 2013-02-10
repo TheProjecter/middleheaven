@@ -1,4 +1,4 @@
-package org.middleheaven.license;
+package org.middleheaven.licence;
 
 public final class OpenLicense extends AbstractLicense{
 
