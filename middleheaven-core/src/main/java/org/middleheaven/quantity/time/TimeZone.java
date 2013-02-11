@@ -28,6 +28,8 @@ public abstract class TimeZone {
 
 	public abstract java.util.TimeZone toTimeZone();
 
-
+	public abstract boolean equals(Object other);
+	
+	public abstract int hashCode();
 
 }

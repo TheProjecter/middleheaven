@@ -3,6 +3,8 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import org.middleheaven.ui.ComponentAggregationEvent;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
@@ -45,7 +47,7 @@ class VaadinBorderLayout extends VaadinUILayout {
 	public void addComponent(UIComponent component, UILayoutConstraint layoutConstrain) {
 		
 		
-		VaadinUIComponent c = (VaadinUIComponent)component;
+		VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get(); 
 		
 		UIBorderLayoutConstraint borderConstraint = (UIBorderLayoutConstraint)layoutConstrain;
 		

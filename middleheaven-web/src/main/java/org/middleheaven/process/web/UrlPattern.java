@@ -9,16 +9,22 @@ package org.middleheaven.process.web;
  */
 public abstract class UrlPattern {
 
-	public static <P extends UrlPattern>  P maxOf(String path, Iterable<? extends P> mappings){
+	/**
+	 * Selects the best match for the path string considering the given patterns
+	 * @param path the path to match
+	 * @param patterns the patterns to match 
+	 * @return
+	 */
+	public static <P extends UrlPattern>  P maxOf(String path, Iterable<? extends P> patterns){
 		P selected= null;
 		double max =0;
 		
-		for (P mapping : mappings){
+		for (P mapping : patterns){
 			
 			double m = mapping.match(path);
 			
 			if (Double.compare(m, max) > 0){
-				m = max;
+				max = m;
 				selected = mapping;
 			}
 		}

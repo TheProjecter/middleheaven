@@ -73,7 +73,7 @@ public class DirectGraph<E,V> implements Graph<E,V>{
 		 * @return
 		 */
 		private boolean equalsEdge(BeanEdge other) {
-			return object == null && this.object.equals (other.object) 
+			return object != null && this.object.equals (other.object) 
 					&& this.sourceVertex.equals(other.sourceVertex) 
 					&& this.targetVertex.equals(other.targetVertex)
 					&& Double.compare(this.cost, other.cost) == 0; 

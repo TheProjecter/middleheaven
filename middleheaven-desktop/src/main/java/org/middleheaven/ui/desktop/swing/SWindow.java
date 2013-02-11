@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
@@ -138,13 +140,13 @@ public class SWindow extends JFrame implements UIWindow{
 		if (component instanceof JMenuBar){
 			this.setJMenuBar((JMenuBar)component);
 		} else {
-			this.getContentPane().add((JComponent)component);
+			this.getContentPane().add(safeCast(component, JComponent.class).get());
 		}
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.getContentPane().remove((JComponent)component);
+		this.getContentPane().remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
@@ -179,6 +181,7 @@ public class SWindow extends JFrame implements UIWindow{
 		return id;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UIWindow.class;

@@ -13,6 +13,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.empty.UnexistantManagedFile;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.collections.Pair;
 import org.middleheaven.util.collections.PairEnumerable;
@@ -155,6 +156,14 @@ public class SetManagedFileRepository extends AbstractManagedRepository  {
 		@Override
 		protected int childrenCount() {
 			return 0;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
+		      return new UnexistantManagedFile(this.getRepository(), path);
 		}
 
 	

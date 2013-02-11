@@ -85,14 +85,11 @@ public class PreparedStatementStorable {
 		}  else {
 			switch (cm.getType()){
 			case CLOB:
-//				if (value instanceof Reader){ // TODO handler jdbc driver that has no Clob methods
-//					ps.setClob(i, (Reader) value);
-//					break;
-//				} else {
-//					ps.setClob(i, new StringReader(value.toString()));
-//					break;
-//				}
-				ps.setString(i, value.toString());
+				if (value instanceof Reader){ // TODO handler jdbc driver that has no Clob methods
+					ps.setClob(i, (Reader) value);
+				} else {
+					ps.setClob(i, new StringReader(value.toString()));
+				}
 				break;
 			case TEXT:
 				ps.setString(i, value.toString());

@@ -3,6 +3,8 @@
  */
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.util.collections.CollectionUtils;
+
 
 /**
  * 
@@ -16,7 +18,7 @@ public abstract class AbstractProducingWiringPoint implements ProducingWiringPoi
 	
 	protected AbstractProducingWiringPoint (WiringSpecification methodSpecification,WiringSpecification[] paramsSpecifications){
 		this.methodSpecification = methodSpecification;
-		this.paramsSpecifications = paramsSpecifications;
+		this.paramsSpecifications = CollectionUtils.duplicateArray(paramsSpecifications);
 	}
 	
 	/**

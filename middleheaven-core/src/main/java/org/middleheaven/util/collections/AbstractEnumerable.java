@@ -74,7 +74,7 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 	@Override
 	public int size() {
 		int count = 0;
-		for (T c : this){
+		for (Iterator<T> it = this.iterator(); it.hasNext(); it.next()){
 			count++;
 		}
 		return count;
@@ -96,14 +96,13 @@ public abstract class AbstractEnumerable<T> implements Enumerable<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumerable<T> sort() {
 		ArrayList all = this.into(new ArrayList());
 		
-		if (!all.isEmpty()){
-			if (!Comparable.class.isInstance(all.get(0))){
-				throw new IllegalArgumentException("Element is not Comparable");
-			}
+		if (!all.isEmpty() && !Comparable.class.isInstance(all.get(0))){
+			throw new IllegalArgumentException("Element is not Comparable");
 		}
 		Collections.sort(all);
 		

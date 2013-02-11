@@ -124,8 +124,8 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 		Maybe<String> layoutConstraint = XMLUtils.getStringAttribute("layoutConstraint", node, "");
 
-		if ("default".equals(familly)){
-			familly = null;
+		if ("default".equals(familly.get())){
+			familly = Maybe.absent();
 		}
 
 		Class<UIComponent> uiTypeClass = resolveClass(type.get());

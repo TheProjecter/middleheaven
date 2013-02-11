@@ -47,13 +47,13 @@ public class NumberCoersor extends AbstractTypeCoersor<Number, Number> {
 		} else if (AtomicLong.class.isAssignableFrom(type)){
 			return new AtomicLong(n.longValue());
 		} else if (Long.class.isAssignableFrom(type)){
-			return new Long(n.longValue());
+			return Long.valueOf(n.longValue());
 		} else if (Integer.class.isAssignableFrom(type)){
-			return new Integer(n.intValue());
+			return Integer.valueOf(n.intValue());
 		}else if (Short.class.isAssignableFrom(type)){
-			return new Short(n.shortValue());
+			return Short.valueOf(n.shortValue());
 		}else if (Byte.class.isAssignableFrom(type)){
-			return new Byte(n.byteValue());
+			return Byte.valueOf(n.byteValue());
 		} else {
 			throw new CoersionException("Cannot coerce " + n + " to " + type);
 		}

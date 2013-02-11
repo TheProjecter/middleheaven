@@ -20,7 +20,7 @@ final class KeyTextLocalizable extends TextLocalizable{
 	private Serializable[] params = new Serializable[0];
 
 	// used by TextLocalizable
-    KeyTextLocalizable(String domain, String label , Serializable[] params){
+    KeyTextLocalizable(String domain, String label , Serializable ... params){
 		this.label = label;
 		this.domain = domain;
 		this.params = params;

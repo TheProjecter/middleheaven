@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,7 +30,7 @@ public class SLayout extends SBasePanel implements NamingContainer , UILayout{
 		
 		if (this.getComponentCount() == 0 || this.getComponent(0) instanceof UIComponent){
 			c.setUIParent(this);
-			this.add((JComponent)c);
+			this.add(safeCast(c, JComponent.class).get());
 		}
 	}
 	
@@ -40,7 +42,7 @@ public class SLayout extends SBasePanel implements NamingContainer , UILayout{
 
 	@Override
 	public final void removeComponent(UIComponent component) {
-		this.remove((JComponent)component);
+		this.remove(safeCast(component, JComponent.class).get());
 		manager.removeComponent(component);
 	}
 	
@@ -55,7 +57,7 @@ public class SLayout extends SBasePanel implements NamingContainer , UILayout{
 
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getComponent(index);
+				return safeCast(getComponent(index), UIComponent.class).get();
 			}
 
 			@Override

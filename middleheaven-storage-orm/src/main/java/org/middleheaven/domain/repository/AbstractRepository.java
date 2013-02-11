@@ -47,8 +47,7 @@ public abstract class AbstractRepository<E> implements Repository<E> {
 		for (RepositoryListener listener : listeners){
 			listener.onRepositoryChanged(event);	
 		}
-		
-		event = null;
+
 	}
 	
 	protected void fireAddedEvent(E instance){

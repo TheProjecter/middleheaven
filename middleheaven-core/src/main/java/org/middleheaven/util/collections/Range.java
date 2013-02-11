@@ -330,11 +330,12 @@ public class Range<T, I> extends AbstractEnumerable<T> implements RandomEnumerab
 	private T index(int index){
 		
 		Iterator<T> it = this.iterator();
-		for (int i = 0; i < index; i++){
-			it.next();
+		T value = null;
+		for (int i = 0; i <= index && i < this.size(); i++){
+			value = it.next();
 		}
 		
-		return it.hasNext() ? null : it.next();
+		return  value;
 	}
 	
 	/**

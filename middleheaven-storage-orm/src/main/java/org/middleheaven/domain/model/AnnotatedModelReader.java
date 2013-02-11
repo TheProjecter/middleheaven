@@ -114,7 +114,9 @@ public class AnnotatedModelReader implements DomainModelReader {
 		
 		if ( maybeDiscriminatorValue.isAbsent()){
 			if (rootModel.getInheritanceStrategy().isSingleDataset()){
-				throw new IllegalModelStateException("Single dataset inherintance strategy must define a discriminator value for " + em.getEntityName());
+				throw new IllegalModelStateException(
+						"Single dataset inherintance strategy must define a discriminator value for " + em.getEntityName()
+				);
 			}
 		} else {
 			rootModel.addDescriminatorValue(type, maybeDiscriminatorValue.get().value());
@@ -400,7 +402,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 			identityType = idType;
 			if(identityType==null || Void.class.equals(identityType)){
 				throw new ModelingException("Illegal identity type for " 
-						+ fm.getName().getQualifier().toString() 
+						+ fm.getName().getQualifier()
 						+ ".When using interfaces or abstract types as identity type you must specify a non interface, non abstract, class for identity");
 			}
 		}

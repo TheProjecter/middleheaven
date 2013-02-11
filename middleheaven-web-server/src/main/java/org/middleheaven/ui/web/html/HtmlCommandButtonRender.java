@@ -1,10 +1,13 @@
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommand;
+import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -22,7 +25,7 @@ public class HtmlCommandButtonRender extends AbstractHtmlCommandRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 		
-		UICommand command = (UICommand) component;
+		UICommand command = safeCast(component, UICommand.class).get();
 		
 		document.addRelativeStylesheet("css/ui/jquery-ui-1.8.20.custom.css");
 		document.addRelativeStylesheet("css/ui/extention.css");

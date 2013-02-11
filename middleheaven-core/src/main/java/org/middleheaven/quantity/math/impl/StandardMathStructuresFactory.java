@@ -15,7 +15,11 @@ public class StandardMathStructuresFactory extends MathStructuresFactory {
 			if (superclass.equals(Complex.class)){
 				return superclass.cast(new RealPairComplex(values[0].toString()));
 			} else if (superclass.equals(Real.class)){
-				return superclass.cast(new BigDecimalReal(values[0].toString()));
+				if (values[0] instanceof BigDecimalReal){
+					return superclass.cast(values[0]);
+				} else {
+					return superclass.cast(BigDecimalReal.valueOf(values[0].toString()));
+				}
 			} else if (superclass.equals(BigInt.class)){
 				return superclass.cast(new LongInteger(values[0].toString()));
 			} else {

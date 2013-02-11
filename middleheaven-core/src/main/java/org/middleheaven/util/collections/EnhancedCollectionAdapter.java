@@ -80,18 +80,6 @@ class EnhancedCollectionAdapter<T> extends AbstractEnumerableAdapter<T> implemen
 	public <O> O[] toArray(O[] a) {
 		return original.toArray(a);
 	}
-	
-
-
-	private T get(int index){
-		Iterator<T> it = this.iterator();
-		while (index>0 && it.hasNext()){
-			index--;
-		}
-		return it.next();
-	}
-	
-	
 
 
 }

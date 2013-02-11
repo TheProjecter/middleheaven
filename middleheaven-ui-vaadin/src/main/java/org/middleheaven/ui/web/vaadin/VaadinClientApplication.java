@@ -3,6 +3,8 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -204,7 +206,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 	@Override
 	public void addComponent(UIComponent component) {
 		
-		final VaadinUIComponent c = (VaadinUIComponent) component;
+		final VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get(); 
 		
 		components.put(c.getGID(), c);
 		

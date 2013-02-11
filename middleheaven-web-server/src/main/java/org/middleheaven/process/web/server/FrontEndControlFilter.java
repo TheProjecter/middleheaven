@@ -1,5 +1,7 @@
 package org.middleheaven.process.web.server;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -18,8 +20,8 @@ public class FrontEndControlFilter extends AbstractFilter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
 		try {
-			HttpServletRequest hRequest = (HttpServletRequest) request;
-			HttpServletResponse hResponse = (HttpServletResponse) request;
+			HttpServletRequest hRequest = safeCast(request, HttpServletRequest.class).get(); 
+			HttpServletResponse hResponse = safeCast(response, HttpServletResponse.class).get();
 			try{
 
 				ServletHttpServerService serverService = (ServletHttpServerService) this.getFilterConfig().getServletContext().getAttribute("httpService");

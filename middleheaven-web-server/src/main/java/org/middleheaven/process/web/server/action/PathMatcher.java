@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Mateches server paths to a given pattern.
  */
-public class PathMatcher {
+public final class PathMatcher {
 
 
 	/**

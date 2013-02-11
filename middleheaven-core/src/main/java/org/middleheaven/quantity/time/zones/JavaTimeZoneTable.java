@@ -36,6 +36,30 @@ public class JavaTimeZoneTable extends TimeZoneTable {
 		public java.util.TimeZone toTimeZone() {
 			return zone;
 		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean equals(Object other) {
+			return other instanceof WrappedTimeZone && equalsOther((WrappedTimeZone) other);
+		}
+		
+		/**
+		 * @param other
+		 * @return
+		 */
+		private boolean equalsOther(WrappedTimeZone other) {
+			return this.zone.equals(other);
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public int hashCode() {
+			throw new UnsupportedOperationException("Not implememented yet");
+		}
 		
 	}
 }

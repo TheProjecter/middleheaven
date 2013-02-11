@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
-public class SRawWindow extends JWindow implements UIWindow{
+class SRawWindow extends JWindow implements UIWindow{
 
 
 	private static final long serialVersionUID = -3684173828402031480L;
@@ -49,13 +51,13 @@ public class SRawWindow extends JWindow implements UIWindow{
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
-		this.getContentPane().add((JComponent)component);
+		this.getContentPane().add(safeCast(component, JComponent.class).get());
 		
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.getContentPane().remove((JComponent)component);
+		this.getContentPane().remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
@@ -64,7 +66,7 @@ public class SRawWindow extends JWindow implements UIWindow{
 
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getContentPane().getComponent(index);
+				return safeCast(getContentPane().getComponent(index), UIComponent.class).get();
 			}
 
 			@Override

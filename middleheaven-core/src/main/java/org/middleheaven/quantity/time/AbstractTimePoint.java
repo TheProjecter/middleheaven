@@ -2,7 +2,9 @@ package org.middleheaven.quantity.time;
 
 import java.io.Serializable;
 
-class AbstractTimePoint implements TimePoint, Serializable {
+import org.middleheaven.util.Hash;
+
+abstract class AbstractTimePoint implements TimePoint, Serializable {
 
 	private static final long serialVersionUID = -5640403398323384453L;
 	
@@ -40,6 +42,22 @@ class AbstractTimePoint implements TimePoint, Serializable {
 			return 0;
 		}
 
+	}
+	
+	public final boolean equals(Object other){
+		return this.getClass().equals(other.getClass()) && equalsOther((AbstractTimePoint)other);
+	}
+	
+	/**
+	 * @param other
+	 * @return
+	 */
+	private boolean equalsOther(AbstractTimePoint other) {
+		return this.milliseconds == other.milliseconds;
+	}
+
+	public final int hashCode (){
+		return Hash.hash(this.milliseconds).hashCode();
 	}
 
 }

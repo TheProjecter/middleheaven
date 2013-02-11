@@ -56,7 +56,7 @@ public final class Authenticator {
 				agentLevel.agent.autenticate(credentials, callbackSet);
 				if (SuccessLevel.SUFFICIENT.equals(agentLevel.level)){
 					// interrupt with success. no further authentication is required
-					globalSucess =  globalSucess && false;
+					globalSucess = true;
 					break;
 				}
 			} catch (AuthenticationException e) {

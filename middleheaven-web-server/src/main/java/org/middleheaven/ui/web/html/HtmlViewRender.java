@@ -3,6 +3,8 @@
  */
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -25,7 +27,7 @@ public class HtmlViewRender extends AbstractHtmlRender {
 	protected void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 		
 		
-		UIView view = (UIView) component;
+		UIView view =  safeCast(component, UIView.class).get();
 
 		Writer writer = document.getBodyWriter();
 		

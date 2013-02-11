@@ -14,7 +14,7 @@ public class ArrayEnumerable<T> extends AbstractEnumerable<T> {
 	private T[] array;
 
 	public ArrayEnumerable (T[] array){
-		this.array = array;
+		this.array = CollectionUtils.duplicateArray(array);
 	}
 	
 	/**

@@ -32,21 +32,6 @@ public class DomainStoreServiceActivator extends ServiceActivator {
 	@Override
 	public void activate(ServiceContext serviceContext) {
 		storeService = new HashDomainStoreService();
-
-		// install an EntityStore provider
-		
-		WiringService wiringService = serviceContext.getService(WiringService.class);
-				
-		
-//		wiringService.addConfiguration( new BindConfiguration(){
-//
-//			@Override
-//			public void configure(Binder binder) {
-//				Class cr = DomainStoreResolver.class;
-//				binder.bind(DomainStoreResolver.class).in(Shared.class).toResolver(cr);
-//			}
-//
-//		});
 		
 		serviceContext.register(DomainStoreService.class, storeService);
 	}

@@ -1,5 +1,7 @@
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -23,7 +25,7 @@ public class HtmlSecretRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 
-		UIField comp = (UIField)component;
+		UIField comp = safeCast(component, UIField.class).get();
 
 
 		UIReadState state = comp.getReadStateProperty().get();

@@ -1,8 +1,6 @@
 package org.middleheaven.io.repository;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import org.middleheaven.io.IOTransport;
@@ -11,16 +9,9 @@ import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.collections.AbstractEnumerableAdapter;
-import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.IterableEnumerable;
-import org.middleheaven.util.collections.Pair;
-import org.middleheaven.util.collections.PairEnumerable;
 import org.middleheaven.util.collections.TreeEnumerable;
-import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Mapper;
-import org.middleheaven.util.function.Predicate;
 
 /**
  * Default implementation of a {@link ManagedFile} usefull for extention.
@@ -79,14 +70,6 @@ public abstract class AbstractManagedFile implements ManagedFile {
 			//no-op
 			return null;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
-		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
 

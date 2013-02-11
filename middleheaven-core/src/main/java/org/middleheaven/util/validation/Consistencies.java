@@ -182,7 +182,7 @@ public class Consistencies {
 				return ((Enumerable<?>)object).isEmpty();
 			} else if (object instanceof Map){
 				return ((Map<?,?>)object).isEmpty();
-			} else if (object!=null && object.getClass().isArray()){
+			} else if (object.getClass().isArray()){
 				return Array.getLength(object)==0;
 			} else {
 				return false; // any other object is not supported

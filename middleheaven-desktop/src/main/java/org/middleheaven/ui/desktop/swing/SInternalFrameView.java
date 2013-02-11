@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -112,14 +114,14 @@ public class SInternalFrameView extends JInternalFrame implements UIView{
 		if (component instanceof JMenuBar){
 			this.setJMenuBar((JMenuBar)component);
 		} else {
-			this.getContentPane().add((JComponent)component);
+			this.getContentPane().add(safeCast(component, JComponent.class).get());
 		}
 	}
 	
 	
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.getContentPane().remove((JComponent)component);
+		this.getContentPane().remove(safeCast(component, JComponent.class).get());
 	}
 
 	@Override

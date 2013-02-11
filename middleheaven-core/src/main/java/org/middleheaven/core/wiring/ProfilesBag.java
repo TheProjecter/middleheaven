@@ -16,26 +16,26 @@ import org.middleheaven.util.collections.CollectionUtils;
  */
 public class ProfilesBag implements Iterable<String>{
 
-	private final Collection<String> profiles = new HashSet<String>(); 
+	private final Collection<String> profilesSet = new HashSet<String>(); 
 	
 	public void add(String ... profile){
-		profiles.addAll(Arrays.asList(profile));
+		this.profilesSet.addAll(Arrays.asList(profile));
 	}
 	
 	public void add(Collection<String> profiles){
-		profiles.addAll(profiles);
+		this.profilesSet.addAll(profiles);
 	}
 	
 	public void remove(Collection<String> profiles){
-		profiles.removeAll(profiles);
+		this.profilesSet.removeAll(profiles);
 	}
 	
 	public void remove(String ... profile){
-		profiles.removeAll(Arrays.asList(profile));
+		this.profilesSet.removeAll(Arrays.asList(profile));
 	}
 	
 	public boolean containsProfile(String profile){
-		return profiles.contains(profile);
+		return profilesSet.contains(profile);
 	}
 	
 	/**
@@ -43,19 +43,19 @@ public class ProfilesBag implements Iterable<String>{
 	 */
 	@Override
 	public Iterator<String> iterator() {
-		return profiles.iterator();
+		return profilesSet.iterator();
 	}
 	
 	public boolean isEmpty(){
-		return profiles.isEmpty();
+		return profilesSet.isEmpty();
 	}
 	
 	public int hashCode(){
-		return Hash.hash(profiles).hashCode();
+		return Hash.hash(profilesSet).hashCode();
 	}
 	
 	public boolean equals(Object other){
-		return (other instanceof ProfilesBag ) && CollectionUtils.equalContents(((ProfilesBag) other).profiles, this.profiles); 
+		return (other instanceof ProfilesBag ) && CollectionUtils.equalContents(((ProfilesBag) other).profilesSet, this.profilesSet); 
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class ProfilesBag implements Iterable<String>{
 	}
 	
 	public String toString(){
-		return this.profiles.toString();
+		return this.profilesSet.toString();
 	}
 
 

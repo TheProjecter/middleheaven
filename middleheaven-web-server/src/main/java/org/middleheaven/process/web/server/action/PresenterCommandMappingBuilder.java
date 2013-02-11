@@ -4,7 +4,7 @@ import org.middleheaven.process.web.HttpStatusCode;
 import org.middleheaven.process.web.server.Outcome;
 
 
-public class PresenterCommandMappingBuilder {
+public final class PresenterCommandMappingBuilder {
 
 	
 	public static PresenterCommandMappingBuilder map(Class<?> presenterClass, WebCommandMappingService webCommandMappingService){

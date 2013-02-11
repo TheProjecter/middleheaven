@@ -65,15 +65,19 @@ public class PermissionSet implements Permission {
         	// resources of this one
         	
             for (Iterator<ResourcePermission> it = ((PermissionSet)threshold).iterator();it.hasNext();){
-                ResourcePermission t = (ResourcePermission) it.next();
-                ResourcePermission r = (ResourcePermission)this.permissions.get(t.resourceName);
-                if (r==null && t.permissionLevel!=PermissionLevel.NONE){ 
-                	// a required resource is messing
-                    return false;
+                ResourcePermission requiredPermission = (ResourcePermission) it.next();
+                ResourcePermission userPermission = (ResourcePermission)this.permissions.get(requiredPermission.resourceName);
+                if (userPermission==null){
+                	if (requiredPermission.permissionLevel != PermissionLevel.NONE){
+                		// a required resource is messing
+                        return false;
+                	}
+                } else {
+                	if (!PermissionLevel.levelIncludes(userPermission.permissionLevel , requiredPermission.permissionLevel)){
+                        return false;
+                    }
                 }
-                if (!PermissionLevel.levelIncludes(r.permissionLevel , t.permissionLevel)){
-                    return false;
-                }
+                
             }
             return true;
         } else if (threshold instanceof ResourcePermission){

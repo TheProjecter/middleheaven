@@ -29,7 +29,7 @@ public class CommonsVSFRepositoryProvider implements ManagedFileRepositoryProvid
 		try {
 			FileObject file = VFS.getManager().resolveFile(uri.toString());
 			
-			return null; //new VirtualFileSystemManagedFile(virtualFileWatchService, file);
+			return new VirtualFileSystemManagedFile(virtualFileWatchService, file);
 		} catch (FileSystemException e) {
 			throw new RepositoryCreationException(e);
 		}

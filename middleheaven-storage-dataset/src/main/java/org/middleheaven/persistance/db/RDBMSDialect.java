@@ -359,17 +359,18 @@ public abstract class RDBMSDialect {
 			return ColumnValueType.TIME;
 		case Types.TIMESTAMP:
 			return ColumnValueType.DATETIME;
-		case Types.VARCHAR:
-		case Types.CHAR:
-			return ColumnValueType.TEXT;
 		case Types.CLOB:
 			return ColumnValueType.MEMO;
 		case Types.BLOB:
 			return ColumnValueType.BLOB;
 		case Types.DECIMAL:
 			return ColumnValueType.DECIMAL;
+		case Types.VARCHAR:
+		case Types.CHAR:
+			return ColumnValueType.TEXT;
+		default:
+			throw new IllegalArgumentException(" cannot translate sqlType " + sqlType + " to a ColumnValueType");
 		}
-		return ColumnValueType.TEXT;
 	}
 	
 	public int typeToNative(ColumnValueType dataType) {

@@ -55,7 +55,7 @@ import org.middleheaven.util.function.Maybe;
 /**
  * Impleemntation of {@link DomainStoreManager} using the Hiberante framework.
  */
-public class HibernateDomainStore extends AbstractDomainStoreManager {
+public final class HibernateDomainStore extends AbstractDomainStoreManager {
 	
 	private SessionFactory sessionFactory;
 	private InterceptorAdpater interceptor = new InterceptorAdpater();

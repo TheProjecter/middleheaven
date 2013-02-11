@@ -3,7 +3,7 @@ package org.middleheaven.text.indexing;
 /**
  * 
  */
-public class TextIndexingException extends RuntimeException{
+public final class TextIndexingException extends RuntimeException{
 
 
 	private static final long serialVersionUID = 3282058266172271396L;

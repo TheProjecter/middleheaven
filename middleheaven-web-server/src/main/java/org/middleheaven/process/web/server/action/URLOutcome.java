@@ -6,7 +6,7 @@ import java.util.Map;
 import org.middleheaven.process.web.HttpStatusCode;
 import org.middleheaven.process.web.server.Outcome;
 
-public class URLOutcome extends Outcome {
+public final class URLOutcome extends Outcome {
 
 	public static URLOutcome forUrl(String url){
 		return new URLOutcome(url);

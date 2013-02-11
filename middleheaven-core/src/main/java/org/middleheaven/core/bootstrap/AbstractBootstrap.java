@@ -515,6 +515,9 @@ public abstract class AbstractBootstrap {
 
 									if (serviceGraph != null && !serviceGraph.equals(g)) {
 										// need merge
+										merge(serviceGraphMapping, ini, s,
+												dependencySpecification, dependencyService,
+												targetGraph, serviceGraph, dependency);
 									} else {
 										g.addDependency(dependency, new DependencyGraphNode(s, ini), !dependencySpecification.isOptional());
 										serviceGraphMapping.put(s, g);
@@ -527,31 +530,9 @@ public abstract class AbstractBootstrap {
 					if (serviceGraph != null && !serviceGraph.equals(targetGraph)) {
 						// need merge
 						
-						if (targetGraph.isEmpty()){
-							serviceGraph.addDependency(
-									dependency,
-									new DependencyGraphNode(s, ini), !dependencySpecification.isOptional()
-							);
-							serviceGraphMapping.put(dependencyService, serviceGraph);
-							
-						} else {
-							DependencyGraph mergedGraph = serviceGraph.merge(targetGraph);
-							
-							List<Service> keyServices = new LinkedList<Service>();
-							
-							for (Map.Entry<Service, DependencyGraph> entry : serviceGraphMapping.entrySet()){
-								if (entry.getValue().equals(targetGraph) || entry.getValue().equals(serviceGraph)){
-									keyServices.add(entry.getKey());
-								}
-							}
-							
-							serviceGraphMapping.values().remove(serviceGraph);
-							serviceGraphMapping.values().remove(targetGraph);
-							
-							for (Service sk : keyServices){
-								serviceGraphMapping.put(sk, mergedGraph);
-							}
-						}
+						merge(serviceGraphMapping, ini, s,
+								dependencySpecification, dependencyService,
+								targetGraph, serviceGraph, dependency);
 						
 					} else {
 						targetGraph.addDependency(
@@ -585,6 +566,40 @@ public abstract class AbstractBootstrap {
 
 
 
+	}
+
+
+
+	private void merge(Map<Service, DependencyGraph> serviceGraphMapping,
+			DependencyInicilizer inicializer, Service service,
+			ServiceSpecification dependencySpecification,
+			Service dependencyService, DependencyGraph targetGraph,
+			DependencyGraph serviceGraph, final DependencyGraphNode dependency) {
+		if (targetGraph.isEmpty()){
+			serviceGraph.addDependency(
+					dependency,
+					new DependencyGraphNode(service, inicializer), !dependencySpecification.isOptional()
+			);
+			serviceGraphMapping.put(dependencyService, serviceGraph);
+			
+		} else {
+			DependencyGraph mergedGraph = serviceGraph.merge(targetGraph);
+			
+			List<Service> keyServices = new LinkedList<Service>();
+			
+			for (Map.Entry<Service, DependencyGraph> entry : serviceGraphMapping.entrySet()){
+				if (entry.getValue().equals(targetGraph) || entry.getValue().equals(serviceGraph)){
+					keyServices.add(entry.getKey());
+				}
+			}
+			
+			serviceGraphMapping.values().remove(serviceGraph);
+			serviceGraphMapping.values().remove(targetGraph);
+			
+			for (Service sk : keyServices){
+				serviceGraphMapping.put(sk, mergedGraph);
+			}
+		}
 	}
 
 	protected void readExtentions(List<BootstrapContainerExtention> extentions) {

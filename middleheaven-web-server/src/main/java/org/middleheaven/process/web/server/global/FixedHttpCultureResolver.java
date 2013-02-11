@@ -3,7 +3,7 @@ package org.middleheaven.process.web.server.global;
 import org.middleheaven.global.Culture;
 import org.middleheaven.process.web.server.HttpServerContext;
 
-public class FixedHttpCultureResolver implements
+public final class FixedHttpCultureResolver implements
 		HttpCultureResolver {
 
 	public static FixedHttpCultureResolver instanceFor(Culture culture){

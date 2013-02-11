@@ -1,6 +1,6 @@
 package org.middleheaven.text.indexing;
 
-public class SimpleDocumentFieldModel implements DocumentFieldModel {
+public final class SimpleDocumentFieldModel implements DocumentFieldModel {
 
 	private String name;
 	private boolean isStorable;

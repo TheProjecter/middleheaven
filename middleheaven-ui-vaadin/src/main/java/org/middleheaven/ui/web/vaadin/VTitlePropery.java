@@ -11,7 +11,7 @@ import org.middleheaven.util.property.ValueProperty;
 /**
  * 
  */
-public class VTitlePropery extends ValueProperty<TextLocalizable> {
+public final class VTitlePropery extends ValueProperty<TextLocalizable> {
 
 	
 	public static Property<TextLocalizable> bind( final VaadinUIComponentContainer component){

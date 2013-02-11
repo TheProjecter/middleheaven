@@ -22,7 +22,7 @@ class TransaltedTextLocalizable extends TextLocalizable {
 		this.text = text;
 	}
 	
-	TransaltedTextLocalizable (String text, String domain, String message, Serializable[] params){
+	TransaltedTextLocalizable (String text, String domain, String message, Serializable ... params){
 		this.text = text;
 		this.domain = domain;
 		this.message = message;

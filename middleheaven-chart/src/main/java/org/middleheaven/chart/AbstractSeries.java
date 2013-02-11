@@ -17,7 +17,6 @@ public abstract class AbstractSeries implements Series {
 		for (SeriesListener l : listeners){
 			l.onChange(event);
 		}
-		event = null;
 	}
 	
 	@Override

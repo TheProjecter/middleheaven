@@ -3,8 +3,12 @@
  */
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
+
+import javax.swing.JComponent;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIWindow;
@@ -24,7 +28,7 @@ public class HtmlWindowRender extends AbstractHtmlRender  {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context, UIComponent component) throws IOException {
 	
-		UIWindow window = (UIWindow) component;
+		UIWindow window = safeCast(component, UIWindow.class).get(); 
 		
 		Writer head = document.getHeadWriter();
 		

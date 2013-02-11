@@ -1008,6 +1008,7 @@ final class  Base64 {
 				return false;
 			} else if (read == NON_BASE_64_WHITESPACE){
 				// ignore white space
+				continue;
 			} else if (read == NON_BASE_64_PADDING){
 				numPadding++;
 				numBase64Chars++;

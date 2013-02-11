@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.middleheaven.util.Hash;
+
 
 public class LocalTimePoint implements TimePoint , Comparable<TimePoint>  {
 
@@ -41,6 +43,21 @@ public class LocalTimePoint implements TimePoint , Comparable<TimePoint>  {
 		return (int)(this.milliseconds - other.getMilliseconds());
 	}
 
+	public boolean equals(Object other){
+		return other instanceof LocalTimePoint && equalsOther((LocalTimePoint)other);
+	}
+	
+	/**
+	 * @param other
+	 * @return
+	 */
+	private boolean equalsOther(LocalTimePoint other) {
+		return this.milliseconds == other.milliseconds && this.timeZone.equals(other.timeZone);
+	}
+
+	public int hashCode (){
+		return Hash.hash(this.milliseconds).hash(this.timeZone).hashCode();
+	}
 
 	public TimeZone getTimeZone() {
 		return timeZone;
@@ -52,4 +69,6 @@ public class LocalTimePoint implements TimePoint , Comparable<TimePoint>  {
 		calendar.setTimeZone(this.timeZone.toTimeZone());
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(calendar.getTime());
 	}
+	
+	
 }

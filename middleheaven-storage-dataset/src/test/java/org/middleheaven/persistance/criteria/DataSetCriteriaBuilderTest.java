@@ -9,6 +9,8 @@ import java.util.Date;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.middleheaven.core.annotations.Wire;
+import org.middleheaven.core.wiring.BindConfiguration;
+import org.middleheaven.core.wiring.Binder;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
@@ -17,7 +19,10 @@ import org.middleheaven.persistance.DataQuery;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.DataRowStream;
 import org.middleheaven.persistance.DataService;
+import org.middleheaven.persistance.DataStore;
+import org.middleheaven.persistance.DataStoreName;
 import org.middleheaven.persistance.DataStoreNotFoundException;
+import org.middleheaven.persistance.DataStoreProvider;
 import org.middleheaven.persistance.DataStoreSchema;
 import org.middleheaven.persistance.DataStoreSchemaName;
 import org.middleheaven.persistance.DataStoreSchemaNotFoundException;
@@ -30,6 +35,7 @@ import org.middleheaven.persistance.model.DataSetDefinition;
 import org.middleheaven.persistance.model.DataSetDefinitions;
 import org.middleheaven.persistance.model.TypeDefinition;
 import org.middleheaven.quantity.money.CentsMoney;
+import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
 import org.middleheaven.util.QualifiedName;
 
@@ -75,6 +81,46 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 	@Override
 	protected void setupWiringBundles(WiringService service) {
 
+		service.addConfiguration(new BindConfiguration(){
+
+			@Override
+			public void configure(Binder binder) {
+				binder.bind(DataService.class).inSharedScope().toInstance(new DataService(){
+
+					@Override
+					public void addProvider(DataStoreProvider provider) {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public void removeProvider(DataStoreProvider provider) {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public void registerDataStore(DataStoreName name,
+							DatasetRepositoryModel dataSetModel) {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public DataStore getDataStore(DataStoreName name)
+							throws DataStoreNotFoundException {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public DataStoreSchema getDataStoreSchema(
+							DataStoreSchemaName name)
+							throws DataStoreSchemaNotFoundException {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+					
+				});
+			}
+			
+		});
+		
 	}
 	
 	@Wire 

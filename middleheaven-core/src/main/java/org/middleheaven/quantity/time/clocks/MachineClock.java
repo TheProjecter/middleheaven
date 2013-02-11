@@ -53,14 +53,14 @@ public class MachineClock extends Clock {
 
 	final Map<Schedule, ClockTicked> timers = new  HashMap<Schedule, ClockTicked>();
 
-	Timer timer = null;
+	private Timer timer;
 
 
 	@Override
 	protected synchronized ClockTicked schedule(Schedule chronogram) {
 
 		ClockTicked ticked = timers.get(chronogram);
-		if (ticked==null){
+		if (ticked == null){
 
 			// create only when first time is created
 			if (timer == null) {

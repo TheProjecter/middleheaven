@@ -1,5 +1,6 @@
 package org.middleheaven.io.repository.vfs;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -16,12 +17,14 @@ import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileContent;
 import org.middleheaven.io.repository.ManagedFilePath;
+import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
+import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Predicate;
 
-final class VirtualFileSystemManagedFile extends AbstractManagedFile {
+final class VirtualFileSystemManagedFile extends AbstractManagedFile implements ManagedFileRepository{
 
 	protected final FileObject file;
 	private final String finalPath;
@@ -355,6 +358,62 @@ final class VirtualFileSystemManagedFile extends AbstractManagedFile {
 	protected int childrenCount() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void close() throws IOException {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<ManagedFilePath> getRoots() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isOpen() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public WatchService getWatchService() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean exists(ManagedFilePath path) throws ManagedIOException {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean delete(ManagedFilePath path) throws ManagedIOException {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFilePath getPath(String first, String... more) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 

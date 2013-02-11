@@ -3,6 +3,10 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 
@@ -28,7 +32,7 @@ public class VaadinTabSheetLayout extends VaadinUILayout  {
 	@Override
 	public void addComponent(UIComponent component,UILayoutConstraint layoutConstrain) {
 		
-		VaadinUIComponent c = (VaadinUIComponent)component;
+		VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get(); 
 		
 		
 		TabSheet t = (TabSheet) this.getComponent();

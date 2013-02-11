@@ -1,5 +1,7 @@
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +17,7 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
@@ -45,7 +48,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 		this.enabled.set(component.getEnableProperty().get());
 		
 		if (component.isType(UICommand.class)){
-			UICommand command = (UICommand)component;
+			UICommand command = safeCast(component, UICommand.class).get();
 			
 			for (CommandListener listener : command.getCommandListeners()){
 				commandListeners.add(listener);

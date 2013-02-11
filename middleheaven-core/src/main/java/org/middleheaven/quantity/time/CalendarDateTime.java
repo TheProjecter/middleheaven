@@ -170,18 +170,6 @@ public class CalendarDateTime extends AbstractTimePoint implements  DateHolder ,
 		return comp;
 	}
 
-	public boolean equals(Object other) {
-		return other instanceof TimePoint
-				&& equalsOther((TimePoint) other);
-	}
-
-	private boolean equalsOther(TimePoint other) {
-		return other.getMilliseconds() == this.milliseconds;
-	}
-
-	public int hashCode() {
-		return (int)this.getMilliseconds();
-	}
 	
 	public String toString(){
 		return new Date(this.milliseconds).toString();

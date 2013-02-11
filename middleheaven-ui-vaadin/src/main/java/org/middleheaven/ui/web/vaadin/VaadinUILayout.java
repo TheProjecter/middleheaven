@@ -31,7 +31,7 @@ public abstract class VaadinUILayout extends VaadinUIComponentContainer implemen
 	 */
 	@Override
 	public void setLayoutManager(UILayoutManager layoutManager) {
-		this.manager = manager;
+		this.manager = layoutManager;
 	}
 	
 	/**

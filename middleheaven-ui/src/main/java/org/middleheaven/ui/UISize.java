@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents the pair of vertical and horizontal dimensions of a UI object.
  */
-public class UISize implements Serializable {
+public final class UISize implements Serializable {
   
 	private static final long serialVersionUID = 6059819788937306305L;
 	

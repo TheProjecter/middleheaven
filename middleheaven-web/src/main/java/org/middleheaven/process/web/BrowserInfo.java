@@ -2,7 +2,7 @@ package org.middleheaven.process.web;
 
 import org.middleheaven.util.Version;
 
-public class BrowserInfo {
+public final class BrowserInfo {
 
 	public static enum CommonBrowsers {
 		UNKOWN,

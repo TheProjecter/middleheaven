@@ -3,6 +3,8 @@ package org.middleheaven.core.wiring;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.middleheaven.util.collections.CollectionUtils;
+
 public final class MethodPublishPoint extends AbstractMethodWiringPoint implements PublishPoint {
 
 	private Method method;
@@ -14,7 +16,7 @@ public final class MethodPublishPoint extends AbstractMethodWiringPoint implemen
 		this.method = method;
 		this.params = params;
 		this.scope = scope;
-		this.paramsSpecifications = paramsSpecifications;
+		this.paramsSpecifications = CollectionUtils.duplicateArray(paramsSpecifications);
 	}
 
 	

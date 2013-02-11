@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
-public class SMenuBar extends JMenuBar implements UICommandSet {
+class SMenuBar extends JMenuBar implements UICommandSet {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -78,12 +80,12 @@ public class SMenuBar extends JMenuBar implements UICommandSet {
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
-		this.add((JComponent)component);
+		this.add(safeCast(component, JComponent.class).get());
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.remove((JComponent)component);
+		this.remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
@@ -92,7 +94,7 @@ public class SMenuBar extends JMenuBar implements UICommandSet {
 
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getComponent(index);
+				return safeCast(getComponent(index), UIComponent.class).get();
 			}
 
 			@Override

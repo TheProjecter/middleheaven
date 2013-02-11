@@ -3,6 +3,8 @@
  */
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -23,12 +25,12 @@ public abstract class SBaseContainerPanel extends SBasePanel implements  UIConta
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
-		this.add((JComponent)component);
+		this.add(safeCast(component, JComponent.class).get());
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.remove((JComponent)component);
+		this.remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
@@ -42,7 +44,7 @@ public abstract class SBaseContainerPanel extends SBasePanel implements  UIConta
 
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getComponent(index);
+				return safeCast(getComponent(index), UIComponent.class).get();
 			}
 
 			@Override

@@ -312,6 +312,8 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 		case STATUS:
 		case ENUM:
 			return ColumnValueType.SMALL_INTEGER;
+		case MANY_TO_ONE:// TODO composed reference key, key may not be an integer
+		case ONE_TO_ONE:
 		case INTEGER:
 			return ColumnValueType.INTEGER;
 		case LOGIC:
@@ -322,10 +324,6 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 			return ColumnValueType.CLOB;
 		case TIME:
 			return ColumnValueType.TIME;
-		case MANY_TO_ONE:
-		case ONE_TO_ONE:
-			// TODO composed reference key
-			return ColumnValueType.INTEGER;
 		case ONE_TO_MANY:
 		case MANY_TO_MANY:
 		case UNKONW:

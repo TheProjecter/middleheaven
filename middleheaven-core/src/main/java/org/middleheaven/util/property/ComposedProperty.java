@@ -6,6 +6,7 @@ package org.middleheaven.util.property;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.function.Function;
 
 /**
@@ -29,7 +30,7 @@ public class ComposedProperty<T> extends AbstractProperty<T> {
 	 */
 	public ComposedProperty(String name, Property<?>[] others , Function<T, Property[]> composition) {
 		super(name, null);
-		this.others = others;
+		this.others = CollectionUtils.duplicateArray(others);
 		this.composition = composition;
 		this.value = composition.apply(others);
 		

@@ -7,6 +7,7 @@ import org.middleheaven.graph.Graph.Edge;
 import org.middleheaven.graph.Graph.Vertex;
 import org.middleheaven.graph.VertextInfoManager.VertexInfo;
 import org.middleheaven.graph.VertextInfoManager.VertexInfoVisitor;
+import org.middleheaven.util.Hash;
 
 /**
  * Implements Dijkstra's algorithm to termine the shortest path between to vertices on a graph.
@@ -25,8 +26,23 @@ public class PositiveWeigthedShortestPathInspector implements ShortestPathInspec
 
 		@Override
 		public int compareTo(Path other) {
-
 			return Double.compare(this.cost, other.cost);
+		}
+		
+		public boolean equals (Object other){
+			return other instanceof Path && equalsOther((Path) other);
+		}
+		
+		/**
+		 * @param other
+		 * @return
+		 */
+		private boolean equalsOther(Path other) {
+			return this.cost == other.cost && this.targetVertex.equals(other.targetVertex);
+		}
+
+		public int hashCode(){
+			return Hash.hash(cost).hash(targetVertex).hashCode();
 		}
 		
 		

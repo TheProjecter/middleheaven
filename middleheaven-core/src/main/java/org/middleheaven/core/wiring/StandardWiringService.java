@@ -420,7 +420,7 @@ public class StandardWiringService implements WiringService {
 	private void initializeBinding(Binding b) {
 		if (!b.isInicialized()
 				&& !b.isLazy()
-				&& (Service.class.equals(b.getScope()) || Shared.class.equals(b.getScope()))) {
+				&& ("service".equals(b.getScope()) || "shared".equals(b.getScope()))) {
 			try {
 				getInstance(b.getSourceType());
 				b.setInicialized(true);

@@ -2,6 +2,8 @@ package org.middleheaven.quantity.time;
 
 import java.util.Date;
 
+import org.middleheaven.util.Hash;
+
 public class EpocTimePoint implements TimePoint  {
 
 
@@ -28,5 +30,20 @@ public class EpocTimePoint implements TimePoint  {
 
 	public String toString(){
 		return new Date(this.timeFromEpoc).toString();
+	}
+	public boolean equals(Object other){
+		return other instanceof EpocTimePoint && equalsOther((EpocTimePoint)other);
+	}
+	
+	/**
+	 * @param other
+	 * @return
+	 */
+	private boolean equalsOther(EpocTimePoint other) {
+		return this.timeFromEpoc == other.timeFromEpoc;
+	}
+
+	public int hashCode (){
+		return Hash.hash(this.timeFromEpoc).hashCode();
 	}
 }

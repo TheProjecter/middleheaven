@@ -15,7 +15,7 @@ import org.middleheaven.util.QualifiedName;
 /**
  * 
  */
-public class DataSetDefinitions {
+public final class DataSetDefinitions {
 
 	
 	private DataSetDefinitions(){}

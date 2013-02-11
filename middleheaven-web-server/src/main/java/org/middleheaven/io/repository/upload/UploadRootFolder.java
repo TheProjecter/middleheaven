@@ -187,4 +187,12 @@ public class UploadRootFolder extends AbstractManagedFile {
 		return files.size();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
+		return files.get(this.getPath().resolve(path));
+	}
+
 }

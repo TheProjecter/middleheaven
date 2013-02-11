@@ -3,6 +3,8 @@
  */
 package org.middleheaven.logging;
 
+import org.middleheaven.util.collections.CollectionUtils;
+
 /**
  * 
  */
@@ -13,7 +15,7 @@ public class ObjectArrayLoggingEventParametersCollector implements
 	private Object[] params;
 	
 	public ObjectArrayLoggingEventParametersCollector (Object[] params){
-		this.params = params;
+		this.params = CollectionUtils.duplicateArray(params);
 	}
 	
 	/**

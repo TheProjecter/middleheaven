@@ -76,10 +76,17 @@ public class SitemapIndexWriter {
 				// sitemap files 
 				for (Sitemap sm : this.sitemaps){
 					ManagedFile smFile = folder.retrive(sm.getName() + ".xml.gz").createFile();
-
-					PrintWriter smWriter = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(smFile.getContent().getOutputStream()), "UTF-8"));
-					write(smWriter,sm, dateFormat);
-					smWriter.close();
+					PrintWriter smWriter = null;
+					try{
+						smWriter = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(smFile.getContent().getOutputStream()), "UTF-8"));
+						write(smWriter,sm, dateFormat);
+					} finally {
+						if (smWriter != null){
+							smWriter.close();
+						}
+					}
+					
+					
 				}
 
 			}

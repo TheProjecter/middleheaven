@@ -63,12 +63,12 @@ public final class Culture implements Serializable{
 	}
 	
 	
-	private String country;
-	private String language;
+	private final String country;
+	private final String language;
 	private String[] variant = new String[0];
 	
 	private Culture(String languageCode){
-		this(languageCode,"");
+		this(languageCode,null);
 	}
 	
 	private Culture(String languageCode, String countryCode){
@@ -82,7 +82,7 @@ public final class Culture implements Serializable{
 	}
 	
 	public CountryIsoCode getCountry(){
-		return new CountryIsoCode(country);
+		return country.isEmpty() ? null : new CountryIsoCode(country);
 	}
 	
 	public Language getLanguage(){
@@ -94,12 +94,15 @@ public final class Culture implements Serializable{
 	}
 	
 	public Locale toLocale(){
-		if (variant.length>0){
-			return new Locale(language,country,variant[0]);
+		if (country != null){
+			if (variant.length>0){
+				return new Locale(language,country,variant[0]);
+			} else {
+				return new Locale(language,country);
+			}
 		} else {
-			return new Locale(language,country);
+			return new Locale(language);
 		}
-	
 	}
 	
 	

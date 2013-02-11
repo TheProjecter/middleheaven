@@ -305,7 +305,7 @@ public class UISearch {
 	 * @return
 	 */
 	public static UISearchExecutor absolute(UIComponent c){
-		return new UISearchExecutor(searchClient(c));
+		return new UISearchExecutor(client(c));
 	}
 	
 	/**
@@ -325,7 +325,7 @@ public class UISearch {
 	}
 
 
-	private static UIClient searchClient(UIComponent other) {
+	public static UIClient client(UIComponent other) {
 
 
 		List<UIComponent> list = new ArrayList<UIComponent>(1);
@@ -401,30 +401,4 @@ public class UISearch {
 
 	}
 
-	/**
-	 * @param gid
-	 * @param components
-	 */
-	private static UIComponent doSearch(String gid, LinkedList<UIComponent> components) {
-
-
-		while (!components.isEmpty()) {
-
-			UIComponent c = components.removeFirst();
-
-			if (c.getGID().equals(gid)){
-				return c;
-			} else {
-				if (c.getChildrenCount() > 0){
-					for (UIComponent uic : c.getChildrenComponents()){
-						components.addLast(uic);
-					}
-				}
-
-			}
-
-		}
-
-		return null;
-	}
 }

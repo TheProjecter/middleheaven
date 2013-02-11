@@ -29,12 +29,14 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * 
  */
-public class XmlDrivenDatasetRepositoryModelReader implements
+public final class XmlDrivenDatasetRepositoryModelReader implements
 		DatasetRepositoryModelReader {
 
-	
-
-
+	/**
+	 * Creates {@link XmlDrivenDatasetRepositoryModelReader} for the given file.
+	 * @param file the file to read
+	 * @return an XmlDrivenDatasetRepositoryModelReader object
+	 */
 	public static XmlDrivenDatasetRepositoryModelReader newInstance(ManagedFile file){
 		return new XmlDrivenDatasetRepositoryModelReader(file);
 	}
@@ -105,8 +107,7 @@ public class XmlDrivenDatasetRepositoryModelReader implements
 		
 	}
 	
-	private class XmlHandler extends DefaultHandler {
-		
+	private static class XmlHandler extends DefaultHandler {
 		
 		private  Map<String , UserType> userTypes = new HashMap<String , UserType>();
 		private  Map<String , ColumnValueType> typesMapping = new HashMap<String , ColumnValueType>();

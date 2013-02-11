@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -17,8 +19,10 @@ import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
+/**
+ * {@link UICommandSet} as a {@link JToolBar}
+ */
 public class SToolbar extends JToolBar implements UICommandSet{
-
 
 	private static final long serialVersionUID = -2053844931546150045L;
 	
@@ -26,6 +30,10 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	private String id;
 	private UIComponent parent;
 	
+	/**
+	 * 
+	 * Constructor.
+	 */
 	public SToolbar(){
 		
 	}
@@ -41,28 +49,26 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
-		this.add((JComponent)component);
+		this.add(safeCast(component, JComponent.class).get());
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.remove((JComponent)component);
+		this.remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
 	public List<UIComponent> getChildrenComponents() {
 		return new DelegatingList<UIComponent>(){
-
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getComponent(index);
+				return safeCast(getComponent(index), UIComponent.class).get();
 			}
 
 			@Override
 			public int size() {
 				return getComponentCount();
 			}
-			
 		};
 	}
 	
@@ -95,8 +101,6 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	public boolean isRendered() {
 		return true;
 	}
-
-
 
 	@Override
 	public void setFamily(String family) {
@@ -216,5 +220,4 @@ public class SToolbar extends JToolBar implements UICommandSet{
 		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
-	
 }

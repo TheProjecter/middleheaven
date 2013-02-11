@@ -1,5 +1,7 @@
 package org.middleheaven.process.web.server.filters;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,7 +50,7 @@ public class ViewTemplateFilter extends AbstractFilter {
 			//			if (Container.get() == Container.TOMCAT) {
 			request.getSession(true);
 			//			}
-			HttpServletResponse  response = (HttpServletResponse ) rs;
+			HttpServletResponse  response = safeCast(rs, HttpServletResponse.class).get();
 
 			// parse data into Page object (or continue as normal if Page not parseable)
 			Page page = parsePage(request, response, chain);
@@ -59,7 +61,6 @@ public class ViewTemplateFilter extends AbstractFilter {
 				Decorator decorator = getDecorator(request, page);
 				if (decorator != null && decorator.getPage() != null) {
 					applyDecorator(page, decorator, request, response);
-					page = null;
 					return;
 				}
 
@@ -67,7 +68,6 @@ public class ViewTemplateFilter extends AbstractFilter {
 				// what we don't want is an exception printed to the user, so
 				// we write the original page
 				writeOriginal(request, response, page);
-				page = null;
 			}
 		}
 	}

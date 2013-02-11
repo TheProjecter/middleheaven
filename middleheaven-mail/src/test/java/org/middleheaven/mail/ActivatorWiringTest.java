@@ -20,8 +20,6 @@ import org.middleheaven.tool.test.MiddleHeavenTestCase;
  */
 public class ActivatorWiringTest extends MiddleHeavenTestCase{
 
-	
-	
 	@Test
 	public void testInit(){
 		
@@ -29,7 +27,7 @@ public class ActivatorWiringTest extends MiddleHeavenTestCase{
 
 			@Override
 			public void configure(Binder binder) {
-				binder.bind(NameDirectoryService.class).in(Shared.class).to(JNDINameDirectoryService.class);
+				binder.bind(NameDirectoryService.class).in(Shared.class).toInstance(new JNDINameDirectoryService());
 				binder.bind(JavaMailActivator.class).in(Shared.class).to(JavaMailActivator.class);
 			}
 

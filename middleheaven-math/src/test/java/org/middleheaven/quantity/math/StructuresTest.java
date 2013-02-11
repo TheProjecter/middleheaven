@@ -222,9 +222,9 @@ public class StructuresTest {
 		});
 
 		L = space.matrix(3,3, new Real []{
-				Real.valueOf(1) , Real.valueOf(0 ), Real.valueOf(0),
-				Real.valueOf(3,2 ) , Real.valueOf(1 ), Real.valueOf(0),
-				Real.valueOf(1, 2) , Real.valueOf(4 ), Real.valueOf(1)	
+				Real.valueOf(1) , Real.valueOf(0), Real.valueOf(0),
+				Real.valueOf(3,2 ) , Real.valueOf(1), Real.valueOf(0),
+				Real.valueOf(1, 2) , Real.valueOf(4), Real.valueOf(1)	
 		});
 		
 		

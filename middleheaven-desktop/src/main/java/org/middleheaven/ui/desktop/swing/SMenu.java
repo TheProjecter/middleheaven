@@ -1,5 +1,8 @@
 package org.middleheaven.ui.desktop.swing;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
+
 import java.util.Collections;
 import java.util.List;
 
@@ -77,12 +80,12 @@ public class SMenu extends JMenu implements UICommandSet {
 	@Override
 	public void addComponent(UIComponent component) {
 		component.setUIParent(this);
-		this.add((JComponent)component);
+		this.add(safeCast(component, JComponent.class).get());
 	}
 
 	@Override
 	public void removeComponent(UIComponent component) {
-		this.remove((JComponent)component);
+		this.remove(safeCast(component, JComponent.class).get());
 	}
 	
 	@Override
@@ -91,7 +94,7 @@ public class SMenu extends JMenu implements UICommandSet {
 
 			@Override
 			public UIComponent get(int index) {
-				return (UIComponent)getComponent(index);
+				return  safeCast(getComponent(index), UIComponent.class).get();
 			}
 
 			@Override

@@ -15,6 +15,7 @@ import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.MediaManagedFile;
 import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.empty.UnexistantManagedFile;
 
 /**
  * 
@@ -184,6 +185,14 @@ class UploadManagedFile extends AbstractMediaManagedFile implements MediaManaged
 	@Override
 	public void deleteTree() {
 		//no-op. there is no tree.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
+		return new UnexistantManagedFile(this.getRepository(), path);
 	}
 
 

@@ -2,6 +2,8 @@ package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Method;
 
+import org.middleheaven.util.collections.CollectionUtils;
+
 /**
  * Used a {@link Method} as a {@link AfterWiringPoint}.
  */
@@ -35,7 +37,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 		super();
 		this.method = method;
 		this.methodSpecification = methodSpecification;
-		this.paramsSpecifications = paramsSpecifications;
+		this.paramsSpecifications = CollectionUtils.duplicateArray(paramsSpecifications);
 	}
 
 

@@ -14,7 +14,7 @@ import org.htmlparser.tags.TitleTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-public class HTMLPage implements Page{
+public final class HTMLPage implements Page{
 
 
 	private HttpServletRequest request;

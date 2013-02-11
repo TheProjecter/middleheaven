@@ -33,10 +33,9 @@ public class DependencyResolver {
 		// If the two stacks have the same items this means those items have a ciclic dependency.
 		// proxies will them be used in order to overcome the cycle.
 
-		List<T> stack = starter.sort(dependables);
+		final List<T> stack = starter.sort(dependables);
 		LinkedList<T> newStack  = new  LinkedList<T>(stack);
 		LinkedList<T> oldStack  = new  LinkedList<T>();
-
 
 		List<T> failedDependencies = new LinkedList<T>();
 
@@ -58,7 +57,6 @@ public class DependencyResolver {
 					log.warn(e,"Impossible to inicialize {0}." , dependable);
 					// dependencies will never be available
 					failedDependencies.add(dependable);
-
 				}  
 			}
 		}

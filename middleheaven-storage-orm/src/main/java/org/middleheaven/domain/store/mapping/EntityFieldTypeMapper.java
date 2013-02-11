@@ -8,6 +8,7 @@ import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.storage.types.TypeMapper;
 import org.middleheaven.util.QualifiedName;
+import org.middleheaven.util.collections.CollectionUtils;
 
 /**
  * 
@@ -28,7 +29,7 @@ public class EntityFieldTypeMapper implements TypeMapper {
 	public EntityFieldTypeMapper(EntityFieldModel field, TypeMapper fieldType, DataColumnModel[] columns) {
 		this.field = field;
 		this.fieldType = fieldType;
-		this.columns = columns;
+		this.columns = CollectionUtils.duplicateArray(columns);
 	}
 
 	public DataColumnModel[] getColumns(){

@@ -1,11 +1,14 @@
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
+import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**
@@ -28,7 +31,7 @@ public class HtmlTextInputRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 
-		UIField comp = (UIField)component;
+		UIField comp =  safeCast(component, UIField.class).get();
 
 
 		UIReadState state = comp.getReadStateProperty().get();

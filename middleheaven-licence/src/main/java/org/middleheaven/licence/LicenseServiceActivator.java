@@ -31,7 +31,8 @@ public class LicenseServiceActivator extends ServiceActivator {
 	private LicenseService implementation;
 	private LicenseProvider provider = new VoidLicenseProvider();
 
-
+	public LicenseServiceActivator (){}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -194,7 +195,7 @@ public class LicenseServiceActivator extends ServiceActivator {
 		return providers;
 	}
 
-	private static class LicenceProviderHandler implements ProxyHandler{
+	private static final class LicenceProviderHandler implements ProxyHandler{
 
 		Object provider;
 		Method getLicenceMethod;

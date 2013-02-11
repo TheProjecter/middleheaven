@@ -23,6 +23,7 @@ import org.middleheaven.process.web.server.filters.HttpFilter;
 import org.middleheaven.process.web.server.filters.HttpFilterChain;
 import org.middleheaven.process.web.server.global.HttpCultureResolver;
 import org.middleheaven.process.web.server.global.RequestAgentHttpCultureResolver;
+import org.middleheaven.util.function.Maybe;
 import org.middleheaven.web.rendering.RenderingProcessor;
 import org.middleheaven.web.rendering.RenderingProcessorResolver;
 
@@ -115,25 +116,36 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 		HttpRenderingMapping mapping = urlTrasientRenderingMatch.get(incomingUrl);
 
 		if (mapping == null){
-			double max = 0;
-			for (HttpRenderingMapping m : renderingMappings.values()){
-
-				double match = m.processor.canProcess(viewName, contentType) ? m.mapping.match(incomingUrl) : 0;
-
-				if (Double.compare(match, max) >0){
-					mapping = m;
-				}
-
-			}
-
-			if (mapping != null){
-				urlTrasientRenderingMatch.put(incomingUrl, mapping);
+			Maybe<HttpRenderingMapping> maybeMapping = findHttpRenderingMapping(incomingUrl, viewName , contentType);
+					
+			if (maybeMapping.isPresent()){
+				mapping = maybeMapping.get();
+				urlTrasientRenderingMatch.put(incomingUrl, maybeMapping.get());
+			} else {
+				throw new IllegalStateException("Cannot find a mapping for url " + incomingUrl + " and type " + contentType);
 			}
 		}
 
 		return mapping.processor.resolve(viewName, contentType);
 	}
 
+	private Maybe<HttpRenderingMapping> findHttpRenderingMapping(String incomingUrl, String viewName, String contentType){
+		HttpRenderingMapping mapping = null;
+		double max = 0;
+		for (HttpRenderingMapping m : renderingMappings.values()){
+
+			double match = m.processor.canProcess(viewName, contentType) ? m.mapping.match(incomingUrl) : 0;
+
+			if (Double.compare(match, max) >0){
+				mapping = m;
+			}
+
+		}
+		
+		return Maybe.of(mapping);
+
+	}
+	
 	@Override
 	public HttpProcessor resolveControlProcessor(String url) {
 
@@ -159,7 +171,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isAvailable() {
+	public synchronized boolean isAvailable() {
 		return available;
 	}
 
@@ -168,7 +180,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setAvailable(boolean available) {
+	public synchronized void setAvailable(boolean available) {
 		this.available = available;
 	}
 
@@ -195,7 +207,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 	 * Determines if hte server is stopped.
 	 * @return <code>true</code> if the server is stopped, <code>false</code> otherwise.
 	 */
-	protected boolean isStopped(){
+	protected synchronized boolean isStopped(){
 		return this.stopped;
 	}
 
@@ -283,8 +295,6 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 
 		try{
 
-
-
 			// execute processing
 			Outcome outcome = this.doService(context, processor);
 
@@ -313,7 +323,11 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 					contentType = outcome.getContentType();
 				} 
 
-				RenderingProcessor render = this.resolverRenderingProcessor(context.getRequestUrl().getFilename(), outcome.getUrl(), contentType);
+				RenderingProcessor render = this.resolverRenderingProcessor(
+						context.getRequestUrl().getFilename(), 
+						outcome.getUrl(), 
+						contentType
+						);
 
 				if (render == null){
 					logger.error("Render could not be found for {0}" , outcome);
@@ -330,7 +344,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 			throw e.getIOException();
 		}catch (HttpProcessServletException e){
 			throw e.getServletException();
-		}catch (Throwable e){
+		}catch (Exception e){
 			throw new ServletException(e);
 		} 
 	}

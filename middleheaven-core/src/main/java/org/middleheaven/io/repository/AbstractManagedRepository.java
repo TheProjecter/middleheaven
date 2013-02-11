@@ -1,9 +1,12 @@
 package org.middleheaven.io.repository;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.watch.WatchService;
+import org.middleheaven.util.function.Maybe;
 
 /**
  * Default implementation for some methods of {@link ManagedFileRepository}.
@@ -21,14 +24,19 @@ public abstract class AbstractManagedRepository implements ManagedFileRepository
 	}
 
 	public boolean delete(ManagedFile file) throws ManagedIOException {
-		if (!file.getParent().equals(this)){
+		
+		Maybe<ManagedFileRepository> repo = safeCast(file.getParent(), ManagedFileRepository.class);
+		
+		if (repo.isAbsent() || !repo.get().equals(this)){
 			return false;
 		}
 		return file.delete();
 	}
 
 	public void store(ManagedFile file) throws RepositoryNotWritableException, ManagedIOException {
-		if (file.getParent().equals(this)){
+		Maybe<ManagedFileRepository> repo = safeCast(file.getParent(), ManagedFileRepository.class);
+		
+		if (repo.isAbsent() || repo.get().equals(this)){
 			// already in store
 			return;
 		}

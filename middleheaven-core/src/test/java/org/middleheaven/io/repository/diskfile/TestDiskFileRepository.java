@@ -1,5 +1,6 @@
 package org.middleheaven.io.repository.diskfile;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class TestDiskFileRepository extends MiddleHeavenTestCase {
 		
 		ManagedFile file = repo.retrive(repo.getPath("c:"));
 		
-		assertEquals (new File("c:/").toURI() , file.getURI());
+		assertTrue(new File("c:/").toURI().toString().equalsIgnoreCase(file.getURI().toString()));
 	}
 	
 }

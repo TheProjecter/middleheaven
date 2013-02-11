@@ -1,5 +1,7 @@
 package org.middleheaven.process.web.server.filters;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -14,7 +16,7 @@ public class ResourceCacheFilter extends AbstractFilter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
 		chain.doFilter(request, response);
-		HttpServletResponse httpResponse =  (HttpServletResponse)response;
+		HttpServletResponse httpResponse = safeCast(response, HttpServletResponse.class).get();
 		
 		httpResponse.addHeader("Expires", "Thu, 1 Jan 2099 23:59:59 GMT");
 		httpResponse.addHeader("Cache-Control", "max-age=2592000"); // one month

@@ -41,6 +41,8 @@ public class LogKeepingActivator extends ServiceActivator {
 	@Override
 	public void activate(ServiceContext serviceContext) {
 
+		loggingService = new BroadcastLoggingService();
+		
 		final FileContext fileRepositoryService = serviceContext.getService(FileContextService.class).getFileContext();
 		
 		ManagedFile configFolder = fileRepositoryService.getEnvironmentConfigRepository();
@@ -48,7 +50,7 @@ public class LogKeepingActivator extends ServiceActivator {
 		LoggingConfigurator configurator = new BasicConfigurator();
 		LoggingConfiguration configuration = new LoggingConfiguration(null);
 
-		if (configFolder!=null && configFolder.exists() && configFolder.isReadable()){
+		if (configFolder != null && configFolder.exists() && configFolder.isReadable()){
 			ManagedFile configXML = configFolder.retrive("log-config.xml");
 			if (configXML!=null && configXML.exists() && configXML.isReadable()){
 				try {
@@ -61,9 +63,7 @@ public class LogKeepingActivator extends ServiceActivator {
 			}
 		} 
 		//else,  don't bother to configure
-		configurator = new BasicConfigurator();
-		configuration = new LoggingConfiguration(null);
-
+	
 		ConfigurableLogListener listener = new ConfigurableLogListener(configuration, configurator);
 
 		this.loggingService.addLogListener(listener);

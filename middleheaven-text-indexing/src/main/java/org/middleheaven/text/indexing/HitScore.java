@@ -2,7 +2,7 @@ package org.middleheaven.text.indexing;
 
 import org.middleheaven.util.Hash;
 
-public class HitScore implements Comparable<HitScore> {
+public final class HitScore implements Comparable<HitScore> {
 
 
 	public static HitScore valueOf(float score){

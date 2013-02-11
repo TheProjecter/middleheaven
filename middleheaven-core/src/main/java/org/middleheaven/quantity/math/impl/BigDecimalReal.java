@@ -18,24 +18,34 @@ public class BigDecimalReal extends Real{
 
 	private static final int SCALE = 22;
 	
-	
+	private final static BigDecimalReal ZERO  = new BigDecimalReal(BigDecimal.ZERO , BigDecimal.ONE);
+	private final static BigDecimalReal ONE  = new BigDecimalReal(BigDecimal.ONE , BigDecimal.ONE);
+
 	// Ratio pattern like implementation to adjourn the 
 	// division as much as possible.
 	private BigDecimal numerator; // only contains integer value
 	private BigDecimal denominator; // only contains integer value
 
-	BigDecimalReal (String value){
-		this(new BigDecimal(value));
+	public static BigDecimalReal valueOf (String value){
+		return valueOf(new BigDecimal(value));
 	}
-
-    BigDecimalReal (long value){
-		this(BigDecimal.valueOf(value), BigDecimal.ONE);
-	}
-
-	private BigDecimalReal (BigDecimal value){
+	
+	public static BigDecimalReal valueOf (BigDecimal value){
 		final BigDecimal scale = BigDecimalMath.intPower(BigDecimal.TEN, value.scale(), 0);
-		this.numerator = value.multiply( scale);
-		this.denominator = scale;	
+		return valueOf(value.multiply( scale), scale);
+	}
+	
+	public static BigDecimalReal valueOf (long value){
+		return valueOf(BigDecimal.valueOf(value), BigDecimal.ONE);
+	}
+	
+	public static BigDecimalReal valueOf (BigDecimal numerator,BigDecimal denominator){
+		if (numerator.compareTo(BigDecimal.ZERO) == 0){
+			return ZERO;
+		} else if (numerator.compareTo(denominator) == 0){
+			return ONE;
+		}
+		return new BigDecimalReal(numerator, denominator);
 	}
 
 	private BigDecimalReal (BigDecimal numerator,BigDecimal denominator){
@@ -159,9 +169,8 @@ public class BigDecimalReal extends Real{
 
 	private BigDecimalReal times(BigDecimal otherNumerator, BigDecimal otherDenominator){
 		if (otherNumerator.compareTo(BigDecimal.ZERO) ==0){
-			return new BigDecimalReal(0);
-		}
-		else {
+			return BigDecimalReal.ZERO;
+		} else {
 			return new BigDecimalReal(
 					this.numerator.multiply(otherNumerator),
 					this.denominator.multiply(otherDenominator)
@@ -187,7 +196,7 @@ public class BigDecimalReal extends Real{
 
 	@Override
 	public String toString() {
-		return this.numerator.toString() + "/" + this.denominator.toString();
+		return this.denominator.compareTo(BigDecimal.ONE) == 0 ? this.numerator.toString() : this.numerator.toString() + "/" + this.denominator.toString();
 	}
 
 	@SuppressWarnings("unchecked")

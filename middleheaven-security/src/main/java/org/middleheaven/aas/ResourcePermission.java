@@ -98,13 +98,15 @@ public class ResourcePermission implements Permission {
                 }
                 return false;
             }
-        } else {
+        } else if (threshold instanceof ResourcePermission){
 
            ResourcePermission other = (ResourcePermission)threshold;
            if (other.permissionLevel == PermissionLevel.NONE){
                return true; // no level is required, accept it
            }
            return other.resourceName.equals(this.resourceName) && PermissionLevel.levelIncludes(this.permissionLevel, other.permissionLevel);
+        } else {
+        	return false;
         }
     }
 

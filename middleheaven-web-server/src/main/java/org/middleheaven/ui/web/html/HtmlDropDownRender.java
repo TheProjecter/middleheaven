@@ -1,9 +1,12 @@
 package org.middleheaven.ui.web.html;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
+import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.data.UIDataItem;
 import org.middleheaven.ui.rendering.RenderingContext;
@@ -18,7 +21,7 @@ public class HtmlDropDownRender extends AbstractHtmlInputRender {
 	@Override
 	public void write(HtmlDocument document, RenderingContext context,UIComponent component) throws IOException {
 		
-		UISelectOne selectOne = (UISelectOne) component;
+		UISelectOne selectOne = safeCast(component, UISelectOne.class).get();
 		
 		Writer writer = document.getBodyWriter();
 		

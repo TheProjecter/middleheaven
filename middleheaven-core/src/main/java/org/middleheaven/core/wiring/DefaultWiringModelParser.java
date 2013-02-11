@@ -109,7 +109,9 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 				if ("service".equals(scopeName)){
 					if (!type.isInterface()){
 						if (interfaces.isEmpty()){
-							throw new IllegalStateException("A @Service must be declared on an annotation or the type must implement an interface");
+							throw new IllegalStateException(
+								"A @Service must be declared on an annotation or the type must implement an interface"
+							);
 						}
 						model.addContractType(interfaces.getFirst());
 					}
@@ -234,9 +236,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 				readConstructorProducingPoint(type, model, introspector);
 			} else if ( candidates.size() > 1){
 				throw new ConfigurationException("Multiple static factory methods found for " + type + ". Annotate only one method with @" + Factory.class.getSimpleName());
-			} else {
-
-			}
+			} 
 		}
 
 		// injection points

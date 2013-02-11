@@ -3,6 +3,8 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -11,7 +13,6 @@ import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.components.UILayoutManager;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -51,7 +52,7 @@ public abstract class VaadinUIComponentContainer extends VaadinUIComponent imple
 	 * {@inheritDoc}
 	 */
 	public ComponentContainer getComponent(){
-		return (ComponentContainer) super.getComponent();
+		return safeCast(super.getComponent(), ComponentContainer.class).get();
 	}
 	
 	/**
@@ -69,10 +70,10 @@ public abstract class VaadinUIComponentContainer extends VaadinUIComponent imple
 	public void addComponent(UIComponent component) {
 		
 		if (component instanceof UILayout){
-			this.setUIContainerLayout(UILayout.class.cast(component));
+			this.setUIContainerLayout( safeCast(component, UILayout.class).get());
 			this.components.add((VaadinUIComponent) component);
 		} else if ( this.layout == null){
-			VaadinUIComponent c = VaadinUIComponent.class.cast(component);
+			VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get();
 			this.addWrapperComponent(c);
 			this.getComponent().addComponent(c.getComponent());
 		} else {
@@ -87,7 +88,7 @@ public abstract class VaadinUIComponentContainer extends VaadinUIComponent imple
 	@Override
 	public void addComponent(UIComponent component,UILayoutConstraint layoutConstrain) {
 		
-		VaadinUIComponent c = (VaadinUIComponent)component;
+		VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get();
 		this.addWrapperComponent(c);
 		
 		this.layout.addComponent(component, layoutConstrain);
@@ -100,7 +101,7 @@ public abstract class VaadinUIComponentContainer extends VaadinUIComponent imple
 	@Override
 	public void removeComponent(UIComponent component) {
 		
-		VaadinUIComponent c = (VaadinUIComponent)component;
+		VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get(); 
 		components.remove(c);
 		
 		this.getComponent().addComponent(c.getComponent());

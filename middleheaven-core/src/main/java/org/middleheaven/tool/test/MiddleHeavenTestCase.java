@@ -26,7 +26,7 @@ public abstract class MiddleHeavenTestCase extends TestBootstrap {
 	@Before
 	public final void setUp(){
 	
-		getWiringService().addItem(new TypeWiringItem(this.getClass()));
+		//getWiringService().addItem(new TypeWiringItem(this.getClass()));
 		
 		this.start();
 		

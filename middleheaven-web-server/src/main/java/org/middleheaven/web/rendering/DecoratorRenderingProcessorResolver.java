@@ -140,7 +140,6 @@ public class DecoratorRenderingProcessorResolver extends AbstractJspProcessorRes
 						Decorator decorator = getDecorator(outcome, page);
 						if (decorator != null && decorator.getPage() != null) {
 							applyDecorator(page, decorator, request, response);
-							page = null;
 							return;
 						}
 
@@ -148,7 +147,6 @@ public class DecoratorRenderingProcessorResolver extends AbstractJspProcessorRes
 						// what we don't want is an exception printed to the user, so
 						// we write the original page
 						writeOriginal(request, response, page);
-						page = null;
 					}
 				}
 

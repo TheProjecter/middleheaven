@@ -189,8 +189,7 @@ public class VaadinApplicationServletAdapter extends AbstractApplicationServlet{
 			 * cache timeout can be configured by setting the resourceCacheTime
 			 * parameter in web.xml
 			 */
-			response.setHeader("Cache-Control",
-					"max-age= " + String.valueOf(3600));
+			response.setHeader("Cache-Control", "max-age=3600");
 		}
 
 		// Write the resource to the client.

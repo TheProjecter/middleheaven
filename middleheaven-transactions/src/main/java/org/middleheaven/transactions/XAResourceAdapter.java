@@ -16,17 +16,17 @@ public abstract class XAResourceAdapter implements XAResource {
     	return xid;
     }
 
-	public synchronized void start(Xid xid, int flag) throws XAException {
+	public void start(Xid xid, int flag) throws XAException {
         // Associate to transaction  
         this.xid = xid;
     }
 
-    public synchronized void end(Xid xid, int flag) throws XAException {
+    public void end(Xid xid, int flag) throws XAException {
         // Disassociate from transaction
         this.xid = null;
     }
 
-    public synchronized int prepare(Xid xid) throws XAException {
+    public int prepare(Xid xid) throws XAException {
         return XA_OK;
     }
     

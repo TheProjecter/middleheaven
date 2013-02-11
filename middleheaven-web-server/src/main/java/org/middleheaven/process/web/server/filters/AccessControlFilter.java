@@ -84,12 +84,12 @@ public class AccessControlFilter implements HttpFilter{
 	@Override
 	public void doFilter(HttpServerContext context, HttpFilterChain chain) {
 
-		Permission[] permissions = getGuardPermission(context.getRequestUrl());
+		Permission[] guardPermissions = getGuardPermission(context.getRequestUrl());
 
 		CallbackHandler handler = context.getAttributes().getAttribute(ContextScope.SESSION, CALLBACK_HANLDER, CallbackHandler.class);
 
 
-		if (handler ==null && canPass(permissions) && !context.getRequestMethod().equals(HttpMethod.POST)){
+		if (handler ==null && canPass(guardPermissions) && !context.getRequestMethod().equals(HttpMethod.POST)){
 			// free for all
 			HttpContextAccessRequest request = new HttpContextAccessRequest(context,handler,storePolicy.resolveSignatureStore(context));
 
@@ -100,7 +100,7 @@ public class AccessControlFilter implements HttpFilter{
 				context.getAttributes().setAttribute(ContextScope.SESSION, CALLBACK_HANLDER, handler);
 			}
 
-			HttpContextAccessRequest request = new HttpContextAccessRequest(context,handler,storePolicy.resolveSignatureStore(context));
+			final HttpContextAccessRequest request = new HttpContextAccessRequest(context,handler,storePolicy.resolveSignatureStore(context));
 
 			final AccessRequestBroker accessRequestBroker = accessControlService.accessRequestBroker();
 
@@ -122,7 +122,7 @@ public class AccessControlFilter implements HttpFilter{
 					Subject subject = request.getSubject();
 
 					// assert permissions
-					for (Permission p : permissions){
+					for (Permission p : guardPermissions){
 						if (!accessRequestBroker.hasPermission(subject, p)){
 							chain.interruptWithOutcome(accessDeniedOutcome);
 							return;
@@ -131,7 +131,12 @@ public class AccessControlFilter implements HttpFilter{
 
 					// all fine. go on
 					repeat=false;
-					HttpCookie redirectCookie =	attributeContext.getAttribute(ContextScope.REQUEST_COOKIES, "redirect_after_login", HttpCookie.class);
+					HttpCookie redirectCookie =	attributeContext.getAttribute(
+							ContextScope.REQUEST_COOKIES,
+							"redirect_after_login", 
+							HttpCookie.class
+					);
+					
 					if (redirectCookie != null){ // read redirect cookie
 						RedirectAfterCookie rc = new RedirectAfterCookie(redirectCookie);
 						chain.interruptWithOutcome(rc.asOutcome());
@@ -155,7 +160,8 @@ public class AccessControlFilter implements HttpFilter{
 						repeat = false;
 
 						// if it is the login page
-						if (this.loginOutcome.getParameterizedURL().equalsIgnoreCase(context.getRequestUrl().getContexlesPathAndFileName())){
+						if (this.loginOutcome.getParameterizedURL()
+								.equalsIgnoreCase(context.getRequestUrl().getContexlesPathAndFileName())){
 
 							letPass(context,chain, request);
 
@@ -168,7 +174,11 @@ public class AccessControlFilter implements HttpFilter{
 										"redirect_after_login", 
 										context.getRequestUrl().toString()
 										);
-								//attributeContext.setAttribute(ContextScope.REQUEST_COOKIES, "redirect_after_login", rc);
+								attributeContext.setAttribute(
+										ContextScope.REQUEST_COOKIES, 
+										"redirect_after_login", 
+										rc
+								);
 							}
 						}
 

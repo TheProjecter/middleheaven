@@ -3,10 +3,10 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.ui.ComponentAggregationEvent;
+import static org.middleheaven.util.SafeCastUtils.safeCast;
+
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UISize;
 
 import com.vaadin.ui.Component;
 
@@ -29,8 +29,7 @@ public class VaadinFlowLayout extends VaadinUILayout  {
 	 */
 	@Override
 	public void addComponent(UIComponent component, UILayoutConstraint layoutConstrain) {
-		final VaadinUIComponent c = (VaadinUIComponent)component;
-		this.addWrapperComponent(c);
+		this.addWrapperComponent(safeCast(component, VaadinUIComponent.class).get());
 	}
 
 

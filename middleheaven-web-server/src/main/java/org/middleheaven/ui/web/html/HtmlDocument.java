@@ -18,7 +18,7 @@ import org.middleheaven.global.Culture;
 /**
  * An utility class to help write strutureed HTML files 
  */
-public class HtmlDocument {
+public final class HtmlDocument {
 
 	private ByteArrayOutputStream headOut = new ByteArrayOutputStream();
 	private ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();

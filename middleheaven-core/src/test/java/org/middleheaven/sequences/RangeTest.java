@@ -70,16 +70,16 @@ public class RangeTest {
 		
 		list = range.into(new ArrayList<Integer>());
 		
-		assertEquals(6, list.size());
-		
 		assertEquals(6, range.size());
 		
-		Set<Integer> selected = new HashSet<Integer>();
-		for(int i=0;selected.size() != range.size() && i < 100000;i++){
+		assertEquals(range.size(), list.size());
+		
+		List<Integer> selected = new ArrayList<Integer>();
+		for(int i=0; i < 10 ;i++){
 			selected.add(range.random());
 		}
 		
-		assertEquals(6,selected.size());
+		assertEquals(10,selected.size());
 		
 	}
 	
