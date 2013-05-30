@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.junit.Test;
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 
 public class CollectionUtilsTest {

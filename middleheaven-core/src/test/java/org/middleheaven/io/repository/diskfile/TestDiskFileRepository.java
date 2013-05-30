@@ -1,7 +1,6 @@
 package org.middleheaven.io.repository.diskfile;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;

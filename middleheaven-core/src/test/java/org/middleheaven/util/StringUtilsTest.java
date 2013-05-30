@@ -1,5 +1,6 @@
 package org.middleheaven.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -9,10 +10,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 public class StringUtilsTest {
 
+	@Test
+	public void testRepeat(){
+		assertEquals("mmm", StringUtils.repeat("m", 3));
+		assertEquals("acacac", StringUtils.repeat("ac", 3));
+		
+		assertEquals("ac:ac:ac", StringUtils.repeat("ac", 3, ":"));
+	}
+	
+	
+	@Test
+	public void testIffenDelimiter(){
+		assertEquals("abBcCd", StringUtils.iffenDelimitedToCamelCase("ab-bc-cd"));
+	}
+	
+	@Test
+	public void testFirstLetterToUppercase(){
+		assertEquals("middleHeaven", StringUtils.firstLetterToLower("MiddleHeaven"));
+		assertEquals("MiddleHeaven", StringUtils.firstLetterToUpper("middleHeaven"));
+	}
 	
 	@Test
 	public void testSimplePattern(){

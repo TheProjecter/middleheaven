@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Test;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.IteratorsIterator;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.IteratorsIterator;
 import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Mapper;
 

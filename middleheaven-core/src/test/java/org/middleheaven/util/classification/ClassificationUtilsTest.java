@@ -9,9 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.FilteredIterator;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.FilteredIterator;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.function.Predicate;

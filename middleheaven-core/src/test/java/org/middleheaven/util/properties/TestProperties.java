@@ -3,7 +3,7 @@
  */
 package org.middleheaven.util.properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import javax.swing.JLabel;
 
@@ -12,7 +12,6 @@ import org.middleheaven.util.function.Function;
 import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.ComposedProperty;
 import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 /**
  * 
