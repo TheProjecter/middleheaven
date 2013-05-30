@@ -7,10 +7,11 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.core.annotations.Service;
 import org.middleheaven.core.annotations.Shared;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.wiring.mock.C;
 import org.middleheaven.core.wiring.mock.CyclicDisplayer;
 import org.middleheaven.core.wiring.mock.DictionaryService;
@@ -26,7 +27,6 @@ import org.middleheaven.core.wiring.mock.MockDisplay;
 import org.middleheaven.core.wiring.mock.X;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
-import org.middleheaven.util.collections.ParamsMap;
 
 public class WiringTestCase extends MiddleHeavenTestCase {
 
@@ -35,11 +35,7 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 
 	protected void setupWiringBundles(WiringService wiringService){
 
-		wiringService.addItemBundle( new ClassSetWiringBundle().add(X.class.getPackage())
-				.add(C.class)
-				.add(X.class)
-				.add(GermanDictionayService.class)		
-				);
+		wiringService.addItemBundle( new ClassSetWiringBundle().add(X.class.getPackage()));
 		
 		
 		final HashDictionaryService en = new HashDictionaryService("en");
@@ -51,7 +47,6 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 			public void configure(Binder binder) {
 				binder.bind(DictionaryService.class).named("en").in(Service.class).toInstance(en);
 				binder.bind(DictionaryService.class).named("pt").in(Service.class).toInstance(pt);
-				binder.bind(DictionaryService.class).in(Service.class).to(GermanDictionayService.class);
 				binder.bind(DictionaryUser.class).in(Shared.class).to(DictionaryUser.class);
 			}
 
@@ -116,6 +111,17 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 	@Test
 	public void testWiringServiceWithParams(){
 
+		final WiringService wiringService = this.getWiringService();
+
+		wiringService.addConfiguration(new BindConfiguration(){
+
+			@Override
+			public void configure(Binder binder) {
+				binder.bind(DictionaryService.class).in(Service.class).to(GermanDictionayService.class); 
+			}
+
+		});
+		
 		DefaultWiringModelParser  parser = new DefaultWiringModelParser();
 
 		BeanDependencyModel model = new BeanDependencyModel(GermanDictionayService.class);
@@ -163,7 +169,7 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 
 			@Override
 			public void configure(Binder binder) {
-				binder.bind(DictionaryService.class).in(Service.class).to(GreekDictionayService.class);
+				binder.bind(DictionaryService.class).in(Service.class).to(GreekDictionayService.class); // production
 				binder.bind(DictionaryService.class).in(Service.class).to(GermanDictionayService.class);
 			}
 
@@ -173,7 +179,6 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 		DictionaryService eDic = wiringService.getInstance(DictionaryService.class);
 
 		assertEquals("gr", eDic.getLang());
-
 
 	}
 
@@ -189,12 +194,11 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 
 			@Override
 			public void configure(Binder binder) {
-				binder.bind(DictionaryService.class).profiled("dev").in(Service.class).toInstance(new HashDictionaryService("un"));
+				binder.bind(DictionaryService.class).profiled("dev").in(Service.class).toInstance(new HashDictionaryService("un")); //dev
 				binder.bind(DictionaryService.class).profiled("prod").in(Service.class).toInstance(new HashDictionaryService("kg"));
 			}
 
 		});
-
 
 		DictionaryService eDic = wiringService.getInstance(DictionaryService.class);
 

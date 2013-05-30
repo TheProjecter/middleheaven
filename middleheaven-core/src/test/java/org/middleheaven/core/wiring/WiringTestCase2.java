@@ -3,7 +3,7 @@ package org.middleheaven.core.wiring;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.wiring.mock.C;
 import org.middleheaven.core.wiring.mock.X;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
