@@ -1,22 +1,23 @@
 package org.middleheaven.reflection;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.ClassCastReflectionException;
 import org.middleheaven.core.reflection.MemberAccess;
 import org.middleheaven.core.reflection.MethodDelegator;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.collections.Enumerable;
 
 
 public class ReflectionTest {
@@ -39,6 +40,24 @@ public class ReflectionTest {
 		Introspector.of(String.class).load(CharSequence.class.getName());
 		
 	}
+	
+	
+	@Test
+	public void testProxyNotInterfaceWithArguments(){
+		
+		TestType instance = Introspector.of(TestType.class).newProxyInstance(new ProxyHandler() {
+			
+			@Override
+			public Object invoke(Object proxy, Object[] args, MethodDelegator delegator)
+					throws Throwable {
+				return delegator.invokeSuper(proxy, args);
+			}
+		}, "a", 1);
+		
+		assertNotNull(instance);
+		assertEquals("a1", instance.test());
+		
+	}
 
 	@Test
 	public void testInstropection(){
@@ -46,7 +65,8 @@ public class ReflectionTest {
 		List<Constructor<ArrayList>> c = new ArrayList<Constructor<ArrayList>>();
 		
 		 Introspector.of(ArrayList.class)
-		.inspect().constructors().sortedByQuantityOfParameters()
+		.inspect().constructors()
+		.sortedByQuantityOfParameters()
 		.withAccess(MemberAccess.PUBLIC)
 		.retriveAll().into(c);
 		
@@ -54,13 +74,14 @@ public class ReflectionTest {
 		assertTrue( c.get(0).getParameterTypes().length <= c.get(1).getParameterTypes().length);
 		assertTrue( c.get(1).getParameterTypes().length <= c.get(2).getParameterTypes().length);
 		
-		Enumerable<Method> m = Introspector.of(ArrayList.class)
+		Enumerable<MethodHandler> m = Introspector.of(String.class)
 		.inspect().methods()
 		.notInheritFromObject()
-		.withAccess(MemberAccess.PUBLIC , MemberAccess.PROTECTED)
+		.beingStatic(false)
+		.withAccess(MemberAccess.PUBLIC)
 		.retriveAll();
 		
-		assertEquals(44,m.size());
+		assertEquals(54,m.size());
 	}
 	
 

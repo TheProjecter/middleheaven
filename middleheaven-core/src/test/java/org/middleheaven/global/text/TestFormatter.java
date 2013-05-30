@@ -25,6 +25,8 @@ public class TestFormatter {
 	public void quantityMoneyFormatter(){
 		QuantityFormatter formatterPtBR = new QuantityFormatter(Culture.valueOf("pt", "BR"));
 		
+		Real real = Real.valueOf("3000.68");
+		
 		assertEquals("R$ 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "BRL")));
 		assertEquals("US$ 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "USD")));
 		assertEquals("EUR 3.000,68" ,formatterPtBR.format(CentsMoney.valueOf("3000.68", "EUR")));
@@ -33,7 +35,7 @@ public class TestFormatter {
 		
 		assertEquals("3.000,68 BRL" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "BRL")));
 		assertEquals("3.000,68 USD" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "USD")));
-		assertEquals("3.000,68 �" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "EUR")));
+		assertEquals("3.000,68 €" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "EUR")));
 		
 		QuantityFormatter formatterEnUS = new QuantityFormatter(Culture.valueOf("en", "US"));
 		

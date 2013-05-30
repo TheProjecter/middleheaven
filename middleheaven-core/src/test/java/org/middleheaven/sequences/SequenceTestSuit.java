@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.Test;
+import org.middleheaven.collections.Range;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.sequence.IterableBasedSequence;
 import org.middleheaven.sequence.Sequence;
 import org.middleheaven.sequence.SequenceToken;
-import org.middleheaven.util.collections.Range;
 
 
 public class SequenceTestSuit {

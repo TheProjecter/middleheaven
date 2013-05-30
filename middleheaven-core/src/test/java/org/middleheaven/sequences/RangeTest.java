@@ -5,18 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.middleheaven.collections.Range;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.time.CalendarDate;
-import org.middleheaven.util.collections.Range;
 
 public class RangeTest {
 
