@@ -39,6 +39,11 @@
 			<artifactId>middleheaven-storage-orm</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-validation</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 </project>

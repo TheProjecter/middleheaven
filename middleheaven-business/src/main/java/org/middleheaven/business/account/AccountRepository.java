@@ -3,10 +3,10 @@ package org.middleheaven.business.account;
 import java.util.Collections;
 import java.util.List;
 
+import org.middleheaven.collections.Interval;
 import org.middleheaven.domain.store.DomainStore;
 import org.middleheaven.quantity.measure.Amount;
 import org.middleheaven.quantity.time.DateHolder;
-import org.middleheaven.util.collections.Interval;
 
 public abstract class AccountRepository<A extends Amount<A,?>> {
 

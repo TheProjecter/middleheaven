@@ -8,8 +8,8 @@ import org.middleheaven.global.gov.NDI;
 import org.middleheaven.global.gov.br.BRCNPJValidator;
 import org.middleheaven.global.gov.br.BRCPFValidator;
 import org.middleheaven.global.gov.us.USSocialSecurityNumberValidator;
-import org.middleheaven.util.validation.DefaultValidationResult;
-import org.middleheaven.util.validation.LogicValidator;
+import org.middleheaven.validation.DefaultValidationResult;
+import org.middleheaven.validation.LogicValidator;
 
 public class NDIValidationTest {
 

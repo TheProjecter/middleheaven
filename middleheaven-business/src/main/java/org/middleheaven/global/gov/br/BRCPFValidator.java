@@ -1,10 +1,10 @@
 package org.middleheaven.global.gov.br;
 
 import org.middleheaven.global.gov.NDI;
-import org.middleheaven.util.validation.DefaultValidationResult;
-import org.middleheaven.util.validation.MessageInvalidationReason;
-import org.middleheaven.util.validation.ValidationResult;
-import org.middleheaven.util.validation.Validator;
+import org.middleheaven.validation.DefaultValidationResult;
+import org.middleheaven.validation.MessageInvalidationReason;
+import org.middleheaven.validation.ValidationResult;
+import org.middleheaven.validation.Validator;
 
 public class BRCPFValidator implements Validator<NDI> {
 
