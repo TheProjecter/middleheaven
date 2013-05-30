@@ -313,9 +313,9 @@ final class  Base64 {
 		// but the input length must be divisible by three.
 		// If it isn't the next largest size that is divisible
 		// by three is used.
-		int mod;
 		int length = bytes.length;
-		if ((mod = length % 3) != 0){
+		int mod = length % 3;
+		if ( mod != 0){
 			length += 3 - mod;
 		}
 		length = length * 4 / 3;
