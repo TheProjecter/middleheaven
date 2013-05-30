@@ -1,6 +1,6 @@
 package org.middleheaven.ui.desktop.swing;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPrespectiveListener;
@@ -13,7 +13,7 @@ public class SPanelView extends SBaseContainerPanel implements UIView {
 
 
 	private static final long serialVersionUID = 1L;
-	private Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
+	private Property<LocalizableText> text = ValueProperty.writable("text", LocalizableText.class);
 
 
 	@Override
@@ -74,7 +74,7 @@ public class SPanelView extends SBaseContainerPanel implements UIView {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTitleProperty() {
+	public Property<LocalizableText> getTitleProperty() {
 		return text;
 	}
 	

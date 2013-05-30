@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UIReadState;
@@ -30,7 +30,7 @@ public class SLabel extends JLabel implements UILabel {
 	
 	private final Property<Boolean> visible = BindedProperty.bind("visible", this);
 	private final Property<Boolean> enable = BindedProperty.bind("enable", this);
-	private final Property<TextLocalizable> text = STextProperty.bind(this);
+	private final Property<LocalizableText> text = STextProperty.bind(this);
 	
 	private String family;
 	private String id;
@@ -115,7 +115,7 @@ public class SLabel extends JLabel implements UILabel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		return text;
 	}
 

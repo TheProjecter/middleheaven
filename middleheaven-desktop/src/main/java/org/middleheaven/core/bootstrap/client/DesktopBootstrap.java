@@ -9,7 +9,9 @@ import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.bootstrap.BootstrapEnvironment;
 import org.middleheaven.core.bootstrap.BootstrapEnvironmentResolver;
 import org.middleheaven.core.services.ServiceBuilder;
+import org.middleheaven.logging.ConsoleConfigurator;
 import org.middleheaven.logging.LogServiceDelegatorLogger;
+import org.middleheaven.logging.LoggingConfigurator;
 import org.middleheaven.ui.UIService;
 import org.middleheaven.ui.desktop.service.DesktopUIServiceActivator;
 
@@ -70,6 +72,14 @@ public class DesktopBootstrap extends AbstractBootstrap {
 			}
 			
 		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected LoggingConfigurator getStartUpLoggingConfigurator() {
+		return new ConsoleConfigurator();
 	}
 
 

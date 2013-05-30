@@ -4,13 +4,11 @@ import java.util.List;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.data.UIDataContainer;
 import org.middleheaven.ui.data.UIDataItem;
-import org.middleheaven.util.property.Property;
 
 public class SList extends SBaseFieldInput implements UISelectOne{
 

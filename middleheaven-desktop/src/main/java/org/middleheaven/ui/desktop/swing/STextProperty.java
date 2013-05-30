@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
@@ -16,36 +16,36 @@ import org.middleheaven.util.property.ValueProperty;
 /**
  * 
  */
-class STextProperty extends ValueProperty<TextLocalizable> {
+class STextProperty extends ValueProperty<LocalizableText> {
 
 	
-	public static Property<TextLocalizable> bind(final AbstractButton component){
-		return new STextProperty().onChange(new Block<TextLocalizable>(){
+	public static Property<LocalizableText> bind(final AbstractButton component){
+		return new STextProperty().onChange(new Block<LocalizableText>(){
 
 			@Override
-			public void apply(TextLocalizable text) {
+			public void apply(LocalizableText text) {
 				component.setText(SDisplayUtils.localize(text));
 			}
 			
 		});
 	}
 	
-	public static Property<TextLocalizable> bind(final JInternalFrame component){
-		return new STextProperty().onChange(new Block<TextLocalizable>(){
+	public static Property<LocalizableText> bind(final JInternalFrame component){
+		return new STextProperty().onChange(new Block<LocalizableText>(){
 
 			@Override
-			public void apply(TextLocalizable text) {
+			public void apply(LocalizableText text) {
 				component.setTitle(SDisplayUtils.localize(text));
 			}
 			
 		});
 	}	
 	
-	public static Property<TextLocalizable> bind(final JFrame component){
-		return new STextProperty().onChange(new Block<TextLocalizable>(){
+	public static Property<LocalizableText> bind(final JFrame component){
+		return new STextProperty().onChange(new Block<LocalizableText>(){
 
 			@Override
-			public void apply(TextLocalizable text) {
+			public void apply(LocalizableText text) {
 				component.setTitle(SDisplayUtils.localize(text));
 			}
 			
@@ -56,11 +56,11 @@ class STextProperty extends ValueProperty<TextLocalizable> {
 	 * @param sLabel
 	 * @return
 	 */
-	public static Property<TextLocalizable> bind(final JLabel label) {
-		return new STextProperty().onChange(new Block<TextLocalizable>(){
+	public static Property<LocalizableText> bind(final JLabel label) {
+		return new STextProperty().onChange(new Block<LocalizableText>(){
 
 			@Override
-			public void apply(TextLocalizable text) {
+			public void apply(LocalizableText text) {
 				label.setText(SDisplayUtils.localize(text));
 			}
 			
@@ -75,7 +75,7 @@ class STextProperty extends ValueProperty<TextLocalizable> {
 	 * @param readOnly
 	 */
 	public STextProperty() {
-		super("text", null, TextLocalizable.class, false);
+		super("text", null, LocalizableText.class, false);
 
 		
 	}

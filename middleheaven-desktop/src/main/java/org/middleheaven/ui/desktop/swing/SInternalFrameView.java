@@ -10,8 +10,9 @@ import javax.swing.JMenuBar;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
+import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
@@ -20,7 +21,6 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
-import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 
@@ -34,7 +34,7 @@ public class SInternalFrameView extends JInternalFrame implements UIView{
 
 	private final EventListenersSet<UIPrespectiveListener> prespectiveListeners = EventListenersSet.newSet(UIPrespectiveListener.class);
 	
-	private Property<TextLocalizable> title = STextProperty.bind(this);
+	private Property<LocalizableText> title = STextProperty.bind(this);
 	private Property<Boolean> visible = BindedProperty.bind("visible", this);
 	private Property<Boolean> enable  = BindedProperty.bind("enable", this);
 	
@@ -241,7 +241,7 @@ public class SInternalFrameView extends JInternalFrame implements UIView{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTitleProperty() {
+	public Property<LocalizableText> getTitleProperty() {
 		return title;
 	}
 

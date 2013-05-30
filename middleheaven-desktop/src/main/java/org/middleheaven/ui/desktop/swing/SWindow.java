@@ -10,8 +10,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
+import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
@@ -22,7 +23,6 @@ import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.components.UIWindowsListener;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
 import org.middleheaven.ui.events.UIWindowEvent;
-import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 
@@ -35,7 +35,7 @@ public class SWindow extends JFrame implements UIWindow{
 	
 	private final Property<Boolean> visible = BindedProperty.bind("visible", this);
 	private final Property<Boolean> enable = BindedProperty.bind("enable", this);
-	private final Property<TextLocalizable> title = STextProperty.bind(this);
+	private final Property<LocalizableText> title = STextProperty.bind(this);
 	
 	private UIComponent parent;
 	private String id;
@@ -329,7 +329,7 @@ public class SWindow extends JFrame implements UIWindow{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTitleProperty() {
+	public Property<LocalizableText> getTitleProperty() {
 		return title;
 	}
 	

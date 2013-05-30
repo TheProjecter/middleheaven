@@ -9,9 +9,9 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
+import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIContainer;
-import org.middleheaven.util.collections.DelegatingList;
 
 
 /**

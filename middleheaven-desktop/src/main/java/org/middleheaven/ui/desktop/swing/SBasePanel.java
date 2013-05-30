@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 

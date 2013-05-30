@@ -8,12 +8,12 @@ import java.util.TreeMap;
 
 import javax.swing.JComponent;
 
+import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.ui.NamingContainer;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UILayoutManager;
-import org.middleheaven.util.collections.DelegatingList;
 
 public class SLayout extends SBasePanel implements NamingContainer , UILayout{
 

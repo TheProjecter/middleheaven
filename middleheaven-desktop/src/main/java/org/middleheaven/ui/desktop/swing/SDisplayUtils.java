@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.desktop.swing;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 
 /**
  * 
@@ -11,7 +11,7 @@ import org.middleheaven.global.text.TextLocalizable;
 public class SDisplayUtils {
 
 	
-	public static String localize(TextLocalizable text){
+	public static String localize(LocalizableText text){
 		return text.toString();
 	}
 }

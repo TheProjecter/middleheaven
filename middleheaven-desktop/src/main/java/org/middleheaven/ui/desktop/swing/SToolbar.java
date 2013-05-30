@@ -7,7 +7,8 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.collections.DelegatingList;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
@@ -15,7 +16,6 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
@@ -143,7 +143,7 @@ public class SToolbar extends JToolBar implements UICommandSet{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		return ValueProperty.readOnly("text", null);
 	}
 

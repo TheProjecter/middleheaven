@@ -2,7 +2,6 @@ package org.middleheaven.ui.desktop.swing;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.rendering.RenderingContext;
-import org.middleheaven.ui.rendering.UIRender;
 
 public class SProgressRender extends SwingUIRender {
 

@@ -7,7 +7,7 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 
 import org.middleheaven.core.bootstrap.BootstrapService;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.ui.AbstractUIClient;
 import org.middleheaven.ui.SceneNavigator;

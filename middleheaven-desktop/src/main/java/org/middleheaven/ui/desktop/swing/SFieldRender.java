@@ -6,7 +6,6 @@ import org.middleheaven.ui.components.UIDateField;
 import org.middleheaven.ui.components.UINumericField;
 import org.middleheaven.ui.components.UISecretField;
 import org.middleheaven.ui.rendering.RenderingContext;
-import org.middleheaven.ui.rendering.UIRender;
 
 public class SFieldRender  extends SwingUIRender{
 

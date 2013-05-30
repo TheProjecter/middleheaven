@@ -8,7 +8,8 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.collections.DelegatingList;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
@@ -16,7 +17,6 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.collections.DelegatingList;
 import org.middleheaven.util.property.BindedProperty;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
@@ -34,7 +34,7 @@ class SMenuBar extends JMenuBar implements UICommandSet {
 	private Property<Boolean> visible = BindedProperty.bind("visible", this);
 	private Property<Boolean> enabled = BindedProperty.bind("enabled", this);
 	private Property<String> name = BindedProperty.bind("name", this);;
-	private Property<TextLocalizable> text = ValueProperty.readOnly("text", null);
+	private Property<LocalizableText> text = ValueProperty.readOnly("text", null);
 	
 	/**
 	 * {@inheritDoc}
@@ -56,7 +56,7 @@ class SMenuBar extends JMenuBar implements UICommandSet {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		return text;
 	}
 

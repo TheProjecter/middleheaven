@@ -6,12 +6,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.data.UIDataContainer;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 public abstract class SDocumentInput extends SBaseFieldInput implements UIField{
 	

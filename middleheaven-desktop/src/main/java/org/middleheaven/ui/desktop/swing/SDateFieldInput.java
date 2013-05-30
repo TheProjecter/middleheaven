@@ -9,12 +9,9 @@ import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.MaskFormatter;
 
-import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIDateField;
-import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.data.UIDataContainer;
-import org.middleheaven.util.property.Property;
 
 public class SDateFieldInput extends SDocumentInput implements UIDateField {
 

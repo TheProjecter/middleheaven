@@ -8,7 +8,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIPosition;
@@ -31,7 +31,7 @@ public class SMenuButton extends JMenuItem implements UICommand {
 	private final Property<Boolean> visible = BindedProperty.bind("visible" , this);
 	private final Property<Boolean> enable = BindedProperty.bind("enable" , this);
 	private final Property<String> name = BindedProperty.bind("name" , this);
-	private final Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
+	private final Property<LocalizableText> text = ValueProperty.writable("text", LocalizableText.class);
 	
 	private final EventListenersSet<CommandListener> commandListeners = EventListenersSet.newSet(CommandListener.class);
 	
@@ -149,7 +149,7 @@ public class SMenuButton extends JMenuItem implements UICommand {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		return text;
 	}
 

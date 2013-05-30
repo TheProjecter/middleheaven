@@ -9,7 +9,6 @@ import javax.swing.text.JTextComponent;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UINumericField;
-import org.middleheaven.ui.data.UIDataContainer;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
