@@ -7,19 +7,19 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 import org.junit.Test;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.collections.Enumerable;
 
 
 public class TestIntrospector {
 
-	@Test
+	@Test(expected=WriteOnlyPropertyException.class)
 	public void testPropertyAcessor(){
 		
 		SomeBean sb = new SomeBean();
 		
-		PropertyAccessor pa = Introspector.of(SomeBean.class).inspect().properties().named("list").retrive();
+		PropertyHandler pa = Introspector.of(SomeBean.class).inspect().properties().named("list").retrive();
 		
 		pa.setValue(sb, new LinkedList());
 		
@@ -29,12 +29,10 @@ public class TestIntrospector {
 		
 		pa.setValue(sb, "A");
 		
-		try{
-			pa.getValue(sb);
-			assertFalse(true);
-		} catch (WriteOnlyPropertyException e){
-			
-		}
+	
+		pa.getValue(sb);
+
+	
 	}
 	
 	@Test
@@ -53,7 +51,7 @@ public class TestIntrospector {
 	@Test
 	public void testAnnotationsInParents(){
 		
-		Enumerable<Method> all = Introspector.of(SomeObject.class).inspect()
+		Enumerable<MethodHandler> all = Introspector.of(SomeObject.class).inspect()
 		.methods()
 		.notInheritFromObject()
 		.annotatedWith(Wire.class).retriveAll();
