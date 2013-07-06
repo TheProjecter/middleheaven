@@ -1,5 +1,6 @@
 package org.middleheaven.cache;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 public class ExtendableCacheService implements CacheService {
 
 	private final Map<String ,CacheRegion > regions = new HashMap<String ,CacheRegion>();
-	private final LinkedList<CacheManager> managers = new LinkedList<CacheManager>();
+	private final Deque<CacheManager> managers = new LinkedList<CacheManager>();
 	
 	public ExtendableCacheService(){}
 	
