@@ -11,13 +11,14 @@ import org.middleheaven.chart.jfreechart.JFreeChartEngine;
 import org.middleheaven.quantity.time.CalendarDateTime;
 import org.middleheaven.quantity.time.Period;
 import org.middleheaven.quantity.time.clocks.IntervalSchedule;
+import org.middleheaven.tool.test.MiddleHeavenTestCase;
 import org.middleheaven.work.Work;
 import org.middleheaven.work.WorkContext;
 import org.middleheaven.work.scheduled.AlarmClockScheduleWorkExecutionService;
 import org.middleheaven.work.scheduled.ScheduleWorkExecutorService;
 
 
-public class ChartTest {
+public class ChartTest extends MiddleHeavenTestCase{
 
 
 	public static void main(String ... args){
