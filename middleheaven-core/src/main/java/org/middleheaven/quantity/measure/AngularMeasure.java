@@ -2,13 +2,13 @@ package org.middleheaven.quantity.measure;
 
 import java.math.BigDecimal;
 
+import org.middleheaven.collections.Interval;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.math.RealField;
 import org.middleheaven.quantity.measurables.Angle;
 import org.middleheaven.quantity.unit.IncompatibleUnitsException;
 import org.middleheaven.quantity.unit.SI;
 import org.middleheaven.quantity.unit.Unit;
-import org.middleheaven.util.collections.Interval;
 
 /**
  * Angular position in radians

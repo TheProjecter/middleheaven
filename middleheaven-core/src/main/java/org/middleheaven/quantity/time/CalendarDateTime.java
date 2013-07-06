@@ -3,14 +3,29 @@ package org.middleheaven.quantity.time;
 import java.util.Date;
 
 
+
 public class CalendarDateTime extends AbstractTimePoint implements  DateHolder , TimeHolder  {
 
 	public static CalendarDateTime now(){
 		return new CalendarDateTime(TimeContext.getTimeContext(), TimeContext.getTimeContext().now().getMilliseconds());
 	}
 	
+	
 	static CalendarDateTime origin(){
 		return new CalendarDateTime(TimeContext.getTimeContext(), 0);
+	}
+	
+
+	public static CalendarDateTime at(int year, int month, int day, int hour, int minute, int second) {
+		return new CalendarDate(TimeContext.getTimeContext(),TimeContext.getTimeContext().getChronology().milisecondsFor(false,year, month, day, hour, minute, second));
+	}
+	
+	public static CalendarDateTime midnight(int year, int month, int day) {
+		return at(year, month, day, 0, 0, 0);
+	}
+	
+	public static CalendarDateTime midday(int year, int month, int day) {
+		return at(year, month, day, 12, 0, 0);
 	}
 	
 	public static CalendarDateTime valueOf(Date date){
@@ -105,6 +120,10 @@ public class CalendarDateTime extends AbstractTimePoint implements  DateHolder ,
     	return this.context.getChronology().add(this, (ElapsedTime)elapsed.negate());
     }
 
+    public Duration differenceTo(TimePoint other, DurationUnit unit){
+    	return this.context.getChronology().differenceBetween(this, other, unit);
+    }
+    
 	@Override
 	public boolean isBefore(DateHolder other) {
 		return this.compareTo(other)<0;
@@ -182,6 +201,8 @@ public class CalendarDateTime extends AbstractTimePoint implements  DateHolder ,
     public CalendarDate toDate(){
     	return new CalendarDate(this.context, this.milliseconds);
     }
+
+
 
 
 	

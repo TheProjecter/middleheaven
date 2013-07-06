@@ -4,7 +4,7 @@
 package org.middleheaven.quantity.time;
 
 
-import org.middleheaven.util.collections.Interval;
+import org.middleheaven.collections.Interval;
 
 
 /**

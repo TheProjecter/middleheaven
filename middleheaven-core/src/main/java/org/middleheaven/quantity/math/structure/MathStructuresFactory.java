@@ -1,7 +1,6 @@
 package org.middleheaven.quantity.math.structure;
 
 import org.middleheaven.quantity.math.Numeral;
-import org.middleheaven.quantity.math.impl.StandardMathStructuresFactory;
 
 public abstract class MathStructuresFactory {
 

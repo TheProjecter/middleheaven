@@ -3,6 +3,7 @@ package org.middleheaven.quantity.time;
 import java.util.EnumMap;
 import java.util.Map;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.core.exception.UnimplementedMethodException;
 import org.middleheaven.quantity.measurables.Time;
 import org.middleheaven.quantity.unit.Dimension;
@@ -10,39 +11,20 @@ import org.middleheaven.quantity.unit.IncompatibleUnitsException;
 import org.middleheaven.quantity.unit.SI;
 import org.middleheaven.quantity.unit.Unit;
 import org.middleheaven.util.Hash;
-import org.middleheaven.util.collections.CollectionUtils;
 
-public class Duration extends ElapsedTime implements Comparable<Duration>{
+public final class Duration extends ElapsedTime implements Comparable<Duration>{
 
-	private enum DurationType{
-		MILISECONDS(null),
-		MINUTES(MILISECONDS),
-		HOURS(MINUTES),
-		DAYS(HOURS), 
-		MONTHS(DAYS),
-		YEARS(MONTHS), ;
+	private EnumMap<DurationUnit,Number> fields = new EnumMap<DurationUnit,Number>(DurationUnit.class);
 
-		private DurationType next;
-		private DurationType(DurationType next){
-			this.next = next;
-		}
-		
-		public DurationType getNext(){
-			return next;
-		}
-	}
-	
-	private EnumMap<DurationType,Number> fields = new EnumMap<DurationType,Number>(DurationType.class);
-
-	protected Duration() {
-		for (DurationType t : DurationType.values()){
+	private Duration() {
+		for (DurationUnit t : DurationUnit.values()){
 			fields.put(t, 0);
 		}
 	}
 	
-	protected Duration(Duration other) {
+	private Duration(Duration other) {
 		this();
-		for (Map.Entry<DurationType,Number> e : other.fields.entrySet()){
+		for (Map.Entry<DurationUnit,Number> e : other.fields.entrySet()){
 			this.fields.put(e.getKey(), e.getValue()); 
 		}
 	}
@@ -51,83 +33,83 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 		return new Duration ();
 	}
 	
-	private Duration add(DurationType type, Number value) {
+    public Duration add(DurationUnit type, Number value) {
 		fields.put(type,value);
 		return this;
 	}
 	
 	public Duration weeks(int weeks){
-		return new Duration ( this ).add(DurationType.DAYS, 7*weeks);
+		return new Duration ( this ).add(DurationUnit.DAYS, 7*weeks);
 	}
 	
 	public Duration days(int days){
-		return new Duration ( this ).add( DurationType.DAYS, days);
+		return new Duration ( this ).add( DurationUnit.DAYS, days);
 	}
 	
 	public Duration date(int years, int months,int days){
 		return new Duration (this)
-		.add(DurationType.YEARS,years)
-		.add(DurationType.MONTHS, months)
-		.add(DurationType.DAYS, days);
+		.add(DurationUnit.YEARS,years)
+		.add(DurationUnit.MONTHS, months)
+		.add(DurationUnit.DAYS, days);
 	}
 
 	public Duration time(int hours, int minutes,int seconds){
 		return new Duration (this)
-		.add(DurationType.HOURS,hours)
-		.add(DurationType.MINUTES, minutes)
-		.add(DurationType.MILISECONDS, seconds * 1000);
+		.add(DurationUnit.HOURS,hours)
+		.add(DurationUnit.MINUTES, minutes)
+		.add(DurationUnit.MILISECONDS, seconds * 1000);
 	}
 
 	public Duration years(int ammount){
-		return new Duration ( this ).add(DurationType.YEARS,ammount);
+		return new Duration ( this ).add(DurationUnit.YEARS,ammount);
 	}
 
 	public Duration months(int ammount){
-		return new Duration ( this ).add(DurationType.MONTHS,ammount);
+		return new Duration ( this ).add(DurationUnit.MONTHS,ammount);
 	}
 
 	public Duration hours(int ammount){
-		return new Duration ( this ).add(DurationType.HOURS,ammount);
+		return new Duration ( this ).add(DurationUnit.HOURS,ammount);
 	}
 
 	public Duration minutes(int ammount){
-		return new Duration ( this ).add(DurationType.MINUTES,ammount);
+		return new Duration ( this ).add(DurationUnit.MINUTES,ammount);
 	}
 
 	public Duration seconds(int ammount){
-		return new Duration ( this ).add(DurationType.MILISECONDS,ammount*1000);
+		return new Duration ( this ).add(DurationUnit.MILISECONDS,ammount*1000);
 	}
 
 	public Duration miliseconds(long ammount){
-		return new Duration ( this ).add(DurationType.MILISECONDS,ammount);
+		return new Duration ( this ).add(DurationUnit.MILISECONDS,ammount);
 	}
 	
 	public int years(){
-		return fields.get(DurationType.YEARS).intValue();
+		return fields.get(DurationUnit.YEARS).intValue();
 	}
 
 	public int months(){
-		return fields.get(DurationType.MONTHS).intValue();
+		return fields.get(DurationUnit.MONTHS).intValue();
 	}
 
 	public int days(){
-		return fields.get(DurationType.DAYS).intValue();
+		return fields.get(DurationUnit.DAYS).intValue();
 	}
 
 	public int hours(){
-		return fields.get(DurationType.HOURS).intValue();
+		return fields.get(DurationUnit.HOURS).intValue();
 	}
 
 	public int minutes(){
-		return fields.get(DurationType.MONTHS).intValue();
+		return fields.get(DurationUnit.MONTHS).intValue();
 	}
 
 	public double secounds(){
-		return fields.get(DurationType.MILISECONDS).longValue() / 1000d;
+		return fields.get(DurationUnit.MILISECONDS).longValue() / 1000d;
 	}
 
 	public double miliseconds(){
-		return fields.get(DurationType.MILISECONDS).longValue();
+		return fields.get(DurationUnit.MILISECONDS).longValue();
 	}
 
 	/**
@@ -136,14 +118,14 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	@Override
 	public Unit<Time> unit() {
 		int count =0;
-		for (DurationType t : DurationType.values()){
+		for (DurationUnit t : DurationUnit.values()){
 			if (fields.get(t)==null){
 				count++;
 			}
 		}
 		
 		if (count==1){
-			for (DurationType t : DurationType.values()){
+			for (DurationUnit t : DurationUnit.values()){
 				if (fields.get(t)==null){
 					switch (t){
 					case YEARS:
@@ -168,7 +150,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 
 	public Duration negate() {
 		Duration d = new Duration();
-		for (Map.Entry<DurationType,Number> e : this.fields.entrySet()){
+		for (Map.Entry<DurationUnit,Number> e : this.fields.entrySet()){
 			if (e.getValue()!=null){
 				d.fields.put(e.getKey(), -1*e.getValue().longValue());
 			}
@@ -182,8 +164,8 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	
 	protected org.middleheaven.quantity.math.Numeral<?> reduce (){
 		int count =0;
-		DurationType field=null;
-		for (DurationType t : DurationType.values()){
+		DurationUnit field=null;
+		for (DurationUnit t : DurationUnit.values()){
 			if (fields.get(t)==null){
 				count++;
 				field = t;
@@ -201,7 +183,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	public Duration times(org.middleheaven.quantity.math.Numeral<?> other) {
 		long factor = other.asNumber().longValue();
 		Duration d = new Duration(this);
-		for (Map.Entry<DurationType,Number> e : this.fields.entrySet()){
+		for (Map.Entry<DurationUnit,Number> e : this.fields.entrySet()){
 			if (e.getValue()!=null){
 				d.fields.put(e.getKey(), factor*e.getValue().longValue());
 			}
@@ -227,7 +209,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	
 	public Duration plus(Duration other) throws IncompatibleUnitsException {
 		Duration r = new Duration();
-		for (DurationType t : DurationType.values()){
+		for (DurationUnit t : DurationUnit.values()){
 			if (fields.get(t)==null){
 				r.fields.put(t, sum(this.fields.get(t) , other.fields.get(t)));
 			}
@@ -238,7 +220,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 	public Duration plus(Period other) throws IncompatibleUnitsException {
 		Duration r = new Duration(this);
 		Long p =  Long.valueOf(other.milliseconds());
-		for (DurationType t : DurationType.values()){
+		for (DurationUnit t : DurationUnit.values()){
 			if (fields.get(t)==null){
 				r.fields.put(t, sum(this.fields.get(t) , p ));
 			}
@@ -249,7 +231,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
-		for (DurationType t : DurationType.values()){
+		for (DurationUnit t : DurationUnit.values()){
 			if (this.fields.get(t)!=null && fields.get(t).longValue()>0){
 				builder.append(fields.get(t)).append(' ');
 				switch (t){
@@ -298,7 +280,7 @@ public class Duration extends ElapsedTime implements Comparable<Duration>{
 		TimePoint t1 = TimeContext.getTimeContext().getChronology().add(CalendarDateTime.origin(), this);
 		TimePoint t2 = TimeContext.getTimeContext().getChronology().add(CalendarDateTime.origin(), other);
 		
-		return (int)(t2.getMilliseconds()-t1.getMilliseconds());
+		return t1.getMilliseconds() > t2.getMilliseconds() ? 1 : (t1.getMilliseconds() < t2.getMilliseconds() ? -1 : 0);
 	}
 
     public boolean equals(Object other){

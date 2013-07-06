@@ -42,7 +42,7 @@ public class JavaTimeZoneTable extends TimeZoneTable {
 		 */
 		@Override
 		public boolean equals(Object other) {
-			return other instanceof WrappedTimeZone && equalsOther((WrappedTimeZone) other);
+			return (other instanceof WrappedTimeZone) && equalsOther((WrappedTimeZone) other);
 		}
 		
 		/**
@@ -50,7 +50,7 @@ public class JavaTimeZoneTable extends TimeZoneTable {
 		 * @return
 		 */
 		private boolean equalsOther(WrappedTimeZone other) {
-			return this.zone.equals(other);
+			return this.zone.equals(other.zone);
 		}
 		
 		/**

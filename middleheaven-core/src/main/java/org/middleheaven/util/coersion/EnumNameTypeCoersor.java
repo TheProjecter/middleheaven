@@ -9,7 +9,7 @@ public class EnumNameTypeCoersor<E extends Enum> extends AbstractTypeCoersor<Str
 
 	@Override
 	public <T extends E> T coerceForward(String value, Class<T> type) {
-		try {
+	
 			if(value ==null){
 				return null;
 			}
@@ -19,13 +19,7 @@ public class EnumNameTypeCoersor<E extends Enum> extends AbstractTypeCoersor<Str
 					.retrive()
 					.invoke(null, new Object[]{value}));
 			
-		} catch (IllegalArgumentException e) {
-			throw ReflectionException.manage(e, type);
-		} catch (IllegalAccessException e) {
-			throw ReflectionException.manage(e, type);
-		} catch (InvocationTargetException e) {
-			throw ReflectionException.manage(e, type);
-		}
+		
 	}
 
 	@Override

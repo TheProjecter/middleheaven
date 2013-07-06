@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.middleheaven.collections.AbstractEnumerableAdapter;
+import org.middleheaven.collections.TransformedIterator;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.AbstractEnumerableAdapter;
-import org.middleheaven.util.collections.TransformedIterator;
 import org.middleheaven.util.function.Mapper;
 
 /**
@@ -105,6 +105,22 @@ public class PropertiesBag extends AbstractEnumerableAdapter<PropertiesBag.Entry
 		public boolean isEmpty();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int size() {
+		return bag.size();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isEmpty() {
+		return bag.isEmpty();
+	}
+	
 	private static class JavaPropertiesBagStategy implements PropertiesBagStategy{
 
 		
@@ -133,15 +149,9 @@ public class PropertiesBag extends AbstractEnumerableAdapter<PropertiesBag.Entry
 		 */
 		@Override
 		public Iterator<Entry> iterator() {
-			return TransformedIterator.transform(this.properties.entrySet().iterator(), new Mapper<Entry, Map.Entry<Object, Object>>(){
-
-				@Override
-				public Entry apply(java.util.Map.Entry<Object, Object> next) {
-					return new StringEntry (next.getKey().toString(), next.getValue().toString());
-				}
-				
-			});
+			return TransformedIterator.transform(this.properties.entrySet().iterator(), entryMapper);
 		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -160,6 +170,19 @@ public class PropertiesBag extends AbstractEnumerableAdapter<PropertiesBag.Entry
 		
 	}
 	
+	private static final EntryMapper entryMapper = new EntryMapper();
+	
+	private static class EntryMapper<K,V> implements Mapper<Entry, Map.Entry<K, V>> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Entry apply(java.util.Map.Entry<K, V> next) {
+			return new StringEntry (next.getKey().toString(), next.getValue().toString());
+		}
+		
+	}
 	private static class MapPropertiesBagStategy implements PropertiesBagStategy{
 
 		
@@ -188,14 +211,7 @@ public class PropertiesBag extends AbstractEnumerableAdapter<PropertiesBag.Entry
 		 */
 		@Override
 		public Iterator<Entry> iterator() {
-			return TransformedIterator.transform(this.properties.entrySet().iterator(), new Mapper<Entry, Map.Entry<String, String>>(){
-
-				@Override
-				public Entry apply(java.util.Map.Entry<String, String> next) {
-					return new StringEntry (next.getKey(), next.getValue());
-				}
-				
-			});
+			return TransformedIterator.transform(this.properties.entrySet().iterator(), entryMapper);
 		}
 		
 		/**
@@ -244,21 +260,7 @@ public class PropertiesBag extends AbstractEnumerableAdapter<PropertiesBag.Entry
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int size() {
-		return bag.size();
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isEmpty() {
-		return bag.isEmpty();
-	}
 
 
 

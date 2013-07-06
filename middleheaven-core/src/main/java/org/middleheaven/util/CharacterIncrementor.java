@@ -1,6 +1,5 @@
 package org.middleheaven.util;
 
-import org.middleheaven.quantity.time.CalendarDateIncrementor;
 
 /**
  * Incrementor for {@link Character}.

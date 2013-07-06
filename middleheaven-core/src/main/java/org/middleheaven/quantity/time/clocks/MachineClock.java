@@ -11,9 +11,9 @@ import java.util.TimerTask;
 import org.middleheaven.core.bootstrap.BootstapListener;
 import org.middleheaven.core.bootstrap.BootstrapEvent;
 import org.middleheaven.core.bootstrap.BootstrapService;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.reflection.ReflectionException;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.services.ServiceRegistry;
 import org.middleheaven.quantity.time.EpocTimePoint;
 import org.middleheaven.quantity.time.TimePoint;
 import org.middleheaven.quantity.time.TimeZone;
@@ -25,7 +25,7 @@ import org.middleheaven.quantity.time.TimeZone;
  */
 public class MachineClock extends Clock {
 
-	private static MachineClock ME = new MachineClock();
+	private static final MachineClock ME = new MachineClock();
 
 	public static MachineClock getInstance(){
 		return ME;
@@ -57,7 +57,7 @@ public class MachineClock extends Clock {
 
 
 	@Override
-	protected synchronized ClockTicked schedule(Schedule chronogram) {
+	protected  ClockTicked schedule(Schedule chronogram) {
 
 		ClockTicked ticked = timers.get(chronogram);
 		if (ticked == null){
@@ -73,6 +73,7 @@ public class MachineClock extends Clock {
 				public void onBoostapEvent(BootstrapEvent event) {
 					if (timer != null){
 						timer.cancel();
+						timer = null;
 					}
 				}
 

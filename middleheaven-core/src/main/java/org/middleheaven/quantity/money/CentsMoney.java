@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.unit.Unit;
 import org.middleheaven.util.Hash;
-import org.middleheaven.util.collections.CollectionUtils;
 
 /**
  * Represents an amount of money that only represents quantity to the currency maximum fraction digits.
@@ -20,9 +20,9 @@ public class CentsMoney extends Money  {
 
 	private static final long serialVersionUID = -609821160213501702L;
 	
-	private static int TEN = 10;
-	private static int ONE_HUNDRED = 100;
-	private static int TEN_CUBED= 1000;
+	private static final int TEN = 10;
+	private static final int ONE_HUNDRED = 100;
+	private static final int TEN_CUBED= 1000;
 	
 	/**
 	 * Power of 10 has the value at position n in the arrays equals 10 to nth power. 
@@ -77,7 +77,7 @@ public class CentsMoney extends Money  {
 		if (number.isInteger()){
 			return number.asNumber().longValue();
 		} else {
-			return number.raise(getPower(currency.getDefaultFractionDigits())).asNumber().longValue();
+			return number.times(getPower(currency.getDefaultFractionDigits())).asNumber().longValue();
 		}
 		
 	}  

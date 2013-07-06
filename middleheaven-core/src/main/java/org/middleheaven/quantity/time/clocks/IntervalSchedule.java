@@ -1,8 +1,8 @@
 package org.middleheaven.quantity.time.clocks;
 
+import org.middleheaven.collections.Interval;
 import org.middleheaven.quantity.time.Period;
 import org.middleheaven.quantity.time.TimePoint;
-import org.middleheaven.util.collections.Interval;
 
 public class IntervalSchedule implements Schedule{
 

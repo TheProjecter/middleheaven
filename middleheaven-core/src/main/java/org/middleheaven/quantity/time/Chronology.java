@@ -30,7 +30,12 @@ public abstract class Chronology {
 	 * @param day the day of the month
 	 * @return the correspondent milisecounds in the {@link Chronology}.
 	 */
-	public abstract long milisecondsFor(boolean lenient,int year, int month, int day );
+	public long milisecondsFor(boolean lenient,int year, int month, int day ){
+		return milisecondsFor(lenient, year, month, day, 0, 0, 0);
+	}
+	
+	
+	public abstract long milisecondsFor(boolean lenient,int year, int month, int day , int hour, int minute, int second );
 	
 	/**
 	 * Add an {@link ElapsedTime} to a {@link TimePoint}.
@@ -132,6 +137,16 @@ public abstract class Chronology {
 		// TODO 
 		throw new UnimplementedMethodException("Conversion between chonologies is not yet supported");
 	}
+
+	/**
+	 * The duration between to {@link TimePoint}s.
+	 * 
+	 * @param calendarDateTime
+	 * @param other
+	 * @param unit 
+	 * @return
+	 */
+	public abstract Duration differenceBetween(TimePoint calendarDateTime,TimePoint other, DurationUnit unit);
 
 	
 

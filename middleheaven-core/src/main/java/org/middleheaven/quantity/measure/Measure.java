@@ -1,10 +1,10 @@
 package org.middleheaven.quantity.measure;
 
+import org.middleheaven.collections.Interval;
 import org.middleheaven.quantity.Quantity;
 import org.middleheaven.quantity.math.structure.OrderedFieldElement;
 import org.middleheaven.quantity.unit.IncompatibleUnitsException;
 import org.middleheaven.quantity.unit.Unit;
-import org.middleheaven.util.collections.Interval;
 
 /**
  * The value of a measurement and the associated uncertainty

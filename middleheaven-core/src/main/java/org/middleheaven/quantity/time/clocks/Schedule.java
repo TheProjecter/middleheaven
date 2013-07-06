@@ -21,7 +21,7 @@ public interface Schedule {
 
 	/**
 	 * 
-	 * @return <code>true</code> if this chronogram has a stop time.<code>false</code> otherwise.
+	 * @return <code>true</code> if this {@link Schedule} has a stop time.<code>false</code> otherwise.
 	 */
 	public boolean isLimited();
 	

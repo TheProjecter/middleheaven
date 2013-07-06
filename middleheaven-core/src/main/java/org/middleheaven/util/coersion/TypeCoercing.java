@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.quantity.time.CalendarDate;
 import org.middleheaven.quantity.time.CalendarDateTime;
 import org.middleheaven.util.identity.Identity;
-import org.middleheaven.util.identity.NumberIdentityCoersor;
-import org.middleheaven.util.identity.StringIdentityCoersor;
 
 /**
  * Main utility class for type coercing.
@@ -31,7 +29,7 @@ public class TypeCoercing {
 		addCoersor(CharSequence.class, Number.class , new CharSequenceNumberConverter());
 		addCoersor(CharSequence.class, Boolean.class , new CharSequenceBooleanCoersor());
 		addCoersor(String.class, Identity.class , new StringIdentityCoersor());
-		addCoersor(String.class, TextLocalizable.class , new StringTextLocalizableCoersor());
+		addCoersor(String.class, LocalizableText.class , new StringTextLocalizableCoersor());
 		
 		addCoersor(Number.class, Number.class ,  new NumberCoersor());
 		

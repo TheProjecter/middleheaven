@@ -5,10 +5,10 @@ package org.middleheaven.quantity.time;
 
 import java.util.Date;
 
+import org.middleheaven.collections.Interval;
+import org.middleheaven.collections.Range;
 import org.middleheaven.util.Incrementable;
 import org.middleheaven.util.NaturalIncrementable;
-import org.middleheaven.util.collections.Interval;
-import org.middleheaven.util.collections.Range;
 
 
 
@@ -51,6 +51,10 @@ public class CalendarDate extends CalendarDateTime  implements Incrementable<Ela
     	return context.getChronology().add(this, Duration.of().days(1));
     }
     
+	
+	public CalendarDateTime atTime(int hour, int minute, int second){
+		return CalendarDateTime.at(this.year().ordinal(), this.month().ordinal(), this.dayOfMonth().getDay(), hour, minute, second);
+	}
 	/**
 	 * {@inheritDoc}
 	 */

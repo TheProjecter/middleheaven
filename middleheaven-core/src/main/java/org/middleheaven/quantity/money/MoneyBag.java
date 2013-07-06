@@ -19,7 +19,7 @@ public final class MoneyBag implements Serializable {
 
 	private static final long serialVersionUID = -3168834691930549570L;
 	
-	private HashMap<Unit<Currency>, Money> bag = new HashMap<Unit<Currency>, Money>();
+	private Map<Unit<Currency>, Money> bag = new HashMap<Unit<Currency>, Money>();
 
 	public static MoneyBag empty(){
 		return new MoneyBag();

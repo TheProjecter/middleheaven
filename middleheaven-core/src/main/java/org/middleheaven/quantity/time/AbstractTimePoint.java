@@ -45,7 +45,7 @@ abstract class AbstractTimePoint implements TimePoint, Serializable {
 	}
 	
 	public final boolean equals(Object other){
-		return this.getClass().equals(other.getClass()) && equalsOther((AbstractTimePoint)other);
+		return other != null && this.getClass().equals(other.getClass()) && equalsOther((AbstractTimePoint)other);
 	}
 	
 	/**

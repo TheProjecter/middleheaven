@@ -5,14 +5,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.function.Maybe;
 
 /**
@@ -20,16 +16,16 @@ import org.middleheaven.util.function.Maybe;
  */
 public class StringUtils {
 
-	StringUtils(){}
+	protected StringUtils(){}
 	
 	/**
 	 * Counts how much a given pattern appears in a given {@link CharSequence}.
 	 * @param text the given text.
 	 * @param pattern the given pattern.
-	 * @return
+	 * @return how much a given pattern appears in a given text.
 	 */
-	public static int countMatches(CharSequence text, String pattern){
-		Pattern p = Pattern.compile(pattern);
+	public static int countMatches(CharSequence text, CharSequence pattern){
+		Pattern p = Pattern.compile(pattern.toString());
 		int count=0;
 		final Matcher matcher = p.matcher(text);
 		while (matcher.find()){
@@ -38,14 +34,39 @@ public class StringUtils {
 		return count;
 	}
 	
+	/**
+	 * Creates a string by repeadly concatenating a pattern with it self {@code count} times.
+	 * @param pattern pattern to repeat
+	 * @param count how many times 
+	 * @return
+	 */
 	public static String repeat(String pattern, int count){
-		return repeat(pattern,count,"");
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 1 ; i < count; i++){
+			builder.append(pattern);
+		}
+		
+		builder.append(pattern);
+		return builder.toString();
 	}
 	
+	/**
+	 * Creates a string by repeadly concatenating a pattern with it self {@code count} times, separatin each concatenation with a {@code separator}
+	 * @param pattern
+	 * @param count
+	 * @param separator
+	 * @return
+	 */
 	public static String repeat(String pattern, int count , String separator){
-		String[] res = new String[count];
-		Arrays.fill(res, pattern);
-		return join(separator,res);
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 1 ; i < count; i++){
+			builder.append(pattern).append(separator);
+		}
+		
+		builder.append(pattern);
+		return builder.toString();
 	}
 
 	public static String ensureEndsWith(String text, String suffix){
@@ -208,63 +229,6 @@ public class StringUtils {
 		return writer.toString();
 	}
 
-//	/**
-//	 * Splits a CharSequence in the format paramname1=value1;paramname2=value2;...  
-//	 * @param charSequence
-//	 * @return
-//	 */
-//	public static Map<String,String> splitParams(CharSequence charSequence){
-//		String[] paramPairs = split(charSequence, ";");
-//
-//		if (paramPairs.length==0){
-//			return Collections.emptyMap();
-//		}
-//		HashMap<String, String> paramsMap = new HashMap<String, String>();
-//		for (String s : paramPairs){
-//			String[] p = split(s,"=");
-//			paramsMap.put(p[0], p[1]);
-//		}
-//		return paramsMap;
-//	}
-
-//	public static String[] split(CharSequence charSequence, char delimiter){
-//		return split(charSequence , Character.toString(delimiter));
-//	}
-
-//	/**
-//	 * Split the given char sequence into an array of strings using the delimiter has would String.split() do.
-//	 * However if the delimiter is not found the char sequence the char sequence it self will be returned
-//	 * @param charSequence
-//	 * @param delimiter
-//	 * @return
-//	 */
-//	public static String[] split(CharSequence charSequence, String delimiter){
-//		if (delimiter==null){
-//			throw new IllegalArgumentException("parameter `delimiter` is required");
-//		}
-//		if (charSequence==null){
-//			return new String[0];
-//		}
-//
-//		String source = charSequence.toString();
-//
-//		if (source.indexOf(delimiter)<0){
-//			// return the original sequence
-//			return new String[]{source};
-//		}
-//
-//		if (delimiter.equals(".")){
-//			return source.split("\\.");
-//		}else  if (delimiter.equals(" ")){
-//			return source.split("\\s");
-//		} else {
-//			return source.split(delimiter);
-//		}
-//
-//		
-//
-//	}
-
 	// TODO put in a StringFormat
 	public static String capitalizeFirst(String text) {
 		StringBuilder builder  = new StringBuilder(text);
@@ -279,10 +243,10 @@ public class StringUtils {
 	
 	/**
 	 * Compiles a glob pattern string into a regex {@link Pattern}.
-	 * A glob pattern only uses '*' for matching "all" and "one" 
+	 * A glob pattern only uses '*' and '?' for matching "all" and "one" 
 	 * respectively
-	 * @param simplePattern
-	 * @return
+	 * @param simplePattern a simple glob pattern
+	 * @return the pattern.
 	 */
 	public static Pattern compile(String glob){
 
@@ -291,120 +255,6 @@ public class StringUtils {
 	            + glob.replace("*", "\\E.*\\Q")
 	                  .replace("?", "\\E.\\Q") 
 	            + "\\E$");
-
-	    
-//		String pattern = glob.trim();
-//	    int strLen = pattern.length();
-//	    StringBuilder sb = new StringBuilder(strLen);
-//	    // Remove beginning and ending * globs because they're useless
-//	    if (pattern.startsWith("*"))
-//	    {
-//	        pattern = pattern.substring(1);
-//	        strLen--;
-//	    }
-//	    if (pattern.endsWith("*"))
-//	    {
-//	        pattern = pattern.substring(0, strLen-1);
-//	        strLen--;
-//	    }
-//	    boolean escaping = false;
-//	    int inCurlies = 0;
-//	    for (char currentChar : pattern.toCharArray())
-//	    {
-//	        switch (currentChar)
-//	        {
-//	        case '*':
-//	            if (escaping)
-//	                sb.append("\\*");
-//	            else
-//	                sb.append(".*");
-//	            escaping = false;
-//	            break;
-//	        case '?':
-//	            if (escaping)
-//	                sb.append("\\?");
-//	            else
-//	                sb.append('.');
-//	            escaping = false;
-//	            break;
-//	        case '.':
-//	        case '(':
-//	        case ')':
-//	        case '+':
-//	        case '|':
-//	        case '^':
-//	        case '$':
-//	        case '@':
-//	        case '%':
-//	            sb.append('\\');
-//	            sb.append(currentChar);
-//	            escaping = false;
-//	            break;
-//	        case '\\':
-//	            if (escaping)
-//	            {
-//	                sb.append("\\\\");
-//	                escaping = false;
-//	            }
-//	            else
-//	                escaping = true;
-//	            break;
-//	        case '{':
-//	            if (escaping)
-//	            {
-//	                sb.append("\\{");
-//	            }
-//	            else
-//	            {
-//	                sb.append('(');
-//	                inCurlies++;
-//	            }
-//	            escaping = false;
-//	            break;
-//	        case '}':
-//	            if (inCurlies > 0 && !escaping)
-//	            {
-//	                sb.append(')');
-//	                inCurlies--;
-//	            }
-//	            else if (escaping)
-//	                sb.append("\\}");
-//	            else
-//	                sb.append("}");
-//	            escaping = false;
-//	            break;
-//	        case ',':
-//	            if (inCurlies > 0 && !escaping)
-//	            {
-//	                sb.append('|');
-//	            }
-//	            else if (escaping)
-//	                sb.append("\\,");
-//	            else
-//	                sb.append(",");
-//	            break;
-//	        default:
-//	            escaping = false;
-//	            sb.append(currentChar);
-//	        }
-//	    }
-//	    return Pattern.compile(sb.toString());
-
-
-//		
-//		if (simplePattern.startsWith("*") && simplePattern.endsWith("*")){
-//			return Pattern.compile(simplePattern.replaceAll("\\*", ""));
-//		} else if (simplePattern.startsWith("*")){
-//			// end with text
-//			return Pattern.compile(simplePattern.replaceAll("\\*", "") + "$");
-//		} else if (simplePattern.endsWith("*")){
-//			// starts with
-//			return Pattern.compile("^" + simplePattern.replaceAll("\\*", ""));
-//		} else {
-//			// is exactly
-//			return Pattern.compile("^" + simplePattern + "$");
-//		}
-	
 	}
 	
 	public static String removeDiacritics(CharSequence text) {
@@ -426,31 +276,35 @@ public class StringUtils {
 		return builder.toString();
 	}
 	
-	
 	public static String iffenDelimitedToCamelCase(CharSequence text){
 		StringBuilder builder = new StringBuilder(text);
 		
-		for (int i=1; i < builder.length(); i++){
-			if (builder.charAt(i) == '-'){
-				builder.setCharAt(i, Character.toUpperCase(builder.charAt(i+1)));
-				builder.setCharAt(i+1, ' ');
-				i++;
-			}
+		int pos = builder.indexOf("-");
+		while (pos >=0){
+			builder.setCharAt(pos, Character.toUpperCase(builder.charAt(pos+1)));
+			builder.deleteCharAt(pos+1);
+			pos = builder.indexOf("-");
 		}
 		
-		return builder.toString().replaceAll(" ", "");
+		return builder.toString();
 	}
 
-	public static String firstLetterToLower(String text) {
-		return text.substring(0,1).toLowerCase() + text.substring(1);
+	public static String firstLetterToLower(CharSequence text) {
+		StringBuilder builder = new StringBuilder(text);
+		final char c = builder.charAt(0);
+		builder.setCharAt(0, Character.toLowerCase(c));
+		return builder.toString();
 	}
 	
 	/**
 	 * @param name
 	 * @return
 	 */
-	public static String firstLetterToUpper(String text) {
-		return text.substring(0,1).toUpperCase() + text.substring(1);
+	public static String firstLetterToUpper(CharSequence text) {
+		StringBuilder builder = new StringBuilder(text);
+		final char c = builder.charAt(0);
+		builder.setCharAt(0, Character.toUpperCase(c));
+		return builder.toString();
 	}
 
 
@@ -477,8 +331,8 @@ public class StringUtils {
 	 * Returns an absent {@link Maybe} if {@code this#isEmptyOrBlank(CharSequence)} returns <code>true</code>, otherwise returns a {@link Maybe} with the given string inside.
 	 * @param value a given {@link String}.
 	 */
-	public static Maybe<String> maybe(String value) {
-		return isEmptyOrBlank(value) ? Maybe.<String>absent() : Maybe.of(value);
+	public static <C extends CharSequence> Maybe<C> maybe(C value) {
+		return isEmptyOrBlank(value.toString()) ? Maybe.<C>absent() : Maybe.of(value);
 	}
 
 }

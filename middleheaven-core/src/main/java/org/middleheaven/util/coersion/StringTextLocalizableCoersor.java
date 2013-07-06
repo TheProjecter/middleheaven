@@ -3,27 +3,27 @@
  */
 package org.middleheaven.util.coersion;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 
 /**
- * Coercor for {@link String} and {@link TextLocalizable} types.
+ * Coercor for {@link String} and {@link LocalizableText} types.
  */
-public class StringTextLocalizableCoersor extends AbstractTypeCoersor<String, TextLocalizable> {
+public class StringTextLocalizableCoersor extends AbstractTypeCoersor<String, LocalizableText> {
 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T extends TextLocalizable> T coerceForward(String value,Class<T> type) {
-		return type.cast(TextLocalizable.valueOf(value));
+	public <T extends LocalizableText> T coerceForward(String value,Class<T> type) {
+		return type.cast(LocalizableText.valueOf(value));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T extends String> T coerceReverse(TextLocalizable value,
+	public <T extends String> T coerceReverse(LocalizableText value,
 			Class<T> type) {
 		return type.cast(value.toString());
 	}

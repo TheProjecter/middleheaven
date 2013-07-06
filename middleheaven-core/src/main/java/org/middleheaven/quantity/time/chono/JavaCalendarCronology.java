@@ -8,6 +8,7 @@ import org.middleheaven.quantity.time.AbstractChronology;
 import org.middleheaven.quantity.time.DayOfMonth;
 import org.middleheaven.quantity.time.DayOfWeek;
 import org.middleheaven.quantity.time.Duration;
+import org.middleheaven.quantity.time.DurationUnit;
 import org.middleheaven.quantity.time.Month;
 import org.middleheaven.quantity.time.TimeHolder;
 import org.middleheaven.quantity.time.TimePoint;
@@ -53,7 +54,7 @@ public class JavaCalendarCronology extends AbstractChronology{
 
 
 	@Override
-	public long milisecondsFor(boolean lenient, int year, int month, int day) {
+	public long milisecondsFor(boolean lenient, int year, int month, int day, int hour, int minute, int second) {
 		if (year <=0){
 			throw new IllegalArgumentException("Year must be a positive integer");
 		}
@@ -63,6 +64,15 @@ public class JavaCalendarCronology extends AbstractChronology{
 		if (month <=0){
 			throw new IllegalArgumentException("Month must be a positive integer");
 		}
+		if (hour <0){
+			throw new IllegalArgumentException("Hour must be a positive integer");
+		}
+		if (minute <0){
+			throw new IllegalArgumentException("Minute must be a positive integer");
+		}
+		if (second <0){
+			throw new IllegalArgumentException("Second must be a positive integer");
+		}
 
 		Calendar calendar = (Calendar)prototype.clone();
 		clearCalendar(calendar);
@@ -70,9 +80,9 @@ public class JavaCalendarCronology extends AbstractChronology{
 		calendar.set(Calendar.YEAR, year);
 		calendar.set(Calendar.MONTH, month-1);
 		calendar.set(Calendar.DATE, day);
-		calendar.clear(Calendar.HOUR_OF_DAY);
-		calendar.clear(Calendar.MINUTE);
-		calendar.clear(Calendar.SECOND);
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		calendar.set(Calendar.SECOND, second);
 		calendar.clear(Calendar.MILLISECOND);
 		
 		return calendar.getTimeInMillis();
@@ -177,5 +187,70 @@ public class JavaCalendarCronology extends AbstractChronology{
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Duration differenceBetween(TimePoint a, TimePoint b , DurationUnit unit) {
+
+		long max;
+		long min;
+		
+		if (a.getMilliseconds() > b.getMilliseconds()){
+			max = a.getMilliseconds();
+			min = b.getMilliseconds();
+		} else {
+			max = b.getMilliseconds();
+			min = a.getMilliseconds();
+		}
+		
+		Calendar ca = (Calendar)prototype.clone();
+		ca.setTimeInMillis(max);
+		
+		Calendar cb = (Calendar)prototype.clone();
+		cb.setTimeInMillis(min);
+		
+		if (ca.get(Calendar.YEAR) == cb.get(Calendar.YEAR) && ca.get(Calendar.MONDAY) == cb.get(Calendar.MONDAY) && ca.get(Calendar.DATE) == cb.get(Calendar.DATE)){
+			switch (unit){
+			case DAYS:
+			case MONTHS:
+			case YEARS:
+				return Duration.of().add(unit, 0);
+			default:
+				// default algorithm
+			}
+		}
+		
+		long count = 0;
+		int calendarUnit = calendarUnitFromDurationUnit(unit);
+		while (cb.compareTo(ca) < 0){
+			cb.add(calendarUnit, 1);
+			count++;
+		}
+
+		return Duration.of().add(unit, count);
+		
+	}
+
+	private int calendarUnitFromDurationUnit(DurationUnit unit){
+		switch (unit){
+		case MILISECONDS:
+			return Calendar.MILLISECOND;
+		case SECONDS:
+			return Calendar.SECOND;
+		case MINUTES:
+			return Calendar.MINUTE;
+		case HOURS:
+			return Calendar.HOUR_OF_DAY;
+		case DAYS:
+			return Calendar.DATE;
+		case MONTHS:
+			return Calendar.MONTH;
+		case YEARS:
+			return Calendar.YEAR;
+		default:
+			return Calendar.DATE;
+		}
+	}
 
 }

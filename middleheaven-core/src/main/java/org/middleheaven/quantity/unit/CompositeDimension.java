@@ -32,12 +32,12 @@ public class CompositeDimension extends Dimension {
 	}
 
 
-	private TreeMap<Character , BaseDimension > dims = new TreeMap<Character , BaseDimension >();
+	private Map<Character , BaseDimension > dims = new TreeMap<Character , BaseDimension >();
 
 
 	CompositeDimension(CompositeDimension other){
 		// clone 
-		 this.dims = (TreeMap) other.dims.clone();
+		 this.dims = new TreeMap<Character , BaseDimension>(other.dims);
 
 	}
 

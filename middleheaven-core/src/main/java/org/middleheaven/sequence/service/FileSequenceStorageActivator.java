@@ -3,13 +3,13 @@ package org.middleheaven.sequence.service;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Properties;
 
+import org.middleheaven.collections.ParamsMap;
+import org.middleheaven.core.FileContext;
+import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.annotations.Service;
 import org.middleheaven.core.bootstrap.BootstrapEnvironment;
-import org.middleheaven.core.bootstrap.FileContext;
-import org.middleheaven.core.bootstrap.FileContextService;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
@@ -19,7 +19,6 @@ import org.middleheaven.sequence.SequenceState;
 import org.middleheaven.sequence.StateChangedEvent;
 import org.middleheaven.sequence.StatePersistentSequence;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.ParamsMap;
 
 /**
  * Activates  <code>SequenceStorageService</code> for sequence storing. 
