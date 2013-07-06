@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.IllegalAccessReflectionException;
 import org.middleheaven.core.reflection.InvocationTargetReflectionException;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 
 public class MethodIntrospector extends Introspector{

@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.util.Hash;
-import org.middleheaven.util.collections.CollectionUtils;
 
 public class ServiceProxy<T> implements ServiceListener, ProxyHandler {
 

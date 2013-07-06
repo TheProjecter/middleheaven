@@ -13,10 +13,13 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.TransformedCollection;
 import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.TransformedCollection;
+import org.middleheaven.io.IO;
+import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.function.Predicate;
@@ -39,38 +42,62 @@ public class PackageIntrospector extends Introspector {
 	}
 
 	public Enumerable<PackageIntrospector> getSubpackages(){
-		final String name = this.getName();
-		
-		return CollectionUtils.asEnumerable(Package.getPackages()).filter(new Predicate<Package>(){
-
-			@Override
-			public Boolean apply(Package p) {
-				return p.getName().startsWith(name) && p.getName().length() != name.length();
-			}
-			
-		}).map(new Mapper<PackageIntrospector, Package>(){
-
-			@Override
-			public PackageIntrospector apply(Package p) {
-				return of(p);
-			}
-			
-		});
+		return CollectionUtils.asEnumerable(Package.getPackages())
+				.filter(new PackageIntrospectorPredicate(this.getName()))
+				.map(mapper);
 		
 	}
+	
 
+	private static class PackageIntrospectorPredicate implements Predicate<Package> {
+
+		
+		private String name;
+
+		public PackageIntrospectorPredicate (String name){
+			this.name = name;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Boolean apply(Package p) {
+			return p.getName().startsWith(name) && p.getName().length() != name.length();
+		}
+		
+	}
+	private static final PackageIntrospectorMapper mapper = new PackageIntrospectorMapper();
+
+	private static class PackageIntrospectorMapper implements  Mapper<PackageIntrospector, Package>{
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public PackageIntrospector apply(Package p) {
+			return PackageIntrospector.of(p);
+		}
+		
+	}
+	
+	private static class IntrospectorMapper implements  Mapper<ClassIntrospector, Class<?>>{
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public ClassIntrospector apply(Class<?> obj) {
+			return Introspector.of(obj);
+		}
+		
+	}
+	
+	private static final IntrospectorMapper introspectorMapper = new IntrospectorMapper();
 
 	public Enumerable<ClassIntrospector> getClassesIntrospectors(){
 		return CollectionUtils.asEnumerable(
-				TransformedCollection.transform( getPackageClasses(typePackage) , 
-						new Mapper< ClassIntrospector,Class<?>>(){
-
-							@Override
-							public ClassIntrospector apply(Class<?> obj) {
-								return Introspector.of(obj);
-							}
-						}
-				)
+			TransformedCollection.transform( getPackageClasses(typePackage) , introspectorMapper)
 		);
 	}
 
@@ -126,7 +153,7 @@ public class PackageIntrospector extends Introspector {
                 File[] files = folder.listFiles(new FilenameFilter() {
 
                     public boolean accept(File file, String name) {
-                        return name.indexOf("$") < 0 && name.endsWith(".class");
+                        return name.indexOf('$') < 0 && name.endsWith(".class");
                     }
 
                 });
@@ -155,43 +182,52 @@ public class PackageIntrospector extends Introspector {
         }
     }
 
-    private static void extractClasseInJarPackage(Set<Class<?>> classes, String jarName, String packageName)
+    private static void extractClasseInJarPackage(final Set<Class<?>> classes, String jarName, final String aPackageName)
         throws IOException {
 
-        packageName = packageName.replaceAll("\\." , "/");
+    	final String packageName = aPackageName.replaceAll("\\." , "/");
         if (jarName.startsWith("file:")) {
             jarName = jarName.substring("file:".length());
         }
 
-        JarInputStream jarFile = new JarInputStream(new FileInputStream(new File(jarName)));
-        JarEntry jarEntry;
+        IO.using(new JarInputStream(new FileInputStream(new File(jarName))), new Block<JarInputStream>(){
 
-        while (true) {
-            jarEntry = jarFile.getNextJarEntry();
-            if (jarEntry == null) {
-                break;
-            }
-            
-           
-            final String name = jarEntry.getName();
-            
-   
-			if (name.startsWith(packageName)
-                    && name.endsWith(".class") && !isFromSubPackage(name, packageName)) {
+			@Override
+			public void apply(JarInputStream jarFile) {
+				try {   
+		        JarEntry jarEntry;
 
-                String className = name.replaceAll("/", "\\.");
-                className = className.substring(0, className.length() - ".class".length());
+		        while (true) {
+		            jarEntry = jarFile.getNextJarEntry();
+		            if (jarEntry == null) {
+		                break;
+		            }
+		            
+		           
+		            final String name = jarEntry.getName();
+		            
+		   
+					if (name.startsWith(packageName)
+		                    && name.endsWith(".class") && !isFromSubPackage(name, packageName)) {
 
-                try {
-                    classes.add(Class.forName(className));
-                } catch (ClassNotFoundException e) {
-                    // no-op
-                    continue;
-                }
-            }
-        }
+		                String className = name.replaceAll("/", "\\.");
+		                className = className.substring(0, className.length() - ".class".length());
 
+		                try {
+		                    classes.add(Class.forName(className));
+		                } catch (ClassNotFoundException e) {
+		                    // no-op
+		                    continue;
+		                }
+		            }
+		        }
 
+				} catch (IOException e){
+					throw ManagedIOException.manage(e);
+				}
+			}
+			
+		});
     }
 
 	/**

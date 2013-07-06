@@ -2,8 +2,7 @@ package org.middleheaven.core.reflection.inspection;
 
 import java.lang.annotation.Annotation;
 
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.Enumerable;
 
 public class AnnotationIntrospectionCriteriaBuilder<T> {
 
@@ -14,7 +13,7 @@ public class AnnotationIntrospectionCriteriaBuilder<T> {
 	}
 	
 	public Enumerable<Annotation> retrive(){
-		return CollectionUtils.asEnumerable(Reflector.getReflector().getAnnotations(introspectionCriteriaBuilder.type));
+		return Reflector.getReflector().getAnnotations(introspectionCriteriaBuilder.type);
 	}
 
 }

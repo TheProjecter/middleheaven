@@ -3,9 +3,9 @@ package org.middleheaven.core.wiring;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Mergable;
 import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Mergable;
 
 /**
  * Implements a {@link ProducingWiringPoint} using a {@link Constructor}.

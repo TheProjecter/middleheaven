@@ -15,6 +15,32 @@ import org.middleheaven.graph.VertexTraversalEvent;
  */
 public class DependencyGraph extends DirectGraph<DependencyGraphEdge, DependencyGraphNode> {
 
+	/**
+	 * 
+	 */
+	private static final class ResolveTransversalListener implements GraphTranverseListener<DependencyGraphNode, DependencyGraphEdge> {
+		@Override
+		public void beginEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
+			//no-op
+		}
+
+		@Override
+		public void endEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
+			//no-op
+		}
+
+		@Override
+		public void endVertex(VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
+			//no-op
+		}
+
+		@Override
+		public void beginVertex(
+				VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
+			e.getVertex().getObject().inicialize();
+		}
+	}
+
 	public DependencyGraph() {
 	}
 	
@@ -50,29 +76,7 @@ public class DependencyGraph extends DirectGraph<DependencyGraphEdge, Dependency
 	public void resolve() {
 		TopologicOrderTransversor t = new TopologicOrderTransversor();
 		
-		t.addListener(new GraphTranverseListener<DependencyGraphNode, DependencyGraphEdge>() {
-
-			@Override
-			public void beginEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
-				//no-op
-			}
-
-			@Override
-			public void endEdgeTraversed(EdgeTraversalEvent<DependencyGraphEdge, DependencyGraphNode> e) {
-				//no-op
-			}
-
-			@Override
-			public void endVertex(VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
-				//no-op
-			}
-
-			@Override
-			public void beginVertex(
-					VertexTraversalEvent<DependencyGraphNode, DependencyGraphEdge> e) {
-				e.getVertex().getObject().inicialize();
-			}
-		});
+		t.addListener(new ResolveTransversalListener());
 		
 		t.transverse(this, null);
 		

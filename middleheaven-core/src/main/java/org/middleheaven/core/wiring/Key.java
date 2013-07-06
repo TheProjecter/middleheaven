@@ -2,7 +2,7 @@ package org.middleheaven.core.wiring;
 
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 class Key {
 
@@ -10,7 +10,7 @@ class Key {
 	private Map<String, Object> params;
 
 	public String toString(){
-		return targetClass.getName() + "+" + params.toString();
+		return targetClass.getName() + "[" + params.toString() + "]";
 	}
 	
 	public static  Key keyFor(Class<?> targetClass, Map<String, Object> params) {
@@ -24,6 +24,10 @@ class Key {
 	
 	public int hashCode(){
 		return targetClass==null ? 0 :  targetClass.getName().hashCode();
+	}
+	
+	public Class<?> getTargetClass(){
+		return targetClass;
 	}
 	
 	public boolean equals(Object other){

@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 
 import org.middleheaven.util.function.Maybe;
 
-public interface FieldAcessor {
+public interface FieldHandler {
 
 	public Object getValue(Object target) throws ReflectionException;
 

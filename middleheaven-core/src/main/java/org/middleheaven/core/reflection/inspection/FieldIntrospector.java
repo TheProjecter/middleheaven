@@ -5,13 +5,13 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.middleheaven.core.reflection.FieldAcessor;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.FieldHandler;
 import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 
-public class FieldIntrospector extends Introspector implements FieldAcessor {
+public class FieldIntrospector extends Introspector implements FieldHandler {
 
 	private Field field;
 

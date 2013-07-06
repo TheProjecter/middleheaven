@@ -4,9 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Predicate;
 
 public class ConstructorIntrospectionCriteriaBuilder<T> extends ParameterizableMemberIntrospectionCriteriaBuilder<T,Constructor<T>>{

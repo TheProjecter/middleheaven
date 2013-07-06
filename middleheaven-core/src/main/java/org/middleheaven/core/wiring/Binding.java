@@ -18,21 +18,41 @@ public final class Binding {
 	
 	private boolean lazy = false;
 	private boolean inicialized = false;
-	private EventListenersSet<BindingScopeListener> eventListeners = EventListenersSet.newSet(BindingScopeListener.class);
+	private EventListenersSet<BindingScopeListener> eventListeners;
 	
 	
 	private Class<?> sourceType;
 	private Map<String, Object> params = new HashMap<String, Object>();
 	
-	private String scope = "default";
+	private String scope;
 	private Resolver resolver;
 	private Provider<?> provider;
 	private ProfilesBag profiles = new ProfilesBag();
 
 	
-	public Binding(){}
+	public Binding(){
+		scope = "default";
+	}
 
+
+	public synchronized void setScope(String scope) {
+		this.scope = scope;
+		if (eventListeners != null){
+			eventListeners.broadcastEvent().onScopeChange(this);
+		}
+	}
 	
+	public synchronized void addListeners(BindingScopeListener listener){
+		if (eventListeners == null){
+			eventListeners = EventListenersSet.newSet(BindingScopeListener.class);
+		}
+		this.eventListeners.addListener(listener);
+	}
+	
+	public synchronized String getScope() {
+		return scope;
+	}
+
 	/**
 	 * Obtains {@link boolean}.
 	 * @return the inicialized
@@ -88,7 +108,6 @@ public final class Binding {
 		this.profiles = profiles;
 	}
 
-
 	public String toString(){
 		return sourceType.getName() + "#" + params.toString() + "@" + this.profiles;
 	}
@@ -120,19 +139,7 @@ public final class Binding {
 	public Map<String, Object> getParams(){
 		return this.params;
 	}
-
-	public void setScope(String scope) {
-		this.scope = scope;
-		eventListeners.broadcastEvent().onScopeChange(this);
-	}
 	
-	public void addListeners(BindingScopeListener listener){
-		this.eventListeners.addListener(listener);
-	}
-	
-	public String getScope() {
-		return scope;
-	}
 
 	/**
 	 * @param params2

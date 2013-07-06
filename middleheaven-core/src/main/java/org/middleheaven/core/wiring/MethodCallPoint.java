@@ -3,9 +3,7 @@
  */
 package org.middleheaven.core.wiring;
 
-import java.lang.reflect.Method;
-
-import org.middleheaven.core.reflection.ReflectionException;
+import org.middleheaven.core.reflection.MethodHandler;
 
 /**
  * 
@@ -13,9 +11,9 @@ import org.middleheaven.core.reflection.ReflectionException;
 public class MethodCallPoint implements PostCreatePoint, PreDestroiPoint {
 
 	
-	private Method method;
+	private MethodHandler method;
 	
-	public MethodCallPoint (Method method){
+	public MethodCallPoint (MethodHandler method){
 		this.method = method;
 	}
 	
@@ -24,11 +22,7 @@ public class MethodCallPoint implements PostCreatePoint, PreDestroiPoint {
 	 */
 	@Override
 	public void call(Object target) {
-		try {
-			this.method.invoke(target, new Object[0]);
-		} catch (Exception e) {
-			throw ReflectionException.manage(e, method.getDeclaringClass());
-		} 
+		this.method.invoke(target);
 	}
 
 }

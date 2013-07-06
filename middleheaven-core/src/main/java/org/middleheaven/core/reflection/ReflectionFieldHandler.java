@@ -6,24 +6,23 @@ import java.lang.reflect.Field;
 import org.middleheaven.util.function.Maybe;
 
 
-public  class ReflectionFieldAccessor implements FieldAcessor{
+public  class ReflectionFieldHandler implements FieldHandler{
 
 	protected Class<?> type;
 	protected String name;
 	protected Field field;
 
-	public ReflectionFieldAccessor(Class<?> type, String fieldName){
+	public ReflectionFieldHandler(Class<?> type, String fieldName){
 		this.type = type;
 		this.name = fieldName;
 
 		load();
 	}
 
-	ReflectionFieldAccessor(Class<?> type, Field field) {
+	ReflectionFieldHandler(Class<?> type, Field field) {
 		this.type = type;
 		this.name = field.getName().toLowerCase();
 		this.field = field;
-		this.field.setAccessible(true);
 	}
 	
 	protected void load(){

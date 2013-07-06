@@ -3,7 +3,7 @@
  */
 package org.middleheaven.core.services;
 
-import org.middleheaven.util.collections.ParamsMap;
+import org.middleheaven.collections.ParamsMap;
 
 /**
  * 

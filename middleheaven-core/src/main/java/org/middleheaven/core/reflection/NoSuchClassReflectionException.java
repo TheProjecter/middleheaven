@@ -5,11 +5,14 @@
 package org.middleheaven.core.reflection;
 
 /**
- * @author  Sergio M. M. Taborda 
+ * Represents a {@link ClassNotFoundException} in the {@link ReflectionException} tree.
  */
 public class NoSuchClassReflectionException extends ClassloadingException {
 
-    protected final String className;
+
+	private static final long serialVersionUID = -9020721820233512164L;
+	
+	protected final String className;
     public NoSuchClassReflectionException(String className){
         super(className + " could not be found on the classpath");
         this.className =  className;

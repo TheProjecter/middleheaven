@@ -2,9 +2,9 @@ package org.middleheaven.core.reflection.metaclass;
 
 import java.lang.annotation.Annotation;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.PropertyNotFoundException;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * An interface for reading meta information from a class.
@@ -17,13 +17,13 @@ public interface MetaClass {
 	 * @return the property assessor.
 	 * @throws PropertyNotFoundException if the property does not exist in the bean
 	 */
-	public PropertyAccessor getPropertyAcessor(String name) throws PropertyNotFoundException;
+	public PropertyHandler getPropertyAcessor(String name) throws PropertyNotFoundException;
 	
 	/**
 	 * Retrieves all assessors for all the existing properties.
 	 * @return an enumerable with all the acessors.
 	 */
-	public Enumerable<PropertyAccessor> getProperties();
+	public Enumerable<PropertyHandler> getProperties();
 	
 	/**
 	 * Creates a new object based on the classe.

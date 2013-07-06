@@ -4,16 +4,16 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.collections.EnhancedArrayList;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.PropertyNotFoundException;
-import org.middleheaven.util.collections.EnhancedArrayList;
-import org.middleheaven.util.collections.Enumerable;
 
 public class DecoratedMetaClass implements MetaClass {
 	
 	private MetaClass original;
 	
-	private Map<String, PropertyAccessor> acessors = new HashMap<String, PropertyAccessor>();
+	private Map<String, PropertyHandler> acessors = new HashMap<String, PropertyHandler>();
 	
 	public DecoratedMetaClass (MetaClass original){
 		this.original = original;	
@@ -24,13 +24,13 @@ public class DecoratedMetaClass implements MetaClass {
 	 * 
 	 * @param acessor
 	 */
-	public void addProperty(PropertyAccessor acessor){
+	public void addProperty(PropertyHandler acessor){
 		this.acessors.put(acessor.getName(), acessor);
 	}
 	
 	@Override
-	public PropertyAccessor getPropertyAcessor(String name) throws PropertyNotFoundException {
-		PropertyAccessor pa = this.acessors.get(name);
+	public PropertyHandler getPropertyAcessor(String name) throws PropertyNotFoundException {
+		PropertyHandler pa = this.acessors.get(name);
 		
 		if (pa == null){
 			return this.acessors.get(name);
@@ -39,8 +39,8 @@ public class DecoratedMetaClass implements MetaClass {
 	}
 
 	@Override
-	public Enumerable<PropertyAccessor> getProperties() {
-		EnhancedArrayList<PropertyAccessor> allProperties = new EnhancedArrayList<PropertyAccessor>(original.getProperties());
+	public Enumerable<PropertyHandler> getProperties() {
+		EnhancedArrayList<PropertyHandler> allProperties = new EnhancedArrayList<PropertyHandler>(original.getProperties());
 		
 		allProperties.addAll(this.acessors.values());
 		

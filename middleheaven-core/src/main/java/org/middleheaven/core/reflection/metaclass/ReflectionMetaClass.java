@@ -2,10 +2,10 @@ package org.middleheaven.core.reflection.metaclass;
 
 import java.lang.annotation.Annotation;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.PropertyNotFoundException;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * Wraps a {@link java.lang.Class} in a {@link MetaClass}.
@@ -28,8 +28,8 @@ public class ReflectionMetaClass implements MetaClass{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public PropertyAccessor getPropertyAcessor(String name) {
-		PropertyAccessor pa = Introspector.of(type).inspect().properties().named(name).retrive();
+	public PropertyHandler getPropertyAcessor(String name) {
+		PropertyHandler pa = Introspector.of(type).inspect().properties().named(name).retrive();
 
 		if (pa == null){
 			throw new PropertyNotFoundException(name , this.getName());
@@ -42,7 +42,7 @@ public class ReflectionMetaClass implements MetaClass{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Enumerable<PropertyAccessor> getProperties() {
+	public Enumerable<PropertyHandler> getProperties() {
 		return Introspector.of(type).inspect().properties().retriveAll();
 	}
 

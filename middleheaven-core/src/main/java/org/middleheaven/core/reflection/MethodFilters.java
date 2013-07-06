@@ -1,6 +1,5 @@
 package org.middleheaven.core.reflection;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.middleheaven.util.function.Predicate;
@@ -10,7 +9,7 @@ import org.middleheaven.util.function.Predicate;
  * Utility class for use with ReflectionUtils to filter methods in a class
  *
  */
-public class MethodFilters implements Predicate<Method> {
+public class MethodFilters implements Predicate<MethodHandler> {
 
 	/**
 	 * 
@@ -21,7 +20,7 @@ public class MethodFilters implements Predicate<Method> {
 		return new MethodFilters(){
 
 			@Override
-			public Boolean apply(Method method) {
+			public Boolean apply(MethodHandler method) {
 				final String name = method.getName();
 				final int modifiers = method.getModifiers();
 				return Boolean.valueOf(Modifier.isPublic(modifiers) && !(name.startsWith("get") || name.startsWith("set") || name.startsWith("is")));
@@ -33,7 +32,7 @@ public class MethodFilters implements Predicate<Method> {
 		return new MethodFilters(){
 
 			@Override
-			public Boolean apply(Method method) {
+			public Boolean apply(MethodHandler method) {
 				final String name = method.getName();
 				final int modifiers = method.getModifiers();
 				return Boolean.valueOf(Modifier.isPublic(modifiers) && !name.equals("getClass") && (name.startsWith("get") || name.startsWith("set") || name.startsWith("is")));
@@ -52,7 +51,7 @@ public class MethodFilters implements Predicate<Method> {
 
 
 	@Override
-	public Boolean apply(Method method) {
+	public Boolean apply(MethodHandler method) {
 		return Boolean.TRUE;
 	}
 

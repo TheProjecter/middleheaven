@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 /**
  * Representation of a service metadata. This class does not represent the service it self or an instance of it, but 

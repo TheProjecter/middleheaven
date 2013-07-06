@@ -5,10 +5,10 @@ package org.middleheaven.core.wiring;
 
 import java.util.Iterator;
 
+import org.middleheaven.collections.TransformedIterator;
 import org.middleheaven.core.reflection.ClassSet;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.reflection.inspection.PackageIntrospector;
-import org.middleheaven.util.collections.TransformedIterator;
 import org.middleheaven.util.function.Mapper;
 
 /**
@@ -17,6 +17,18 @@ import org.middleheaven.util.function.Mapper;
 public class ClassSetWiringBundle implements WiringItemBundle {
 
 	
+	/**
+	 * 
+	 */
+	private static final class TypeMapper implements
+			Mapper<WiringItem, Class<?>> {
+		@Override
+		public WiringItem apply(Class<?> obj) {
+			return new TypeWiringItem(obj);
+		}
+	}
+
+	private static TypeMapper typeMapper = new TypeMapper();
 	private ClassSet contextClasses;
 
 	/**
@@ -80,17 +92,7 @@ public class ClassSetWiringBundle implements WiringItemBundle {
 	 */
 	@Override
 	public Iterator<WiringItem> iterator() {
-		
-		return TransformedIterator.transform(contextClasses.iterator(), new Mapper<WiringItem, Class<?>>(){
-
-			@Override
-			public WiringItem apply(Class<?> obj) {
-				return new TypeWiringItem(obj);
-			}
-			
-		});
-		
-	
+		return TransformedIterator.transform(contextClasses.iterator(), typeMapper);
 	}
 	
 	

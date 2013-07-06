@@ -15,17 +15,17 @@ import org.middleheaven.core.reflection.inspection.Introspector;
 public class EventListenersSet<L> implements Iterable<L>{
 
 	private final Set<L> listeners = new CopyOnWriteArraySet<L>();
-	private L listener;
+	private Class<L> listenerType;
 	
 	public static <T> EventListenersSet<T> newSet(Class<T> listenerType){
-		EventListenersSet<T> set = new EventListenersSet<T>();
-		set.listener  = Introspector.of(listenerType).newProxyInstance(new EventMethodHandler(set));
-		return set;
+		return new EventListenersSet<T>(listenerType);
 	}
 	
-	protected EventListenersSet(){}
+	protected EventListenersSet(Class<L> listenerType){
+		this.listenerType = listenerType;
+	}
 	
-	public void addListener ( L listener){
+	public void addListener (L listener){
 		listeners.add(listener);
 	}
 	
@@ -34,7 +34,7 @@ public class EventListenersSet<L> implements Iterable<L>{
 	}
 	
 	public L broadcastEvent(){
-		return listener;
+		return Introspector.of(listenerType).newProxyInstance(new EventMethodHandler(this));
 	}
 
 	private static class EventMethodHandler implements ProxyHandler{
@@ -62,6 +62,13 @@ public class EventListenersSet<L> implements Iterable<L>{
 	@Override
 	public Iterator<L> iterator() {
 		return this.listeners.iterator();
+	}
+
+	/**
+	 * 
+	 */
+	public void removeAll() {
+		this.listeners.clear();
 	}
 
 }

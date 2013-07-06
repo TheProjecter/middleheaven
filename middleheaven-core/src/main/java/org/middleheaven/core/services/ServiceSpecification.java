@@ -6,7 +6,7 @@ package org.middleheaven.core.services;
 import java.util.Collections;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 /**
  * 

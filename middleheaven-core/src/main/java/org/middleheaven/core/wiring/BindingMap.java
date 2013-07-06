@@ -42,7 +42,7 @@ public class BindingMap {
 		getMap(binding.getSourceType()).remove(binding.getKey());
 	}
 	
-	public Binding findNearest(WiringQuery query){
+	public Binding findNearestWithParams(WiringQuery query){
 		Map<Key, Binding> map = getMap(query.getContract());
 		
 		if (map.isEmpty()){
@@ -67,9 +67,9 @@ public class BindingMap {
 					}
 				}
 				
-				if (candidate == null){
-					throw new BindingException("To many matching binding candidates for " + query.getContract() + ". Try qualify your search.");
-				}
+//				if (candidate == null){
+//					throw new BindingException("To many matching binding candidates for " + query.getContract() + ". Try qualify your search.");
+//				}
 				
 				return candidate;
 			} else {

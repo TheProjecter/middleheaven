@@ -1,5 +1,7 @@
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.util.function.Maybe;
+
 
 
 /**
@@ -22,6 +24,8 @@ public final class FactoryResolver implements Resolver {
 
 	@Override
 	public Object resolve(ResolutionContext context, WiringQuery query) {
+		
+	
 		// Determine witch constructor to invoke
 
 		final ProducingWiringPoint producingPoint = model.getProducingWiringPoint();
@@ -30,12 +34,26 @@ public final class FactoryResolver implements Resolver {
 			throw new ConfigurationException("Type " + model.getBeanClass() + " does not have a valid constructor");
 		}
 
-		Object instance = producingPoint.produceWith(context.getInstanceFactory());
+		// if exists a compatible ciclying proxy
+		
+		
+		
+		final InstanceFactory instanceFactory = context.getInstanceFactory();
+		
+
+		Maybe<Object> maybeProxy = instanceFactory.peekCyclickProxy(model.getBeanClass());
+			
+		if (maybeProxy.isPresent()){
+			return maybeProxy.get();
+		}
+		
+		
+		Object instance = producingPoint.produceWith(instanceFactory);
 
 		// fill requirements
 
 		for (AfterWiringPoint a : model.getAfterPoints()){
-			a.writeAtPoint(context.getInstanceFactory(), instance);
+			a.writeAtPoint(instanceFactory, instance);
 		}
 
 		// initialize

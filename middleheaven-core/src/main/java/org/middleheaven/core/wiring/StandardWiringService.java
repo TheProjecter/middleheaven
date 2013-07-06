@@ -1,7 +1,10 @@
 package org.middleheaven.core.wiring;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,24 +15,22 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.middleheaven.collections.ClassMap;
 import org.middleheaven.core.annotations.Component;
 import org.middleheaven.core.annotations.Service;
-import org.middleheaven.core.annotations.Shared;
+import org.middleheaven.core.bootstrap.RegistryServiceContext;
 import org.middleheaven.core.reflection.ClassSet;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.services.RegistryServiceContext;
 import org.middleheaven.core.services.ServiceScope;
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.graph.DirectGraph;
 import org.middleheaven.logging.Logger;
-import org.middleheaven.util.collections.ClassMap;
+import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.function.Predicate;
 
 @Service
 public class StandardWiringService implements WiringService {
-
-	protected static final Introspector Instrospector = null;
 
 	private final Collection<WiringItemBundle> bundles = new CopyOnWriteArrayList<WiringItemBundle>();
 
@@ -174,131 +175,8 @@ public class StandardWiringService implements WiringService {
 
 			return factory.getInstance(query);
 
-			//			// specialcase of wiringTarget injection
-			//
-			//			if (query.getContract().equals(WiringTarget.class)){
-			//				return query.getTarget();
-			//			}
-			//
-			//			Key key = Key.keyFor(query.getContract(), query.getParams());
-			//
-			//			Binding binding = bindingMap.findNearest(query);
-			//			if (binding == null) {
-			//				// is binding is not found try to guess one automatically
-			//
-			//	
-			//				
-			//				// if its a concrete class create an auto-binding for it
-			//				if (!query.getContract().isAnnotation()
-			//						&& !query.getContract().isInterface()
-			//						&& !Modifier.isAbstract(query.getContract()
-			//								.getModifiers())) {
-			//
-			//					BeanDependencyModel model = this.getBeanModel(query.getContract());
-			//
-			//					binding = new Binding();
-			//
-			//					binding.addParams(model.getParams());
-			//					binding.setScope("shared");
-			//
-			//					binding.setSourceType(query.getContract());
-			//
-			//					binding.setResolver(FactoryResolver.instanceFor(model));
-			//
-			//					binding.setProfiles(model.getProfiles());
-			//
-			//					this.addBinding(binding);
-			//
-			//					return getInstance(query); // repeat search recursively
-			//				}
-			//
-			//				// try understand from which scope could be read
-			//				Set<Annotation> annotations = Introspector
-			//						.of(query.getContract()).inspect().annotations()
-			//						.retrive();
-			//
-			//				// find a scope annotation
-			//				String found = null;
-			//				for (Annotation a : annotations) {
-			//					final String scopeName = WiringUtils.readScope(a);
-			//					if (scopes.containsKey(scopeName)) {
-			//						if (found != null) {
-			//							// already found one previouslly
-			//							throw new BindingException(
-			//									"To many auto-binding options");
-			//						}
-			//						found = scopeName; // do not break
-			//					}
-			//				}
-			//
-			//				if (found == null && query.isRequired()) {
-			//					throw new CanSatisfyDependencyException(query.getContract(), query.getTarget());
-			//				} else {
-			//					return getOrCreate(query, key,  found , null);
-			//				}
-			//
-			//			}
-			//
-			//
-			//			// binding was found
-			//			// resolve target
-			//			if (stack.contains(key)) {
-			//				// cyclic reference
-			//				// return proxy
-			//				CyclicProxy proxy = cyclicProxies.get(key);
-			//				if (proxy == null) {
-			//					proxy = new CyclicProxy();
-			//					cyclicProxies.put(key, proxy);
-			//				}
-			//				return Introspector.of(query.getContract()).newProxyInstance(proxy);
-			//
-			//			} else {
-			//				stack.offer(key);
-			//				try {
-			//					return getOrCreate(query, key,  binding.getScope(),binding.getResolver());
-			//				} catch (RuntimeException e) {
-			//					stack.remove(key);
-			//					throw e;
-			//				}
-			//			}
-
 		}
-//
-//		private Object getOrCreate(WiringQuery query, Key key,String scopeName, Resolver resolver ) {
-//			// resolve scope
-//
-//			Scope scopePool = getScopePool(scopeName);
-//
-//			if (resolver == null){
-//
-//				if (!query.getContract().isInterface()) {
-//					resolver = FactoryResolver.instanceFor(this.getBeanModel(query.getContract()));
-//				} else {
-//					resolver = NullResolver.instance();
-//				}
-//
-//			}
-//
-//			if (resolver != null) {
-//				// attach interceptors
-//
-//				ResolutionContext context = new StandardResolutionContext(scopeName);
-//
-//				final InterceptorResolver interceptorResolver = new InterceptorResolver(interceptors, resolver);
-//				Object obj = scopePool.getInScope(context, query, interceptorResolver);
-//
-//				stack.remove(key);
-//
-//				// check if there is any proxy to complete
-//				CyclicProxy proxy = cyclicProxies.get(key);
-//				if (proxy != null) {
-//					proxy.setRealObject(obj);
-//				}
-//				return obj;
-//			} else {
-//				return null;
-//			}
-//		}
+
 
 		public void wireMembers(Object obj) {
 			BeanDependencyModel model = this.getBeanModel(obj.getClass());
@@ -369,7 +247,7 @@ public class StandardWiringService implements WiringService {
 		 */
 		@Override
 		public void autobind(ClassSet set) {
-			
+
 			for (Class c : set){
 				if (c.getEnclosingClass() == null){ // no inner classes
 					this.bind(c).inSharedScope().to(c);
@@ -379,7 +257,7 @@ public class StandardWiringService implements WiringService {
 
 	}
 
-	public class StandardResolutionContext implements ResolutionContext {
+	private class StandardResolutionContext implements ResolutionContext {
 
 		private String scopeName;
 
@@ -435,8 +313,8 @@ public class StandardWiringService implements WiringService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public WiringService addConfiguration(BindConfiguration... modules) {
-		for (BindConfiguration m : modules) {
+	public WiringService addConfiguration(BindConfiguration... configuration) {
+		for (BindConfiguration m : configuration) {
 			m.configure(binder);
 		}
 
@@ -496,26 +374,38 @@ public class StandardWiringService implements WiringService {
 	public void registerScope(String name, Scope scope) {
 		scopes.put(name, scope);
 
-		scope.addScopeListener(new ScopeListener() {
+		scope.addScopeListener(new SimpleScopeListener(objetEvent));
 
-			@Override
-			public void onObjectAdded(ScopePoolEvent scopePoolEvent) {
-				objetEvent.broadcastEvent()
-				.onObjectAdded(
-						new ObjectEvent(scopePoolEvent
-								.getObject()));
-			}
+	}
+	
+	public static class SimpleScopeListener implements ScopeListener{
 
-			@Override
-			public void onObjectRemoved(ScopePoolEvent scopePoolEvent) {
-				objetEvent.broadcastEvent()
-				.onObjectRemoved(
-						new ObjectEvent(scopePoolEvent
-								.getObject()));
-			}
+		private EventListenersSet<ObjectPoolListener> eventSet;
+		
+		
+		public SimpleScopeListener(
+				EventListenersSet<ObjectPoolListener> objetEvent) {
+			super();
+			this.eventSet = objetEvent;
+		}
 
-		});
+		@Override
+		public void onObjectAdded(ScopePoolEvent scopePoolEvent) {
+			eventSet.broadcastEvent()
+			.onObjectAdded(
+					new ObjectEvent(scopePoolEvent
+							.getObject()));
+		}
 
+		@Override
+		public void onObjectRemoved(ScopePoolEvent scopePoolEvent) {
+			eventSet.broadcastEvent()
+			.onObjectRemoved(
+					new ObjectEvent(scopePoolEvent
+							.getObject()));
+		}
+
+		
 	}
 
 
@@ -529,15 +419,10 @@ public class StandardWiringService implements WiringService {
 
 	}
 
-	Predicate<Class> componentFilter = new Predicate<Class>(){
+	private static final Predicate<Class> componentFilter = new IntrospectorPredicate();
+			
 
-		@Override
-		public Boolean apply(Class obj) {
-			return Instrospector.of(obj).isAnnotationPresent(Component.class);
-		}
-
-	};
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -583,7 +468,7 @@ public class StandardWiringService implements WiringService {
 			}
 
 		}
-		
+
 		// inicialize wiring interceptors
 
 		BeanDependencyModel im;
@@ -646,39 +531,54 @@ public class StandardWiringService implements WiringService {
 						binding.setSourceType(bean.getType());
 						binding.setResolver(bean.getResolver());
 						binding.setScope(bean.getScope());
-						
+
 						binder.addBinding(binding);
 					}
 				}
 
 			}
 
-//			// treat interfaces as publishpoints
-//
-//			for (Class i : Instrospector.of(model.getBeanClass()).getDeclaredInterfaces()){
-//				BeanDependencyModel interfaceBean = this.binder.getBeanModel(i);
-//
-//				final DependendableBean iBean = DependendableBean.fromImplementation(interfaceBean, bean);
-//
-//
-//				Binding binding2 = new Binding();
-//				binding2.setSourceType(iBean.getType());
-//				binding2.setResolver(iBean.getResolver());
-//				binding2.setScope(iBean.getScope());
-//
-//				binder.addBinding(binding2);
-//
-//			}
+			//			// treat interfaces as publishpoints
+			//
+			//			for (Class i : Instrospector.of(model.getBeanClass()).getDeclaredInterfaces()){
+			//				BeanDependencyModel interfaceBean = this.binder.getBeanModel(i);
+			//
+			//				final DependendableBean iBean = DependendableBean.fromImplementation(interfaceBean, bean);
+			//
+			//
+			//				Binding binding2 = new Binding();
+			//				binding2.setSourceType(iBean.getType());
+			//				binding2.setResolver(iBean.getResolver());
+			//				binding2.setScope(iBean.getScope());
+			//
+			//				binder.addBinding(binding2);
+			//
+			//			}
 
 		}
 	}
 
 	StandardInstanceFactory factory = new StandardInstanceFactory();
-	Queue<Key> stack = new LinkedList<Key>();
+	Deque<Key> stack = new LinkedList<Key>();
 	Map<Key, CyclicProxy> cyclicProxies = new HashMap<Key, CyclicProxy>();
 
 	public class StandardInstanceFactory implements InstanceFactory{
 
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Maybe<Object> peekCyclickProxy(Class<?> contract) {
+
+			Key key = Key.keyFor(contract, Collections.<String,Object>emptyMap());
+
+			if (!stack.isEmpty() && stack.contains(key) && !stack.peekLast().equals(key)) {
+				return Maybe.of(obtainCyclicProxy(contract, key));
+			}
+
+			return Maybe.absent();
+		}
 
 
 		public void addInstance(DependendableBean bean) {
@@ -720,12 +620,12 @@ public class StandardWiringService implements WiringService {
 
 
 
-			Binding binding = bindingMap.findNearest(query);
+			Binding binding = bindingMap.findNearestWithParams(query);
 			if (binding == null) {
 				if (query.getContract().isInterface()){
 					// search in service scope
 					Scope scope = scopes.get("service");
-				
+
 					ResolutionContext context = new StandardResolutionContext("service"){
 						/**
 						 * {@inheritDoc}
@@ -735,40 +635,40 @@ public class StandardWiringService implements WiringService {
 							return factory;
 						}
 					};
-					
+
 					Object service= scope.getInScope(context, query, NullResolver.instance());
-					
+
 					if (service != null){
 						// there is a service for this interface
 						// create binding for future reference
 						// TODO create binding when registring service
-						
+
 						binding = new Binding();
-						
+
 						binding.setInicialized(true);
 						binding.setLazy(false);
 						binding.setScope("service");
 						binding.setSourceType(query.getContract());
 						binding.setResolver(NullResolver.instance());
-						
+
 						bindingMap.add(binding);
 					}
-					
+
 					return query.getContract().cast(service);
 				} else if (!Modifier.isAbstract(query.getContract().getModifiers())) {
-					
-					
-						binder.bind(query.getContract())
-						.inSharedScope()
-						.to(query.getContract());
-						
-						return this.getInstance(query);
-					
+
+
+					binder.bind(query.getContract())
+					.inSharedScope()
+					.to(query.getContract());
+
+					return this.getInstance(query);
+
 				} else {
 					throw new BindingException("Can not satisfy binding: " + query);
 				}
-				
-				
+
+
 			} else {
 
 
@@ -779,27 +679,8 @@ public class StandardWiringService implements WiringService {
 				if (!stack.isEmpty() && stack.contains(key)) {
 					// cyclic reference
 
-					if (query.getContract().equals(String.class)){
-						throw new BindingException("Propery must be bound for String injection");
-					} else if (Modifier.isFinal(query.getContract().getModifiers())){
-						throw new BindingException("A cycle was detected up on a final type " + query.getContract() + ". Cycle can not be resolved.");
-					}
+					return obtainCyclicProxy(query.getContract(), key);
 
-					
-					if (query.getContract().isInterface()){
-						// return proxy
-						CyclicProxy proxy = cyclicProxies.get(key);
-						if (proxy == null) {
-							proxy = new CyclicProxy();
-							cyclicProxies.put(key, proxy);
-						}
-						return Introspector.of(query.getContract()).newProxyInstance(proxy);
-
-					} else {
-						// TODO register as self-binding 
-						return Introspector.of(query.getContract()).newInstance();
-					}
-					
 				} else {
 					stack.offer(key);
 					try {
@@ -837,10 +718,6 @@ public class StandardWiringService implements WiringService {
 
 						return obj;
 
-
-
-					} catch (RuntimeException e) {
-						throw e;
 					} finally {
 						stack.remove(key);
 					}
@@ -851,6 +728,48 @@ public class StandardWiringService implements WiringService {
 
 			} 
 
+		}
+
+
+		private Object obtainCyclicProxy(Class contract, Key key) {
+
+			if (contract.equals(String.class)){
+				throw new BindingException("Propery must be bound for String injection");
+			} else if (Modifier.isFinal(contract.getModifiers())){
+				throw new BindingException("A cycle was detected up on a final type " + contract + ". Cycle can not be resolved.");
+			}
+
+			final ClassIntrospector introspector = Introspector.of(contract);
+
+			if (contract.isInterface()){
+				// return proxy
+				CyclicProxy proxy = cyclicProxies.get(key);
+				if (proxy == null) {
+					proxy = new CyclicProxy();
+					cyclicProxies.put(key, proxy);
+				}
+				return introspector.newProxyInstance(proxy);
+
+			} else {
+
+
+				Constructor c = (Constructor) introspector.inspect().constructors().sortedByQuantityOfParameters().retrive();
+
+				Object[] params = new Object[c.getParameterTypes().length];
+				for (int i =0; i < params.length; i++){
+					params[i] = getInstance(WiringQuery.search(c.getParameterTypes()[i]));
+				}
+
+				// return proxy
+				CyclicProxy proxy = cyclicProxies.get(key);
+				if (proxy == null) {
+					proxy = new CyclicProxy();
+					cyclicProxies.put(key, proxy);
+				}
+
+				return introspector.newProxyInstance(proxy, params);
+
+			}
 		}
 
 
@@ -873,5 +792,17 @@ public class StandardWiringService implements WiringService {
 	public WiringService addItem(WiringItem item) {
 		this.bundles.add(new EditableWiringItemBundle().add(item));
 		return this;
+	}
+	
+	private static class IntrospectorPredicate implements Predicate<Class> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Boolean apply(Class obj) {
+			return Introspector.of(obj).isAnnotationPresent(Component.class);
+		}
+		
 	}
 }

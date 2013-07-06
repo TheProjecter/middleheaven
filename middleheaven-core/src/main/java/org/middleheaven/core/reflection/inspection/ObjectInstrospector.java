@@ -1,7 +1,8 @@
 package org.middleheaven.core.reflection.inspection;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.ProxyHandler;
+import org.middleheaven.core.reflection.WrapperProxy;
 import org.middleheaven.util.function.Block;
 
 
@@ -16,10 +17,10 @@ public class ObjectInstrospector<T> {
 	
 	public T copyTo(final T copy ){
 
-		 introspectClass().inspect().properties().retriveAll().forEach(new Block<PropertyAccessor>(){
+		 introspectClass().inspect().properties().retriveAll().forEach(new Block<PropertyHandler>(){
 
 			@Override
-			public void apply(PropertyAccessor fa) {
+			public void apply(PropertyHandler fa) {
 				fa.setValue(copy, fa.getValue(object));
 			}
 		});
@@ -61,6 +62,13 @@ public class ObjectInstrospector<T> {
 	
 	public <I> I newProxyInstance (Class<I> proxyInterface){
 		return Reflector.getReflector().proxyObject(this.object, proxyInterface);
+	}
+
+	/**
+	 * 
+	 */
+	public boolean isProxyfied() {
+		return this instanceof WrapperProxy;
 	}
 
 

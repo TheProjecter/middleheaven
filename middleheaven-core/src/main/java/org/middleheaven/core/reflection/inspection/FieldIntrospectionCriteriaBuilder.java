@@ -4,9 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 
 public class FieldIntrospectionCriteriaBuilder<T> extends MemberIntrospectionCriteriaBuilder<T,Field>{
 
@@ -100,8 +100,7 @@ public class FieldIntrospectionCriteriaBuilder<T> extends MemberIntrospectionCri
 		 */
 		@Override
 		public Enumerable<Field> resolve(Class<?> type) {
-			
-			
+
 			LinkedList<Field> stack = new LinkedList<Field>();
 			
 			while ( type != null && !type.equals(Object.class) ){
@@ -111,8 +110,6 @@ public class FieldIntrospectionCriteriaBuilder<T> extends MemberIntrospectionCri
 				
 				type = type.getSuperclass();
 			}
-			
-			
 			
 			return CollectionUtils.asEnumerable(stack);
 		}

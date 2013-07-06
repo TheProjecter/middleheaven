@@ -16,6 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.ClassCastReflectionException;
 import org.middleheaven.core.reflection.IllegalAccessReflectionException;
 import org.middleheaven.core.reflection.InvocationTargetReflectionException;
@@ -23,8 +25,6 @@ import org.middleheaven.core.reflection.NoSuchClassReflectionException;
 import org.middleheaven.core.reflection.NoSuchMethodReflectionException;
 import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 
 
@@ -38,28 +38,21 @@ public class ClassIntrospector<T> extends Introspector{
 	private Class<T> type;
 
 	public static boolean isInClasspath(String className) {
-		try {
-			Class.forName(className, false, ClassIntrospector.class.getClassLoader());
-			return true;
-		} catch (ClassNotFoundException e) {
-			return false;
-		}
+		return Reflector.getReflector().isInClasspath(className);
 	}
 
 	ClassIntrospector(Class<T> type) {
 		this.type = type;
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Creates a {@link ClassIntrospector} for the classe given name.
+	 * @param className the name of the class that will be used to create the {@link ClassIntrospector}.
+	 * @return the created {@link ClassIntrospector}.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static ClassIntrospector<?> loadFrom( String className){
-		// this does not delegate to load(string,classloaded) because inicialization control
-		try{
-			// TODO do without creating the class object
-			Class type =  Class.forName(className, false, ClassIntrospector.class.getClassLoader());
-			return new ClassIntrospector(type);
-		} catch (ClassNotFoundException e) {
-			throw new NoSuchClassReflectionException(className);
-		}
+		return new ClassIntrospector(Reflector.getReflector().loadClass(className));
 	}
 
 	/**
@@ -70,17 +63,9 @@ public class ClassIntrospector<T> extends Introspector{
 	 * @throws NoSuchClassReflectionException if the class is not found on the classpath
 	 * @throws ClassCastReflectionException if the loaded class is not a subclass of the introspected class 
 	 */
+	@SuppressWarnings("rawtypes")
 	public ClassIntrospector<T> load( String className){
-		// this does not delegate to load(string,classloaded) because inicialization control
-		try{
-			@SuppressWarnings("unchecked")
-			Class<T> type = (Class<T>) Class.forName(className, false, this.getClass().getClassLoader()).asSubclass(this.type);
-			return new ClassIntrospector<T>(type);
-		} catch (ClassNotFoundException e) {
-			throw new NoSuchClassReflectionException(className);
-		} catch (ClassCastException e){
-			throw new ClassCastReflectionException(className , this.type.getName());
-		}
+		return new ClassIntrospector(Reflector.getReflector().loadClass(className, this.type));
 	}
 
 
@@ -100,7 +85,7 @@ public class ClassIntrospector<T> extends Introspector{
 		if (isMetaAnnotation(annotationClass)){
 			
 			for (Annotation a : type.getAnnotations()){
-				if (isMetaAnnotationPresent(a, annotationClass)){;
+				if (isMetaAnnotationPresent(a, annotationClass)){
 					return true;
 				}
 			}
@@ -116,7 +101,7 @@ public class ClassIntrospector<T> extends Introspector{
 	}
 
 	private boolean isMetaAnnotationPresent(Annotation annotation,Class<? extends Annotation> annotationClass) {
-		return isMetaAnnotationPresent(annotation,annotationClass, new HashSet());
+		return isMetaAnnotationPresent(annotation,annotationClass, new HashSet<Class<?>>());
 	}
 
 	private boolean isMetaAnnotationPresent(Annotation a, Class<? extends Annotation> annotationClass, Set<Class<?>> visited) {
@@ -201,9 +186,9 @@ public class ClassIntrospector<T> extends Introspector{
 	}
 
 	public Type[] getActualTypeArguments(){
-		Type type  = getClass().getGenericSuperclass();
-		if (type instanceof ParameterizedType){
-			ParameterizedType parameterizedType = (ParameterizedType) type;
+		Type genericSuperType  = getClass().getGenericSuperclass();
+		if (genericSuperType instanceof ParameterizedType){
+			ParameterizedType parameterizedType = (ParameterizedType) genericSuperType;
 			return parameterizedType.getActualTypeArguments();
 		} else {
 			return new Type[0];
@@ -226,11 +211,8 @@ public class ClassIntrospector<T> extends Introspector{
 		return Reflector.getReflector().newInstance(this.type, otherClassLoader);
 	}
 
-	public T newProxyInstance(ProxyHandler handler){
-		if(!type.isInterface()){
-			throw new UnsupportedOperationException("Cannot proxy " + type.getName() + " as interface");
-		}
-		return Reflector.getReflector().proxyType(type, handler);
+	public T newProxyInstance(ProxyHandler handler, Object ... args){
+		return Reflector.getReflector().proxyType(type, handler, args);
 	} 
 
 	public <I> I newProxyInstance(ProxyHandler handler, Class<I> proxyInterface ,Class<?> ... adicionalInterfaces){
@@ -361,6 +343,7 @@ public class ClassIntrospector<T> extends Introspector{
 	 * The first super class that descends from {@link Object};
 	 * @return an absent {@link Maybe} if this is directly descendent form Object, of a not absent {@link Maybe} if a super class can be found
 	 */
+	@SuppressWarnings("rawtypes")
 	public Maybe<Class> getRootParent() {
 		
 		if (type.getSuperclass().getName().equals(Object.class.getName())){

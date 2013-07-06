@@ -4,10 +4,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.MemberAccess;
 import org.middleheaven.util.classification.LogicComposedPredicate;
 import org.middleheaven.util.classification.LogicOperator;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Predicate;
 

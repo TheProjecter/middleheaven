@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.Hash;
-import org.middleheaven.util.collections.CollectionUtils;
 
 /**
  * 

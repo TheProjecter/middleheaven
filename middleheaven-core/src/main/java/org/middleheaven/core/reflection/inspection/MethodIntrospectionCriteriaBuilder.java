@@ -7,12 +7,15 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.core.reflection.ReflectiveMethodHandler;
+import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.function.Predicate;
 
-public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMemberIntrospectionCriteriaBuilder<T,Method>{
+public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMemberIntrospectionCriteriaBuilder<T,MethodHandler>{
 
 	Resolver resolver = new StandardResolver();
 	
@@ -40,10 +43,10 @@ public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMember
 	}
 
 	public MethodIntrospectionCriteriaBuilder<T> notInheritFromObject() {
-		add(new Predicate<Method>(){
+		add(new Predicate<MethodHandler>(){
 
 			@Override
-			public Boolean apply(Method obj) {
+			public Boolean apply(MethodHandler obj) {
 				return !obj.getDeclaringClass().equals(Object.class);
 			}
 
@@ -64,33 +67,30 @@ public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMember
 		return this;
 	}
 
-	public MethodIntrospectionCriteriaBuilder<T> match(Predicate<Method> filter) {
+	public MethodIntrospectionCriteriaBuilder<T> match(Predicate<MethodHandler> filter) {
 		add(filter);
 		return this;
 	}
 
 	@Override
-	protected int getParameterCount(Method member) {
+	protected int getParameterCount(MethodHandler member) {
 		return member.getParameterTypes().length;
 	}
 
 
 
 	@Override
-	protected int getModifiers(Method method) {
+	protected int getModifiers(MethodHandler method) {
 		return method.getModifiers();
 	}
 
 	@Override
-	protected boolean isAnnotationPresent(Method method,Class<? extends Annotation> annotationType) {
+	protected boolean isAnnotationPresent(MethodHandler method,Class<? extends Annotation> annotationType) {
 
 		Set<Method> all = new HashSet<Method>();
 
-		all.add(method);
-
 		// read all methods in the hierarchy
 		Class<?> superType = method.getDeclaringClass();
-
 
 		while (superType!=null && !Object.class.equals(superType)){
 			all.addAll(Arrays.asList(superType.getDeclaredMethods())); // private , protected , public
@@ -104,7 +104,6 @@ public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMember
 			superType = superType.getSuperclass();
 
 		}
-
 
 		for (Method m : all){
 			if (m.getName().equals(method.getName()) 
@@ -122,12 +121,12 @@ public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMember
 	}
 
 	@Override
-	protected String getName(Method obj) {
+	protected String getName(MethodHandler obj) {
 		return obj.getName();
 	}
 
 	@Override
-	protected boolean hasParameterTypes(Method obj, Class<?>[] parameterTypes) {
+	protected boolean hasParameterTypes(MethodHandler obj, Class<?>[] parameterTypes) {
 		// equals already compares array length.
 		return Arrays.equals(obj.getParameterTypes(), parameterTypes);
 	}
@@ -152,8 +151,15 @@ public class MethodIntrospectionCriteriaBuilder<T> extends ParameterizableMember
 
 
 	@Override
-	protected Enumerable<Method> getAllMembersInType(Class<T> type) {
-		return resolver.resolve(type);
+	protected Enumerable<MethodHandler> getAllMembersInType(Class<T> type) {
+		return CollectionUtils.asEnumerable(resolver.resolve(type)).map(new Mapper<MethodHandler, Method>(){
+
+			@Override
+			public MethodHandler apply(Method obj) {
+				return new ReflectiveMethodHandler(obj);
+			}
+			
+		});
 	}
 	
 	private static interface Resolver {

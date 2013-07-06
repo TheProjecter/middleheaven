@@ -2,14 +2,15 @@ package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Method;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.core.reflection.MethodHandler;
 
 /**
  * Used a {@link Method} as a {@link AfterWiringPoint}.
  */
 public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements AfterWiringPoint{
 
-	private Method method;
+	private MethodHandler method;
 	private WiringSpecification methodSpecification;
 	private WiringSpecification[] paramsSpecifications;
 
@@ -33,7 +34,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 	 * @param methodSpecification the wiring specification of the method. 
 	 * @param paramsSpecifications the wiring specification for each method parameter.
 	 */
-	public MethodAfterWiringPoint(Method method, WiringSpecification methodSpecification, WiringSpecification[] paramsSpecifications) {
+	public MethodAfterWiringPoint(MethodHandler method, WiringSpecification methodSpecification, WiringSpecification[] paramsSpecifications) {
 		super();
 		this.method = method;
 		this.methodSpecification = methodSpecification;

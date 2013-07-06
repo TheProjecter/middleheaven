@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.annotations.Component;
 import org.middleheaven.core.annotations.Factory;
 import org.middleheaven.core.annotations.Named;
@@ -21,11 +23,11 @@ import org.middleheaven.core.annotations.Qualifier;
 import org.middleheaven.core.annotations.ScopeSpecification;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.reflection.MemberAccess;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Block;
+import org.middleheaven.util.function.Maybe;
 
 
 /**
@@ -91,6 +93,11 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 	@Override
 	public <T> void readBeanModel(Class<T> type, final BeanDependencyModel model) {
 
+		
+		if(!type.equals(model.getBeanClass())){
+			throw new IllegalArgumentException("Model type " + model.getBeanClass() + " does not must match " + type.getName());
+		}
+		
 		ClassIntrospector<T> introspector = Introspector.of(type);
 
 		final Enumerable<Class<?>> interfaces = Introspector.of(type).getDeclaredInterfaces();
@@ -144,13 +151,13 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 		// find publish points
 
 
-		Enumerable<Method> methods =  introspector.inspect().methods().notInheritFromObject().beingStatic(false).searchHierarchy().retriveAll();
+		Enumerable<MethodHandler> methods =  introspector.inspect().methods().notInheritFromObject().beingStatic(false).searchHierarchy().retriveAll();
 
-		for (Method method : methods){
+		for (MethodHandler method : methods){
 
 			if (method.isAnnotationPresent(Publish.class)){
 
-				Publish p = method.getAnnotation(Publish.class);
+				Publish p = method.getAnnotation(Publish.class).get();
 
 				// process params. this params will be added to the published bean model.
 				String[] paramPairs = p.value();
@@ -165,10 +172,10 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 					params.put(values[0], values[1]);
 				}
 
-				Params paramsAnnotation = method.getAnnotation(Params.class);
-				if (paramsAnnotation != null){
+				Maybe<Params> mayBeParamsAnnotation = method.getAnnotation(Params.class);
+				if (mayBeParamsAnnotation.isPresent()){
 
-					for (String paramPair : paramsAnnotation.value()){
+					for (String paramPair : mayBeParamsAnnotation.get().value()){
 						String[] values = paramPair.split("=");
 						if(values.length!=2){
 							throw new IllegalStateException("Param pair expected to be in format name=value but found" + paramPair);
@@ -230,7 +237,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 			// read @Factory
 
-			Enumerable<Method> candidates = introspector.inspect().methods().beingStatic(true).annotatedWith(Factory.class).retriveAll();
+			Enumerable<MethodHandler> candidates = introspector.inspect().methods().beingStatic(true).annotatedWith(Factory.class).retriveAll();
 
 			if (candidates.isEmpty()) {
 				readConstructorProducingPoint(type, model, introspector);
@@ -252,10 +259,10 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 		} );
 
 		introspector.inspect().methods().beingStatic(false).searchHierarchy().annotatedWith(annotations).retriveAll()
-		.forEach(new Block<Method>(){
+		.forEach(new Block<MethodHandler>(){
 
 			@Override
-			public void apply(Method method) {
+			public void apply(MethodHandler method) {
 				model.addAfterWiringPoint(new MethodAfterWiringPoint(method, null, readParamsSpecification(method)));
 			}
 

@@ -5,6 +5,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.middleheaven.core.reflection.MethodHandler;
+
 /**
  * 
  */
@@ -19,7 +21,7 @@ public abstract class AbstractAnnotationBasedWiringModelParser implements Wiring
 				);
 	}
 	
-	protected WiringSpecification[] readParamsSpecification(Method method){
+	protected WiringSpecification[] readParamsSpecification(MethodHandler method){
 
 		return parseAnnotations(
 				method.getParameterAnnotations(),

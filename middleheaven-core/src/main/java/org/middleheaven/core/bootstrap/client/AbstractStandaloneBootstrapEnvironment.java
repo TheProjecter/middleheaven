@@ -4,9 +4,9 @@
  */
 package org.middleheaven.core.bootstrap.client;
 
+import org.middleheaven.core.FileContext;
 import org.middleheaven.core.bootstrap.AbstractBootstrapEnvironment;
 import org.middleheaven.core.bootstrap.BootstrapContext;
-import org.middleheaven.core.bootstrap.FileContext;
 import org.middleheaven.core.bootstrap.StandardContainerFileSystem;
 import org.middleheaven.io.repository.ManagedFileRepositoryProvider;
 import org.middleheaven.io.repository.machine.MachineFileSystemRepositoryProvider;

@@ -1,15 +1,27 @@
 package org.middleheaven.core.reflection;
 
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.Enumerable;
 
 public interface ReflectionStrategy {
 
-	public PropertyAccessor getPropertyAccessor(Class<?> type, String fieldName);
-	public Enumerable<PropertyAccessor> getPropertyAccessors(Class<?> type) throws ReflectionException;
+	public PropertyHandler getPropertyAccessor(Class<?> type, String fieldName);
+	public Enumerable<PropertyHandler> getPropertyAccessors(Class<?> type, boolean inherit) throws ReflectionException;
 
-
-	public <T> T proxyType (Class<T> facadeClass , ProxyHandler handler);
+    /**
+     * 
+     * @param facadeClass
+     * @param handler
+     * @param constructorArgs
+     * @return
+     */
+	public <T> T proxyType (Class<T> facadeClass , ProxyHandler handler, Object[] constructorArgs);
 	
+	/**
+	 * Applies a given interface to an object. The object can be invoke as if it implemented the interface
+	 * @param delegationTarget
+	 * @param proxyInterface
+	 * @return
+	 */
 	public <I> I proxyObject(Object delegationTarget , Class<I> proxyInterface);
 	
 	/**

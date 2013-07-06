@@ -39,7 +39,7 @@ public class StandardBindingBuilder<T> implements BindingBuilder<T> {
 
 		} 
 		
-		public void toResolver(Class<Resolver> type){
+		public void toResolver(Class<? extends Resolver> type){
 			Resolver r = (Resolver) standardBindingBuilder.binder.getInstance(WiringQuery.search(type));
 			standardBindingBuilder.binding.setResolver(r);
 			

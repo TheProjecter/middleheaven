@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import org.middleheaven.util.coersion.TypeCoercing;
 import org.middleheaven.util.function.Maybe;
 
-public final class ReflectionPropertyAccessor extends ReflectionFieldAccessor implements PropertyAccessor {
+public final class ReflectionPropertyAccessor extends ReflectionFieldHandler implements PropertyHandler {
 
 	private Method assessor;
 	private Method modifier;

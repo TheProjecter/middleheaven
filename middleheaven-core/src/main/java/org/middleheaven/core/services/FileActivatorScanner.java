@@ -13,11 +13,13 @@ import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 
+import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.bootstrap.activation.AbstractActivatorScanner;
 import org.middleheaven.core.bootstrap.activation.ActivatorScanner;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.WiringService;
+import org.middleheaven.io.IO;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.watch.FileChangeStrategy;
@@ -120,42 +122,51 @@ public class FileActivatorScanner extends AbstractActivatorScanner {
 
 	}
 
-	private void loadModuleFromFile(WiringService wiringService,ManagedFile jar , Map<String,ServiceActivator> activators) {
+	private void loadModuleFromFile(final WiringService wiringService, final ManagedFile jar , final Map<String,ServiceActivator> activators) {
 
 		try{
-			URLClassLoader cloader = URLClassLoader.newInstance(new URL[]{jar.getURI().toURL()});
+			final URLClassLoader cloader = URLClassLoader.newInstance(new URL[]{jar.getURI().toURL()});
 
-			JarInputStream jis = new JarInputStream(jar.getContent().getInputStream());
-			Manifest manifest = jis.getManifest();
-			String className=null;
-			if (manifest!=null){
-				Attributes at = manifest.getMainAttributes();
-				className = at.getValue("unit-activator");
-			}
+			IO.using(new JarInputStream(jar.getContent().getInputStream()), new Block<JarInputStream>(){
 
-			if(className!=null && !className.isEmpty()){
-				try{
-					// TODO must instantiate ? 
-					Class<? extends ServiceActivator> type = Introspector.of(ServiceActivator.class).load(className,cloader).getIntrospected();
-					ServiceActivator activator = wiringService.getInstance(type);
+				@Override
+				public void apply(JarInputStream jis) {
 
-					String activatorName = activator.getClass().getName();
-
-					ServiceActivator older = activators.get(activatorName);
-					if (older != null){
-						// unload the old activator.
-						fireDeployableLost(older.getClass());
-						activators.remove(activator.getClass().getName());
+					Manifest manifest = jis.getManifest();
+					String className=null;
+					if (manifest!=null){
+						Attributes at = manifest.getMainAttributes();
+						className = at.getValue("unit-activator");
 					}
-					activators.put(activator.getClass().getName(),activator);
 
-					fireDeployableFound(activator.getClass());
-				} catch (ClassCastException e){
-					logger.warn("{0} is not a valid application module activator",className);
+					if(className!=null && !className.isEmpty()){
+						try{
+							// TODO must instantiate ? 
+							Class<? extends ServiceActivator> type = Introspector.of(ServiceActivator.class).load(className,cloader).getIntrospected();
+							ServiceActivator activator = wiringService.getInstance(type);
+
+							String activatorName = activator.getClass().getName();
+
+							ServiceActivator older = activators.get(activatorName);
+							if (older != null){
+								// unload the old activator.
+								fireDeployableLost(older.getClass());
+								activators.remove(activator.getClass().getName());
+							}
+							activators.put(activator.getClass().getName(),activator);
+
+							fireDeployableFound(activator.getClass());
+						} catch (ClassCastException e){
+							logger.warn("{0} is not a valid application module activator",className);
+						}
+					}else {
+						logger.warn( "{0} does not present an application module.",jar.getPath().getFileNameWithoutExtension());
+					}
 				}
-			}else {
-				logger.warn( "{0} does not present an application module.",jar.getPath().getFileNameWithoutExtension());
-			}
+				
+			});
+			
+
 
 		}catch (IOException e) {
 			ManagedIOException.manage(e);

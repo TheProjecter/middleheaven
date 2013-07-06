@@ -3,7 +3,7 @@
  */
 package org.middleheaven.core.wiring;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 
 /**

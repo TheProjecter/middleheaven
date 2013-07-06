@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Mergable;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Mergable;
 
 /**
  * Maintains data about the wiring contract to be fulfill by the wiring context.  

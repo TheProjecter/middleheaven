@@ -1,8 +1,5 @@
 package org.middleheaven.core.reflection.inspection;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.middleheaven.core.reflection.ReflectionException;
 
 public class EnumIntrospector<E> extends ClassIntrospector<E>{
 
@@ -16,22 +13,14 @@ public class EnumIntrospector<E> extends ClassIntrospector<E>{
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public E[] getValues(){
 
-		try {
 			return (E[]) this.inspect()
 					.staticMethods()
 					.named("values")
 					.retrive()
-					.invoke(null, new Object[0]);
-			
-		} catch (IllegalArgumentException e) {
-			throw ReflectionException.manage(e, this.getIntrospected());
-		} catch (IllegalAccessException e) {
-			throw ReflectionException.manage(e, this.getIntrospected());
-		} catch (InvocationTargetException e) {
-			throw ReflectionException.manage(e, this.getIntrospected());
-		}
-		
+					.invoke(null);
+
 	}
 }

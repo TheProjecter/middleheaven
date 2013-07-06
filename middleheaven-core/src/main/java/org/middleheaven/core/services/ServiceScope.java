@@ -1,5 +1,6 @@
 package org.middleheaven.core.services;
 
+import org.middleheaven.core.bootstrap.RegistryServiceContext;
 import org.middleheaven.core.wiring.AbstractScopePool;
 import org.middleheaven.core.wiring.ResolutionContext;
 import org.middleheaven.core.wiring.Resolver;
@@ -16,7 +17,6 @@ public class ServiceScope extends AbstractScopePool {
 
 	private RegistryServiceContext serviceRegistryContext;
 
-	public ServiceScope(){}
 	
 	/**
 	 * Constructor.

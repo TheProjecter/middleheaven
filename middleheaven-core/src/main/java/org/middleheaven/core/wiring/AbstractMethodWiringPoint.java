@@ -5,6 +5,7 @@ package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Method;
 
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.ReflectionException;
 
 /**
@@ -13,8 +14,8 @@ import org.middleheaven.core.reflection.ReflectionException;
 public class AbstractMethodWiringPoint {
 
 	
-	protected final Object callMethodPoint(InstanceFactory factory, Method method, Object object, WiringSpecification[] paramsSpecifications){
-		method.setAccessible(true);
+	protected final Object callMethodPoint(InstanceFactory factory, MethodHandler method, Object object, WiringSpecification[] paramsSpecifications){
+	
 		Object[] params = new Object[paramsSpecifications.length];
 		
 		Class<?>[] parameterTypes = method.getParameterTypes();

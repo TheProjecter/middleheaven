@@ -16,8 +16,8 @@ import org.middleheaven.core.reflection.WrapperProxy;
 
 public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 
-	
-	private class ProxyMethodDelegator implements MethodDelegator {
+
+	private static class ProxyMethodDelegator implements MethodDelegator {
 
 		private Class<? extends Object> type;
 		private Method invoked;
@@ -58,14 +58,15 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 		public Object invokeSuper(Object target, Object[] args) throws Throwable {
 			return methodProxy.invokeSuper(target, args);
 		}
-		
+
 	}
-	private class ProxyHandlerInterceptor implements MethodInterceptor{
+	
+	private static class ProxyHandlerMethodInterceptorAdapter implements MethodInterceptor{
 
 		private ProxyHandler handler;
 		private Class<?> originalType;
-		
-		public ProxyHandlerInterceptor(Class<?> originalType, ProxyHandler handler) {
+
+		public ProxyHandlerMethodInterceptorAdapter(Class<?> originalType, ProxyHandler handler) {
 			super();
 			this.originalType = originalType;
 			this.handler = handler;
@@ -81,33 +82,51 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 		}
 
 	}
-	
+
 
 	@Override
-	public <T> T proxyType(Class<T> facadeClass, ProxyHandler handler) {
-		
+	public <T> T proxyType(Class<T> facadeClass, ProxyHandler handler, Object[] constructorArgs) {
+
 		if (facadeClass == null){
 			throw new IllegalArgumentException("facadeClass is required");
 		}
-		
+
 		if (handler == null){
 			throw new IllegalArgumentException("handler is required");
 		}
-	
-		try{
-			return facadeClass.cast(Enhancer.create(
-					facadeClass,
-					new ProxyHandlerInterceptor(facadeClass,handler)
-			));
-		}catch (RuntimeException e){
-			throw new ReflectionException("Not possible to proxy type " + facadeClass + "." + e.getMessage());
+
+		if (constructorArgs.length == 0){
+			try{
+				return facadeClass.cast(Enhancer.create(
+						facadeClass,
+						new ProxyHandlerMethodInterceptorAdapter(facadeClass,handler)
+						));
+			}catch (RuntimeException e){
+				throw new ReflectionException("Not possible to proxy type " + facadeClass + "." + e.getMessage());
+			}
+		} else {
+			try { 
+				Enhancer en = new Enhancer();
+				en.setSuperclass(facadeClass);
+				en.setCallback(new ProxyHandlerMethodInterceptorAdapter(facadeClass,handler));
+
+				Class[] argumentTypes= new Class[constructorArgs.length];
+				for (int i =0; i < constructorArgs.length; i++){
+					argumentTypes[i] = this.getRealType(constructorArgs[i].getClass());
+				}
+
+				return facadeClass.cast(en.create(argumentTypes, constructorArgs));
+			}catch (RuntimeException e){
+				throw new ReflectionException("Not possible to proxy type " + facadeClass + "." + e.getMessage());
+			}
 		}
+
 	}
-	
+
 	@Override
 	public <T> T proxyType(Class<?> facadeType, ProxyHandler handler, Class<T> proxyInterface, Class<?>... adicionalInterfaces) {
 		try{
-			
+
 			if (facadeType.isInterface()){
 				Class[] interfaces = new Class[adicionalInterfaces.length + 2];
 				interfaces[0] = facadeType;
@@ -115,12 +134,12 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				for (int i =0; i < adicionalInterfaces.length; i++){
 					interfaces[i+1] = adicionalInterfaces[i];
 				}
-				
+
 				return proxyInterface.cast(Enhancer.create(
 						Object.class,
 						interfaces,
-						new ProxyHandlerInterceptor(facadeType,handler)
-				));
+						new ProxyHandlerMethodInterceptorAdapter(facadeType,handler)
+						));
 			} else {
 				Class[] interfaces = new Class[adicionalInterfaces.length + 1];
 				interfaces[0] = proxyInterface;
@@ -128,20 +147,20 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				for (int i =0; i < adicionalInterfaces.length; i++){
 					interfaces[i+1] = adicionalInterfaces[i];
 				}
-				
+
 				return proxyInterface.cast(Enhancer.create(
 						facadeType,
 						interfaces,
-						new ProxyHandlerInterceptor(facadeType,handler)
-				));
+						new ProxyHandlerMethodInterceptorAdapter(facadeType,handler)
+						));
 			}
-			
+
 		}catch (RuntimeException e){
 			throw new ReflectionException(e);
 		}
 	}
 
-	
+
 
 	@Override
 	public <I> I proxyObject(final Object delegationTarget, Class<I> proxyInterface) {
@@ -153,18 +172,30 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 			return proxyInterface.cast(Enhancer.create(
 					delegationTarget.getClass(), 
 					new Class[]{proxyInterface, WrapperProxy.class},
-					new Dispatcher(){
-						public Object loadObject(){
-							return delegationTarget;
-						}
-					}
-			));
+					new ObjectDispatcher(delegationTarget)
+					));
 		}catch (RuntimeException e){
 			throw new ReflectionException(e);
 		}
 	}
 
-	
+	private static class ObjectDispatcher implements Dispatcher{
+
+		private Object object;
+		
+		public ObjectDispatcher(Object object){
+			this.object = object;
+		}
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Object loadObject() throws Exception {
+			return object;
+		}
+		
+	}
+
 	@Override
 	public <I> I proxyObject(Object delegationTarget, ProxyHandler handler,Class<I> proxyInterface,Class<?> ... adicionalInterfaces) {
 		if (!proxyInterface.isInterface()){
@@ -186,8 +217,8 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				return proxyInterface.cast(Enhancer.create(
 						delegationTarget.getClass(), 
 						newInterfaces,
-						new ProxyHandlerInterceptor(delegationTarget.getClass(),handler))
-				);
+						new ProxyHandlerMethodInterceptorAdapter(delegationTarget.getClass(),handler))
+						);
 			} catch (IllegalArgumentException e){
 				if (e.getMessage().equals("Superclass has no null constructors but no arguments were given")){
 					throw new ReflectionException("Type " + delegationTarget.getClass() + " has no argumentless constructors and no arguments were given");
@@ -198,7 +229,7 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				throw new ReflectionException(e);
 			}
 		}
-	
+
 
 
 	}
@@ -207,7 +238,7 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 	public Class<?> getRealType(Class<?> type) {
 		int pos = type.getName().indexOf("$$");
 		if (pos >=0){
-			 try {
+			try {
 				return Class.forName(type.getName().substring(0, pos));
 			} catch (ClassNotFoundException e) {
 				throw ReflectionException.manage(e, type);
@@ -221,7 +252,7 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 		return Enhancer.isEnhanced(type);
 	}
 
-	
+
 
 
 

@@ -6,7 +6,7 @@ package org.middleheaven.core.wiring;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 
 /**
  * 

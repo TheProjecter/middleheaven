@@ -1,8 +1,8 @@
 package org.middleheaven.core.reflection.inspection;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.util.function.Predicate;
 
 
@@ -25,8 +25,8 @@ public class IntrospectionCriteriaBuilder<T> {
 
 	public MethodIntrospectionCriteriaBuilder<T> staticMethods() {
 		return new MethodIntrospectionCriteriaBuilder<T>(this)
-		.match(new Predicate<Method>(){
-			public Boolean apply (Method m){
+		.match(new Predicate<MethodHandler>(){
+			public Boolean apply (MethodHandler m){
 				return Boolean.valueOf(Modifier.isStatic( m.getModifiers()));
 			}
 		});
