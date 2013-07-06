@@ -2,10 +2,11 @@ package org.middleheaven.graph;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 
+import org.middleheaven.collections.TransformedCollection;
 import org.middleheaven.graph.Graph.Edge;
-import org.middleheaven.util.collections.TransformedCollection;
 import org.middleheaven.util.function.Mapper;
 
 /**
@@ -16,7 +17,7 @@ import org.middleheaven.util.function.Mapper;
 public class QueueGraphPath<E, V> implements GraphPath<E, V> {
 
 	
-	private final LinkedList<Edge<V,E>> queue = new LinkedList<Edge<V,E>>();
+	private final Deque<Edge<V,E>> queue = new LinkedList<Edge<V,E>>();
 	private final Graph<E, V> graph;
 	
 	

@@ -11,13 +11,14 @@ import java.util.Set;
 
 import org.middleheaven.global.Culture;
 import org.middleheaven.global.LocalizationService;
+import org.middleheaven.global.text.bundle.LocalizableTextBundle;
 
 /**
  * 
  */
 public class  CultureModelLocalizationService implements LocalizationService{
 
-	LocalizationDomainBundle masterBundle;
+	LocalizableTextBundle masterBundle;
 
 	private Collection<CultureModelFactory> factories = new LinkedList<CultureModelFactory>();
 	
@@ -46,12 +47,12 @@ public class  CultureModelLocalizationService implements LocalizationService{
 	}
 
 
-	public String getMessage(TextLocalizable label, boolean asMnemonic) {
+	public String getMessage(LocalizableText label, boolean asMnemonic) {
 		return getMessage(label, this.getExecutionEnvironmentCulture()); 
 	}
 
 	@Override
-	public String getMessage(TextLocalizable localResource, Culture culture) {
+	public String getMessage(LocalizableText localResource, Culture culture) {
 		return  localResource.isLocalized() ? localResource.toString() :  masterBundle.localizeLabel(localResource, culture);
 	}
 
@@ -74,7 +75,7 @@ public class  CultureModelLocalizationService implements LocalizationService{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void registerLocalizationDomainBundle(LocalizationDomainBundle bundle) {
+	public void registerLocalizationDomainBundle(LocalizableTextBundle bundle) {
 		this.masterBundle = bundle;
 	}
 

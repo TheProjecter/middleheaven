@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.middleheaven.quantity.time.Chonologies;
-import org.middleheaven.quantity.time.Chronology;
-import org.middleheaven.util.validation.Consistencies;
+import org.middleheaven.util.StringUtils;
 
 /**
  * Representation of a culture.
@@ -22,16 +20,19 @@ public final class Culture implements Serializable{
 	}
 	
 	public static Culture valueOf(Locale locale) {
-		Consistencies.consistNotNull(locale);
+		if (locale == null){
+			throw new IllegalArgumentException("Locale is required");
+		}
 		return valueOf(locale.getLanguage(), locale.getCountry());
 	}
 
-	
-
-	
 	public static Culture valueOf(String language, String country){
-		Consistencies.consistNotNull(language);
-		Consistencies.consistNotNull(country);
+		if (StringUtils.isEmptyOrBlank(language)){
+			throw new IllegalArgumentException("Language is required");
+		}
+		if (StringUtils.isEmptyOrBlank(country)){
+			throw new IllegalArgumentException("Country is required");
+		}
 		return new Culture(language.trim().toLowerCase(), country.trim().toUpperCase());
 	}
 	
@@ -41,10 +42,9 @@ public final class Culture implements Serializable{
 	}
 	
 	public static Culture valueOf(CharSequence charSequence){
-	
-		Consistencies.consistNotNull(charSequence);
-		Consistencies.consistNotEmpty(charSequence);
-
+		if (StringUtils.isEmptyOrBlank(charSequence)){
+			throw new IllegalArgumentException("Argument cannot be null");
+		}
 		final String culture = charSequence.toString();
 		if(culture.contains("_")){
 			return new Culture(culture);
@@ -68,7 +68,7 @@ public final class Culture implements Serializable{
 	private String[] variant = new String[0];
 	
 	private Culture(String languageCode){
-		this(languageCode,null);
+		this(languageCode, "");
 	}
 	
 	private Culture(String languageCode, String countryCode){
@@ -87,10 +87,6 @@ public final class Culture implements Serializable{
 	
 	public Language getLanguage(){
 		return Language.valueOf(language);
-	}
-	
-	public Chronology getChonology(){
-		return Chonologies.getChonology(this);
 	}
 	
 	public Locale toLocale(){

@@ -68,23 +68,45 @@ public class NegativeWeigthedShortestPathInspector implements ShortestPathInspec
 				}
 			}
 	
-			manager.doVisit(new VertexInfoVisitor<E, V> (){
-
-				@Override
-				public void beginVisitVertex(Vertex<V, E> vertex) {}
-
-				@Override
-				public void endVisitVertex(Vertex<V, E> vertex) {}
-
-				@Override
-				public void visitEdge(Edge<V, E> connectingEdge) {
-					result.addFirstEdge(connectingEdge);
-				}	
-				
-			} , graph.getVertex(endVertex));
+			manager.doVisit(new VertexVisitor<E,V> (result) , graph.getVertex(endVertex));
 		}	
 		
 		return result;
+	}
+	
+	private static  class VertexVisitor<E,V> implements VertexInfoVisitor<E,V>{
+		
+		private final QueueGraphPath<E, V> result;
+
+		public VertexVisitor(QueueGraphPath<E, V> result){
+			this.result = result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void beginVisitVertex(Vertex<V, E> vertex) {
+			
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void endVisitVertex(Vertex<V, E> vertex) {
+			
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void visitEdge(Edge<V, E> connectingEdge) {
+			result.addFirstEdge(connectingEdge);
+		}
+		
+		
 	}
 
 }

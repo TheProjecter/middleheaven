@@ -24,44 +24,58 @@ public final class IOTransport {
 	 * Copy interface.
 	 */
 	public interface IOCopy {
-		
+
 		/**
 		 * Copy the original data to the given stream.
 		 * @param outStream the stream to receive the data.
 		 * @throws IOException if something goes wrong with the copy of the access to the stream.
 		 */
-		void to(OutputStream outStream) throws IOException;
-		
+		void to(OutputStream outStream) throws ManagedIOException;
+
 		/**
 		 * Copy the original data to the given file.
 		 * @param outfile the file to receive the data.
 		 * @throws IOException if something goes wrong with the copy of the access to the file.
 		 */
-		void to(File outfile) throws IOException;
+		void to(File outfile) throws ManagedIOException;
+		
+		/**
+		 * Copy the original data to the given {@link StreamableContent}.
+		 * @param content the content to receive the data.
+		 * @throws IOException if something goes wrong with the copy of the access to the stream.
+		 */
+		void to(StreamableContent content) throws ManagedIOException;
+		
+		/**
+		 * Copy the original data to the given {@link StreamableContentSource}.
+		 * @param content the content to receive the data.
+		 * @throws IOException if something goes wrong with the copy of the access to the stream.
+		 */
+		void to(StreamableContentSource source) throws ManagedIOException;
 	}
-	
+
 	/**
 	 * Move interface.
 	 */
 	public interface IOMove {
-		
+
 		/**
 		 * Moves the contents of the original file to the given file, and deletes the original file.
 		 * @param outfile the file to receive the data.
 		 * @throws IOException if something goes wrong with the copy of the access to the file.
 		 */
-		void to(File outfile) throws IOException;
-		
+		void to(File outfile) throws ManagedIOException;
+
 		/**
 		 * Moves the contents of the original file to a file with the same name as the original but in the given folder. Then, deletes the original file.
 		 * @param outFolder the folder where to create the file to receive the data.
 		 * @throws IOException if something goes wrong with the copy of the access to the file.
 		 */
-		void toFolder(File outFolder) throws IOException;
+		void toFolder(File outFolder) throws ManagedIOException;
 	}
-	
+
 	private IOTransport(){}
-	
+
 
 	/**
 	 * Move the given file.
@@ -72,25 +86,43 @@ public final class IOTransport {
 		return new IOMove(){
 
 			@Override
-			public void to(File outFile) throws IOException {
+			public void to(File outFile) throws ManagedIOException {
 				move(file,outFile);
 			}
 
 			@Override
-			public void toFolder(File outFolder) throws IOException {
+			public void toFolder(File outFolder) throws ManagedIOException {
 				if (!outFolder.exists()) {
 					if (!outFolder.mkdirs()){
-						throw new IOException("Was not possible to create folder " + outFolder);
+						throw new ManagedIOException("Was not possible to create folder " + outFolder);
 					}
 				}
-				
+
 				File outFile = new File(outFolder, file.getName());
-				
+
 				move(file,outFile);
 			}
 
-			
+
 		};
+	}
+
+	/**
+	 * Copies the contents of a given {@link StreamableContent}.
+	 * @param content the content to copy.
+	 * @return a {@link IOCopy} to complete the destination.
+	 */
+	public static IOCopy copy(StreamableContent content){
+		return copy(content.getInputStream());
+	}
+	
+	/**
+	 * Copies the contents of a given {@link StreamableContent}.
+	 * @param content the content to copy.
+	 * @return a {@link IOCopy} to complete the destination.
+	 */
+	public static IOCopy copy(StreamableContentSource source){
+		return copy(source.getContent().getInputStream());
 	}
 	
 	/**
@@ -102,18 +134,33 @@ public final class IOTransport {
 		return new IOCopy(){
 
 			@Override
-			public void to(OutputStream outStream) throws IOException {
+			public void to(OutputStream outStream) throws ManagedIOException {
 				copy(inStream, outStream);
 			}
 
 			@Override
-			public void to(File outfile) throws IOException {
-				copy(inStream, new FileOutputStream(outfile));
+			public void to(File outfile) throws ManagedIOException {
+				try{
+					copy(inStream, new FileOutputStream(outfile));
+				} catch (IOException e) {
+					throw ManagedIOException.manage(e);
+				}
 			}
-			
+
+			@Override
+			public void to(StreamableContent content) throws ManagedIOException {
+				copy(inStream, content.getOutputStream());
+			}
+
+			@Override
+			public void to(StreamableContentSource source)
+					throws ManagedIOException {
+				copy(inStream, source.getContent().getOutputStream());
+			}
+
 		};
 	}
-	
+
 	/**
 	 * Copies the contents of a given byte array.
 	 * @param bytes the byte array to copy.
@@ -123,18 +170,32 @@ public final class IOTransport {
 		return new IOCopy(){
 
 			@Override
-			public void to(OutputStream outStream) throws IOException {
+			public void to(OutputStream outStream) throws ManagedIOException {
 				copy(bytes, outStream);
 			}
-			
+
 			@Override
-			public void to(File outfile) throws IOException {
-				copy(bytes, new FileOutputStream(outfile));
+			public void to(File outfile) throws ManagedIOException {
+				try {
+					copy(bytes, new FileOutputStream(outfile));
+				} catch (IOException e) {
+					throw ManagedIOException.manage(e);
+				}
 			}
-			
+
+			@Override
+			public void to(StreamableContent content) throws ManagedIOException {
+				copy(bytes, content.getOutputStream());
+			}
+
+			@Override
+			public void to(StreamableContentSource source)
+					throws ManagedIOException {
+				copy(bytes, source.getContent().getOutputStream());
+			}
 		};
 	}
-	
+
 	/**
 	 * Copy the given file.
 	 * @param file the file to copy.
@@ -144,18 +205,40 @@ public final class IOTransport {
 		return new IOCopy(){
 
 			@Override
-			public void to(OutputStream outStream) throws IOException {
-				copy(new FileInputStream(inFile), outStream);
+			public void to(OutputStream outStream) throws ManagedIOException {
+				try {
+					copy(new FileInputStream(inFile), outStream);
+				} catch (IOException e) {
+					throw ManagedIOException.manage(e);
+				}
 			}
 
 			@Override
-			public void to(File outfile) throws IOException {
+			public void to(File outfile) throws ManagedIOException {
 				copy(inFile, outfile);
 			}
-			
+
+			@Override
+			public void to(StreamableContent content) throws ManagedIOException {
+				try {
+					copy(new FileInputStream(inFile), content.getOutputStream());
+				} catch (IOException e) {
+					throw ManagedIOException.manage(e);
+				}
+			}
+
+			@Override
+			public void to(StreamableContentSource source)
+					throws ManagedIOException {
+				try {
+					copy(new FileInputStream(inFile), source.getContent().getOutputStream());
+				} catch (IOException e) {
+					throw ManagedIOException.manage(e);
+				}
+			}
 		};
 	}
-	
+
 	/**
 	 * Closes an I/O resource. Possible IOException is encapsulated in 
 	 * an ManagedIOException
@@ -171,17 +254,20 @@ public final class IOTransport {
 
 	}
 
-	private static void doStreamCopy(InputStream in,OutputStream out) throws IOException {
+	private static void doStreamCopy(InputStream in,OutputStream out) throws ManagedIOException {
+		try{
+			byte[] buffer = new byte[1024 * 4]; //4 Kb
+			int n = 0;
+			while (-1 != (n = in.read(buffer))) {
+				out.write(buffer, 0, n);
+			}
+			out.flush();
 
-		byte[] buffer = new byte[1024 * 4]; //4 Kb
-		int n = 0;
-		while (-1 != (n = in.read(buffer))) {
-			out.write(buffer, 0, n);
+			out.close();
+			in.close();
+		}catch (IOException e){
+			throw ManagedIOException.manage(e);
 		}
-		out.flush();
-
-		out.close();
-		in.close();
 	}
 
 	private static void doCopyFile(FileInputStream in , FileOutputStream out)  {
@@ -223,9 +309,9 @@ public final class IOTransport {
 		} catch (IOException e) {
 			ManagedIOException.manage(e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * The copy does not closes the steams.
 	 * @param in the stream to read from
@@ -233,7 +319,7 @@ public final class IOTransport {
 	 * @throws IOException if something goes wrong
 	 * @throws IllegalArgumentException if any argument is <code>null</code>
 	 */
-	private static void copy(InputStream in, OutputStream out) throws IOException {
+	private static void copy(InputStream in, OutputStream out) throws ManagedIOException {
 		if (in==null || out ==null){
 			throw new IllegalArgumentException("Cannot copy a non existent stream");
 		}
@@ -268,7 +354,7 @@ public final class IOTransport {
 	/**
 	 * Copies the data in one file to another existing file. 
 	 * @param in the file to read 
-     * @param out the file to write
+	 * @param out the file to write
 	 */
 	private static void copy(File in, File out) {
 		FileInputStream fis =null;

@@ -6,12 +6,11 @@ package org.middleheaven.global.text;
 import java.io.Serializable;
 
 import org.middleheaven.util.Splitter;
-import org.middleheaven.util.StringUtils;
 
 /**
  * 
  */
-public abstract class TextLocalizable implements Serializable{
+public abstract class LocalizableText implements Serializable{
 
 	/**
 	 * 
@@ -19,31 +18,31 @@ public abstract class TextLocalizable implements Serializable{
 	private static final long serialVersionUID = 3077687035613387346L;
 
 	/**
-	 * Create a {@link TextLocalizable} from a given template.
+	 * Create a {@link LocalizableText} from a given template.
 	 * A qualified global string is of the form {@code resouceDomainName:label}.
 	 * If the given string template does not contain a {@code resouceDoamineName} it will be considered the text is already translated
 	 * and will be used as is.
 	 * 
 	 * @param template the template string.
-	 * @return the corresponding {@link TextLocalizable}.
+	 * @return the corresponding {@link LocalizableText}.
 	 * 
 	 * 
 	 */
-	public static TextLocalizable valueOf(String template){
+	public static LocalizableText valueOf(String template){
 		return valueOf(template, new Serializable[0]);
 	}
 	
 	/**
-	 * Create a {@link TextLocalizable} from a given qualified global string and parameters.
+	 * Create a {@link LocalizableText} from a given qualified global string and parameters.
 	 * A qualified global string is in the form {@code resourceDomain:label}.
 	 * 
 	 * @param qualifiedString the qualified global string.
 	 * @param params the parameters to inclue in the translated label.
 	 * 
-	 * @return the corresponding {@link TextLocalizable}.
+	 * @return the corresponding {@link LocalizableText}.
 	 * @throws IllegalArgumentException if the given string is no qualified.
 	 */
-	public static TextLocalizable valueOf(String qualifiedString, Serializable[] params){
+	public static LocalizableText valueOf(String qualifiedString, Serializable[] params){
 		if (qualifiedString.indexOf(":")<0){
 			return new TransaltedTextLocalizable(qualifiedString , "", "", params);
 		} else {
@@ -56,19 +55,19 @@ public abstract class TextLocalizable implements Serializable{
 	}
 	
 	/**
-	 * Create a {@link TextLocalizable} from a given resourceBundle name and label.
+	 * Create a {@link LocalizableText} from a given resourceBundle name and label.
 	 * 
 	 * 
 	 * @param resouceDomain the name of the resource bundle domain.
 	 * @param label the label to be translated
 	 * @return
 	 */
-	public static TextLocalizable valueOf(String resouceDomain, String label){
+	public static LocalizableText valueOf(String resouceDomain, String label){
 		return valueOf (resouceDomain, label, new Serializable[0]);
 	}
 	
 	/**
-	 * Create a {@link TextLocalizable} from a given resourceBundle name and label.
+	 * Create a {@link LocalizableText} from a given resourceBundle name and label.
 	 * 
 	 * 
 	 * @param resouceDomain the name of the resource bundle domain.
@@ -76,8 +75,8 @@ public abstract class TextLocalizable implements Serializable{
 	 * @param params the parameters to inclue in the translated label.
 	 * @return
 	 */
-	public static TextLocalizable valueOf(String resorceBundle, String label , Serializable[] params){
-		return new KeyTextLocalizable (resorceBundle, label, params);
+	public static LocalizableText valueOf(String resorceBundle, String label , Serializable[] params){
+		return new KeyLocalizableText (resorceBundle, label, params);
 	}
 	
 	/**
@@ -115,6 +114,8 @@ public abstract class TextLocalizable implements Serializable{
 	 */
 	public abstract String toString();
 	
-
+	public abstract boolean equals(Object other);
+	
+	public abstract int hashCode();
 	
 }

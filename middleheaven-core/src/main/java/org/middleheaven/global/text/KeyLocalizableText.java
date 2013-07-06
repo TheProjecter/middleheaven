@@ -11,7 +11,7 @@ import org.middleheaven.util.Hash;
 /**
  * 
  */
-final class KeyTextLocalizable extends TextLocalizable{
+final class KeyLocalizableText extends LocalizableText{
 
 	private static final long serialVersionUID = 3624294714337027974L;
 	
@@ -20,7 +20,7 @@ final class KeyTextLocalizable extends TextLocalizable{
 	private Serializable[] params = new Serializable[0];
 
 	// used by TextLocalizable
-    KeyTextLocalizable(String domain, String label , Serializable ... params){
+    KeyLocalizableText(String domain, String label , Serializable ... params){
 		this.label = label;
 		this.domain = domain;
 		this.params = params;
@@ -57,7 +57,7 @@ final class KeyTextLocalizable extends TextLocalizable{
 	 * {@inheritDoc}
 	 */
 	public boolean equals(Object other){
-		return other instanceof  KeyTextLocalizable && ((KeyTextLocalizable)other).label.equals(label);
+		return other instanceof  KeyLocalizableText && ((KeyLocalizableText)other).label.equals(label);
 	}
 
 	/**

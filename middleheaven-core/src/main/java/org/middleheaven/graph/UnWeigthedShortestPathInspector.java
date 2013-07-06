@@ -14,6 +14,37 @@ import org.middleheaven.graph.VertextInfoManager.VertexInfoVisitor;
  */
 public class UnWeigthedShortestPathInspector implements ShortestPathInspector{
 
+	/**
+	 * @param <E>
+	 * @param <V>
+	 */
+	private static final class ResultVertexVisitor<E, V> implements
+			VertexInfoVisitor<E, V> {
+		/**
+		 * 
+		 */
+		private final QueueGraphPath<E, V> result;
+
+		/**
+		 * Constructor.
+		 * @param result
+		 */
+		private ResultVertexVisitor(QueueGraphPath<E, V> result) {
+			this.result = result;
+		}
+
+		@Override
+		public void beginVisitVertex(Vertex<V, E> vertex) {}
+
+		@Override
+		public void endVisitVertex(Vertex<V, E> vertex) {}
+
+		@Override
+		public void visitEdge(Edge<V, E> connectingEdge) {
+			result.addFirstEdge(connectingEdge);
+		}
+	}
+
 	public UnWeigthedShortestPathInspector (){}
 	
 	@Override
@@ -57,20 +88,7 @@ public class UnWeigthedShortestPathInspector implements ShortestPathInspector{
 
 			}
 	
-			manager.doVisit(new VertexInfoVisitor<E, V> (){
-
-				@Override
-				public void beginVisitVertex(Vertex<V, E> vertex) {}
-
-				@Override
-				public void endVisitVertex(Vertex<V, E> vertex) {}
-
-				@Override
-				public void visitEdge(Edge<V, E> connectingEdge) {
-					result.addFirstEdge(connectingEdge);
-				}	
-				
-			} , graph.getVertex(endVertex));
+			manager.doVisit(new ResultVertexVisitor<E, V>(result) , graph.getVertex(endVertex));
 		}	
 		
 		return result;

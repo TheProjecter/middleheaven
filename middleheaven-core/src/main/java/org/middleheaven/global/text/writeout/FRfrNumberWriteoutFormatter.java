@@ -30,7 +30,7 @@ class FRfrNumberWriteoutFormatter extends NumberWriteoutFormatter{
 		case 6: return "six";
 		case 7: return "sept";
 		case 8: return "huit";
-		case 9: return "noeuf";
+		case 9: return "neuf";
 		case 10: return "dix";
 		case 11: return "onze";
 		case 12: return "douze";
@@ -82,7 +82,7 @@ class FRfrNumberWriteoutFormatter extends NumberWriteoutFormatter{
 	public String getFractionUnitName(int exponent) {
 		switch (exponent){
 		case 1: return "decime";
-		case 2: return "centesime";
+		case 2: return "centièmes";
 		case 3: return "milinesime";
 		case 4: return "decime milinesime";
 		case 5: return "centesime milinesime";
@@ -107,7 +107,14 @@ class FRfrNumberWriteoutFormatter extends NumberWriteoutFormatter{
 
 	@Override
 	public String getInnerGroupConcatenator(int value,int group, int indice) {
-		return (indice > 0 && value%100 <=10) ? "et" :(  value<20 || value %10 ==0 ?  null : "");
+		if (indice == 0){
+			return  "";
+		} else if (indice == 1){
+			return   value % 10 != 0 && !(value > 90 && value <=99) ?  "et" : "";
+		} else if (indice == 2){
+			return value%100 <=10 ? "et" : "";
+		}
+		return "et";
 	}
 
 	@Override

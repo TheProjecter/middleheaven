@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * 
  */
-class TransaltedTextLocalizable extends TextLocalizable {
+class TransaltedTextLocalizable extends LocalizableText {
 
 
 	private static final long serialVersionUID = -6311812794303023037L;
@@ -68,6 +68,26 @@ class TransaltedTextLocalizable extends TextLocalizable {
 	@Override
 	public String toString() {
 		return text;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof TransaltedTextLocalizable && equalsOther((TransaltedTextLocalizable) other);
+	}
+	
+	private boolean equalsOther(TransaltedTextLocalizable other) {
+		return this.text.equals(other.text);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		return text.hashCode();
 	}
 
 }

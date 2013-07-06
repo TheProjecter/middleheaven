@@ -75,7 +75,7 @@ public class TimepointFormatter implements ParsableFormatter<TimePoint> {
 			formater = DateFormat.getDateInstance(DateFormat.SHORT, culture.toLocale());
 			break;
 		case TIME_ONLY:
-			formater = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, culture.toLocale());
+			formater = DateFormat.getTimeInstance(DateFormat.SHORT, culture.toLocale());
 			break;
 		case DATE_AND_TIME:
 		default:

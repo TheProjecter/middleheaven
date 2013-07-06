@@ -1,6 +1,7 @@
 package org.middleheaven.graph;
 
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -57,6 +58,6 @@ public abstract class AbstractGraphFirstTransversor extends AbstractGraphTransve
 	}
 
 	
-	protected abstract <V, E> Vertex<V, E> nextVertex(LinkedList<Vertex<V, E>> q);
+	protected abstract <V, E> Vertex<V, E> nextVertex(Deque<Vertex<V, E>> q);
 	
 }

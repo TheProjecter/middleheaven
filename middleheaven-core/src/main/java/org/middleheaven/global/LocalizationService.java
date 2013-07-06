@@ -9,8 +9,8 @@ import java.util.Collection;
 import org.middleheaven.core.annotations.Service;
 import org.middleheaven.global.text.CultureModel;
 import org.middleheaven.global.text.CultureModelFactory;
-import org.middleheaven.global.text.LocalizationDomainBundle;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
+import org.middleheaven.global.text.bundle.LocalizableTextBundle;
 
 
 /**
@@ -56,14 +56,14 @@ public interface LocalizationService  {
      *
      * @return the localizaed message for the label in the given {@link Culture}.
      */
-    public String getMessage(TextLocalizable label , Culture culture);
+    public String getMessage(LocalizableText label , Culture culture);
     
 
     /**
      * 
      * @param bundle
      */
-    public void registerLocalizationDomainBundle(LocalizationDomainBundle bundle);
+    public void registerLocalizationDomainBundle(LocalizableTextBundle bundle);
     
     
 
