@@ -1,9 +1,9 @@
-package org.middleheaven.core.bootstrap;
+package org.middleheaven.core;
 
 import org.middleheaven.io.repository.ManagedFile;
 
 /**
- * Represent special meaning locations for the container.
+ * Represent special meaningfull locations for the container.
  */
 public interface FileContext {
 

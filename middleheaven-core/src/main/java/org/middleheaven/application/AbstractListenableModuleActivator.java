@@ -3,8 +3,6 @@
  */
 package org.middleheaven.application;
 
-import javax.swing.event.EventListenerList;
-
 import org.middleheaven.events.EventListenersSet;
 
 /**
@@ -14,7 +12,7 @@ public abstract class AbstractListenableModuleActivator implements ListenableMod
 
 
 	
-	private EventListenersSet<ModuleActivatorListener> eventListeners =  EventListenersSet.newSet(ModuleActivatorListener.class);
+	private EventListenersSet<ModuleActivatorListener> eventListeners;
 			
 	public AbstractListenableModuleActivator (){}
 	
@@ -25,7 +23,9 @@ public abstract class AbstractListenableModuleActivator implements ListenableMod
 	public final void start(ApplicationContext context) {
 		doStartListenableModule(context);
 		
-		eventListeners.broadcastEvent().onModuleStart(new ModuleActivationEvent(this));
+		if (eventListeners != null){
+			eventListeners.broadcastEvent().onModuleStart(new ModuleActivationEvent(this));
+		}
 		
 	}
 	
@@ -38,7 +38,9 @@ public abstract class AbstractListenableModuleActivator implements ListenableMod
 	public void stop(ApplicationContext context) {
 		doStopListenableModule(context);
 		
-		eventListeners.broadcastEvent().onModuleStop(new ModuleActivationEvent(this));
+		if (eventListeners != null){
+			eventListeners.broadcastEvent().onModuleStop(new ModuleActivationEvent(this));
+		}
 	}
 
 	protected abstract void doStopListenableModule(ApplicationContext context);
@@ -47,7 +49,10 @@ public abstract class AbstractListenableModuleActivator implements ListenableMod
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final void addModuleActivatorListener(ModuleActivatorListener listener) {
+	public final synchronized void addModuleActivatorListener(ModuleActivatorListener listener) {
+		if (eventListeners == null){
+			this.eventListeners =  EventListenersSet.newSet(ModuleActivatorListener.class);
+		}
 		this.eventListeners.addListener(listener);
 	}
 
@@ -55,8 +60,10 @@ public abstract class AbstractListenableModuleActivator implements ListenableMod
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void removeModuleActivatorListener(ModuleActivatorListener listener) {
-		this.eventListeners.removeListener(listener);
+	public final void removeModuleActivatorListener(ModuleActivatorListener listener) {
+		if (eventListeners != null){
+			this.eventListeners.removeListener(listener);
+		}
 	}
 
 }

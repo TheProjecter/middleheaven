@@ -13,15 +13,16 @@ import java.util.jar.Attributes;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.io.IO;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.util.Splitter;
-import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.Version;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.ParamsMap;
 import org.middleheaven.util.function.Block;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.function.Predicate;
 
 /**
@@ -29,16 +30,6 @@ import org.middleheaven.util.function.Predicate;
  */
 public class LibraryJarModuleScanner implements ModuleScanner {
 
-//	
-//	private FileWatchChannelProcessor fileWatchChannelProcessor;
-//
-//
-//	public void inactivate(){
-//		if (fileWatchChannelProcessor != null){
-//			fileWatchChannelProcessor.close();
-//		}
-//	}
-	
 	private ManagedFile libraryFolder;
 
 	/**
@@ -84,16 +75,11 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 //			fileWatchChannelProcessor.start();
 //		}
 
-		libraryFolder.children().forEach(new Block<ManagedFile>(){
-
-			@Override
-			public void apply(ManagedFile file) {
-				if (appModulesFilter.apply(file)){
-					applicationModuleFiles.add(file);
-				}
+		for (ManagedFile file : libraryFolder.children()){
+			if (appModulesFilter.apply(file)){
+				applicationModuleFiles.add(file);
 			}
-
-		});
+		}
 
 		for (ManagedFile jar : applicationModuleFiles){
 			loadModuleFromFile(jar , modules);
@@ -102,27 +88,33 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 		
 	}
 
-	private void loadModuleFromFile(ManagedFile jar, Collection<Module> modules) {
+	private void loadModuleFromFile(final ManagedFile jar, final Collection<Module> modules) {
 
 		try{
-			URLClassLoader cloader = URLClassLoader.newInstance(new URL[]{jar.getURI().toURL()}, Thread.currentThread().getContextClassLoader());
+			final URLClassLoader cloader = URLClassLoader.newInstance(new URL[]{jar.getURI().toURL()}, Thread.currentThread().getContextClassLoader());
 			
-			JarInputStream jis = new JarInputStream(jar.getContent().getInputStream());
-			Manifest manifest = jis.getManifest();
+			IO.using(new JarInputStream(jar.getContent().getInputStream()), new Block<JarInputStream>(){
 
-			if (manifest!=null){
-				Attributes at = manifest.getMainAttributes();
+				@Override
+				public void apply(JarInputStream jis) {
+					Manifest manifest = jis.getManifest();
 
-				if (at.getValue("Application") != null){
-					ParamsMap map = new ParamsMap()
-					.setParam("Application", at.getValue("Application"))
-					.setParam("Application-Modules", at.getValue("Application-Modules"))
-					.setParam("Application-Module-Depends", at.getValue("Application-Module-Depends"))
-					;
-					
-					parseAttributes(map, cloader, modules);
+					if (manifest!=null){
+						Attributes at = manifest.getMainAttributes();
+
+						if (at.getValue("Application") != null){
+							ParamsMap map = new ParamsMap()
+							.setParam("Application", at.getValue("Application"))
+							.setParam("Application-Modules", at.getValue("Application-Modules"))
+							.setParam("Application-Module-Depends", at.getValue("Application-Module-Depends"))
+							;
+							
+							parseAttributes(map, cloader, modules);
+						}
+					}
 				}
-			}
+				
+			});
 
 		}catch (IOException e) {
 			ManagedIOException.manage(e);
@@ -190,17 +182,24 @@ public class LibraryJarModuleScanner implements ModuleScanner {
 		@Override
 		public Boolean apply(ManagedFile file) {
 			if (file.getPath().getFileName().endsWith(".jar")){
-				JarInputStream jis;
 				try {
-					jis = new JarInputStream(file.getContent().getInputStream());
+					return IO.using(new JarInputStream(file.getContent().getInputStream()), new Function<Boolean , JarInputStream>(){
+
+						@Override
+						public Boolean apply(JarInputStream jis) {
+
+							Manifest manifest = jis.getManifest();
+
+							return manifest != null ;
+						}
+						
+					});
 				} catch (ManagedIOException e) {
 					return false;
 				} catch (IOException e) {
 					return false;
 				}
-				Manifest manifest = jis.getManifest();
-
-				return manifest != null ;
+			
 			}
 			return false;
 

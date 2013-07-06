@@ -5,8 +5,8 @@ package org.middleheaven.application;
 
 import java.util.Collection;
 
+import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.bootstrap.BootstrapService;
-import org.middleheaven.core.bootstrap.FileContextService;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;

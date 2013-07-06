@@ -4,6 +4,7 @@
  */
 package org.middleheaven.core.bootstrap;
 
+import org.middleheaven.core.FileContext;
 import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.io.repository.ManagedFileRepositoryProvider;

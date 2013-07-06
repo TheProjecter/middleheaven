@@ -10,11 +10,12 @@ import org.middleheaven.util.Hash;
 
 public class ContextIdentifier implements Serializable {
 
-    
-    
-    private final String id;
-    protected ContextIdentifier(String ID){
-        this.id = ID;
+	private static final long serialVersionUID = -5069580111097238795L;
+	
+	private final String id;
+	
+    protected ContextIdentifier(String id){
+        this.id = id;
     }
     
     public static ContextIdentifier getInstance(CharSequence id) {

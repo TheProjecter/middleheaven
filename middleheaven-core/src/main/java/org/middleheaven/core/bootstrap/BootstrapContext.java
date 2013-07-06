@@ -1,5 +1,6 @@
 package org.middleheaven.core.bootstrap;
 
+import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceNotAvailableException;
 import org.middleheaven.core.services.ServiceProvider;

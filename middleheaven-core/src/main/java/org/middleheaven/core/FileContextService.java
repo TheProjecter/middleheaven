@@ -1,7 +1,8 @@
 /**
  * 
  */
-package org.middleheaven.core.bootstrap;
+package org.middleheaven.core;
+
 
 /**
  * 

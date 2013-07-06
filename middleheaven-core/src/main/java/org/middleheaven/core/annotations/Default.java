@@ -6,14 +6,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({
 	ElementType.FIELD, 
-	ElementType.PARAMETER
+	ElementType.PARAMETER,
+	ElementType.TYPE
 	})
 @Documented
 @ScopeSpecification(name ="default")
 public @interface Default {
-
+	
 }
