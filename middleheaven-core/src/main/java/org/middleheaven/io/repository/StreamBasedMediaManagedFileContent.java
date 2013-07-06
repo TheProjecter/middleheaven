@@ -1,7 +1,7 @@
 package org.middleheaven.io.repository;
 
 
-public abstract class StreamBasedMediaManagedFileContent  implements MediaManagedFileContent {
+public abstract class StreamBasedMediaManagedFileContent  implements MediaStreamableContent {
 
 	private String contentType = "octet-stream";
 

@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.middleheaven.core.bootstrap.BootstapListener;
 import org.middleheaven.core.bootstrap.BootstrapEvent;
 import org.middleheaven.core.bootstrap.BootstrapService;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 
 
 /**

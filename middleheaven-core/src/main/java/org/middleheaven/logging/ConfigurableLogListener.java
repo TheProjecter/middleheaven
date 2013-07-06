@@ -23,13 +23,9 @@ public class ConfigurableLogListener implements LoggingEventListener {
      * @param configurator configurator to config
      */
 	public ConfigurableLogListener(LoggingConfiguration configuration , LoggingConfigurator configurator) {
-		configurator.config(this,configuration);
-		
 		this.configuration = configuration;
-		
-		addBook(new WritableLogBook("",LoggingLevel.ALL).addWriter(new ConsoleLogWriter()));
+		configurator.config(this, this.configuration);
 	}
-
 
 	/**
 	 * 
@@ -62,7 +58,10 @@ public class ConfigurableLogListener implements LoggingEventListener {
 	 */
 	@Override
 	public void onLoggingEvent(LoggingEvent event) {
-		this.getLogBook(event.getBookName()).log(event);
+		LogBook book = this.getLogBook(event.getBookName());
+		if (book != null){
+			book.log(event);
+		}
 	}
 	
 	// determine the logbook given aorg.middleheaven.logging.ConsoleLogBook name. 

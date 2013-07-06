@@ -1,6 +1,5 @@
 package org.middleheaven.logging.writters;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +14,7 @@ public class HTMLFormat implements LogFormat {
 
     public void setWriter(LogBookWriter writer) {}
 
-    public void writerHeader(OutputStream stream) {
-        PrintWriter writer = new PrintWriter(stream);
+    public void writerHeader(PrintWriter writer) {
         writer.println("<HTML>");
         writer.println("<BODY>");
         writer.println("<TABLE>");
@@ -28,10 +26,9 @@ public class HTMLFormat implements LogFormat {
         writer.flush();
     }
 
-    public void format(LoggingEvent event, OutputStream stream) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        
-        PrintWriter writer = new PrintWriter(stream);
+    public void format(LoggingEvent event, PrintWriter writer) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+ 
         writer.println("<TR>");
         writer.println("<TD align='center' class='event'>");
         writer.println(format.format(new Date(event.getTime())));
@@ -54,8 +51,7 @@ public class HTMLFormat implements LogFormat {
         writer.flush();
     }
 
-    public void writerFooter(OutputStream stream) {
-        PrintWriter writer = new PrintWriter(stream);
+    public void writerFooter(PrintWriter writer) {
         writer.println("</TABLE>");
         writer.println("</BODY>");
         writer.println("</HTML>");

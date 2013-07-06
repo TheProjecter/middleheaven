@@ -1,11 +1,11 @@
 package org.middleheaven.quantity.math;
 
+import org.middleheaven.collections.Range;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
 import org.middleheaven.quantity.math.structure.OrderedField;
 import org.middleheaven.quantity.math.structure.OrderedFieldElement;
 import org.middleheaven.util.Incrementable;
 import org.middleheaven.util.NaturalIncrementable;
-import org.middleheaven.util.collections.Range;
 
 
 /**

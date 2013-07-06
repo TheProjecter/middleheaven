@@ -1,5 +1,7 @@
 package org.middleheaven.io.repository.machine;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,17 +12,16 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.middleheaven.collections.TransformedCollection;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ManagedFileContent;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileType;
 import org.middleheaven.io.repository.ModificationTracableManagedFile;
 import org.middleheaven.io.repository.empty.EmptyFileContent;
 import org.middleheaven.io.repository.watch.Watchable;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.TransformedCollection;
 import org.middleheaven.util.function.Mapper;
 
 /**
@@ -98,17 +99,17 @@ class FileIOManagedFileAdapter  extends AbstractManagedFile implements Watchable
 	}
 
 	@Override
-	public ManagedFileContent getContent() {
+	public StreamableContent getContent() {
 		if (this.getType().equals(ManagedFileType.FOLDER)){
 			return EmptyFileContent.getInstance(); 
 		}
 
-		return new ManagedFileContent(){
+		return new StreamableContent(){
 
 			@Override
 			public InputStream getInputStream() throws ManagedIOException {
 				try {
-					return new FileInputStream(systemFile);
+					return new BufferedInputStream(new FileInputStream(systemFile));
 				} catch (IOException e) {
 					throw ManagedIOException.manage(e);
 				}
@@ -117,7 +118,7 @@ class FileIOManagedFileAdapter  extends AbstractManagedFile implements Watchable
 			@Override
 			public OutputStream getOutputStream() throws ManagedIOException {
 				try {
-					return new FileOutputStream(systemFile);
+					return new BufferedOutputStream(new FileOutputStream(systemFile));
 				} catch (IOException e) {
 					throw ManagedIOException.manage(e);
 				}

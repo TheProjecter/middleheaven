@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import org.middleheaven.io.repository.ManagedFile;
@@ -15,6 +17,7 @@ public class FileWriter extends StreamLogBookWriter {
 
 
     protected String filename;
+	private BufferedOutputStream out;
 
     public FileWriter(){
         this.format = new HTMLFormat();
@@ -68,7 +71,7 @@ public class FileWriter extends StreamLogBookWriter {
             boolean exists = file.exists();
             this.out = new BufferedOutputStream(new FileOutputStream(file,append));
             if (!exists){
-                this.format.writerHeader(out);
+                this.format.writerHeader(new PrintWriter(out));
             }
         } catch (FileNotFoundException e) {
             // TODO
@@ -77,12 +80,20 @@ public class FileWriter extends StreamLogBookWriter {
 
     public void finalized(){
         try {
-            this.format.writerFooter(out);
+            this.format.writerFooter(new PrintWriter(out));
             this.out.close();
         } catch (IOException e) {
             System.err.println("Problem finalizing " + this.getClass().getName() + "\n");
             e.printStackTrace(System.err);
         }
     }
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected OutputStream getStream() {
+		return out;
+	}
 
 }

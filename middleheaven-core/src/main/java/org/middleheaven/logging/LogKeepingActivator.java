@@ -3,8 +3,8 @@ package org.middleheaven.logging;
 import java.net.MalformedURLException;
 import java.util.Collection;
 
-import org.middleheaven.core.bootstrap.FileContext;
-import org.middleheaven.core.bootstrap.FileContextService;
+import org.middleheaven.core.FileContext;
+import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
@@ -47,7 +47,7 @@ public class LogKeepingActivator extends ServiceActivator {
 		
 		ManagedFile configFolder = fileRepositoryService.getEnvironmentConfigRepository();
 
-		LoggingConfigurator configurator = new BasicConfigurator();
+		LoggingConfigurator configurator = new ConsoleConfigurator();
 		LoggingConfiguration configuration = new LoggingConfiguration(null);
 
 		if (configFolder != null && configFolder.exists() && configFolder.isReadable()){

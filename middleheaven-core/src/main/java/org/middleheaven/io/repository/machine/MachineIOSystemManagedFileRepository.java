@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.TransformedCollection;
 import org.middleheaven.io.FileNotFoundManagedException;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.AbstractManagedRepository;
@@ -15,8 +17,6 @@ import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.TransformedCollection;
 import org.middleheaven.util.function.Mapper;
 
 /**

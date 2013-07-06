@@ -13,7 +13,9 @@ public class FahrenheitCelciusConverter extends AbstractUnitConverter<Temperatur
 
 
 	public DecimalMeasure<Temperature> convertFoward(DecimalMeasure<Temperature>  farhrenheit) {
-		farhrenheit.unit().equals(this.originalUnit);
+		if (!farhrenheit.unit().dimension().equals(this.originalUnit.dimension())){
+			throw new IllegalArgumentException("Dimention is not Temperature");
+		}
 		
 		final DecimalMeasure<Temperature>  ZERO_CELCIUS =  farhrenheit.one().times(Real.valueOf(32), farhrenheit.unit());
 		return farhrenheit.minus(ZERO_CELCIUS).times(Real.valueOf(5),this.resultUnit).over(Real.valueOf(9), this.resultUnit);

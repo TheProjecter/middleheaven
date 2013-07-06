@@ -12,12 +12,8 @@ import org.middleheaven.io.repository.BufferedMediaManagedFileContent;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.io.repository.empty.UnexistantManagedFile;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.Pair;
-import org.middleheaven.util.collections.PairEnumerable;
-import org.middleheaven.util.function.Mapper;
 
 /**
  * {@link ManagedFileRepository} backed by a set for {@link ManagedFile}s.
@@ -99,7 +95,7 @@ public class SetManagedFileRepository extends AbstractManagedRepository  {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public MediaManagedFileContent getContent() {
+		public MediaStreamableContent getContent() {
 			return content;
 		}
 

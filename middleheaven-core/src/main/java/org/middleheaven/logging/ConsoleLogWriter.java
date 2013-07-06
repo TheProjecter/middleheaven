@@ -3,12 +3,13 @@
  */
 package org.middleheaven.logging;
 
+import java.io.OutputStream;
 import java.util.Map;
 
 import org.middleheaven.logging.writters.StreamLogBookWriter;
 
 /**
- *  A writer thar 
+ *  A writer that outputs to the console.
  */
 class ConsoleLogWriter extends StreamLogBookWriter {
 
@@ -16,14 +17,21 @@ class ConsoleLogWriter extends StreamLogBookWriter {
 	 * 
 	 * Constructor.
 	 */
-    ConsoleLogWriter(){
-        this.out = System.out;
-    }
+    ConsoleLogWriter(){ }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void config(Map params, LoggingConfiguration configuration) {}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected OutputStream getStream() {
+		return System.out;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void config(Map<String, String> params,LoggingConfiguration configuration) {}
 
 }

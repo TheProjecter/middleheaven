@@ -10,7 +10,7 @@ package org.middleheaven.logging;
  */
 final class VoidLogBook extends LogBook{
 
-    private static VoidLogBook ME = new VoidLogBook();
+    private static final VoidLogBook ME = new VoidLogBook();
     
     protected static synchronized VoidLogBook getInstance(){
         return ME;

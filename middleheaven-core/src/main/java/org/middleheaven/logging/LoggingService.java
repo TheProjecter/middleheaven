@@ -30,4 +30,9 @@ public interface LoggingService {
 	 * @param listener the listener to remove from the register.
 	 */
 	public void removeLogListener(LoggingEventListener listener);
+
+	/**
+	 * 
+	 */
+	public void removeAllListeners();
 }

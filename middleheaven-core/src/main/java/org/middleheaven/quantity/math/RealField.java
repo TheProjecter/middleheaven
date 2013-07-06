@@ -6,6 +6,7 @@ package org.middleheaven.quantity.math;
 import java.util.Comparator;
 import java.util.Random;
 
+import org.middleheaven.collections.ComparableComparator;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
 import org.middleheaven.quantity.math.structure.OrderedField;
 
@@ -14,9 +15,8 @@ import org.middleheaven.quantity.math.structure.OrderedField;
  */
 public class RealField implements OrderedField<Real> {
 
-	
 	private static final RealField ME = new RealField();
-	
+
 	public static RealField getInstance(){
 		return ME;
 	}
@@ -87,13 +87,8 @@ public class RealField implements OrderedField<Real> {
 
 	@Override
 	public Comparator<Real> getComparator() {
-		return new Comparator<Real> (){
-
-			@Override
-			public int compare(Real a, Real b) {
-				return a.compareTo(b);
-			}
-
-		};
+		return ComparableComparator.getInstance();
 	}
+	
+	
 }

@@ -3,15 +3,15 @@ package org.middleheaven.io.repository;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.middleheaven.io.ByteBuffer;
+import org.middleheaven.io.ArrayByteBuffer;
 import org.middleheaven.io.ManagedIOException;
 
 /**
- * Uses a {@link ByteBuffer} to maintain information in memory.
+ * Uses a {@link ArrayByteBuffer} to maintain information in memory.
  */
 public class BufferedMediaManagedFileContent extends StreamBasedMediaManagedFileContent  {
 
-	private ByteBuffer buffer = new ByteBuffer();
+	private ArrayByteBuffer buffer = new ArrayByteBuffer();
 
 	public BufferedMediaManagedFileContent(){
 

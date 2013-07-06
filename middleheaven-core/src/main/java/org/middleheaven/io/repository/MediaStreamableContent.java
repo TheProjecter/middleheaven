@@ -1,14 +1,16 @@
 package org.middleheaven.io.repository;
 
+import org.middleheaven.io.StreamableContent;
+
 /**
  * A {@link ManagedFileContent} that can inform the content type of the containing information.
  * 
  */
-public interface MediaManagedFileContent extends ManagedFileContent {
+public interface MediaStreamableContent extends StreamableContent {
 
 	/**
 	 * 
-	 * @return the MIME type for this file contents
+	 * @return the MIME type for the stream content
 	 */
 	public String getContentType();
 	

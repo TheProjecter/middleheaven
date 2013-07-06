@@ -11,7 +11,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 
 public class UnexistantManagedFile extends AbstractMediaManagedFile{
 	
@@ -41,7 +41,7 @@ public class UnexistantManagedFile extends AbstractMediaManagedFile{
 	}
 
 	@Override
-	public MediaManagedFileContent getContent() {
+	public MediaStreamableContent getContent() {
 		return content;
 	}
 

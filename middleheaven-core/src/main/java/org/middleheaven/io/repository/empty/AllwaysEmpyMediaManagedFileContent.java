@@ -8,13 +8,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 
 /**
  * 
  */
 public class AllwaysEmpyMediaManagedFileContent implements
-		MediaManagedFileContent {
+		MediaStreamableContent {
 
 	/**
 	 * {@inheritDoc}

@@ -30,13 +30,17 @@ public class SimpleWatchEvent implements WatchEvent{
 		return kind;
 	}
 
+	public String toString(){
+		return "[" + kind + "]" + file.getPath(); 
+	}
+	
 	@Override
 	public int count() {
 		return 1;
 	}
 	
 	public int hashCode(){
-		return Hash.hash(file).hash(kind).hashCode();
+		return Hash.hash(file.getPath()).hash(kind).hashCode();
 	}
 	
 	public boolean equals(Object other){
@@ -48,6 +52,6 @@ public class SimpleWatchEvent implements WatchEvent{
 	 * @return
 	 */
 	private boolean equalsOther(SimpleWatchEvent other) {
-		return other.kind.equals(this.kind) && other.file.equals(this.file);
+		return other.kind.equals(this.kind) && other.file.getPath().equals(this.file.getPath());
 	}
 }

@@ -1,16 +1,16 @@
 package org.middleheaven.io.repository;
 
-import java.io.IOException;
 import java.util.Iterator;
 
+import org.middleheaven.collections.AbstractEnumerableAdapter;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.TreeEnumerable;
 import org.middleheaven.io.IOTransport;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.StreamableContentSource;
 import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
-import org.middleheaven.util.collections.AbstractEnumerableAdapter;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.TreeEnumerable;
 import org.middleheaven.util.function.Block;
 
 /**
@@ -44,7 +44,7 @@ public abstract class AbstractManagedFile implements ManagedFile {
 				file.deleteTree();
 			}
 		}
-	
+
 	}
 
 
@@ -85,17 +85,12 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	 */
 	@Override
 	public void copyTo(ManagedFile other) throws ManagedIOException {
-		try {
-			if (other.getType()==ManagedFileType.FILE){
-				IOTransport.copy(this.getContent().getInputStream()).to(other.getContent().getOutputStream());
-			} else {
-				ManagedFile newFile = other.retrive(this.getPath());
-				newFile.createFile();
-				IOTransport.copy(this.getContent().getInputStream()).to(newFile.getContent().getOutputStream());
-			}
-
-		} catch (IOException ioe) {
-			throw ManagedIOException.manage(ioe);
+		if (other.getType()==ManagedFileType.FILE){
+			IOTransport.copy(this).to(other);
+		} else {
+			ManagedFile newFile = other.retrive(this.getPath());
+			newFile.createFile();
+			IOTransport.copy(this).to(newFile);
 		}
 	}
 
@@ -105,14 +100,9 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void copyTo(ContentSource other) throws ManagedIOException{
-		try {
-			IOTransport.copy(this.getContent().getInputStream()).to(other.getContent().getOutputStream());
-		} catch (IOException ioe) {
-			throw ManagedIOException.manage(ioe);
-		}
+	public void copyTo(StreamableContentSource other) throws ManagedIOException{
+		IOTransport.copy(this).to(other);
 	}
-
 
 	@Override
 	public boolean canRenameTo(String newName) {
@@ -209,14 +199,14 @@ public abstract class AbstractManagedFile implements ManagedFile {
 
 			@Override
 			public void forEachParent(Block<ManagedFile> walker) {
-				
+
 				final ManagedFile parent = getParent();
 				if(parent!=null){
 					walker.apply(parent);
 					parent.asTreeEnumerable().forEachParent(walker);
 				}
 			}
-		
+
 			@Override
 			public void forEachRecursive(Block<ManagedFile> walker) {
 				for (ManagedFile file  : childrenIterable()){
@@ -224,7 +214,7 @@ public abstract class AbstractManagedFile implements ManagedFile {
 					file.asTreeEnumerable().forEachRecursive(walker);
 				}
 			}
-			
+
 		};
 	}
 

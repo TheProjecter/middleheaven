@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.io.repository.ManagedFileContent;
+import org.middleheaven.io.StreamableContent;
 
-public class EmptyFileContent implements ManagedFileContent {
+public class EmptyFileContent implements StreamableContent {
 
 	private static final EmptyFileContent me = new EmptyFileContent();
 	

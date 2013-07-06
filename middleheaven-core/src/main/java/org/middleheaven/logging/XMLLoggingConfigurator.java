@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 
 /**
  * TODO implement
- * @author  Sergio M. M. Taborda 
+ *
  */
 public class XMLLoggingConfigurator extends XMLObjectContructor implements LoggingConfigurator {
 

@@ -2,13 +2,14 @@ package org.middleheaven.io.repository;
 
 import java.util.Arrays;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.io.repository.watch.Watchable;
+import org.middleheaven.util.Joiner;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.CollectionUtils;
 
 
 /**
@@ -233,7 +234,6 @@ public class ArrayManagedFilePath implements ManagedFilePath , Watchable {
 	public String toString(){
 		return this.getPath();
 	}
-
 
 	/**
 	 * {@inheritDoc}

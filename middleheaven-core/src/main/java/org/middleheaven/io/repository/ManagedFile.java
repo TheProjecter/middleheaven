@@ -7,16 +7,17 @@ package org.middleheaven.io.repository;
 
 import java.net.URI;
 
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.TreeEnumerable;
+import org.middleheaven.io.StreamableContentSource;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.watch.Watchable;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.TreeEnumerable;
 
 
 /**
  * A common abstract for all types of files : disk files, url addresses, uploaded files, email attachments, etc ...
  */
-public interface ManagedFile extends Watchable , ContentSource {
+public interface ManagedFile extends Watchable , StreamableContentSource {
 
 	/**
 	 * the {@link ManagedFileRepository} where this file belongs.

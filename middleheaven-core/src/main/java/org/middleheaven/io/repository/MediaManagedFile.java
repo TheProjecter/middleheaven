@@ -7,7 +7,7 @@ public interface MediaManagedFile extends ManagedFile {
      * 
      * @return a handler for the file content
      */
-    public MediaManagedFileContent getContent();
+    public MediaStreamableContent getContent();
 
 
 	

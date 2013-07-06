@@ -5,10 +5,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.middleheaven.quantity.Quantity;
-import org.middleheaven.quantity.math.structure.Field;
 import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.GroupAdditiveElement;
-import org.middleheaven.quantity.math.structure.OrderedFieldElement;
 import org.middleheaven.quantity.math.structure.RingElement;
 import org.middleheaven.quantity.measurables.Dimensionless;
 import org.middleheaven.quantity.unit.SI;

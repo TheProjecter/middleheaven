@@ -3,7 +3,7 @@
  */
 package org.middleheaven.process;
 
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.Enumerable;
 
 /**
  * 

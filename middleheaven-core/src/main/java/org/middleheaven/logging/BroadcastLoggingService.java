@@ -37,4 +37,12 @@ public class BroadcastLoggingService implements LoggingService {
 		listeners.removeListener(listener);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeAllListeners() {
+		listeners.removeAll();
+	}
+
 }

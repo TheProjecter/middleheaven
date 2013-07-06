@@ -6,6 +6,7 @@ package org.middleheaven.quantity.math;
 import java.util.Comparator;
 import java.util.Random;
 
+import org.middleheaven.collections.ComparableComparator;
 import org.middleheaven.quantity.math.structure.MathStructuresFactory;
 import org.middleheaven.quantity.math.structure.OrderedField;
 
@@ -87,14 +88,7 @@ public class BigIntField implements OrderedField<BigInt> {
 
 	@Override
 	public Comparator<BigInt> getComparator() {
-		return new Comparator<BigInt>(){
-
-			@Override
-			public int compare(BigInt a, BigInt b) {
-				return a.compareTo(b);
-			}
-			
-		};
+		return ComparableComparator.getInstance();
 	}
 
 

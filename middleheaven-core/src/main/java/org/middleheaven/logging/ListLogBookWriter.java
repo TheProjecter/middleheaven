@@ -1,7 +1,8 @@
 package org.middleheaven.logging;
 
+import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public final class ListLogBookWriter extends LogBookWriter{
 
-	private final LinkedList<LoggingEvent> events = new LinkedList<LoggingEvent>();
+	private final Deque<LoggingEvent> events = new LinkedList<LoggingEvent>();
 	
 	public ListLogBookWriter(){}
 	
@@ -28,7 +29,7 @@ public final class ListLogBookWriter extends LogBookWriter{
 		events.add(event);
 	}
 	
-	public List<LoggingEvent> getEvents(){
+	public Collection<LoggingEvent> getEvents(){
 		return events;
 	}
 	

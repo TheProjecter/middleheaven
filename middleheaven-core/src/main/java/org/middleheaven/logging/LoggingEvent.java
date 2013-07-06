@@ -21,7 +21,7 @@ public class LoggingEvent {
         this(bookName, level,msg, null, null);
     }
     
-    public LoggingEvent(String bookName, LoggingLevel level, CharSequence msg, Throwable t, LoggingEventParametersCollector collector){
+    public LoggingEvent(String bookName, LoggingLevel level, CharSequence msg,  Throwable t, LoggingEventParametersCollector collector ){
         this.bookName = bookName;
     	this.timeStamp = System.currentTimeMillis();
         this.level = level;

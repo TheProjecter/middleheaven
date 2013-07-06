@@ -1,7 +1,7 @@
 
 package org.middleheaven.logging;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 
 
 
@@ -54,83 +54,83 @@ public abstract class Logger {
 	}
 
 	public final void error(CharSequence msg, Object ... params) {
-		fatal(null,msg,params);
+		error(null,msg,params);
 	}
 	
 	public final void error(CharSequence msg, LoggingEventParametersCollector collector) {
-		fatal(null,msg,collector);
+		error(null,msg,collector);
 	}
 
 	public void error(Throwable throwable, CharSequence message,Object ... params) {
-		fatal(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
+		error(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
 	}
 	
 	public void error(Throwable throwable, CharSequence message,LoggingEventParametersCollector collector) {
-		log(new LoggingEvent(name, LoggingLevel.FATAL,message,throwable,collector));
+		log(new LoggingEvent(name, LoggingLevel.ERROR,message,throwable,collector));
 	}
 
 	public final void warn(CharSequence msg, Object ... params) {
-		fatal(null,msg,params);
+		warn(null,msg,params);
 	}
 	
 	public final void warn(CharSequence msg, LoggingEventParametersCollector collector) {
-		fatal(null,msg,collector);
+		warn(null,msg,collector);
 	}
 
 	public void warn(Throwable throwable, CharSequence message,Object ... params) {
-		fatal(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
+		warn(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
 	}
 	
 	public void warn(Throwable throwable, CharSequence message,LoggingEventParametersCollector collector) {
-		log(new LoggingEvent(name, LoggingLevel.FATAL,message,throwable,collector));
+		log(new LoggingEvent(name, LoggingLevel.WARN,message,throwable,collector));
 	}
 
 	public final void info(CharSequence msg, Object ... params) {
-		fatal(null,msg,params);
+		info(null,msg,params);
 	}
 	
 	public final void info(CharSequence msg, LoggingEventParametersCollector collector) {
-		fatal(null,msg,collector);
+		info(null,msg,collector);
 	}
 
 	public void info(Throwable throwable, CharSequence message,Object ... params) {
-		fatal(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
+		info(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
 	}
 	
 	public void info(Throwable throwable, CharSequence message,LoggingEventParametersCollector collector) {
-		log(new LoggingEvent(name, LoggingLevel.FATAL,message,throwable,collector));
+		log(new LoggingEvent(name, LoggingLevel.INFO,message,throwable,collector));
 	}
 	
 	public final void debug(CharSequence msg, Object ... params) {
-		fatal(null,msg,params);
+		debug(null,msg,params);
 	}
 	
 	public final void debug(CharSequence msg, LoggingEventParametersCollector collector) {
-		fatal(null,msg,collector);
+		debug(null,msg,collector);
 	}
 
 	public void debug(Throwable throwable, CharSequence message,Object ... params) {
-		fatal(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
+		debug(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
 	}
 	
 	public void debug(Throwable throwable, CharSequence message,LoggingEventParametersCollector collector) {
-		log(new LoggingEvent(name, LoggingLevel.FATAL,message,throwable,collector));
+		log(new LoggingEvent(name, LoggingLevel.DEBUG,message,throwable,collector));
 	}
 	
 	public final void trace(CharSequence msg, Object ... params) {
-		fatal(null,msg,params);
+		trace(null,msg,params);
 	}
 	
 	public final void trace(CharSequence msg, LoggingEventParametersCollector collector) {
-		fatal(null,msg,collector);
+		trace(null,msg,collector);
 	}
 
 	public void trace(Throwable throwable, CharSequence message,Object ... params) {
-		fatal(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
+		trace(throwable, message, new ObjectArrayLoggingEventParametersCollector(params));
 	}
 	
 	public void trace(Throwable throwable, CharSequence message,LoggingEventParametersCollector collector) {
-		log(new LoggingEvent(name, LoggingLevel.FATAL,message,throwable,collector));
+		log(new LoggingEvent(name, LoggingLevel.TRACE,message,throwable,collector));
 	}
 
 	

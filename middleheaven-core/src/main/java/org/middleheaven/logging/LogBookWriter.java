@@ -1,7 +1,6 @@
 
 package org.middleheaven.logging;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 
@@ -12,16 +11,7 @@ public abstract class LogBookWriter {
 
     protected LoggingLevel level = LoggingLevel.ALL;
 
-    protected String formatToText(LoggingEvent event){
-    	CharSequence format = event.getMessage();
-    	Object [] params = event.getMessageParameters();
-    	if (params.length ==0){
-    		return format.toString();
-    	}
-    	final MessageFormat messageFormat = new MessageFormat(format.toString());
-    	return messageFormat.format(params);
-    }
-    
+
     public LoggingLevel getLevel(){
         return level;
     }

@@ -5,12 +5,14 @@ package org.middleheaven.io.repository;
 
 import java.net.URI;
 
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.TreeEnumerable;
+import org.middleheaven.io.StreamableContentSource;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.watch.WatchEvent.Kind;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.io.repository.watch.WatchService;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.TreeEnumerable;
 
 /**
  * 
@@ -138,7 +140,7 @@ class ManagedFileDecorator implements ManagedFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ManagedFileContent getContent() {
+	public StreamableContent getContent() {
 		return original.getContent();
 	}
 
@@ -174,7 +176,7 @@ class ManagedFileDecorator implements ManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void copyTo(ContentSource other) throws ManagedIOException {
+	public void copyTo(StreamableContentSource other) throws ManagedIOException {
 		original.copyTo(other);
 	}
 

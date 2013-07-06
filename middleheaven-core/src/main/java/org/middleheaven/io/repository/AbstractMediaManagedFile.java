@@ -3,9 +3,9 @@ package org.middleheaven.io.repository;
 
 import java.net.URI;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * An abstract implementation of a {@link MediaManagedFile}.

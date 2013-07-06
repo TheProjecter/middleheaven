@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.middleheaven.collections.AbstractEnumerableAdapter;
+import org.middleheaven.collections.TransformedIterator;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.AbstractEnumerableAdapter;
-import org.middleheaven.util.collections.TransformedIterator;
 import org.middleheaven.util.function.Mapper;
 
 public class MapContext extends AbstractAttributeContext {
