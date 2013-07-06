@@ -2,10 +2,16 @@ package org.middleheaven.util.identity;
 
 import java.util.Arrays;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.Hash;
 
-public class CompositeIdentity extends Identity {
+/**
+ * An {@link Identity} composed of other identities.
+ */
+public final class CompositeIdentity extends Identity {
 
+	private static final long serialVersionUID = -1592992685697748450L;
+	
 	private final Identity[] identities;
 	private final int hashCode;
 	
@@ -21,7 +27,7 @@ public class CompositeIdentity extends Identity {
 	}
 	
 	private CompositeIdentity(Identity[] identities){
-		this.identities = identities;
+		this.identities = CollectionUtils.duplicateArray(identities);
 		this.hashCode = Hash.hash(identities).hashCode();
 	}
 	

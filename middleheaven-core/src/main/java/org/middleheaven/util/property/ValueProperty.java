@@ -65,6 +65,9 @@ public class ValueProperty<T> extends AbstractProperty<T> {
 		return value != null;
 	}
 	
+	public String toString(){
+		return this.getName() + "=" + value;
+	}
 
 
 }

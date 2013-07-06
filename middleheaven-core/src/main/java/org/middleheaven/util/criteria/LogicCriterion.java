@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.classification.LogicOperator;
-import org.middleheaven.util.collections.CollectionUtils;
 
 /**
  * A {@link BooleanCriterion} the enables logic relaction with other criteria.

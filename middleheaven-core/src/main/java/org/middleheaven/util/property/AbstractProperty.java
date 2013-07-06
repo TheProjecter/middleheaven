@@ -14,19 +14,25 @@ import org.middleheaven.util.function.Block;
  */
 public abstract class AbstractProperty<T> implements Property<T>{
 
-	private EventListenersSet<PropertyChangeListener> listeners = EventListenersSet.newSet(PropertyChangeListener.class);
+	private EventListenersSet<PropertyChangeListener> listeners;
 
-	
 	protected final void fireChange(T oldValue, T newValue){
-		listeners.broadcastEvent().propertyChange(new PropertyChangeEvent(this, "", oldValue, newValue));
+		if (listeners != null){
+			listeners.broadcastEvent().propertyChange(new PropertyChangeEvent(this, "", oldValue, newValue));
+		}
 	}
 
-	public final void addListener(PropertyChangeListener listener){
+	public final synchronized void addListener(PropertyChangeListener listener){
+		if (listeners == null){
+			listeners = EventListenersSet.newSet(PropertyChangeListener.class);
+		}
 		listeners.addListener(listener);
 	}
 	
 	public final void removeListener(PropertyChangeListener listener){
-		listeners.removeListener(listener);
+		if (listeners != null){
+			listeners.removeListener(listener);
+		}
 	}
 	
 	private String name;

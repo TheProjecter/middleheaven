@@ -9,7 +9,6 @@ package org.middleheaven.util.function;
  */
 public final class Maybe<T> {
 
-	
 	private T value;
 	
 	/**

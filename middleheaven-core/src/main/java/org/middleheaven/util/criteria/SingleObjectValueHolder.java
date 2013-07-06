@@ -2,7 +2,7 @@ package org.middleheaven.util.criteria;
 
 import java.util.Map;
 
-import org.middleheaven.util.collections.ParamsMap;
+import org.middleheaven.collections.ParamsMap;
 
 /**
  * Holds a single value.

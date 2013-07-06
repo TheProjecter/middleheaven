@@ -10,4 +10,5 @@ package org.middleheaven.util.function;
  */
 public interface Predicate<T> extends Mapper<Boolean, T> {
 	
+	
 }

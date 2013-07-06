@@ -2,8 +2,8 @@ package org.middleheaven.util.criteria;
 
 import java.util.Collection;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.collections.CollectionUtils;
 
 class CollectionFieldInSetCriteria implements FieldInSetCriterion {
 

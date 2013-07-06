@@ -12,7 +12,6 @@ import org.middleheaven.util.criteria.FieldCriterion;
 import org.middleheaven.util.criteria.FieldInSetCriterion;
 import org.middleheaven.util.criteria.LogicCriterion;
 import org.middleheaven.util.function.BinaryFunction;
-import org.middleheaven.util.function.Function;
 import org.middleheaven.util.function.Predicate;
 
 /**
@@ -60,7 +59,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 		return res;
 	}
 
-	private static BinaryFunction<Boolean, Object, Object> EQ = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final BinaryFunction<Boolean, Object, Object> EQ = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -69,7 +68,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> LESS_THAN = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> LESS_THAN = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -82,7 +81,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> LESS_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> LESS_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -95,7 +94,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> GREATER_THAN = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> GREATER_THAN = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -107,7 +106,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 		}
 
 	};
-	private static BinaryFunction<Boolean, Object, Object> GREATER_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> GREATER_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -120,7 +119,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> STARTS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> STARTS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -130,7 +129,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> CONTAINS = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> CONTAINS = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -140,7 +139,7 @@ public class BeanCriteriaInterpreter<T> implements Predicate<T> {
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> ENDS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> ENDS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {

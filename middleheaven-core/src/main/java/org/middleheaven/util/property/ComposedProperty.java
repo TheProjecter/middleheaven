@@ -6,7 +6,7 @@ package org.middleheaven.util.property;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.function.Function;
 
 /**

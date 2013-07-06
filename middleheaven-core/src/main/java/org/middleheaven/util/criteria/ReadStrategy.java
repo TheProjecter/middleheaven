@@ -8,6 +8,11 @@ public class ReadStrategy {
 	private boolean isFowardOnly = false;
 	private int maxFetchDeep = 2;
 
+	public static ReadStrategy defaultStrategy(){
+		return fowardReadOnly();
+	}
+
+	
 	public static ReadStrategy editableRandomAccess(){
 		return new ReadStrategy(false,false);
 	}
