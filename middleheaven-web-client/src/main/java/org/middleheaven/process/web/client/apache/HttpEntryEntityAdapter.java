@@ -78,7 +78,7 @@ public class HttpEntryEntityAdapter implements HttpEntity {
 	 */
 	@Override
 	public void writeTo(OutputStream outstream) throws IOException {
-		IOTransport.copy(entry.getContent().getInputStream()).to(outstream);
+		IOTransport.copy(entry).to(outstream);
 	}
 
 	/**
