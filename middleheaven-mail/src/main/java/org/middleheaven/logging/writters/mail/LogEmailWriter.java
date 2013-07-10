@@ -1,8 +1,6 @@
 package org.middleheaven.logging.writters.mail;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,12 +11,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.logging.LogBookWriter;
 import org.middleheaven.logging.LogWritingIOExcepiton;
 import org.middleheaven.logging.LoggingConfiguration;
 import org.middleheaven.logging.LoggingEvent;
+import org.middleheaven.logging.writters.AbstractLogFormat;
 import org.middleheaven.logging.writters.FormatableLogWriter;
 import org.middleheaven.logging.writters.LogFormat;
 import org.middleheaven.mail.MailMessage;
@@ -26,8 +25,7 @@ import org.middleheaven.mail.MailSendingService;
 import org.middleheaven.util.StringUtils;
 
 /**
- * TODO implement Trigger functionality
- * @author  Sergio M. M. Taborda
+ * 
  */
 public class LogEmailWriter extends LogBookWriter implements FormatableLogWriter {
 
@@ -36,22 +34,18 @@ public class LogEmailWriter extends LogBookWriter implements FormatableLogWriter
     private String emailTo = null;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH'h'mm");
 
-    private LogFormat format = new LogFormat(){
+    private LogFormat format = new AbstractLogFormat(){
 
-        public void setWriter(LogBookWriter writer) {}
-
-        public void writerHeader(OutputStream stream) throws LogWritingIOExcepiton {
-            PrintWriter message = new PrintWriter(new OutputStreamWriter(stream));
-            message.println("This is an automatic message. Please do not respond to it.");
+        public void writerHeader(PrintWriter writer) throws LogWritingIOExcepiton {
+        	writer.println("This is an automatic message. Please do not respond to it.");
         }
 
-        public void format(LoggingEvent event, OutputStream stream) throws LogWritingIOExcepiton {
-            PrintWriter message = new PrintWriter(new OutputStreamWriter(stream));
+        public void format(LoggingEvent event,PrintWriter message ) throws LogWritingIOExcepiton {
             message.append(dateFormat.format(new Date(event.getTime())));
             message.append(" - ");
             message.append(event.getLevel().toString());
             message.append(" - ");
-            message.append(formatToText(event));
+            message.append(fillParamterHolders(event));
             message.append("\n");
             if (event.hasThrowable()){
                 message.append("\n");
@@ -61,12 +55,6 @@ public class LogEmailWriter extends LogBookWriter implements FormatableLogWriter
                 message.append("\n");
             }
 
-        }
-
-        public void writerFooter(OutputStream stream) throws LogWritingIOExcepiton {}
-
-        public String getContentType() {
-            return "text/plain";
         }
 
     };
@@ -115,7 +103,7 @@ public class LogEmailWriter extends LogBookWriter implements FormatableLogWriter
             email.setSubject("Log Events" + dateFormat.format(new Date()));
             email.setFrom("midleheave.logging@" + getPrimaryAddress().toString());
 
-            ByteArrayOutputStream message  = new ByteArrayOutputStream();
+            PrintWriter message  = new PrintWriter(new ByteArrayOutputStream());
 
             format.writerHeader(message);
             for (int i =0; i < buffer.size();i++){

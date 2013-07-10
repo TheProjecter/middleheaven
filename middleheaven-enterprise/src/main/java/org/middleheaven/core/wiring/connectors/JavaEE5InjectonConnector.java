@@ -3,12 +3,13 @@ package org.middleheaven.core.wiring.connectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.AbstractAnnotationBasedWiringModelParser;
@@ -19,7 +20,6 @@ import org.middleheaven.core.wiring.FieldAfterWiringPoint;
 import org.middleheaven.core.wiring.MethodAfterWiringPoint;
 import org.middleheaven.core.wiring.WiringConnector;
 import org.middleheaven.core.wiring.WiringSpecification;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Block;
 
 /**
@@ -107,10 +107,10 @@ public class JavaEE5InjectonConnector implements WiringConnector {
 
 			// search all methods annotated with Resource
 			introspector.inspect().methods().annotatedWith(Resource.class)
-			.each( new Block<Method>(){
+			.each( new Block<MethodHandler>(){
 
 				@Override
-				public void apply(Method method) {
+				public void apply(MethodHandler method) {
 					WiringSpecification[] spec = readParamsSpecification(method);
 
 					model.addAfterWiringPoint(new MethodAfterWiringPoint(method,null,spec));

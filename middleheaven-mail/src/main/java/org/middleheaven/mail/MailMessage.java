@@ -12,7 +12,7 @@ import java.util.Map;
 import org.middleheaven.io.repository.CharSequenceMediaManagedFileContent;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.MediaManagedFile;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.io.repository.set.SetManagedFileRepository;
 
 
@@ -25,7 +25,7 @@ public class MailMessage implements Serializable {
  
 	private static final long serialVersionUID = 1L;
 	
-	private MediaManagedFileContent body;
+	private MediaStreamableContent body;
 	private String from;
     private String subject;
     private Map<MailRecipientType,List<String>> recipients = new EnumMap<MailRecipientType, List<String>>(MailRecipientType.class);
@@ -151,7 +151,7 @@ public class MailMessage implements Serializable {
      * 
      * @return message body
      */
-	public MediaManagedFileContent getBody() {
+	public MediaStreamableContent getBody() {
 		return this.body;
 	}
 	 

@@ -17,7 +17,7 @@ import org.middleheaven.mail.MailTransmissionResult;
  */
 public class QueueMailSendingService extends MailSendingServiceDecorator {
 
-	BlockingQueue<QueuedMessage> queue = new PriorityBlockingQueue<QueuedMessage>(100,new Comparator<QueuedMessage>(){
+	private BlockingQueue<QueuedMessage> queue = new PriorityBlockingQueue<QueuedMessage>(100,new Comparator<QueuedMessage>(){
 
 		@Override
 		public int compare(QueuedMessage m1, QueuedMessage m2) {
@@ -36,7 +36,7 @@ public class QueueMailSendingService extends MailSendingServiceDecorator {
 	public QueueMailSendingService(MailSendingService original) {
 		super(original);
 
-		this.mailSenderThread = new MailSenderThread();
+		this.mailSenderThread = new MailSenderThread(queue, original);
 	
 	}
 
@@ -73,10 +73,15 @@ public class QueueMailSendingService extends MailSendingServiceDecorator {
 	}
 
 
-	private class MailSenderThread extends Thread {
+	private static class MailSenderThread extends Thread {
 
-		public MailSenderThread() {
+		private BlockingQueue<QueuedMessage> queue;
+		private MailSendingService original;
+
+		public MailSenderThread(BlockingQueue<QueuedMessage> queue, MailSendingService original) {
 			super();
+			this.queue = queue;
+			this.original = original;
 		}
 
 		public void run(){
@@ -84,7 +89,7 @@ public class QueueMailSendingService extends MailSendingServiceDecorator {
 				try{
 					QueuedMessage qm = queue.take();
 					try{
-						getOriginal().send(qm.getMessage(), new MailAsynchrounsCallbackDecorator(qm.getCallback()));
+						original.send(qm.getMessage(), new MailAsynchrounsCallbackDecorator(qm.getCallback()));
 
 					} catch (Exception e){
 						qm.getCallback().onSent(new MailTransmissionResult(qm.getMessage(), e));

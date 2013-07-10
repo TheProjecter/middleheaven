@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 
 /**
  * 
@@ -17,10 +17,10 @@ import org.middleheaven.io.repository.MediaManagedFileContent;
 class MediaManagedFileContentDataSource implements DataSource {
 
 	
-	private MediaManagedFileContent content;
+	private MediaStreamableContent content;
 	private String name;
 
-	public MediaManagedFileContentDataSource (String name, MediaManagedFileContent content){
+	public MediaManagedFileContentDataSource (String name, MediaStreamableContent content){
 		this.content = content;
 		this.name = name;
 	}

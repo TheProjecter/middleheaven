@@ -12,16 +12,16 @@ import java.util.Collections;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ManagedFileContent;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
 import org.middleheaven.io.repository.watch.WatchService;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Predicate;
 
 final class VirtualFileSystemManagedFile extends AbstractManagedFile implements ManagedFileRepository{
@@ -195,7 +195,7 @@ final class VirtualFileSystemManagedFile extends AbstractManagedFile implements 
 	}
 
 	@Override
-	public ManagedFileContent getContent() {
+	public StreamableContent getContent() {
 		return new VirtualManagedFileContent();
 	}
 
@@ -230,7 +230,7 @@ final class VirtualFileSystemManagedFile extends AbstractManagedFile implements 
 
 
 
-	private class VirtualManagedFileContent implements  ManagedFileContent{
+	private class VirtualManagedFileContent implements  StreamableContent{
 
 		@Override
 		public InputStream getInputStream() throws ManagedIOException{
