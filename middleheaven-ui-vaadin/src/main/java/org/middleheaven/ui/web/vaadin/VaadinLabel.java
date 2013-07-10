@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.property.Property;
@@ -16,7 +16,7 @@ import com.vaadin.ui.Label;
  */
 public class VaadinLabel extends VaadinOutputUIComponent implements UILabel {
 
-	private Property<TextLocalizable> text = ValueProperty.writable("text", TextLocalizable.class);
+	private Property<LocalizableText> text = ValueProperty.writable("text", LocalizableText.class);
 	
 	/**
 	 * Constructor.
@@ -29,10 +29,10 @@ public class VaadinLabel extends VaadinOutputUIComponent implements UILabel {
 		Label component = (Label) this.getComponent();
 		component.setContentMode(Label.CONTENT_TEXT);
 		
-		text.onChange(new Block<TextLocalizable>(){
+		text.onChange(new Block<LocalizableText>(){
 
 			@Override
-			public void apply(TextLocalizable text) {
+			public void apply(LocalizableText text) {
 				((Label)getComponent()).setValue(localize(text));
 			}
 			
@@ -52,7 +52,7 @@ public class VaadinLabel extends VaadinOutputUIComponent implements UILabel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		return text;
 	}
 

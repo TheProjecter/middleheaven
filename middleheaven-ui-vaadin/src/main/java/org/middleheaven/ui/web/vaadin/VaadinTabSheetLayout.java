@@ -5,8 +5,6 @@ package org.middleheaven.ui.web.vaadin;
 
 import static org.middleheaven.util.SafeCastUtils.safeCast;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 

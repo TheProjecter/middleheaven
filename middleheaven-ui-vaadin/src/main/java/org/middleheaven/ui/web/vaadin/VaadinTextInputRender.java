@@ -6,7 +6,6 @@ package org.middleheaven.ui.web.vaadin;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.rendering.RenderingContext;
 
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
 /**

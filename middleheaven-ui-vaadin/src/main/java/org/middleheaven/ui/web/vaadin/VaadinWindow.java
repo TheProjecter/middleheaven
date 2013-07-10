@@ -6,7 +6,7 @@ package org.middleheaven.ui.web.vaadin;
 import java.util.Locale;
 
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIWindow;
@@ -14,7 +14,7 @@ import org.middleheaven.ui.components.UIWindowsListener;
 import org.middleheaven.util.property.Property;
 
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.Panel;
 
 /**
  * 
@@ -24,17 +24,14 @@ public class VaadinWindow extends VaadinUIComponentContainer implements UIWindow
 	private final EventListenersSet<UIPrespectiveListener> listeners = EventListenersSet.newSet(UIPrespectiveListener.class);
 	private final EventListenersSet<UIWindowsListener> windowlisteners = EventListenersSet.newSet(UIWindowsListener.class);
 	
-	private final Property<TextLocalizable> title = VTitlePropery.bind(this);
+	private final Property<LocalizableText> title = VTitlePropery.bind(this);
 
 	/**
 	 * Constructor.
 	 * @param locale 
 	 */
 	public VaadinWindow(Locale locale) {
-		super(new Window(), UIWindow.class);
-		Window component = (Window) this.getComponent();
-		component.setSizeFull();
-		component.setLocale(locale);
+		super(new Panel(), UIWindow.class);
 	}
 
 	/**
@@ -43,7 +40,6 @@ public class VaadinWindow extends VaadinUIComponentContainer implements UIWindow
 	@Override
 	public void setGID(String id) {
 		super.setGID(id);
-		((Window)this.getComponent()).setName(id);
 	}
 
 	/**
@@ -74,7 +70,7 @@ public class VaadinWindow extends VaadinUIComponentContainer implements UIWindow
 		this.layout = layout;
 		
 		if (layout instanceof VaadinUIComponent){
-			Window component = (Window) this.getComponent();
+			Panel component = (Panel) this.getComponent();
 			component.setContent((ComponentContainer) ((VaadinUIComponent)layout).getComponent());
 		}
 	}
@@ -83,7 +79,7 @@ public class VaadinWindow extends VaadinUIComponentContainer implements UIWindow
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTitleProperty() {
+	public Property<LocalizableText> getTitleProperty() {
 		return title;
 	}
 

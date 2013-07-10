@@ -295,7 +295,7 @@ class BorderLayout extends VerticalLayout {
      * @param <Component>
      */
     @SuppressWarnings("hiding")
-    private class BorderLayoutIterator<Component> implements
+    private static class BorderLayoutIterator<Component> implements
             Iterator<Component> {
 
         Iterator<Component> mainLayoutIter;

@@ -42,7 +42,8 @@ public class VaadinClientApplication extends Application implements UIClient{
 	private Map <String, VaadinUIComponent> components = new LinkedHashMap<String,VaadinUIComponent>();
 	private ServletWebContext renderingContext;
 	private SceneNavigator navigator;
-
+	private UILayout layout;
+	private Window bowserWindow;
 	
 	public VaadinClientApplication (ServletWebContext renderingContext, SceneNavigator navigator){
 		this.renderingContext = renderingContext;
@@ -63,15 +64,20 @@ public class VaadinClientApplication extends Application implements UIClient{
 	public void init() {
 		//no-op
 		
-		setLocale(((WebApplicationContext)getContext()).getBrowser().getLocale());
 		
-
+		final Locale locale = ((WebApplicationContext)getContext()).getBrowser().getLocale();
+		setLocale(locale);
+		
+		bowserWindow = new Window();
+		bowserWindow.setVisible(true);
+		bowserWindow.setSizeFull();
+		bowserWindow.setLocale(locale);
+		
 		VaadinUIComponent component = (VaadinUIComponent)this.resolveMainWindow(this, getServletWebContext().getAttributes());
 		
-		final Window window = (Window) component.getComponent();
+		bowserWindow.addComponent(component.getComponent());
 		
-		window.setVisible(true);
-		this.setMainWindow(window);
+		this.setMainWindow(bowserWindow);
 		
 	}
 	
@@ -210,9 +216,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 		
 		components.put(c.getGID(), c);
 		
-		Window window = (Window) c.getComponent();
-
-		addWindow(window);
+		//bowserWindow.addComponent(c.getComponent());
 		
 	}
 
@@ -221,7 +225,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 */
 	@Override
 	public void removeComponent(UIComponent component) {
-		//	no-op
+		components.remove(component.getGID());
 	}
 
 	/**
@@ -277,7 +281,7 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 */
 	@Override
 	public void setUIContainerLayout(UILayout component) {
-		throw new UnsupportedOperationException("Not implememented yet");
+		this.layout = component;
 	}
 
 	/**
@@ -285,16 +289,16 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 */
 	@Override
 	public UILayout getUIContainerLayout() {
-		throw new UnsupportedOperationException("Not implememented yet");
+		return layout;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addComponent(UIComponent component,
-			UILayoutConstraint layoutConstrain) {
-		throw new UnsupportedOperationException("Not implememented yet");
+	public void addComponent(UIComponent component, UILayoutConstraint layoutConstrain) {
+		layout.addComponent(component, layoutConstrain);
+		this.addComponent(component);
 	}
 
 	/**
@@ -309,18 +313,16 @@ public class VaadinClientApplication extends Application implements UIClient{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UIComponent resolveMainWindow(UIClient client,
-			AttributeContext context) {
-		throw new UnsupportedOperationException("Not implememented yet");
+	public UIComponent resolveMainWindow(UIClient client, AttributeContext context) {
+		return this.getChildrenComponents().get(0);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UIComponent resolveSplashWindow(UIClient client,
-			AttributeContext context) {
-		throw new UnsupportedOperationException("Not implememented yet");
+	public UIComponent resolveSplashWindow(UIClient client, AttributeContext context) {
+		return null;
 	}
 
 

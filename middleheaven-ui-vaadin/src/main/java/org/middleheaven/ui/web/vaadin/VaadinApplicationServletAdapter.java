@@ -19,6 +19,7 @@ import org.middleheaven.ui.Rendering;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIEnvironmentType;
 import org.middleheaven.ui.UIService;
+import org.middleheaven.ui.binding.UIBinder;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
@@ -34,11 +35,13 @@ public class VaadinApplicationServletAdapter extends AbstractApplicationServlet{
 	private static final long serialVersionUID = 1L;
 	private String applicationId;
 	private UIService uiService;
+	private UIBinder binder;
 
 
-	public VaadinApplicationServletAdapter (String applicationId, UIService uiService){
+	public VaadinApplicationServletAdapter (String applicationId, UIService uiService, UIBinder binder){
 		this.applicationId = applicationId;
 		this.uiService = uiService;
+		this.binder = binder;
 	}
 
 	public void init(javax.servlet.ServletConfig servletConfig) throws javax.servlet.ServletException {
@@ -63,7 +66,6 @@ public class VaadinApplicationServletAdapter extends AbstractApplicationServlet{
 	            serveStaticResources(request, response);
 	            return;
 	        }
-	        
 	        super.service(request, response);
     	} finally {
     	    //remove the context from the session
@@ -258,7 +260,11 @@ public class VaadinApplicationServletAdapter extends AbstractApplicationServlet{
 
 		final Rendering<UIClient> rendering =  uiService.getUIClientRendering(UIEnvironmentType.BROWSER, context.getAttributes());
 
-		return  (Application) rendering.getComponent();
+		UIClient client = rendering.getComponent();
+		
+		binder.bind(client);
+		
+		return  (Application) client;
 	}
 
 

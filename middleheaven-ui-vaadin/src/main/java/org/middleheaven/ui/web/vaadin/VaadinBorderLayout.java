@@ -5,14 +5,12 @@ package org.middleheaven.ui.web.vaadin;
 
 import static org.middleheaven.util.SafeCastUtils.safeCast;
 
-import org.middleheaven.ui.ComponentAggregationEvent;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UISize;
-import org.middleheaven.ui.components.UILayoutManager;
-import org.middleheaven.ui.layout.UIBorderLayoutManager;
 import org.middleheaven.ui.layout.UIBorderLayoutConstraint;
 import org.middleheaven.ui.web.vaadin.BorderLayout.Constraint;
+import org.middleheaven.util.SafeCastUtils;
+import org.middleheaven.util.function.Maybe;
 
 /**
  * 
@@ -44,32 +42,38 @@ class VaadinBorderLayout extends VaadinUILayout {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addComponent(UIComponent component, UILayoutConstraint layoutConstrain) {
+	public void addComponent(UIComponent component, UILayoutConstraint layoutConstraint) {
 		
 		
 		VaadinUIComponent c = safeCast(component, VaadinUIComponent.class).get(); 
 		
-		UIBorderLayoutConstraint borderConstraint = (UIBorderLayoutConstraint)layoutConstrain;
+		Maybe<UIBorderLayoutConstraint> maybeBorderConstraint = SafeCastUtils.safeCast(layoutConstraint, UIBorderLayoutConstraint.class);
 		
-		BorderLayout layout = (BorderLayout) this.getComponent();
-		
-		switch (borderConstraint){
-		case CENTER:
-			layout.addComponent(c.getComponent(), Constraint.CENTER);
-			break;
-		case EAST:
-			layout.addComponent(c.getComponent(), Constraint.EAST);
-			break;
-		case NORTH:
-			layout.addComponent(c.getComponent(), Constraint.NORTH);
-			break;
-		case SOUTH:
-			layout.addComponent(c.getComponent(), Constraint.SOUTH);
-			break;
-		case WEST:
-			layout.addComponent(c.getComponent(), Constraint.WEST);
-			break;
+		if (maybeBorderConstraint.isPresent()){
+			
+			UIBorderLayoutConstraint borderConstraint = maybeBorderConstraint.get();
+			
+			BorderLayout layout = (BorderLayout) this.getComponent();
+			
+			switch (borderConstraint){
+			case CENTER:
+				layout.addComponent(c.getComponent(), Constraint.CENTER);
+				break;
+			case EAST:
+				layout.addComponent(c.getComponent(), Constraint.EAST);
+				break;
+			case NORTH:
+				layout.addComponent(c.getComponent(), Constraint.NORTH);
+				break;
+			case SOUTH:
+				layout.addComponent(c.getComponent(), Constraint.SOUTH);
+				break;
+			case WEST:
+				layout.addComponent(c.getComponent(), Constraint.WEST);
+				break;
+			}
 		}
+	
 		
 		this.addWrapperComponent(c);
 		

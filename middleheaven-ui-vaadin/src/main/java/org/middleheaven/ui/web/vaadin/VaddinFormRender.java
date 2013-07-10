@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UIField;
@@ -53,7 +53,7 @@ public class VaddinFormRender extends AbstractVaadinRender {
 				
 				VaadinUIComponent v = (VaadinUIComponent) context.getRenderKit().renderComponent(context, form, c);
 				
-				h.addComponent(new Label(localize(TextLocalizable.valueOf("ui:label.field." + name), ((VaadinUIComponent) parent).getCulture()))); // TODO locale
+				h.addComponent(new Label(localize(LocalizableText.valueOf("ui:label.field." + name), ((VaadinUIComponent) parent).getCulture()))); // TODO locale
 				h.addComponent(v.getComponent()); 
 				
 				form.getComponent().addComponent(h);

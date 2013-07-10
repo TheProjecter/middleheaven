@@ -4,7 +4,7 @@
 package org.middleheaven.ui.web.vaadin;
 
 import org.middleheaven.events.EventListenersSet;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
@@ -20,14 +20,13 @@ public class VaadinView extends VaadinUIComponentContainer implements UIView  {
 
 	private final EventListenersSet<UIPrespectiveListener> listeners = EventListenersSet.newSet(UIPrespectiveListener.class);
 	
-	private final Property<TextLocalizable> title = VTitlePropery.bind(this);
+	private final Property<LocalizableText> title = VTitlePropery.bind(this);
 	
 	/**
 	 * Constructor.
 	 */
 	public VaadinView() {
 		super(new Panel(), UIView.class);
-	
 	}
 
 	/**
@@ -55,7 +54,7 @@ public class VaadinView extends VaadinUIComponentContainer implements UIView  {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTitleProperty() {
+	public Property<LocalizableText> getTitleProperty() {
 		return title;
 	}
 

@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
@@ -52,7 +52,7 @@ public class VaadinCommandSet extends VaadinUIComponentContainer implements UICo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
+	public Property<LocalizableText> getTextProperty() {
 		throw new UnsupportedOperationException("Not implememented yet");
 	}
 

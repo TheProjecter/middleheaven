@@ -24,7 +24,10 @@ public class VaadinCommandSetRender extends AbstractVaadinRender {
 			UIComponent component) {
 
 
-		return new VaadinCommandSet();
+		VaadinCommandSet set = new VaadinCommandSet();
+		set.setUIParent(parent);
+		
+		return set;
 	}
 
 }

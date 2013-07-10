@@ -8,7 +8,6 @@ import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UIImage;
 import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.components.UISecretField;
 import org.middleheaven.ui.components.UITextField;
 import org.middleheaven.ui.components.UIView;
@@ -31,6 +30,8 @@ public class VaadinRenderKit extends AbstractRenderKit {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static final VaddinSceneNavigator vaddinSceneNavigator = new VaddinSceneNavigator();
+	
 	public VaadinRenderKit(){
 		
 // TODO add render by gid
@@ -89,24 +90,23 @@ public class VaadinRenderKit extends AbstractRenderKit {
 	 */
 	@Override
 	public SceneNavigator getSceneNavigator() {
-		return new SceneNavigator() {
-
-			@Override
-			public void dispose(UIComponent component) {
-				//no-op
-				component.getVisibleProperty().set(false);
-			}
-
-
-			@Override
-			public void show(UIComponent component) {
-				component.getVisibleProperty().set(true);
-			}
-
-		};
+		return vaddinSceneNavigator;
 	}
 
+	private static class VaddinSceneNavigator implements SceneNavigator{
 
+		@Override
+		public void dispose(UIComponent component) {
+			//no-op
+			component.getVisibleProperty().set(false);
+		}
+
+
+		@Override
+		public void show(UIComponent component) {
+			component.getVisibleProperty().set(true);
+		}
+	}
 
 
 

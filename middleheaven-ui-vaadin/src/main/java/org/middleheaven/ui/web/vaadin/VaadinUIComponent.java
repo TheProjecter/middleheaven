@@ -6,10 +6,10 @@ package org.middleheaven.ui.web.vaadin;
 import java.util.Collections;
 import java.util.List;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.global.Culture;
 import org.middleheaven.global.LocalizationService;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIDimension;
 import org.middleheaven.ui.UIDimensionUnit;
@@ -94,7 +94,7 @@ public abstract class VaadinUIComponent implements UIComponent {
 	 * @param context
 	 * @return
 	 */
-	protected final String localize(TextLocalizable text) {
+	protected final String localize(LocalizableText text) {
 		if (text.isLocalized()){
 			return text.toString();
 		}
