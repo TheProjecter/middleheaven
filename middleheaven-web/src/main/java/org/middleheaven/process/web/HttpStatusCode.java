@@ -111,6 +111,11 @@ static int 	SC_USE_PROXY
 	FORBIDDEN(403),
 	
 	/**
+	 *  Status code (408) indicating that the client did not produce a request within the time that the server was prepared to wait.
+	 */
+	REQUEST_TIMEOUT(408),
+  
+	/**
 	 *  The requested resource is no longer available at the server and no forwarding address is known. 
 	 *  This condition is expected to be considered permanent. 
 	 *  Clients with link editing capabilities SHOULD delete references to the Request-URI after user approval. 
