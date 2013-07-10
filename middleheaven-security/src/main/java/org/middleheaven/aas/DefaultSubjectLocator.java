@@ -14,8 +14,8 @@ public class DefaultSubjectLocator implements SubjectLocator {
 		String name ="";
 		
 		for (Credential c  : credentials){
-			if (c instanceof NameCredential){
-				name = ((NameCredential)c).getName();
+			if (c instanceof NamedCredential){
+				name = ((NamedCredential)c).getName();
 				break;
 			}
 		}
@@ -23,7 +23,7 @@ public class DefaultSubjectLocator implements SubjectLocator {
 		return new DefaultSubject(name, roles);
 	}
 	
-	private class DefaultSubject implements Subject {
+	private static class DefaultSubject implements Subject {
 
 		private Map<String, Role > roles = new HashMap<String,Role> ();
 		private String name;

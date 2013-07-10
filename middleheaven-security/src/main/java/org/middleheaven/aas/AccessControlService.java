@@ -1,6 +1,8 @@
 package org.middleheaven.aas;
 
+import org.middleheaven.core.annotations.Service;
 
+@Service
 public interface AccessControlService {
 
 

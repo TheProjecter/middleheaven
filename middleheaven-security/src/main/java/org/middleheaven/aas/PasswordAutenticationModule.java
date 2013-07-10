@@ -12,8 +12,8 @@ public class PasswordAutenticationModule implements AuthenticationModule {
 	private PasswordVerifier verifier;
 
 	
-	private String name = "authentication.name";
-	private String password = "authentication.password";
+	private String nameCallBackIdentifier = "authentication.name";
+	private String passwordCallBackIdentifier = "authentication.password";
 	
 	/**
 	 * 
@@ -28,19 +28,19 @@ public class PasswordAutenticationModule implements AuthenticationModule {
 	 * 
 	 * Constructor.
 	 * @param verifier
-	 * @param name the string identifier to use for the "name" callback
-	 * @param password the string identifier to use for the "password" callback
+	 * @param nameCallBackIdentifier the string identifier to use for the "name" callback
+	 * @param passwordCallBackIdentifier the string identifier to use for the "password" callback
 	 */
-	public PasswordAutenticationModule(PasswordVerifier verifier, String name, String password){
+	public PasswordAutenticationModule(PasswordVerifier verifier, String nameCallBackIdentifier, String passwordCallBackIdentifier){
 		this.verifier = verifier;
-		this.name = name;
-		this.password = password;
+		this.nameCallBackIdentifier = nameCallBackIdentifier;
+		this.passwordCallBackIdentifier = passwordCallBackIdentifier;
 	}
 
 	@Override
 	public void registerCallbacks(CallbacksSet callbackSet) {
-		callbackSet.add(new NameCallback(name,""));
-		callbackSet.add(new PasswordCallback(password));
+		callbackSet.add(new NameCallback(nameCallBackIdentifier,""));
+		callbackSet.add(new PasswordCallback(passwordCallBackIdentifier));
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class PasswordAutenticationModule implements AuthenticationModule {
 		try{
 			verifier.verify (name, password);
 			
-			credentials.add(new NameCredential(name));
+			credentials.add(new NamedCredential(name));
 		} catch (InvalidPasswordException e){
 			// do not add credential
 			throw new FailureAutenticationException();

@@ -13,6 +13,8 @@ public class CallbacksSet implements Iterable<Callback> , Serializable{
 	
 	private final Set<Callback> callbacks = new HashSet<Callback>();
 	
+	public CallbacksSet(){}
+	
 	public void add(Callback callback){
 		callbacks.add(callback);
 	}
