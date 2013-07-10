@@ -6,6 +6,10 @@ import javax.servlet.jsp.JspTagException;
 
 public class SecretInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6558904345748942176L;
 	private Integer maxLength;
 	
 	

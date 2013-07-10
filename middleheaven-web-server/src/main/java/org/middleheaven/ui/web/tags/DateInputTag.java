@@ -11,6 +11,13 @@ import org.middleheaven.quantity.time.TimeUtils;
 
 public class DateInputTag extends TextInputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2949347511597971603L;
+
+
+
 	public DateInputTag() {
 		this.setMaxLength(10);
 		this.setMinLength(10);

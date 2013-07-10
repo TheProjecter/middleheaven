@@ -3,7 +3,7 @@ package org.middleheaven.ui.web.html.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.web.tags.TagContext;
@@ -53,7 +53,7 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 		
 		UICommand command = (UICommand) templateComponent;
 		command.getEnableProperty().set(enabled);
-		command.getTextProperty().set(TextLocalizable.valueOf(caption));
+		command.getTextProperty().set(LocalizableText.valueOf(caption));
 		
 	}
 	

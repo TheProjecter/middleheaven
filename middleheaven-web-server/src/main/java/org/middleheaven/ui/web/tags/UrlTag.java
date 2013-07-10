@@ -12,6 +12,10 @@ import org.middleheaven.util.UrlStringUtils;
  */
 public class UrlTag extends AbstractTagSupport{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7225123114703999809L;
 	private String href;
 
 

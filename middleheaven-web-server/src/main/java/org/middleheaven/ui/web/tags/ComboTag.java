@@ -8,6 +8,10 @@ import javax.servlet.jsp.JspTagException;
 
 public class ComboTag extends AbstractBodyTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1407950868263612170L;
 	Iterator<CheckableListItem> iterator;
 	private String varName = "item"; 
 	private String name;

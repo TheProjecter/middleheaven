@@ -8,7 +8,6 @@ import java.io.Writer;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 /**

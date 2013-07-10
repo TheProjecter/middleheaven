@@ -2,7 +2,6 @@ package org.middleheaven.application.web;
 
 import org.middleheaven.application.AbstractListenableModuleActivator;
 import org.middleheaven.application.ApplicationContext;
-import org.middleheaven.application.ModuleActivator;
 import org.middleheaven.process.web.server.HttpServerService;
 
 /**

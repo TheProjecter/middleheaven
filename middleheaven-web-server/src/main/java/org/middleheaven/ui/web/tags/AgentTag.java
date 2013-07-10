@@ -10,6 +10,10 @@ import org.middleheaven.process.web.HttpUserAgent;
  */
 public class AgentTag extends AbstractBodyTagSupport{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 130517229862281153L;
 	String agentName;
 
 	public void setAgent(String agentName){

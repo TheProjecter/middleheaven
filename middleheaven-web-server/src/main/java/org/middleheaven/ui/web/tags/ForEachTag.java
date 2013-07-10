@@ -5,6 +5,10 @@ package org.middleheaven.ui.web.tags;
 public class ForEachTag extends AbstractIterationTagSupport {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8718515748936487189L;
 	private int first = 0;
 	private int maxCount = 0;
 	private int count= 0;

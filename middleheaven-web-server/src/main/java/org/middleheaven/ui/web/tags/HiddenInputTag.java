@@ -4,6 +4,12 @@ import javax.servlet.jsp.JspException;
 
 public class HiddenInputTag extends AbstractTagSupport{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2107506358504510362L;
+
+
 	public HiddenInputTag() {
 	}
 

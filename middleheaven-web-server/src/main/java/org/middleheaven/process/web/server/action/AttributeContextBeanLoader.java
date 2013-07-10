@@ -3,7 +3,7 @@ package org.middleheaven.process.web.server.action;
 import java.lang.annotation.Annotation;
 import java.util.Date;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.TimepointFormatter;

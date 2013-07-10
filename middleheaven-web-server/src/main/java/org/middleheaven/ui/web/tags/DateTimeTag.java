@@ -8,6 +8,10 @@ import org.middleheaven.quantity.time.TimeUtils;
 
 public class DateTimeTag extends AbstractTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7494225297324079280L;
 	private Object value;
 
 

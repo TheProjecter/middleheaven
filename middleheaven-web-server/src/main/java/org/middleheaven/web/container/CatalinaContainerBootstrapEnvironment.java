@@ -30,7 +30,6 @@ import org.middleheaven.persistance.db.JDBCDataBaseServiceActivator;
 import org.middleheaven.persistance.db.datasource.DataSourceService;
 import org.middleheaven.persistance.db.datasource.DataSourceServiceActivator;
 import org.middleheaven.process.web.CommonHttpServerContainers;
-import org.middleheaven.transactions.AutoCommitTransactionService;
 import org.middleheaven.transactions.AutoCommitTransactionServiceActivator;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.util.PropertiesBag;
@@ -147,8 +146,8 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	public WebContainerInfo getWebContainerInfo() {
 		ClassIntrospector<?> introspector = ClassIntrospector.loadFrom("org.apache.catalina.util.ServerInfo");
 		try {
-			String number = (String) introspector.inspect().methods().beingStatic(true).named("getServerNumber").retrive().invoke(null, new Object[0]);
-			String serverBuilt = (String) introspector.inspect().methods().beingStatic(true).named("getServerBuilt").retrive().invoke(null, new Object[0]);
+			String number = (String) introspector.inspect().methods().beingStatic(true).named("getServerNumber").retrive().invoke(null);
+			String serverBuilt = (String) introspector.inspect().methods().beingStatic(true).named("getServerBuilt").retrive().invoke(null);
 
 			number = number  + "." + serverBuilt;
 			
@@ -156,11 +155,7 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 			
 		} catch (IllegalArgumentException e) {
 			throw ReflectionException.manage(e, introspector.getIntrospected());
-		} catch (IllegalAccessException e) {
-			throw ReflectionException.manage(e, introspector.getIntrospected());
-		} catch (InvocationTargetException e) {
-			throw ReflectionException.manage(e, introspector.getIntrospected());
-		}
+		} 
 	}
 
 

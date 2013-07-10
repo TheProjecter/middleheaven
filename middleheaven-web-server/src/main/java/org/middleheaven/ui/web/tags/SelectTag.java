@@ -9,6 +9,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class SelectTag extends AbstractBodyTagSupport{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9073558569555531230L;
 	private Object value ;
 
 	Object getValue(){

@@ -6,6 +6,11 @@ import javax.servlet.jsp.JspTagException;
 
 public class IntegerInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 241334132926728062L;
+
 	public IntegerInputTag() {
 		super("TEXTFIELD");
 		this.setSubtype("digits");

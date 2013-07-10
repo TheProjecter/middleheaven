@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.data.UIDataItem;
 import org.middleheaven.ui.rendering.RenderingContext;

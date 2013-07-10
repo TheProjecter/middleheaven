@@ -11,6 +11,10 @@ import org.middleheaven.process.ContextScope;
 public class InRoleTag extends AbstractBodyTagSupport{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1406889297832883448L;
 	String roleName;
 	private String query =null;
 	private String varName;

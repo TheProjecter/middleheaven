@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
@@ -17,7 +17,6 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
@@ -32,8 +31,10 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	private List<UIComponent> children = new LinkedList<UIComponent>();
 	private Property<Boolean> visible = ValueProperty.writable("visible", true);
 	private Property<Boolean> enabled = ValueProperty.writable("enabled", true);
+	private Property<String> name = ValueProperty.writable("name", String.class);
+	private Property<LocalizableText> text = ValueProperty.writable("text", LocalizableText.class);
 	private UILayout layout;
-	private ArrayList<CommandListener> commandListeners = new ArrayList<CommandListener>();
+	private List<CommandListener> commandListeners = new ArrayList<CommandListener>();
 
 	protected GenericHtmlUIComponent (){
 		
@@ -54,8 +55,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 				commandListeners.add(listener);
 			}
 		}
-		
-		commandListeners.trimToSize();
+
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	 */
 	@Override
 	public UISize getDisplayableSize() {
-		throw new UnsupportedOperationException("Not implememented yet");
+		return UISize.pixels(0, 0);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	 */
 	@Override
 	public UIPosition getPosition() {
-		throw new UnsupportedOperationException("Not implememented yet");
+		return UIPosition.pixels(0, 0);
 	}
 
 
@@ -96,7 +96,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	 */
 	@Override
 	public void setDisplayableSize(UISize size) {
-		throw new UnsupportedOperationException("Not implememented yet");
+		throw new UnsupportedOperationException("Not supported");
 	}
 
 	/**
@@ -255,8 +255,8 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<TextLocalizable> getTextProperty() {
-		throw new UnsupportedOperationException("Not implememented yet");
+	public Property<LocalizableText> getTextProperty() {
+		return text;
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class GenericHtmlUIComponent implements UIComponent , UIContainer , UICom
 	 */
 	@Override
 	public Property<String> getNameProperty() {
-		throw new UnsupportedOperationException("Not implememented yet");
+		return name;
 	}
 
 	/**

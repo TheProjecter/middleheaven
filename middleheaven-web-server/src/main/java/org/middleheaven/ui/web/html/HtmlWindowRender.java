@@ -8,8 +8,6 @@ import static org.middleheaven.util.SafeCastUtils.safeCast;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.swing.JComponent;
-
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.RenderingContext;

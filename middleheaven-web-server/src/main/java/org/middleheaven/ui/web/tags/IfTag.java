@@ -9,6 +9,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class IfTag extends AbstractBodyTagSupport{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3502804294774364959L;
 	private boolean test ;
 
 	public void setTest(boolean test){

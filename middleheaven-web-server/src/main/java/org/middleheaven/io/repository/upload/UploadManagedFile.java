@@ -14,7 +14,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.MediaManagedFile;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.io.repository.empty.UnexistantManagedFile;
 
 /**
@@ -57,7 +57,7 @@ class UploadManagedFile extends AbstractMediaManagedFile implements MediaManaged
 	}
 
 	@Override
-	public MediaManagedFileContent getContent() {
+	public MediaStreamableContent getContent() {
 		return new FileItemManagedFileContent();
 	}
 
@@ -80,7 +80,7 @@ class UploadManagedFile extends AbstractMediaManagedFile implements MediaManaged
 	}
 
 
-	private class FileItemManagedFileContent implements  MediaManagedFileContent{
+	private class FileItemManagedFileContent implements  MediaStreamableContent{
 
 		@Override
 		public InputStream getInputStream() throws ManagedIOException{

@@ -302,7 +302,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 				logger.warn("Outcome is null for {0}", request.getRequestURI());
 				response.sendError(HttpStatusCode.NOT_FOUND.intValue());
 			} else if (outcome.isTerminal()){
-				logger.debug("Outcome is terminal for {0} ", request.getRequestURI());
+				logger.trace("Outcome is terminal for {0} ", request.getRequestURI());
 				return; // do not process view. The response is already written.
 			} else if (outcome.isError){
 				response.sendError(outcome.getHttpCode().intValue());

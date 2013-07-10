@@ -5,6 +5,10 @@ import javax.servlet.jsp.JspTagException;
 
 public abstract class InputTag extends AbstractTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2539647875363641885L;
 	private String name;
 	private Object value;
 	private String type;

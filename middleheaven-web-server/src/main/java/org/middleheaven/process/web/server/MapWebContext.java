@@ -68,6 +68,39 @@ public final class MapWebContext  extends WebContext{
 	}
 
 
+	
+	/**
+	 * Obtains {@link HttpMethod}.
+	 * @return the service
+	 */
+	public HttpMethod getService() {
+		return service;
+	}
+
+	/**
+	 * Obtains {@link MapContext}.
+	 * @return the mapContext
+	 */
+	public MapContext getMapContext() {
+		return mapContext;
+	}
+
+	/**
+	 * Obtains {@link InetAddress}.
+	 * @return the address
+	 */
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	/**
+	 * Obtains {@link String}.
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

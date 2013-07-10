@@ -3,7 +3,7 @@ package org.middleheaven.process.web.server;
 import java.util.Collections;
 
 import org.middleheaven.aas.Credential;
-import org.middleheaven.aas.NameCredential;
+import org.middleheaven.aas.NamedCredential;
 import org.middleheaven.aas.Signature;
 import org.middleheaven.aas.TimedSignature;
 import org.middleheaven.crypto.Base64CipherAlgorithm;
@@ -32,7 +32,7 @@ class HttpContextCookiesSignatureStore extends HttpContextSignatureStore {
 			String name = ticket.split("@")[0];
 			String hash = ticket.split("@")[1];
 			if (hash.equals(Integer.toHexString(name.hashCode() * 37))){
-				return new TimedSignature(Collections.singleton(new NameCredential(name)), cookie.getMaxAge());
+				return new TimedSignature(Collections.singleton(new NamedCredential(name)), cookie.getMaxAge());
 			}
 		}
 		
@@ -47,8 +47,8 @@ class HttpContextCookiesSignatureStore extends HttpContextSignatureStore {
 		if (signature.isValid()){
 			String name=null;
 			for (Credential c : signature.getCredentials()){
-				if (c instanceof NameCredential){
-					name = ((NameCredential)c).getName();
+				if (c instanceof NamedCredential){
+					name = ((NamedCredential)c).getName();
 					break;
 				}
 			}

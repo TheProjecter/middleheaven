@@ -3,13 +3,13 @@
  */
 package org.middleheaven.ui.web;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.web.server.HttpServerContext;
 import org.middleheaven.process.web.server.filters.HttpFilter;
 import org.middleheaven.process.web.server.filters.HttpFilterChain;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * 

@@ -7,6 +7,11 @@ import javax.servlet.jsp.JspTagException;
 
 public class DecimalInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9166361621174919719L;
+
 	public DecimalInputTag() {
 		super("TEXTFIELD");
 		this.setSubtype("number");

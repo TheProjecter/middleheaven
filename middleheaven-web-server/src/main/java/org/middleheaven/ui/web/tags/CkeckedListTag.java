@@ -9,6 +9,10 @@ import javax.servlet.jsp.JspTagException;
 
 public class CkeckedListTag extends AbstractBodyTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2208199268202609425L;
 	Iterator<CheckableListItem> iterator;
 	private String varName = "item"; 
 	private String name;

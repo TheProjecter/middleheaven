@@ -5,6 +5,11 @@ import javax.servlet.jsp.JspTagException;
 
 public class UploadInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5675673204375724431L;
+
 	public UploadInputTag() {
 		super("FILE");
 	}

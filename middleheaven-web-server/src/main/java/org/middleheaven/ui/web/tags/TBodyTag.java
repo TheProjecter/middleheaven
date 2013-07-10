@@ -6,7 +6,7 @@ import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.pagination.Paginator;
 import org.middleheaven.process.ContextScope;
 
@@ -55,7 +55,7 @@ public class TBodyTag  extends AbstractBodyTagSupport {
 		// print no items message
 		if(isIteratorNotNull() || isPaginator()){
 			writeLine("<tr><td colspan='10' align='center'>");
-			writeLine(this.localize(TextLocalizable.valueOf("ui:listing.no.items.found")));
+			writeLine(this.localize(LocalizableText.valueOf("ui:listing.no.items.found")));
 			writeLine("</td></tr>");
 		}
 

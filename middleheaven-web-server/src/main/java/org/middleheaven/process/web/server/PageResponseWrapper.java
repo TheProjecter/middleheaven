@@ -16,7 +16,6 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 
 	private final RoutablePrintWriter routablePrintWriter;
 	private final RoutableServletOutputStream routableServletOutputStream;
-	//private final Factory factory;
 
 	private PageBuffer buffer;
 	private boolean aborted = false;
@@ -24,18 +23,33 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 
 	public PageResponseWrapper(final HttpServletResponse  response) {
 		super(response);
-		//this.factory = factory;
+		
+		ResponseDestinationFactory factory = new ResponseDestinationFactory(response);
+		routablePrintWriter = new RoutablePrintWriter(factory);
+		routableServletOutputStream = new RoutableServletOutputStream(factory);
+	}
+	
+	private static class ResponseDestinationFactory implements RoutablePrintWriter.DestinationFactory , RoutableServletOutputStream.DestinationFactory{
 
-		routablePrintWriter = new RoutablePrintWriter(new RoutablePrintWriter.DestinationFactory() {
-			public PrintWriter  activateDestination() throws IOException  {
-				return response.getWriter();
-			}
-		});
-		routableServletOutputStream = new RoutableServletOutputStream(new RoutableServletOutputStream.DestinationFactory() {
-			public ServletOutputStream  create() throws IOException  {
-				return response.getOutputStream();
-			}
-		});
+		HttpServletResponse  response;
+		public ResponseDestinationFactory (HttpServletResponse  response){
+			this.response = response;
+		}
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public PrintWriter activateDestination() throws IOException {
+			return response.getWriter();
+		}
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public ServletOutputStream create() throws IOException {
+			return response.getOutputStream();
+		}
+		
 	}
 
 	
@@ -161,7 +175,7 @@ public final class PageResponseWrapper extends HttpServletResponseWrapper  {
 		 if (aborted || !parseablePage) {
 			 return null;
 		 } else {
-			 return HTMLPage.parse(buffer.toCharArray());
+			 return HTMLPage.parse(buffer.asString());
 		 }
 	 }
 

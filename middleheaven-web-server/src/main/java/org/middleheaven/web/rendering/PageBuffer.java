@@ -29,7 +29,7 @@ public class PageBuffer {
 		this.encoding = encoding;
 	}
 
-	public char[] toCharArray() throws IOException{
+	public char[] asCharArray() throws IOException{
 		if (bufferedWriter != null) {
 			return bufferedWriter.toCharArray();
 		} else if (bufferedStream != null) {
@@ -37,6 +37,10 @@ public class PageBuffer {
 		} else {
 			return new char[0];
 		}
+	}
+	
+	public String asString() throws IOException{
+		return new String(asCharArray());
 	}
 
 	public PrintWriter  getWriter() {

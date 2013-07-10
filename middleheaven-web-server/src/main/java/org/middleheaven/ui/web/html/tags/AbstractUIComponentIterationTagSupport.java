@@ -74,7 +74,7 @@ public abstract class AbstractUIComponentIterationTagSupport extends AbstractIte
 			
 		}
 		
-		if(parent == null){
+		if (parent == null){
 			HtmlUIComponent html = (HtmlUIComponent) renderKit.renderComponent(context, parent, templateComponent);
 			
 			HtmlDocument doc = HtmlDocument.newInstance(tagContext.getContextPath(), tagContext.getCulture());

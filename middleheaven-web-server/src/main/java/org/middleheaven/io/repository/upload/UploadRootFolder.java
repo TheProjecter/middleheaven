@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ArrayManagedFilePath;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ManagedFileContent;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
@@ -105,8 +105,8 @@ public class UploadRootFolder extends AbstractManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ManagedFileContent getContent() {
-		return null;
+	public StreamableContent getContent() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

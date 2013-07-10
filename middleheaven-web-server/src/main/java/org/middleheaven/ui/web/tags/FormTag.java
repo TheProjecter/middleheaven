@@ -14,6 +14,11 @@ import org.middleheaven.util.UrlStringUtils;
 
 public class FormTag extends AbstractBodyTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3974116210561854384L;
+
 	// http://docs.jquery.com/Plugins/Validation#Validate_forms_like_you.27ve_never_been_validating_before.21
 
 	private static 	Random random = new Random();

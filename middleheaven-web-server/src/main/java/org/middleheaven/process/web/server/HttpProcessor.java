@@ -13,7 +13,10 @@ import org.middleheaven.process.web.UrlPattern;
  */
 public interface HttpProcessor  {
 
-	
+	/**
+	 * Called once after the objet is registered with the {@link HttpServerService}.
+	 * @param config
+	 */
 	public void init(HttpProcessorConfig config);
 	
 	/**

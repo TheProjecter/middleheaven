@@ -11,6 +11,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class CaseTag extends AbstractBodyTagSupport{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1554501637541143103L;
 	private Object match ;
 	
 	public void setMatch(Object match){

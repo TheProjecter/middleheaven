@@ -1,7 +1,8 @@
 package org.middleheaven.web.rendering;
 
-import java.io.CharArrayReader;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,38 +18,39 @@ import org.htmlparser.util.ParserException;
 public final class HTMLPage implements Page{
 
 
-	private HttpServletRequest request;
-	private CharArrayReader content;
+	private Reader content;
 	private int length;
 	private String title;
 	private String head;
 	private String body;
 
-	public static HTMLPage parse(char[] content){
+	public static HTMLPage parse(String content){
 		HTMLPage page = new HTMLPage();
 
-		page.content = new CharArrayReader(content);
-		page.length = content.length;
+		page.content = new StringReader(content);
+		page.length = content.length();
 
-		Parser parser = Parser.createParser(new String(content), null);
+		Parser parser = Parser.createParser(content, null);
 		try{
 			NodeList nodes = parser.parse(null);
 
 			Html p = findNode(Html.class, nodes);
-
 
 			HeadTag head = findNode(HeadTag.class, p.getChildren());
 			TitleTag title = findNode(TitleTag.class, head.getChildren());
 			BodyTag body = findNode(BodyTag.class, p.getChildren());
 
 			page.head = removeTagName(head.toHtml(), "head");
-			page.head = page.head.replaceAll(title.toHtml(), "");
+			int pos = page.head.indexOf("</title>");
+			page.head = page.head.substring(pos + "</title>".length());
 			page.title = removeTagName(title.toHtml(), "title");
 			page.body = removeTagName(body.toHtml(), "body");
 
 			return page;
 		} catch (ParserException e){
 			throw new RuntimeException(e);
+		} finally {
+			parser = null;
 		}
 	} 
 
@@ -57,7 +59,11 @@ public final class HTMLPage implements Page{
 	}
 
 	private static String removeTagName(String n , String tagName){
-		return n.replaceAll("<" + tagName + ">" ,"").replaceAll("</" + tagName + ">", "");
+		final int length = tagName.length() + 2;
+		
+		return n.substring(length , n.length() - length - 1);
+		
+		//return n.replaceAll("<" + tagName + ">" ,"").replaceAll("</" + tagName + ">", "");
 	}
 
 	private static <N extends Node> N findNode(Class<N> type , NodeList nodes ) {
@@ -77,7 +83,7 @@ public final class HTMLPage implements Page{
 
 	@Override
 	public void setRequest(HttpServletRequest request) {
-		this.request = request;
+		//no-op
 	}
 
 	@Override

@@ -7,6 +7,10 @@ import org.middleheaven.web.rendering.Page;
 
 public class DecoratorTitleTag extends AbstractTagSupport{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7295084614383636521L;
 	private String defaultTitle;
 
 	public void setDefault(String defaultTitle){

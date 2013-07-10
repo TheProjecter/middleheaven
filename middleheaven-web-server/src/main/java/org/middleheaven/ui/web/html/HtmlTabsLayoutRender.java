@@ -6,7 +6,7 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIView;
 import org.middleheaven.ui.rendering.RenderingContext;
@@ -72,7 +72,7 @@ public class HtmlTabsLayoutRender extends AbstractHtmlRender {
 				if (c.isType(UIView.class)) {
 					UIView view = (UIView) c;
 					
-					final TextLocalizable textLocalizable = view.getTitleProperty().get();
+					final LocalizableText textLocalizable = view.getTitleProperty().get();
 					if (textLocalizable != null){
 						title = this.localize(textLocalizable, document.getCulture());
 					}

@@ -5,6 +5,11 @@ import javax.servlet.jsp.JspException;
 
 public class CheckedInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4476077241367385067L;
+
 	public CheckedInputTag() {
 		super("checkbox");
 	}

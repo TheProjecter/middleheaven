@@ -6,6 +6,11 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class JavaScriptEnabledTag extends AbstractBodyTagSupport{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8962379458619826527L;
+
 	public int doStartTag() throws JspException {
 		write("<script ");
 		writeAttribute("text", "text/javascript");

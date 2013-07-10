@@ -12,15 +12,19 @@ import org.middleheaven.aas.CallbacksSet;
 /**
  * 
  */
-public class AccessControlCallbackHandler implements CallbackHandler , Serializable{
+public class CallbacksSetCallbackHandler implements CallbackHandler , Serializable{
 
 
 	private static final long serialVersionUID = 6897036338677468538L;
 	
-	final CallbacksSet set = new CallbacksSet();
+	final CallbacksSet set;
 	
-	public AccessControlCallbackHandler (){
-		
+	public CallbacksSetCallbackHandler (){
+		this.set = new CallbacksSet();
+	}
+	
+	public CallbacksSetCallbackHandler (CallbacksSet other){
+		this.set = other;
 	}
 	
 	/**

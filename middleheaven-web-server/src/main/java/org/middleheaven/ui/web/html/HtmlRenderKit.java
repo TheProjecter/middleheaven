@@ -9,7 +9,6 @@ import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UIImage;
 import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.components.UISecretField;
 import org.middleheaven.ui.components.UISelectOne;
 import org.middleheaven.ui.components.UITextField;
@@ -17,7 +16,6 @@ import org.middleheaven.ui.components.UIView;
 import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.rendering.AbstractRenderKit;
 import org.middleheaven.ui.rendering.RenderKit;
-import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.rendering.UIRender;
 import org.middleheaven.ui.rendering.UIUnitConverter;
 
@@ -29,6 +27,8 @@ public class HtmlRenderKit extends AbstractRenderKit {
 	
 	private static final long serialVersionUID = 8348353086003428862L;
 
+	private static final HtmlSceneNavigator htmlSceneNavigator = new HtmlSceneNavigator();
+	
 	public HtmlRenderKit(){
 		
 		
@@ -90,23 +90,24 @@ public class HtmlRenderKit extends AbstractRenderKit {
 	 */
 	@Override
 	public SceneNavigator getSceneNavigator() {
-		return new SceneNavigator() {
-			
-			@Override
-			public void dispose(UIComponent component) {
-				//no-op
-				component.getVisibleProperty().set(false);
-			}
-
-			
-			@Override
-			public void show(UIComponent component) {
-				component.getVisibleProperty().set(true);
-			}
-
-		};
+		return htmlSceneNavigator;
 	}
 
+	private static class HtmlSceneNavigator implements SceneNavigator{
+
+		@Override
+		public void dispose(UIComponent component) {
+			//no-op
+			component.getVisibleProperty().set(false);
+		}
+
+		
+		@Override
+		public void show(UIComponent component) {
+			component.getVisibleProperty().set(true);
+		}
+		
+	}
 
 
 }

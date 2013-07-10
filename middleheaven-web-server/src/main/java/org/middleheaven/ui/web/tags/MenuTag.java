@@ -4,21 +4,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyContent;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.global.Culture;
 import org.middleheaven.global.LocalizationService;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.components.MenuItem;
 
 public class MenuTag extends AbstractBodyTagSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3570953084157671714L;
 
 	static final String SUB_MENU_TAG = "<submenu/>";
 	
@@ -26,7 +33,7 @@ public class MenuTag extends AbstractBodyTagSupport {
 	StackItem parentStack;
 	private String varName = "menu"; 
 
-	LinkedList<StackItem> iteratorStack = new LinkedList<StackItem>();
+	Deque<StackItem> iteratorStack = new LinkedList<StackItem>();
 	private String rootClass;
 	private String selectedItemClass;
 
@@ -86,7 +93,7 @@ public class MenuTag extends AbstractBodyTagSupport {
 		current = new StackItem(item);
 		if(!item.isTitleLocalized()){
 			Culture culture = new TagContext(pageContext).getCulture();
-			localizationService.getMessage(TextLocalizable.valueOf(item.getTitle()), culture);
+			localizationService.getMessage(LocalizableText.valueOf(item.getTitle()), culture);
 		} else {
 			item.setLabel(item.getTitle());
 		}

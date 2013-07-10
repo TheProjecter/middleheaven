@@ -5,6 +5,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 public class ComboItemTag extends AbstractBodyTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3988615036886333044L;
 	private String value; 
 	private boolean isChecked;
 	

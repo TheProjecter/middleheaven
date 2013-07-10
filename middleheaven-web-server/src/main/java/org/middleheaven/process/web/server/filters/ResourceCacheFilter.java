@@ -12,16 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ResourceCacheFilter extends AbstractFilter {
 
+	private static final int ONE_MONTH_IN_MILISECOUNDS = 30*24*3600*1000;
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
 		chain.doFilter(request, response);
+		
 		HttpServletResponse httpResponse = safeCast(response, HttpServletResponse.class).get();
 		
-		httpResponse.addHeader("Expires", "Thu, 1 Jan 2099 23:59:59 GMT");
-		httpResponse.addHeader("Cache-Control", "max-age=2592000"); // one month
-		httpResponse.addHeader("Last-Modified", "Thu, 1 Jan 1970 00:00:00 GMT");
-
+		final long currentTimeMillis = System.currentTimeMillis();
+		httpResponse.setDateHeader("Last-Modified", currentTimeMillis);
+		httpResponse.setDateHeader("Expires", currentTimeMillis + ONE_MONTH_IN_MILISECOUNDS);
+			
+		
+		
 	}
 
 }

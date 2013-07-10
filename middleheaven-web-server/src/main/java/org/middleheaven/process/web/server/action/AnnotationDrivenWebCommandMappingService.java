@@ -3,10 +3,10 @@
  */
 package org.middleheaven.process.web.server.action;
 
-import java.lang.reflect.Method;
-
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.ClassSet;
 import org.middleheaven.core.reflection.MemberAccess;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.BindConfiguration;
@@ -16,7 +16,6 @@ import org.middleheaven.logging.Logger;
 import org.middleheaven.process.web.server.action.annotaions.Interceptable;
 import org.middleheaven.process.web.server.action.annotaions.Presenter;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 import org.middleheaven.web.annotations.Path;
 import org.middleheaven.web.annotations.Paths;
@@ -28,6 +27,31 @@ import org.middleheaven.web.annotations.Paths;
  */
 public class AnnotationDrivenWebCommandMappingService extends BuildableWebCommandMappingService {
 
+
+	/**
+	 * 
+	 */
+	private static final class ClassBindConfiguration implements
+			BindConfiguration {
+		/**
+		 * 
+		 */
+		private final Class<?> presenter;
+
+		/**
+		 * Constructor.
+		 * @param presenter
+		 */
+		private ClassBindConfiguration(Class<?> presenter) {
+			this.presenter = presenter;
+		}
+
+		@Override
+		public void configure(Binder binder) {
+			Class c = presenter;
+			binder.bind(presenter).inSharedScope().to(c);
+		}
+	}
 
 	private WiringService wiringService;
 
@@ -42,15 +66,7 @@ public class AnnotationDrivenWebCommandMappingService extends BuildableWebComman
 
 	public PresenterCommandMappingBuilder map(final Class<?> presenter){
 
-		wiringService.addConfiguration(new BindConfiguration(){
-
-			@Override
-			public void configure(Binder binder) {
-				Class c = presenter;
-				binder.bind(presenter).inSharedScope().to(c);
-			}
-
-		});
+		wiringService.addConfiguration(new ClassBindConfiguration(presenter));
 
 		return super.map(presenter);
 	}
@@ -76,24 +92,23 @@ public class AnnotationDrivenWebCommandMappingService extends BuildableWebComman
 			//			.through(menuInterceptor)
 			//			.through(breadcrumsInterceptor)
 			//			
-			Enumerable<Method> methods = introspector.inspect().methods().notInheritFromObject().withAccess(MemberAccess.PUBLIC).retriveAll();
+			Enumerable<MethodHandler> methods = introspector.inspect().methods().notInheritFromObject().withAccess(MemberAccess.PUBLIC).retriveAll();
 
-			for (Method m : methods){
+			for (MethodHandler m : methods){
 
-				Paths paths = m.getAnnotation(Paths.class);
+				Maybe<Paths> mayBePaths = m.getAnnotation(Paths.class);
 
 				Path[] all;
-				if (paths!= null){
-					all = paths.value();
+				if (mayBePaths.isPresent()){
+					all = mayBePaths.get().value();
 				} else {
-					Path p = m.getAnnotation(Path.class);
-					if (p != null){
-						all = new Path[]{p};
+					Maybe<Path> mayBePath = m.getAnnotation(Path.class);
+					if (mayBePath.isPresent()){
+						all = new Path[]{mayBePath.get()};
 					} else {
 						all = new Path[0];
 					}
 				}
-
 
 				if (all.length == 0){
 					PresenterCommandMappingBuilder builder = this.map(type);

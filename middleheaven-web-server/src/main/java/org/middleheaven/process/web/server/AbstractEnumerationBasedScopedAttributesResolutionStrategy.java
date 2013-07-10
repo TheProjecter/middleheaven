@@ -6,13 +6,13 @@ package org.middleheaven.process.web.server;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.TransformedIterator;
 import org.middleheaven.process.Attribute;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.ObjectAttribute;
 import org.middleheaven.process.ScopedAttributesResolutionStrategy;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.TransformedIterator;
 import org.middleheaven.util.function.Mapper;
 
 /**

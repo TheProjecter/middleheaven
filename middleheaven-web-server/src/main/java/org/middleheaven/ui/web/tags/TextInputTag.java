@@ -5,6 +5,12 @@ import javax.servlet.jsp.JspTagException;
 
 public class TextInputTag extends InputTag{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7804669772732682756L;
+
+
 	public TextInputTag() {
 		super("TEXTFIELD");
 	}

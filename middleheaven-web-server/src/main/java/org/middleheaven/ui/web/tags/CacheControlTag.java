@@ -9,15 +9,19 @@ import org.middleheaven.quantity.time.Period;
 public class CacheControlTag extends AbstractTagSupport{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7050460872123036883L;
 	private boolean cache = false;
-	private int secoundsFromNow = (int)Period.days(30).seconds();
+	private int milisecoundsFromNow = (int)Period.days(30).milliseconds();
 
 	public void setCache(boolean cache){
 		this.cache = cache;
 	}
 	
 	public void setExpiresIn(int secoundsFromNow){
-		this.secoundsFromNow = secoundsFromNow;
+		this.milisecoundsFromNow = secoundsFromNow * 1000;
 	}
 	
 	public int doStartTag() throws JspException {
@@ -31,8 +35,7 @@ public class CacheControlTag extends AbstractTagSupport{
 
 			} else {
 
-				response.setHeader("Cache-Control","max-age=" + secoundsFromNow); 
-
+				response.setDateHeader("Expires", milisecoundsFromNow);
 			}
 			
 			return SKIP_BODY;

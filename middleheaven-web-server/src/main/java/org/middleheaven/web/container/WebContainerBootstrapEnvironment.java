@@ -7,11 +7,11 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import org.middleheaven.core.FileContext;
 import org.middleheaven.core.bootstrap.AbstractBootstrapEnvironment;
 import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.bootstrap.BootstrapEnvironment;
 import org.middleheaven.core.bootstrap.EditableContainerFileRepositoryManager;
-import org.middleheaven.core.bootstrap.FileContext;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;

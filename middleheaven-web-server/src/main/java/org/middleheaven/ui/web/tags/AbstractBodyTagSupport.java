@@ -5,10 +5,10 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.Tag;
 
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.global.Culture;
 import org.middleheaven.global.LocalizationService;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.global.text.TimepointFormatter;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.quantity.math.Real;
@@ -43,11 +43,11 @@ public abstract class AbstractBodyTagSupport extends BodyTagSupport {
 		return type.cast(this.findAncestorWithClass(this, type));
 	}
 	
-	public String localize(TextLocalizable message){
+	public String localize(LocalizableText message){
 		return localize(message,ContextScope.APPLICATION);
 	}
 	
-	public String localize(TextLocalizable message,ContextScope scope){
+	public String localize(LocalizableText message,ContextScope scope){
 		
 		Culture culture = new TagContext(pageContext).getCulture();
 		
@@ -64,7 +64,7 @@ public abstract class AbstractBodyTagSupport extends BodyTagSupport {
 			pageContext.getOut().append(" ").append(name)
 			.append("=\"").append(value.toString()).append("\"");
 		} catch (Exception e) {
-			throw new JspTagException(e.getMessage());
+			throw new JspTagException(e);
 		}
 	}
 	
@@ -72,7 +72,7 @@ public abstract class AbstractBodyTagSupport extends BodyTagSupport {
 		try {
 			pageContext.getOut().print(text);
 		} catch (Exception e) {
-			throw new JspTagException(e.getMessage());
+			throw new JspTagException(e);
 		}
 	}
 	

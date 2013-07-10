@@ -6,6 +6,11 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class BodyTag extends AbstractBodyTagSupport{
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 672586224533127072L;
+
 	public int doStartTag() throws JspException {
 		
 		return EVAL_BODY_BUFFERED;

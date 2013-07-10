@@ -5,6 +5,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 public class MessageLocationParamTag extends AbstractBodyTagSupport{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9105963912029187082L;
 	Object value;
 	
 	public void setValue(Object obj){

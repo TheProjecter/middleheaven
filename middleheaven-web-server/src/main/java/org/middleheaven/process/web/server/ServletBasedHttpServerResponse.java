@@ -11,10 +11,10 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 
 import org.middleheaven.global.Culture;
+import org.middleheaven.io.StreamableContentSource;
 import org.middleheaven.io.IOTransport;
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.io.repository.ContentSource;
-import org.middleheaven.io.repository.MediaManagedFileContent;
+import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.process.web.HttpCookieWriter;
 import org.middleheaven.process.web.HttpEntry;
 import org.middleheaven.process.web.HttpProcessIOException;
@@ -144,8 +144,8 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public MediaManagedFileContent getContent() {
-			return new MediaManagedFileContent(){
+		public MediaStreamableContent getContent() {
+			return new MediaStreamableContent(){
 			
 				
 				@Override
@@ -213,12 +213,8 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void copyTo(ContentSource other) throws ManagedIOException {
-			try {
-				IOTransport.copy(this.getContent().getInputStream()).to(other.getContent().getOutputStream());
-			} catch (IOException ioe) {
-				throw ManagedIOException.manage(ioe);
-			}
+		public void copyTo(StreamableContentSource other) throws ManagedIOException {
+			IOTransport.copy(this).to(other);
 		}
 		
 	}

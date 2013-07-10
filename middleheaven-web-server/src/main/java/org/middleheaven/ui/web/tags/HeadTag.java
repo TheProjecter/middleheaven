@@ -6,6 +6,11 @@ import javax.servlet.jsp.tagext.BodyContent;
 public class HeadTag extends AbstractBodyTagSupport{
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -398280890235321766L;
+
 	public int doStartTag() throws JspException {
 		writeLine("<head>");
 		TagContext context = new TagContext(pageContext);

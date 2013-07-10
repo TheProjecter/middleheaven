@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.middleheaven.global.Culture;
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.rendering.RenderingContext;
@@ -47,7 +47,7 @@ public class HtmlFormRender extends AbstractHtmlRender {
 				final Culture culture = document.getCulture();
 				writer.append("<label class=\"mh-ui-label\" lang=\"").append(culture.getLanguage().toString())
 				.append(" for=\"").append(c.getGID()).append("\" >")
-				.append(this.localize(TextLocalizable.valueOf("ui:label.field." + name), culture))
+				.append(this.localize(LocalizableText.valueOf("ui:label.field." + name), culture))
 				.append("</label>:");
 				
 			}

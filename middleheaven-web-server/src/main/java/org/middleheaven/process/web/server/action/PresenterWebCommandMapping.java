@@ -1,7 +1,6 @@
 package org.middleheaven.process.web.server.action;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -12,10 +11,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.middleheaven.core.reflection.InvocationTargetReflectionException;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.reflection.MethodFilters;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.services.ServiceRegistry;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.process.AttributeContext;
@@ -29,9 +29,8 @@ import org.middleheaven.process.web.server.Outcome;
 import org.middleheaven.process.web.server.WebContext;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.validation.ValidationException;
+import org.middleheaven.validation.ValidationException;
 import org.middleheaven.web.annotations.Delete;
 import org.middleheaven.web.annotations.Get;
 import org.middleheaven.web.annotations.In;
@@ -49,13 +48,13 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 	private Object controllerObject;
 	private final List<ActionInterceptor> interceptors = new LinkedList<ActionInterceptor>();
 	private final Map<String, Map<OutcomeStatus, OutcomeResolver>> outcomes = new HashMap<String, Map<OutcomeStatus, OutcomeResolver>>();
-	private final Map<String , Method> actions = new HashMap<String,Method>();
+	private final Map<String , MethodHandler> actions = new HashMap<String,MethodHandler>();
 	private final List<PathMatcher> patterns = new LinkedList<PathMatcher>();
 	private final AttributeContextBeanLoader beanLoader = new AttributeContextBeanLoader();
 
-	private EnumMap<HttpMethod, Method> serviceMethods = new EnumMap<HttpMethod, Method>(HttpMethod.class);
+	private EnumMap<HttpMethod, MethodHandler> serviceMethods = new EnumMap<HttpMethod, MethodHandler>(HttpMethod.class);
 
-	private Method doService=null;
+	private MethodHandler doService=null;
 
 	/**
 	 * 
@@ -64,25 +63,25 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 	public String toString(){
 		return controllerClass.getName() + "->" + patterns.toString();
 	}
-	
+
 	public int hashCode(){
 		return Hash.hash(controllerClass.getName()).hash(patterns.size()).hashCode();
 	}
 
 	/**
 	 * {@inheritDoc}
-	*/
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof PresenterWebCommandMapping) && equalsPresenterWebCommandMapping((PresenterWebCommandMapping)obj); 
 	}
-	
-	
+
+
 	private boolean equalsPresenterWebCommandMapping(PresenterWebCommandMapping other) {
 		return this.controllerClass.equals(other.controllerClass) && this.patterns.size() == other.patterns.size() &&
 				CollectionUtils.equalContents(this.patterns, other.patterns);
 	}
-		
+
 	/**
 	 * Constructor.
 	 * @param presenterClass the presenter class.
@@ -102,10 +101,10 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 		// each method on the presenter that is not a getter or a setter is an action
 		// only public not property methods
 		Introspector.of(presenterClass).inspect().methods().notInheritFromObject().match(MethodFilters.publicInstanceNonProperty())
-		.each(new Block<Method>(){
+		.each(new Block<MethodHandler>(){
 
 			@Override
-			public void apply(Method m) {
+			public void apply(MethodHandler m) {
 				// a method can have multiple bindings 
 				if (m.isAnnotationPresent(Post.class)){
 					serviceMethods.put(HttpMethod.POST,m);
@@ -137,9 +136,9 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 
 	@Override
 	public double matches(HttpRelativeUrl url) {
-		
+
 		String dynamicUrl = url.toString();
-		
+
 		for (PathMatcher pattern : patterns){
 
 			final double match = pattern.match(dynamicUrl);
@@ -180,11 +179,11 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 
 	@Override
 	public Outcome execute(HttpServerContext context) {
-		
+
 		if (controllerObject == null){
 			controllerObject = ServiceRegistry.getService(WiringService.class).getInstance(controllerClass);
 		}
-		
+
 		ListInterceptorChain chain = new ListInterceptorChain(this.interceptors){
 
 			public Outcome doFinal(HttpServerContext context){
@@ -204,7 +203,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 		AttributeContext attributes = context.getAttributes();
 
 		Outcome outcome;
-		Method actionMethod = null;
+		MethodHandler actionMethod = null;
 		String action = null;
 
 		try {
@@ -219,7 +218,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 				// try the name match if there are any parameters
 				final ScopedAttributesResolutionStrategy parameters = context.getAttributes().getScopeAttributeContext(ContextScope.REQUEST_PARAMETERS);
 				if (!parameters.isEmpty()){
-					for ( Map.Entry<String,Method> entry : actions.entrySet()){
+					for ( Map.Entry<String, MethodHandler> entry : actions.entrySet()){
 						String act = parameters.getAttribute(entry.getKey(), String.class);
 						if (act!=null){
 							actionMethod = entry.getValue();
@@ -241,7 +240,8 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 					if (context.getRequestMethod().equals(HttpMethod.GET)){
 						return resolveOutcome(null,BasicOutcomeStatus.SUCCESS, context);
 					} else {
-						throw new ActionHandlerNotFoundException(context.getRequestMethod() , this.controllerClass,actionNameFromURL);
+						Logger.onBookFor(this.getClass()).warn("No handler found for action {0} or method {1} in presenter {2}. Request came from {3}" , actionNameFromURL, context.getRequestMethod(), controllerClass, context.getHttpChannel().getRemoteAddr());
+						return new Outcome(BasicOutcomeStatus.ERROR, HttpStatusCode.NOT_FOUND);
 					}
 				}
 			}
@@ -249,30 +249,18 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 
 			Object[] args = inicilizeActionParameters(actionMethod, context);
 
-			try{
-				Object result = Introspector.of(actionMethod).invoke(actionMethod.getReturnType(), controllerObject, args);
-				
-				if (result instanceof Outcome){
-					if ( ((Outcome) result).isTerminal()) {
-						return (Outcome)result;
-					} else if (result instanceof URLOutcome ){
-						return (Outcome)result;
-					} else {
-						Logger.onBookFor(this.getClass()).warn("Illegal outcome class. Use URLOutcome.");
-						outcome =  resolveOutcome(action,BasicOutcomeStatus.FAILURE, context);
-					}
-				}else if (result instanceof String) {
-					return new Outcome(BasicOutcomeStatus.SUCCESS, result.toString(), "text/html");
-				} else if (result==null || !(result instanceof OutcomeStatus)){
-					return resolveOutcome(action,BasicOutcomeStatus.SUCCESS,context);
-				} else if (BasicOutcomeStatus.NOT_FOUND.equals(result)){
-					return new Outcome(BasicOutcomeStatus.ERROR, HttpStatusCode.NOT_FOUND);
-				}  else {
-					return resolveOutcome(action,(OutcomeStatus)result, context);
-				}
+			Object result = actionMethod.getReturnType().cast(actionMethod.invoke(controllerObject, args));
 
-			} catch (InvocationTargetReflectionException e){
-				throw e.getCause();
+			if (result instanceof Outcome){
+				return (Outcome)result;
+			}else if (result instanceof String) {
+				return new Outcome(BasicOutcomeStatus.SUCCESS, result.toString(), "text/html");
+			} else if (result==null || !(result instanceof OutcomeStatus)){
+				return resolveOutcome(action,BasicOutcomeStatus.SUCCESS,context);
+			} else if (BasicOutcomeStatus.NOT_FOUND.equals(result)){
+				return new Outcome(BasicOutcomeStatus.ERROR, HttpStatusCode.NOT_FOUND);
+			}  else {
+				return resolveOutcome(action,(OutcomeStatus)result, context);
 			}
 
 		} catch (ValidationException e){
@@ -285,23 +273,16 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 			Logger.onBookFor(this.getClass()).error(e,"Exception found handling request");
 			attributes.setAttribute(ContextScope.REQUEST, "exception", e);
 			outcome =  resolveOutcome(action,BasicOutcomeStatus.FAILURE, context);
-		} catch (Throwable e){
-			Logger.onBookFor(this.getClass()).fatal(e,"Exception found handling request");
-			attributes.setAttribute(ContextScope.REQUEST, "exception", e);
-			outcome =  resolveOutcome(action,BasicOutcomeStatus.ERROR, context);
-			if (outcome==null){
-				outcome =  resolveOutcome(action,BasicOutcomeStatus.FAILURE, context);
-			}
-		}
+		} 
 		return outcome;
 	}
 
-	private Object[] inicilizeActionParameters(Method action,HttpServerContext context){
+	private Object[] inicilizeActionParameters(MethodHandler action,HttpServerContext context){
 		Class<?>[] argClasses = action.getParameterTypes();
 		Object[] args = new Object[argClasses.length];
 
 		Map<String, String> variables = resolvePathVariablesValues(context.getRequestUrl().getContexlessPath() + context.getRequestUrl().getFilename(true));
-		
+
 		for (int i =0; i <argClasses.length; i++ ){
 			if (argClasses[i].isAssignableFrom(WebContext.class)){
 				args[i] = context;

@@ -17,6 +17,10 @@ import org.middleheaven.util.identity.Identity;
 public class OutTag extends AbstractTagSupport {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3978710146550722490L;
 	private Object value;
 	private int start = 0;
 	private int end = -1;

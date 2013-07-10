@@ -9,6 +9,12 @@ import org.middleheaven.ui.components.MenuItem;
 public class SubMenuTag extends AbstractTagSupport {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4835136751065655858L;
+
+
 	public int doStartTag() throws JspException{
 		
 		MenuTag top =  this.findAncestorTag(MenuTag.class);

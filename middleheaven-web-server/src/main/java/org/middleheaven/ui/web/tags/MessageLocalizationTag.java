@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.servlet.jsp.JspException;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.process.ContextScope;
 
 /**
@@ -18,6 +18,10 @@ import org.middleheaven.process.ContextScope;
  */
 public class MessageLocalizationTag extends AbstractTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5531094657811330299L;
 	private List<Object> params = new LinkedList<Object>();
 	private String key;
 	private String scope;
@@ -57,9 +61,9 @@ public class MessageLocalizationTag extends AbstractTagSupport {
 		paramsObj = params.toArray(paramsObj);			
 
 		if(scope==null) {
-			write(localize(TextLocalizable.valueOf(key,paramsObj), null));
+			write(localize(LocalizableText.valueOf(key,paramsObj), null));
 		} else {
-			write(localize(TextLocalizable.valueOf(key,paramsObj),ContextScope.valueOf(scope)));
+			write(localize(LocalizableText.valueOf(key,paramsObj),ContextScope.valueOf(scope)));
 		}
 		
 		this.params.clear();

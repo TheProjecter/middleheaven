@@ -8,6 +8,11 @@ import org.middleheaven.web.rendering.Page;
 public class DecoratorHeadTag extends AbstractTagSupport{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1265002588302795859L;
+
 	public int doStartTag() throws JspException {
 		try {
 

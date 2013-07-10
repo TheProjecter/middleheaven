@@ -6,13 +6,17 @@ import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
-import org.middleheaven.util.validation.InvalidationReason;
-import org.middleheaven.util.validation.InvalidationSeverity;
-import org.middleheaven.util.validation.ValidationResult;
+import org.middleheaven.validation.InvalidationReason;
+import org.middleheaven.validation.InvalidationSeverity;
+import org.middleheaven.validation.ValidationResult;
 
 
 public class InvalidationReasonsListTag extends AbstractBodyTagSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5164654093651283835L;
 	Iterator<InvalidationReason> iterator;
 	private String varName = "item"; 
 	private ValidationResult result;
