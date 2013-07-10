@@ -37,6 +37,7 @@
 		<module>../middleheaven-transactions</module>
 		<module>../middleheaven-ui</module>
 		<module>../middleheaven-ui-vaadin</module>
+		<module>../middleheaven-validation</module>
 		<module>../middleheaven-web</module>
 		<module>../middleheaven-web-server</module>
 		<module>../middleheaven-web-client</module>
@@ -58,7 +59,6 @@
 			<organization></organization>
 			<roles>
 				<role>Creator</role>
-				<role>Project Leader</role>
 				<role>Architect</role>
 				<role>Designer</role>
 				<role>Developer</role>
