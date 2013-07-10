@@ -1,16 +1,12 @@
 package org.middleheaven.text.indexing.lucene;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.NIOFSDirectory;
-import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ModificationTracableManagedFile;
-import org.middleheaven.io.repository.machine.MachineFiles;
 import org.middleheaven.text.indexing.DocumentModel;
 import org.middleheaven.text.indexing.TextIndex;
 import org.middleheaven.text.indexing.TextIndexingException;

@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.lucene.store.Lock;
 import org.apache.lucene.store.LockFactory;
@@ -84,7 +85,7 @@ class ManagedLock extends Lock {
 	   * one JVM (each with their own NativeFSLockFactory
 	   * instance) have set the same lock dir and lock prefix.
 	   */
-	  private static HashSet<String> LOCK_HELD = new HashSet<String>();
+	  private static final Set<String> LOCK_HELD = new HashSet<String>();
 
 	  public ManagedLock(ManagedFile lockDir, String lockFileName) {
 	    this.lockDir = lockDir;

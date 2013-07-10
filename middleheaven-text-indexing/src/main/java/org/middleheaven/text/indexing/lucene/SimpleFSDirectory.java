@@ -197,11 +197,12 @@ class SimpleFSDirectory extends ManagedFileDirectory {
           if (!success) {
             try {
               file.close();
-            } catch (Throwable t) {
+            } catch (IOException t) {
               // Suppress so we don't mask original exception
             }
-          } else
+          } else{
             file.close();
+          } 
         }
       }
     }
