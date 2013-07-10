@@ -6,6 +6,7 @@ package org.middleheaven.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class UISearch {
 			data.set(state, builder.toString());
 
 			LinkedList<UIComponent> matches = new LinkedList<UIComponent>();
-			LinkedList<UIComponent> candidades = new LinkedList<UIComponent>();
+			Deque<UIComponent> candidades = new LinkedList<UIComponent>();
 			candidades.add(this.pivot);
 
 			doSearch(data, candidades, matches);
@@ -122,7 +123,7 @@ public class UISearch {
 		 * @param gid
 		 * @param components
 		 */
-		private void doSearch(Data data, LinkedList<UIComponent> candidades, List<UIComponent> matches) {
+		private void doSearch(Data data, Deque<UIComponent> candidades, Collection<UIComponent> matches) {
 
 
 			while (!candidades.isEmpty()) {
@@ -147,7 +148,7 @@ public class UISearch {
 
 		}
 		
-		private void applySpecial(Data data, UIComponent c, List<UIComponent> matches) {
+		private void applySpecial(Data data, UIComponent c, Collection<UIComponent> matches) {
 			if (data.specials.isEmpty()){
 				matches.add(c);
 				return;
@@ -186,7 +187,7 @@ public class UISearch {
 			public String familly;
 			public String id;
 			public Map<String, String> properties = new HashMap<String,String>();
-			private LinkedList<Function<List<UIComponent>, UIComponent>> specials = new LinkedList<Function<List<UIComponent>, UIComponent>>();
+			private Deque<Function<List<UIComponent>, UIComponent>> specials = new LinkedList<Function<List<UIComponent>, UIComponent>>();
 
 			public boolean isUnique(){
 				return !StringUtils.isEmptyOrBlank(id) || "UIClient".equals(type);

@@ -9,7 +9,6 @@ import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.ui.components.UILayoutManager;
 
 /**
  * Base implementation for {@link RenderKit} classes.
@@ -195,7 +194,7 @@ public abstract class AbstractRenderKit extends RenderKit {
 
 	}
 
-	protected final class RenderPropertiesKey implements RenderProperties{
+	protected static final class RenderPropertiesKey implements RenderProperties{
 
 		private static final long serialVersionUID = 1L;
 

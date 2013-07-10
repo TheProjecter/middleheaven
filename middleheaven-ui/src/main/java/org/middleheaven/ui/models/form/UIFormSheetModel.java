@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.middleheaven.global.text.TextLocalizable;
-import org.middleheaven.util.validation.Validator;
+import org.middleheaven.global.text.LocalizableText;
+import org.middleheaven.validation.Validator;
 
 /**
  * 
@@ -16,7 +16,7 @@ import org.middleheaven.util.validation.Validator;
 public class UIFormSheetModel implements Serializable{
 
 	private String name;
-	private TextLocalizable caption; 
+	private LocalizableText caption; 
 	private Validator validator;
 	private int tabOrder;
 	private Class<?> valueType;
@@ -49,18 +49,18 @@ public class UIFormSheetModel implements Serializable{
 	}
 
 	/**
-	 * Obtains {@link TextLocalizable}.
+	 * Obtains {@link LocalizableText}.
 	 * @return the caption
 	 */
-	public TextLocalizable getCaption() {
+	public LocalizableText getCaption() {
 		return caption;
 	}
 
 	/**
-	 * Atributes {@link TextLocalizable}.
+	 * Atributes {@link LocalizableText}.
 	 * @param caption the caption to set
 	 */
-	public void setCaption(TextLocalizable caption) {
+	public void setCaption(LocalizableText caption) {
 		this.caption = caption;
 	}
 

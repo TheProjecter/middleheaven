@@ -2,9 +2,7 @@ package org.middleheaven.ui.components;
 
 import java.util.List;
 
-import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.data.UIDataItem;
-import org.middleheaven.util.property.Property;
 
 
 public interface UISelectOne extends UIField {

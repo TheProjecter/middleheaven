@@ -5,7 +5,6 @@
 package org.middleheaven.ui.rendering;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 import org.middleheaven.ui.SceneNavigator;
 import org.middleheaven.ui.UIComponent;

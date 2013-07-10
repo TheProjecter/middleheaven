@@ -5,7 +5,6 @@ package org.middleheaven.ui;
 
 import java.lang.reflect.Method;
 
-import org.middleheaven.process.AttributeContext;
 import org.middleheaven.ui.events.UIActionEvent;
 
 /**

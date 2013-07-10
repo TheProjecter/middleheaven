@@ -6,10 +6,10 @@ xsi:schemaLocation="http://www.middleheaven.org/ui-schema.xsd"
 >
 	<uic type="client">
 		<uic name="login" type="window" layout="tabs">
-				<uic name="frameA" type="view" title="Frame A">
+				<uic id="frameA" name="frameA" type="view" title="Frame A">
 					<uic name="labelA" type="label" text="Olá Mundo" />
 				</uic>
-				<uic name="frameB" type="view" title="Frame B">
+				<uic id="frameB" name="frameB" type="view" title="Frame B">
 					<uic name="labelB" type="label" text="Olá Mundo Lado B" />
 				</uic>
 		</uic>

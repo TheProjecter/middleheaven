@@ -1,15 +1,17 @@
 package org.middleheaven.ui;
 
-import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.middleheaven.core.reflection.MethodDelegator;
+import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.PropertyBagProxyHandler;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 class GenericUIComponentProxyHandler extends PropertyBagProxyHandler {
 
@@ -28,34 +30,25 @@ class GenericUIComponentProxyHandler extends PropertyBagProxyHandler {
 	@Override
 	public Object invoke(Object proxy, Object[] args, MethodDelegator delegator)	throws Throwable {
 		
-		Method m = Introspector.of(GenericUIComponent.class).inspect().methods()
+		MethodHandler m = Introspector.of(GenericUIComponent.class).inspect().methods()
 			.named(delegator.getName())
 			.withParametersType(delegator.getInvoked().getParameterTypes())
 			.retrive();
 		
+		final Class<?> returnType = delegator.getInvoked().getReturnType();
 		if (m!=null){
 			return m.invoke(original,args);
-		} else if (Property.class.isAssignableFrom(delegator.getInvoked().getReturnType())){
-			final String name = delegator.getInvoked().getName();
-			Property p = adicionalProperties.get(name);
-			if (p == null){
-				p = ValueProperty.writable(StringUtils.firstLetterToLower(resolveName(name)), delegator.getInvoked().getReturnType());
-				adicionalProperties.put(name, p);
-			}
-			return p;
+		} 
+		
+		if (Iterable.class.isAssignableFrom(returnType) || Set.class.isAssignableFrom(returnType) || Collection.class.isAssignableFrom(returnType)){
+			return Collections.emptySet();
+		} else if (List.class.isAssignableFrom(returnType)){
+			return Collections.emptySet();
 		}
 		return null;
 		
 	}
-	
-	private String resolveName(String name){
-		int pos = name.indexOf("Property");
-		if (pos < 0){
-			return name.substring(3);
-		} else {
-			return name.substring(3, pos);
-		}
-	}
+
 	public String toString(){
 		return original.toString();
 	}

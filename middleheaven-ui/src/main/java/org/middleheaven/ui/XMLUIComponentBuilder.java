@@ -4,9 +4,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.annotations.Shared;
 import org.middleheaven.core.reflection.NoSuchClassReflectionException;
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.BindConfiguration;
 import org.middleheaven.core.wiring.Binder;
@@ -18,9 +19,10 @@ import org.middleheaven.io.xml.XMLObjectContructor;
 import org.middleheaven.io.xml.XMLUtils;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
+import org.middleheaven.ui.layout.UIBorderLayoutManager;
+import org.middleheaven.ui.layout.UIClientLayoutManager;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.function.Maybe;
@@ -35,7 +37,8 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 	WiringService wiringContext;
 	private UIEnvironmentType targetUIEnvironmentType;
-
+	private int nextGID = 0;
+	
 	public XMLUIComponentBuilder(WiringService wiringContext , UIEnvironmentType targetUIEnvironmentType){
 		this.wiringContext = wiringContext;
 		this.targetUIEnvironmentType = targetUIEnvironmentType;
@@ -111,7 +114,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 		final Map<String, Maybe<String>> propertiesValues = new HashMap<String, Maybe<String>>(); 
 
 
-		Maybe<String> gid = XMLUtils.getStringAttribute("gid", node, "");
+		Maybe<String> gid = XMLUtils.getStringAttribute("id", node, "");
 		Maybe<String> name = XMLUtils.getStringAttribute("name", node , "");
 
 		propertiesValues.put("name", name);
@@ -138,8 +141,8 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 		if (gid.isPresent()){
 			uiComponent.setGID(gid.get());
-		} else if (name.isPresent()){
-			uiComponent.setGID(name.get());
+		} else {
+			uiComponent.setGID(Integer.toString(nextGID++));
 		}
 
 		if (uiComponent.isType(UIContainer.class)){
@@ -150,11 +153,11 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 			} else if (uiComponent.isType(UIClient.class)){
 				myLayout =  GenericUIComponent.getInstance(UILayout.class, "client");
-
+				myLayout.setLayoutManager(new UIClientLayoutManager());
 				((UIContainer)uiComponent).setUIContainerLayout(myLayout);
 			} else {
 				myLayout =  GenericUIComponent.getInstance(UILayout.class, "border");
-
+				myLayout.setLayoutManager(new UIBorderLayoutManager());
 				((UIContainer)uiComponent).setUIContainerLayout(myLayout);
 			}
 
@@ -179,19 +182,13 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 		// read properties
 
-		getProperties(uiTypeClass, uiComponent).forEach(new Block<Property>(){
-
-			@Override
-			public void apply(Property prop) {
-
-				final Maybe<String> maybe = propertiesValues.get(prop.getName());
-				if (maybe != null && maybe.isPresent()){
-					prop.set(TypeCoercing.coerce(maybe.get() , prop.getValueType()));
-				}
-
+		for (Property prop  : getProperties(uiTypeClass, uiComponent)){
+			
+			final Maybe<String> maybe = propertiesValues.get(prop.getName());
+			if (maybe != null && maybe.isPresent()){
+				prop.set(TypeCoercing.coerce(maybe.get() , prop.getValueType()));
 			}
-
-		});
+		}
 
 		// children
 
@@ -232,33 +229,53 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 
 		@Override
 		protected boolean accept(Class<? extends UIClient> type) {
-			return true; // TODO verify agains type
+			return true; // TODO verify againts type
 		}
 
 	}
 
 	private Enumerable<Property> getProperties(Class<UIComponent> uiTypeClass, final UIComponent component){
-		return Introspector.of(uiTypeClass).inspect().properties().retriveAll().filter(new Predicate<PropertyAccessor>(){
-
-			@Override
-			public Boolean apply(PropertyAccessor obj) {
-				return Property.class.isAssignableFrom(obj.getValueType());
-			}
-
-		}).map(new Mapper<Property, PropertyAccessor>(){
-
-			@Override
-			public Property apply(PropertyAccessor obj) {
-				Property  p = (Property)obj.getValue(component);
-
-				if (p == null){
-					throw new IllegalStateException("Property " + obj.getDeclaringClass() + "." + obj.getName() + " is null");
-				}
-
-				return p;
-			}
-
-		});
+		return Introspector.of(uiTypeClass).inspect().properties().retriveAll()
+				.filter(new PropertyHandlerPredicate())
+				.map(new PropertyHandlerPredicateMapper(component));
 	}
 
+	private static class PropertyHandlerPredicate implements Predicate<PropertyHandler>{
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Boolean apply(PropertyHandler obj) {
+			return Property.class.isAssignableFrom(obj.getValueType());
+		}
+		
+	}
+	
+	private static class PropertyHandlerPredicateMapper implements Mapper<Property, PropertyHandler>{
+
+		private final UIComponent component;
+
+		
+		public PropertyHandlerPredicateMapper(UIComponent component) {
+			super();
+			this.component = component;
+		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Property apply(PropertyHandler obj) {
+			Property  p = (Property)obj.getValue(component);
+
+			if (p == null){
+				throw new IllegalStateException("Property " + obj.getDeclaringClass() + "." + obj.getName() + " is null");
+			}
+
+			return p;
+		}
+		
+	}
 }

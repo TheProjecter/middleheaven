@@ -1,15 +1,20 @@
 package org.middleheaven.ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.global.text.ParsableFormatter;
+import org.middleheaven.global.text.LocalizableText;
+import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIContainer;
+import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UILayoutManager;
+import org.middleheaven.ui.data.UIDataContainer;
 import org.middleheaven.ui.rendering.RenderKit;
-import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.property.Property;
 import org.middleheaven.util.property.ValueProperty;
 
@@ -18,7 +23,7 @@ import org.middleheaven.util.property.ValueProperty;
  * 
  * @param <T> the {@link UIComponent} represented by the object.
  */
-public class GenericUIComponent<T extends UIComponent> implements UIContainer {
+public class GenericUIComponent<T extends UIComponent> implements UIContainer , UIField , UICommand, UILayout {
 
 	static private int nextID=0;
 	
@@ -29,7 +34,6 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	private Class<T> renderType;
 	private UIComponent parent;
 
-
 	private UIDimension x = UIDimension.pixels(0);
 	private UIDimension y = UIDimension.pixels(0);
 
@@ -38,20 +42,33 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 
 	private Property<Boolean> visible = ValueProperty.writable("visible", true);
 	private Property<Boolean> enable  = ValueProperty.writable("enable", true);
+	private Property<LocalizableText> title  = ValueProperty.writable("title", LocalizableText.class);
+	private Property<LocalizableText> text  = ValueProperty.writable("text", LocalizableText.class);
+	private Property<UIReadState> readState  = ValueProperty.writable("readState", UIReadState.class);
+	private Property<String> name = ValueProperty.writable("name", String.class);
+	private Property<ParsableFormatter> formater  = ValueProperty.writable("formater", ParsableFormatter.class);
+	private Property<Boolean> required  = ValueProperty.writable("required", false);
+	private Property<Integer> maxLength  = ValueProperty.writable("maxLength",Integer.MAX_VALUE );
+	private Property<Integer> minLength  = ValueProperty.writable("minLength", 0);
+	private Property<Object> value  = ValueProperty.writable("value", Object.class);
 	
+	private UIDataContainer dataContainer;
+	
+	private List<CommandListener> commandListeners = new ArrayList<CommandListener>();
+
+	private UILayoutManager layoutManager;
+
 	/**
 	 * 
-	 * @param uiClass
+	 * @param uiClassInterface
 	 * @param familly
 	 * @return
 	 */
-	public static <T extends UIComponent>  T getInstance(Class<T> uiClass, String familly){
+	public static <T extends UIComponent>  T getInstance(Class<T> uiClassInterface, String familly){
 		
-		final GenericUIComponent object = new GenericUIComponent( uiClass, familly);
-		final GenericUIComponentProxyHandler proxyHandler = new GenericUIComponentProxyHandler(object,uiClass);
-		GenericUIComponent uic= (GenericUIComponent)Introspector.of(object).newProxyInstance(proxyHandler,uiClass);
-		
-		return uiClass.cast(uic);
+		final GenericUIComponent<T> object = new GenericUIComponent<T>( uiClassInterface, familly);
+		final GenericUIComponentProxyHandler proxyHandler = new GenericUIComponentProxyHandler(object,uiClassInterface);
+		return Introspector.of(object).newProxyInstance(proxyHandler,uiClassInterface);
 	}
 	
 	/**
@@ -108,8 +125,14 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 	}
 	
 	@Override
-	public void addComponent(UIComponent component, UILayoutConstraint constraint) {
-		children.add(component); // TODO layoutcontraint
+	public void addComponent(UIComponent component, UILayoutConstraint layoutConstraint) {
+		children.add(component); 
+		if (this.layout != null){
+			layout.addComponent(component, layoutConstraint);
+		}
+		if (this.layoutManager != null){
+			layoutManager.addComponent(component, layoutConstraint);
+		}
 	}
 	
 	@Override
@@ -217,5 +240,111 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer {
 		return enable;
 	}
 
+	public Property<LocalizableText> getTitleProperty() {
+		return title;
+	}
+	
+	public Property<LocalizableText> getTextProperty() {
+		return text;
+	}
 
+	public Property<UIReadState> getReadStateProperty() {
+		return readState;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<String> getNameProperty() {
+		return name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIDataContainer(UIDataContainer container) {
+		dataContainer = container;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<ParsableFormatter> getFormaterProperty() {
+		return formater;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Boolean> getRequiredProperty() {
+		return required;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Integer> getMaxLengthProperty() {
+		return maxLength;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Integer> getMinLengthProperty() {
+		return minLength;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Property<Object> getValueProperty() {
+		return value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCommandListener(CommandListener listener) {
+		this.commandListeners.add(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeCommandListener(CommandListener listener) {
+		this.commandListeners.remove(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterable<CommandListener> getCommandListeners() {
+		return commandListeners;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UILayoutManager getLayoutManager() {
+		return layoutManager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setLayoutManager(UILayoutManager layoutManager) {
+		this.layoutManager = layoutManager;
+	}
 }

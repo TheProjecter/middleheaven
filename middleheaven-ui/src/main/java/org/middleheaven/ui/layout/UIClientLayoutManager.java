@@ -1,28 +1,30 @@
+/**
+ * 
+ */
 package org.middleheaven.ui.layout;
 
 import org.middleheaven.collections.BoundMap;
 import org.middleheaven.collections.HashBoundMap;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
-import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.util.SafeCastUtils;
 
 /**
- * Border Layout.
+ * 
  */
-public class UIBorderLayoutManager  implements UILayoutManager {
+public class UIClientLayoutManager implements UILayoutManager {
 
 	// map the component id to its position
-	private final BoundMap<String, UIBorderLayoutConstraint> children = new HashBoundMap<String, UIBorderLayoutConstraint>();
+	private final BoundMap<String, UIClientLayoutConstraint> children = new HashBoundMap<String, UIClientLayoutConstraint>();
 
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void addComponent(UIComponent component, UILayoutConstraint layoutConstrain) {
-		children.put(component.getGID(), SafeCastUtils.safeCast(layoutConstrain, UIBorderLayoutConstraint.class).get());
+		children.put(component.getGID(), SafeCastUtils.safeCast(layoutConstrain, UIClientLayoutConstraint.class).get());
 	}
 
 
@@ -34,25 +36,13 @@ public class UIBorderLayoutManager  implements UILayoutManager {
 		children.remove(component.getGID());
 	}
 	
-
-	public UISize getLayoutablePreferedSize(UISize layoutable) {
-		return layoutable;
-	}
-
-	public UIBorderLayoutConstraint getBorderConstraintFor(UIComponent component){
-		return this.children.get(component.getGID());
-	}
-	
 	/**
 	 * 
 	 * @param contraint
 	 * @return the id of the component positioned at the given constraint, or <code>null</code> if no component is at that position
 	 */
-	public String getBorderComponentId(UIBorderLayoutConstraint contraint){
+	public String getComponentId(UIClientLayoutConstraint contraint){
 		return this.children.reversed().get(contraint);
-	}
+	} 
 
-
-	
-	
 }

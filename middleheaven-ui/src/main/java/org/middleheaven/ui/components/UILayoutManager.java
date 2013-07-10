@@ -10,7 +10,7 @@ import org.middleheaven.ui.UILayoutConstraint;
  */
 public interface UILayoutManager   {
 
-    public void addComponent (UIComponent component, UILayoutConstraint layoutConstrain);
+    public void addComponent (UIComponent component, UILayoutConstraint layoutConstraint);
     public void removeComponent (UIComponent component);
     
 }

@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.models.form;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 
 /**
@@ -27,7 +27,7 @@ public class UIFormSheetBuilder {
 	 * @param valueOf
 	 * @return
 	 */
-	public UIFormSheetBuilder addField(Class<? extends UIComponent> type, String id, TextLocalizable valueOf) {
+	public UIFormSheetBuilder addField(Class<? extends UIComponent> type, String id, LocalizableText valueOf) {
 
 
 		return this;

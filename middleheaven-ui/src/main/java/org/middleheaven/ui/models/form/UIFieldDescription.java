@@ -5,9 +5,9 @@ package org.middleheaven.ui.models.form;
 
 import java.io.Serializable;
 
-import org.middleheaven.global.text.TextLocalizable;
+import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.util.validation.Validator;
+import org.middleheaven.validation.Validator;
 
 /**
  * 
@@ -20,7 +20,7 @@ public class UIFieldDescription  implements Serializable {
 	private boolean isRequired;
 	private boolean isReadOnly;
 	private String name;
-	private TextLocalizable caption; 
+	private LocalizableText caption; 
 	private Validator validator;
 	private int tabOrder;
 	private Class<?> valueType;
@@ -148,18 +148,18 @@ public class UIFieldDescription  implements Serializable {
 		this.name = name;
 	}
 	/**
-	 * Obtains {@link TextLocalizable}.
+	 * Obtains {@link LocalizableText}.
 	 * @return the caption
 	 */
-	public TextLocalizable getCaption() {
+	public LocalizableText getCaption() {
 		return caption;
 	}
 	
 	/**
-	 * Atributes {@link TextLocalizable}.
+	 * Atributes {@link LocalizableText}.
 	 * @param caption the caption to set
 	 */
-	public void setCaption(TextLocalizable caption) {
+	public void setCaption(LocalizableText caption) {
 		this.caption = caption;
 	}
 	
