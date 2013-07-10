@@ -1,5 +1,6 @@
 package org.middleheaven.domain.store;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Mappings;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Property;
@@ -19,6 +21,7 @@ import org.hibernate.mapping.SimpleValue;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.hibernate.type.BigDecimalType;
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.DateType;
@@ -36,8 +39,8 @@ import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.model.EnumModel;
-import org.middleheaven.domain.query.ListQuery;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryExecuter;
+import org.middleheaven.domain.query.QueryParametersBag;
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.storage.dataset.mapping.DatasetColumnModel;
@@ -55,12 +58,21 @@ import org.middleheaven.util.function.Maybe;
 /**
  * Impleemntation of {@link DomainStoreManager} using the Hiberante framework.
  */
-public final class HibernateDomainStore extends AbstractDomainStoreManager {
+public final class HibernateDomainStoreManager extends AbstractDomainStoreManager {
 	
 	private SessionFactory sessionFactory;
 	private InterceptorAdpater interceptor = new InterceptorAdpater();
 
-	public class InterceptorAdpater extends EmptyInterceptor {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> Query<T> retriveNameQuery(String name, Class<T> type) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	
+	public static class InterceptorAdpater extends EmptyInterceptor {
 		
 		private static final long serialVersionUID = -7018647411280423552L;
 
@@ -113,11 +125,11 @@ public final class HibernateDomainStore extends AbstractDomainStoreManager {
 
 	}
 	
-	public static HibernateDomainStore manage(DomainModel domainModel, DatasetRepositoryModel dataSetModels){
-		return new HibernateDomainStore(domainModel, dataSetModels);
+	public static HibernateDomainStoreManager manage(DomainModel domainModel, DatasetRepositoryModel dataSetModels){
+		return new HibernateDomainStoreManager(domainModel, dataSetModels);
 	}
 	
-	private HibernateDomainStore (DomainModel domainModel, DatasetRepositoryModel dataSetModels){
+	private HibernateDomainStoreManager (DomainModel domainModel, DatasetRepositoryModel dataSetModels){
 		super(domainModel);
 
 		Configuration configuration = new Configuration()
@@ -217,10 +229,9 @@ public final class HibernateDomainStore extends AbstractDomainStoreManager {
 		case TIME:
 			return TimeType.INSTANCE;
 		case DECIMAL:
-		
+			return BigDecimalType.INSTANCE;
 		case INTEGER:
 			return LongType.INSTANCE;
-			
 		case ENUM:
 			Maybe<EnumModel> enumModel = domainModel.getEmumModel(field.getValueType());
 			return new CustomType(new EnumType(enumModel.get()));
@@ -232,7 +243,6 @@ public final class HibernateDomainStore extends AbstractDomainStoreManager {
 			return StringType.INSTANCE;
 		case STATUS:
 			return IntegerType.INSTANCE;
-		
 		case ONE_TO_MANY:
 		case ONE_TO_ONE:
 		case MANY_TO_MANY:
@@ -336,20 +346,54 @@ public final class HibernateDomainStore extends AbstractDomainStoreManager {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Query<T> createQuery(final EntityCriteria<T> criteria, ReadStrategy strategy, StorageUnit unit) {
+	public <T> Query<T> createQuery(final EntityCriteria<T> criteria,StorageUnit unit) {
 
-		return inSession(new Function<Query<T> , Session >(){
+		return new ParametrizedCriteriaQuery<T>(criteria, new QueryExecuter (){
 
 			@Override
-			public Query<T> apply(Session session) {
-				Criteria hcriteria = session.createCriteria(criteria.getTargetClass());
-				
-				interpreter(criteria, hcriteria);
-				 
-				return new ListQuery<T>(hcriteria.list());
+			public <E> Collection<E> retrive(EntityCriteria<E> query, ReadStrategy readStrategy,QueryParametersBag queryParametersBag) {
+				return inSession(new Function<Collection<E> , Session >(){
+
+					@Override
+					public Collection<E> apply(Session session) {
+						Criteria hcriteria = session.createCriteria(criteria.getTargetClass());
+						
+						interpreter(criteria, hcriteria);
+						 
+						return hcriteria.list();
+					}
+					
+				});
+			}
+
+			@Override
+			public <E> long count(EntityCriteria<E> query, QueryParametersBag queryParametersBag) {
+				return inSession(new Function<Long , Session >(){
+
+					@Override
+					public Long apply(Session session) {
+						Criteria hcriteria = session.createCriteria(criteria.getTargetClass());
+						
+						interpreter(criteria, hcriteria);
+						 
+						Long count = (Long) hcriteria.setProjection(Projections.rowCount()).uniqueResult();
+						return count == null ? 0 : count.longValue();
+					}
+					
+				});
+			}
+
+			@Override
+			public <E> boolean existsAny(EntityCriteria<E> query, QueryParametersBag queryParametersBag) {
+				return count(query,queryParametersBag) > 0L;
 			}
 			
 		});
+
+		
+		
+		
+		
 
 	}
 
@@ -438,6 +482,7 @@ public final class HibernateDomainStore extends AbstractDomainStoreManager {
 	protected void flatten(EntityInstance p, Set<EntityInstance> all) {
 		all.add(p);
 	}
+
 
 
 
