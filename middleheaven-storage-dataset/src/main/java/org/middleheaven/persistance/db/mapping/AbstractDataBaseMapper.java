@@ -11,7 +11,6 @@ import org.middleheaven.persistance.db.metamodel.EditableDBTableModel;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.function.Maybe;
 
 public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 

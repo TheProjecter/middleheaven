@@ -3,6 +3,8 @@ package org.middleheaven.persistance.db.datasource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 public class DriverDataSource extends AbstractDataSource{
 
@@ -64,5 +66,7 @@ public class DriverDataSource extends AbstractDataSource{
 	protected void setPassword(String pass) {
 		this.pass = pass;
 	}
+
+
 
 }

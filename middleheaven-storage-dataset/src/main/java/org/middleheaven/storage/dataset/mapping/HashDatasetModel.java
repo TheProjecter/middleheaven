@@ -6,8 +6,8 @@ package org.middleheaven.storage.dataset.mapping;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 
 /**
  * 

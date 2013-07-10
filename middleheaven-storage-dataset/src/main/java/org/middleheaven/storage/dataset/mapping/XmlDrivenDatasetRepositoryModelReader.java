@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.io.ManagedIOException;
@@ -168,7 +168,7 @@ public final class XmlDrivenDatasetRepositoryModelReader implements
 			    			actualLogicNames = new HashSet<String>();
 			    			
 			    			for (int i=0; i < attributes.getLength() ; i++) {
-			    				PropertyAccessor pa = inspectorDataSet.inspect().properties().named(attributes.getLocalName(i)).retrive();
+			    				PropertyHandler pa = inspectorDataSet.inspect().properties().named(attributes.getLocalName(i)).retrive();
 			    				
 			    				if (pa != null){
 				    				pa.setValue(atual, attributes.getValue(i) /*.toLowerCase()*/);
@@ -191,7 +191,7 @@ public final class XmlDrivenDatasetRepositoryModelReader implements
 			    			
 			    			final String attributeValue = attributes.getValue(i);
 							if ("type".equals(attributeName)){
-			    				PropertyAccessor pa = inspectorColumn.inspect().properties().named("valueType").retrive();
+			    				PropertyHandler pa = inspectorColumn.inspect().properties().named("valueType").retrive();
 				    			
 			    				if (pa != null){
 			    					final ColumnValueType value = this.typesMapping.get(attributeValue);
@@ -209,7 +209,7 @@ public final class XmlDrivenDatasetRepositoryModelReader implements
 			    					}
 			    				}
 			    			} else {
-			    				PropertyAccessor pa = inspectorColumn.inspect().properties().named(attributeName).retrive();
+			    				PropertyHandler pa = inspectorColumn.inspect().properties().named(attributeName).retrive();
 				    			
 				    			if (pa != null){
 			    					pa.setValue(cm, attributeValue /*.toLowerCase()*/);
@@ -234,7 +234,7 @@ public final class XmlDrivenDatasetRepositoryModelReader implements
 			    		UserType ut = new UserType();
 			    		
 			    		for (int i=0; i < attributes.getLength() ; i++) {
-			    			PropertyAccessor pa = inspectorUserType.inspect().properties().named(attributes.getLocalName(i)).retrive();
+			    			PropertyHandler pa = inspectorUserType.inspect().properties().named(attributes.getLocalName(i)).retrive();
 			    			
 			    			if (pa != null){
 			    				pa.setValue(ut, attributes.getValue(i).toLowerCase());

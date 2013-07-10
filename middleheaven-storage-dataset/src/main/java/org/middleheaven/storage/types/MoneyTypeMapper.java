@@ -3,8 +3,8 @@ package org.middleheaven.storage.types;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.quantity.math.Real;
-import org.middleheaven.quantity.money.Currency;
 import org.middleheaven.quantity.money.CentsMoney;
+import org.middleheaven.quantity.money.Currency;
 
 public class MoneyTypeMapper implements TypeMapper {
 
@@ -47,8 +47,7 @@ public class MoneyTypeMapper implements TypeMapper {
 		RealTypeMapper.instance().write(null, money.amount(), row, columns[0]);
 		
 		CurrencyTypeMapper.instance().write(null, money.unit(), row, columns[1]);
-	
-		
+
 	}
 
 

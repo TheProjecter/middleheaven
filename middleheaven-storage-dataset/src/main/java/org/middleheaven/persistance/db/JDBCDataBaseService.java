@@ -25,15 +25,7 @@ public class JDBCDataBaseService implements DataBaseService {
 	 */
 	@Override
 	public DataStoreProvider getDataStoreProvider() {
-		
-		return getDataStoreProvider(new DataSourceNameResolver(){
-
-			@Override
-			public String resolveDataSourceName(DataStoreName name) {
-				return name.getName();
-			}
-			
-		});
+		return getDataStoreProvider(new DefaultDataSourceNameResolver());
 	}
 
 	/**
@@ -41,9 +33,18 @@ public class JDBCDataBaseService implements DataBaseService {
 	 */
 	@Override
 	public DataStoreProvider getDataStoreProvider(DataSourceNameResolver dataSourceNameResolver) {
-
 		return new RDBMSDataStoreProvider(dsService, dataSourceNameResolver);
-
 	}
 
+	private static class DefaultDataSourceNameResolver implements DataSourceNameResolver{
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String resolveDataSourceName(DataStoreName name) {
+			return name.getName();
+		}
+		
+	}
 }

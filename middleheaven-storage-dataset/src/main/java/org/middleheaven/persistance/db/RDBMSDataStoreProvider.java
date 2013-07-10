@@ -12,6 +12,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.Pair;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.DataColumn;
 import org.middleheaven.persistance.DataQuery;
@@ -54,8 +56,6 @@ import org.middleheaven.sequence.Sequence;
 import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.classification.LogicOperator;
-import org.middleheaven.util.collections.Enumerable;
-import org.middleheaven.util.collections.Pair;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;

@@ -2,14 +2,11 @@ package org.middleheaven.persistance.db;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-
-import javax.sql.rowset.serial.SerialClob;
 
 import org.middleheaven.persistance.DataColumn;
 import org.middleheaven.persistance.DataRow;

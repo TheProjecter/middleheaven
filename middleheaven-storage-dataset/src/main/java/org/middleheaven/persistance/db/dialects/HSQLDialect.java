@@ -251,20 +251,23 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 
 	public DataBaseModel readDataBaseModel(String catalog, DataSource ds) {
 		Connection con=null;
+		PreparedStatement psTables = null;
+		PreparedStatement psColumns = null;
+		ResultSet tables = null;
 		try{
 			con = ds.getConnection();
 	
 			EditableDataBaseModel dbm = new EditableDataBaseModel();
 			
-			PreparedStatement psTables = con.prepareStatement(
+			psTables = con.prepareStatement(
 				"SELECT table_name FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_TYPE = 'TABLE'"
 			);
-			PreparedStatement psColumns = con.prepareStatement(
+			psColumns = con.prepareStatement(
 				"SELECT column_name,data_type, column_size, nullable, decimal_digits FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_NAME = ? "
 			);
 			
 
-			ResultSet tables = psTables.executeQuery();
+			tables = psTables.executeQuery();
 			while (tables.next()) {
 			
 					final String hardTableName = tables.getString(1);
@@ -322,12 +325,21 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		} catch (SQLException e) {
 			throw this.handleSQLException(e);
 		} finally {
-			if(con!=null){
-				try {
-					con.close();
-				} catch (SQLException e) {
-					throw this.handleSQLException(e);
+			try {
+				if (tables != null) {
+					tables.close();
 				}
+				if (psColumns != null) {
+					psColumns.close();
+				}
+				if (psTables != null) {
+					psTables.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				throw this.handleSQLException(e);
 			}
 		}
 	}

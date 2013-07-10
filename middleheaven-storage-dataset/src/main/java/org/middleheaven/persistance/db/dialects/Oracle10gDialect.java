@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.PropertyNotFoundException;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.persistance.PersistanceException;
@@ -66,7 +66,7 @@ public class Oracle10gDialect extends SequenceSupportedDBDialect{
 			ds = unwrapp(ds);
 			
 			// faster
-			PropertyAccessor pa = Introspector.of(ds.getClass()).inspect().properties().named("login").retrive();
+			PropertyHandler pa = Introspector.of(ds.getClass()).inspect().properties().named("login").retrive();
 
 			return Collections.singletonList(pa.getValue(ds).toString().toUpperCase());
 		} catch (PropertyNotFoundException e){

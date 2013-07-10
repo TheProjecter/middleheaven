@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import javax.sql.DataSource;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.PersistanceException;
@@ -27,7 +28,8 @@ import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.sequence.Sequence;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.util.function.Block;
+import org.middleheaven.util.function.Function;
 
 public abstract class RDBMSDialect {
 
@@ -59,6 +61,7 @@ public abstract class RDBMSDialect {
 	}
 
 
+	
 	/**
 	 * 
 	 * @return true if this dialect SQL syntax permits define a explicit limit to the number of rows returned in a query
@@ -347,6 +350,7 @@ public abstract class RDBMSDialect {
 	public ColumnValueType typeFromNative(int sqlType) {
 		switch (sqlType){
 		case Types.INTEGER:
+		case Types.BIGINT:
 			return ColumnValueType.INTEGER;
 		case Types.TINYINT:	
 			return ColumnValueType.SMALL_INTEGER;

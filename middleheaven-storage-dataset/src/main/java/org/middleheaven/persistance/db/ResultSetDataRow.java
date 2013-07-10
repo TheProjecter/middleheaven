@@ -5,14 +5,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Iterator;
 
+import org.middleheaven.collections.TransformedIterator;
 import org.middleheaven.logging.Logger;
-import org.middleheaven.persistance.DataAccessException;
 import org.middleheaven.persistance.DataColumn;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataColumnsModel;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.collections.TransformedIterator;
 import org.middleheaven.util.function.Mapper;
 
 /**

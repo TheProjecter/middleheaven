@@ -3,17 +3,24 @@ package org.middleheaven.persistance.db.datasource;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.jar.Attributes;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
+import org.middleheaven.collections.ParamsMap;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.io.IO;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.PersistanceException;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.transactions.XAResourceAdapter;
+import org.middleheaven.util.function.Block;
 
 
 /**
@@ -92,15 +99,22 @@ public class EmbeddedDataSource extends AbstractDataSource {
 
 		Logger.onBookFor(this.getClass()).info("Stopping : {0}" , url);
 
-		Connection con=null;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
 		try{
 			try {
 				con = riseConnection(this.login, this.pass);
 
 				con.setAutoCommit(true);
-				con.prepareStatement("SHUTDOWN").execute();
+				ps = con.prepareStatement("SHUTDOWN");
+				
+				ps.execute();
 
 			} finally {
+				if (ps != null){
+					ps.close();
+				}
 				if (con!=null){
 					con.close();
 				}

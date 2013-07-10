@@ -131,7 +131,7 @@ public class PostgressDialect extends SequenceSupportedDBDialect{
 		buffer.append(endDelimiter());
 	}
 
-	private class PostgressCriteriaInterpreter extends AbstractRDBMSDataSetCriteriaInterpreter{
+	private static class PostgressCriteriaInterpreter extends AbstractRDBMSDataSetCriteriaInterpreter{
 
 		public PostgressCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper dataBaseMapper) {
 			super(dataBaseDialect, dataBaseMapper);

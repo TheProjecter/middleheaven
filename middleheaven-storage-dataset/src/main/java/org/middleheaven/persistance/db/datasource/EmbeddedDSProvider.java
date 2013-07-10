@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import org.middleheaven.core.bootstrap.BootstapListener;
 import org.middleheaven.core.bootstrap.BootstrapEvent;
 import org.middleheaven.core.bootstrap.BootstrapService;
-import org.middleheaven.core.services.ServiceRegistry;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.persistance.DataStoreName;
 import org.middleheaven.persistance.DataStoreProvider;
 import org.middleheaven.persistance.db.DataSourceNameResolver;

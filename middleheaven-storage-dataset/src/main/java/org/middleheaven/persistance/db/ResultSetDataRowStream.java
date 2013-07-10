@@ -56,7 +56,7 @@ public class ResultSetDataRowStream implements DataRowStream {
 		}
 	}
 	
-	private class DataColumnIterator implements Iterator<DataColumn> {
+	private static class DataColumnIterator implements Iterator<DataColumn> {
 		
 		private Iterator<DataColumnModel> it;
 		private DataRow row;

@@ -31,7 +31,6 @@ public final class DataSetDefinitions {
 		
 		return (X) Introspector.of(type).newProxyInstance(
 				new DataSetDefinitionProxyHandler(type),
-				DataSetDefinition.class, 
 				DataSetDefinition.class
 		);
 
