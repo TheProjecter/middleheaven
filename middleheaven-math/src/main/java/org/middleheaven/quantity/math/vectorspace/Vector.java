@@ -3,10 +3,10 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.quantity.math.UnivariateFunction;
 import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.GroupAdditiveElement;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * 

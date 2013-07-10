@@ -3,8 +3,6 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
-import java.util.List;
-
 import org.middleheaven.quantity.math.structure.FieldElement;
 
 /**

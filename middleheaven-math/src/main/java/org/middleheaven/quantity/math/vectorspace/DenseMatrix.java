@@ -7,7 +7,7 @@ public class DenseMatrix<F extends FieldElement<F>> extends AbstractMatrix<F> {
 
 
 	protected Object[] all;
-	
+
 	private int columnsCount;
 	private int rowsCount;
 
@@ -46,49 +46,45 @@ public class DenseMatrix<F extends FieldElement<F>> extends AbstractMatrix<F> {
 
 	public DenseMatrix(Matrix<F> other, int ri, int c0, int rowCount, int columnCount) {
 		this(rowCount,columnCount, other.getField().zero());
-		try {
-			for (int i = 0; i < rowCount; i++) {
-				for (int j = 0; j < columnCount; j++) {
-					this.set(i, j , other.get(ri+i , c0+j));
-				}
+
+		for (int i = 0; i < rowCount; i++) {
+			for (int j = 0; j < columnCount; j++) {
+				this.set(i, j , other.get(ri+i , c0+j));
 			}
-		} catch(ArrayIndexOutOfBoundsException e) {
-			throw new ArrayIndexOutOfBoundsException("Submatrix indices");
 		}
+
 	}
-	
+
 	public DenseMatrix(Matrix<F> other, int[] r, int j0, int j1) {
 		this(r.length,j1-j0+1, other.getField().zero());
-		try {
-			for (int i = 0; i < r.length; i++) {
-				for (int j = j0; j <= j1; j++) {
-					this.set(i, j-j0 , other.get(r[i] , j));
-				}
-			}
-		} catch(ArrayIndexOutOfBoundsException e) {
-			throw new ArrayIndexOutOfBoundsException("Submatrix indices");
-		}
-	}
-	
 
-	
+		for (int i = 0; i < r.length; i++) {
+			for (int j = j0; j <= j1; j++) {
+				this.set(i, j-j0 , other.get(r[i] , j));
+			}
+		}
+
+	}
+
+
+
 	public DenseMatrix<F> set(int r, int c, F value){
-		
+
 		all[indexOf(r,c)] = value;
 		return this;
 	}
-	
-	
+
+
 	public DenseMatrix<F> setByIndex(int index, F value){
-		
+
 		all[index] = value;
 		return this;
 	}
-	
+
 	private int indexOf(int row, int column){
 		return row * this.rowsCount + column;
 	}
-	
+
 	@Override
 	public final int columnsCount() {
 		return columnsCount;
@@ -120,9 +116,9 @@ public class DenseMatrix<F extends FieldElement<F>> extends AbstractMatrix<F> {
 
 
 
-	
 
-	
+
+
 
 
 

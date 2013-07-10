@@ -3,12 +3,12 @@ package org.middleheaven.quantity.math.vectorspace;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.middleheaven.collections.AbstractEnumerable;
+import org.middleheaven.collections.IndexBasedIterator;
 import org.middleheaven.quantity.math.Conjugatable;
 import org.middleheaven.quantity.math.UnivariateFunction;
 import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.GroupAdditive;
-import org.middleheaven.util.collections.AbstractEnumerable;
-import org.middleheaven.util.collections.IndexBasedIterator;
 import org.middleheaven.util.function.Block;
 
 public abstract class AbstractVector<F extends FieldElement<F>> extends AbstractEnumerable<F> implements Vector<F> , Conjugatable<Vector<F>> , Iterable<F>{

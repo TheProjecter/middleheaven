@@ -4,7 +4,6 @@
 package org.middleheaven.quantity.math.vectorspace;
 
 import org.middleheaven.quantity.math.structure.FieldElement;
-import org.middleheaven.quantity.math.structure.Ring;
 
 /**
  * 
