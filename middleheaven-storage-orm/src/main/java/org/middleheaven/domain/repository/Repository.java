@@ -1,6 +1,6 @@
 package org.middleheaven.domain.repository;
 
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.util.identity.Identity;
 
 /**
@@ -21,28 +21,28 @@ public interface Repository<E> {
 	 *  
 	 * @return a query that can retrieve all instances in the repository
 	 */
-	public Query<E> findAll();
+	public QueryResult<E> findAll();
 	
 	/**
 	 * 
 	 * @param id
 	 * @return a query that can retrieve the instance that has the given identity 
 	 */
-	public Query<E> findByIdentity(Identity id );
+	public QueryResult<E> findByIdentity(Identity id );
 	
 	/**
 	 * 
 	 * @param instance
 	 * @return a query that can retrieve all instances that are identical to given instance
 	 */
-	public Query<E> findIdentical(E instance);
+	public QueryResult<E> findIdentical(E instance);
 
 	/**
 	 * 
 	 * @param instance
 	 * @return a query that can retrieve all instances that are equal to given instance
 	 */
-	public Query<E> findEquals(E instance);
+	public QueryResult<E> findEquals(E instance);
 	
 	/**
 	 * Store an instance in the repository giving it an identity. The identified instance

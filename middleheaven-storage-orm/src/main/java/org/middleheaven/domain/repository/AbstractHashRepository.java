@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.domain.query.ListQuery;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.util.identity.Identity;
 
 
@@ -15,13 +15,13 @@ public abstract class AbstractHashRepository<E> extends AbstractRepository<E> {
 	private Map<Identity, E> instances = new HashMap<Identity, E>();
 	
 	@Override
-	public Query<E> findAll() {
+	public QueryResult<E> findAll() {
 		return new ListQuery<E>(new ArrayList<E>(instances.values()));
 		
 	}
 
 	@Override
-	public Query<E> findByIdentity(final Identity id) {
+	public QueryResult<E> findByIdentity(final Identity id) {
 		return new ListQuery<E>(Collections.singletonList(instances.get(id)));
 		
 	}

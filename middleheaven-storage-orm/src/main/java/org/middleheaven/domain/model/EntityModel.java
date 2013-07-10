@@ -1,9 +1,9 @@
 package org.middleheaven.domain.model;
 
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.metaclass.MetaClass;
 import org.middleheaven.model.annotations.InheritanceStrategy;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * The entity metadata holder.

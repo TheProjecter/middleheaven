@@ -95,7 +95,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	}
 	
-	private static BinaryFunction<Boolean, Object, Object> EQ = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final BinaryFunction<Boolean, Object, Object> EQ = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -104,7 +104,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> LESS_THAN = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> LESS_THAN = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -117,7 +117,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> LESS_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> LESS_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -130,7 +130,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> GREATER_THAN = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> GREATER_THAN = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -142,7 +142,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 		}
 
 	};
-	private static BinaryFunction<Boolean, Object, Object> GREATER_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> GREATER_THAN_OR_EQUAL = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -155,7 +155,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> STARTS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> STARTS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -165,7 +165,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> CONTAINS = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> CONTAINS = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {
@@ -175,7 +175,7 @@ public class EntityInstanceEntityCriteriaInterpreter<T> implements Predicate<Ent
 
 	};
 
-	private static BinaryFunction<Boolean, Object, Object> ENDS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
+	private static final  BinaryFunction<Boolean, Object, Object> ENDS_WITH = new  BinaryFunction<Boolean, Object, Object> (){
 
 		@Override
 		public Boolean apply(Object a, Object b) {

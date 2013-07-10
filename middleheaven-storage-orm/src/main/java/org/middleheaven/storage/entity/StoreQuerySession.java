@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.middleheaven.collections.ComposedMapKey;
+import org.middleheaven.collections.DualMapKey;
 import org.middleheaven.domain.store.EntityInstance;
 import org.middleheaven.domain.store.EntityInstanceStorage;
-import org.middleheaven.util.collections.ComposedMapKey;
-import org.middleheaven.util.collections.DualMapKey;
 import org.middleheaven.util.identity.Identity;
 
 public class StoreQuerySession {

@@ -1,10 +1,11 @@
-package org.middleheaven.domain.repository;
+package org.middleheaven.domain.validation;
 
-import org.middleheaven.domain.query.Query;
-import org.middleheaven.util.validation.DefaultValidationResult;
-import org.middleheaven.util.validation.MessageInvalidationReason;
-import org.middleheaven.util.validation.ValidationResult;
-import org.middleheaven.util.validation.Validator;
+import org.middleheaven.domain.query.QueryResult;
+import org.middleheaven.domain.repository.Repository;
+import org.middleheaven.validation.DefaultValidationResult;
+import org.middleheaven.validation.MessageInvalidationReason;
+import org.middleheaven.validation.ValidationResult;
+import org.middleheaven.validation.Validator;
 
 
 public class NotDuplicatedValidator<T> implements Validator<T>{
@@ -19,7 +20,7 @@ public class NotDuplicatedValidator<T> implements Validator<T>{
 	public ValidationResult validate(T object) {
 		DefaultValidationResult result = new DefaultValidationResult();
 		
-		Query<T> query = repository.findEquals(object);
+		QueryResult<T> query = repository.findEquals(object);
 
 		if (!query.isEmpty()) {
 			result.add(MessageInvalidationReason.error(object,"invalid.instance.duplicated"));

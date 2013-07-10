@@ -1,6 +1,6 @@
 package org.middleheaven.model;
 
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.Enumerable;
 
 /**
  * The set of models, mapped by modeled classs.

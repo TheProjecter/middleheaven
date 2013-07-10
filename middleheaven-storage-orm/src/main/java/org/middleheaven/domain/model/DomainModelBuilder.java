@@ -51,6 +51,7 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 					EditableDomainEntityModel targetModel =  (EditableDomainEntityModel) model.getModelFor(typeModel.getTargetType().getName());
 
 					if (targetModel == null){
+						// TODO Embeded and ValueObject aka userType
 						throw new IllegalModelStateException("Reference type " + fm.getValueType().getName() + " for field " + fm.getName() +  " is not an entity");
 					}
 					String fieldName = targetModel.identityFieldModel().getName().getDesignation();
@@ -163,7 +164,7 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 		return !c.isInterface();
 	}
 
-	private class SimpleModelBuilder implements EntityModelBuildContext {
+	private static class SimpleModelBuilder implements EntityModelBuildContext {
 
 		EditableDomainModel model = new EditableDomainModel();
 		

@@ -1,7 +1,7 @@
 package org.middleheaven.domain.repository;
 
 import org.middleheaven.domain.criteria.EntityCriteriaBuilder;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.domain.store.DomainChangeEvent;
 import org.middleheaven.domain.store.DomainStore;
 import org.middleheaven.domain.store.DomainStoreListener;
@@ -71,7 +71,6 @@ public class EntityStoreRepository<E> extends AbstractRepository<E>  {
 
 	}
 
-
 	@Override
 	public void remove(E intance) {
 		getEntityStore().remove(intance);
@@ -83,23 +82,21 @@ public class EntityStoreRepository<E> extends AbstractRepository<E>  {
 	}
 
 	@Override
-	public Query<E> findAll() {
-		return getEntityStore().createQuery(EntityCriteriaBuilder.search(entityType).all());
+	public QueryResult<E> findAll() {
+		return getEntityStore().createQuery(EntityCriteriaBuilder.search(entityType).all()).execute();
 	}
 
 	@Override
-	public Query<E> findEquals(E instance) {
-		return getEntityStore().createQuery(EntityCriteriaBuilder.search(entityType).is(instance).all());
+	public QueryResult<E> findEquals(E instance) {
+		return getEntityStore().createQuery(EntityCriteriaBuilder.search(entityType).is(instance).all()).execute();
 	}
 
-
-
 	@Override
-	public Query<E> findByIdentity(Identity id) {
+	public QueryResult<E> findByIdentity(Identity id) {
 		return getEntityStore().createQuery(EntityCriteriaBuilder.search(entityType)
 				.hasIdentity(id)
 				.all()
-		);
+		).execute();
 	}
 
 	@Override

@@ -8,14 +8,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
+import org.middleheaven.model.annotations.Entity;
 import org.middleheaven.model.annotations.Id;
 import org.middleheaven.model.annotations.OneToMany;
+import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.storage.annotations.Column;
 import org.middleheaven.storage.annotations.Dataset;
 import org.middleheaven.storage.annotations.Transient;
 import org.middleheaven.util.identity.Identity;
 import org.middleheaven.util.identity.IntegerIdentity;
 
+@Entity
 @Dataset(hardName="tablec")
 public class TestSubject {
 	
@@ -31,11 +34,29 @@ public class TestSubject {
 	private boolean active;
 	private String name;
 	
+	private CentsMoney money;
+	
 	@Column(hardName="birth")
 	private Date birthdate;
 
 	private int number;
 	
+	/**
+	 * Obtains {@link CentsMoney}.
+	 * @return the money
+	 */
+	public CentsMoney getMoney() {
+		return money;
+	}
+
+	/**
+	 * Atributes {@link CentsMoney}.
+	 * @param money the money to set
+	 */
+	public void setMoney(CentsMoney money) {
+		this.money = money;
+	}
+
 	public Identity getIdentity() {
 		return identity;
 	}

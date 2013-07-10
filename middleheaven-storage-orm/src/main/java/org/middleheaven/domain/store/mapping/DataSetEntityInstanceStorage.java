@@ -19,7 +19,7 @@ import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.model.ReferenceDataTypeModel;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.domain.store.AbstractEntityInstanceStorage;
 import org.middleheaven.domain.store.EntityInstance;
 import org.middleheaven.domain.store.InstanceStorageException;
@@ -83,7 +83,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy) {
+	public <T> QueryResult<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy) {
 		try {
 
 			EntityModel entityModel = this.getStoreManager().getDomainModel().getModelFor(criteria.getTargetClass().getName());
@@ -330,9 +330,6 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 		}
 
 
-
-
-
 		private <T> void interpretOrder(DataSetCriteria dsCriteria, EntityCriteria<T> criteria){
 
 			for (OrderingCriterion ordering : criteria.ordering()){
@@ -407,45 +404,9 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 		private void interpretFieldValueCriterion(final LogicConstraint constraint,
 				final FieldValueCriterion f) {
+			
 			final EntityFieldTypeMapper entityFieldTypeMapper = mapper.getEntityFieldTypeMapper(f.getFieldName());
-
-			DataRow row = new DataRow(){
-
-				@Override
-				public Iterator<DataColumn> iterator() {
-					throw new UnsupportedOperationException("Not implememented yet");
-				}
-
-				@Override
-				public DataColumn getColumn(final QualifiedName name) {
-					return new DataColumn(){
-
-						@Override
-						public DataColumnModel getModel() {
-							throw new UnsupportedOperationException("Not implememented yet");
-						}
-
-						@Override
-						public Object getValue() {
-							throw new UnsupportedOperationException("Not implememented yet");
-						}
-
-						@Override
-						public void setValue(Object value) {
-							ColumnValueConstraint v = new ColumnValueConstraint(
-									new ColumnNameValueLocator(name),
-									f.getOperator(),
-									new ExplicitValueLocator(value)
-									);
-
-							constraint.addConstraint(v);
-						}
-
-					};
-
-				}
-
-			};
+			final DataRow row = new ConstraintDataRow(constraint, f);
 
 			entityFieldTypeMapper.write(null, f.valueHolder().getValue(), row, entityFieldTypeMapper.getColumns());
 		}
@@ -518,6 +479,58 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 			final EntityModelDataSetMapping mapping = mapper.getMappingFor(instance.getEntityModel());
 
 			return dataPersistanceService.getDataStoreSchema(mapping.getSchemaName()).getSequence(mapping.getDataSetName());
+
+		}
+		
+		
+		private static class ConstraintDataRow implements DataRow {
+
+			private LogicConstraint constraint;
+			private FieldValueCriterion f;
+
+			/**
+			 * Constructor.
+			 * @param constraint
+			 * @param f 
+			 */
+			public ConstraintDataRow(LogicConstraint constraint, FieldValueCriterion f) {
+				this.constraint = constraint;
+				this.f = f;
+			}
+
+			@Override
+			public Iterator<DataColumn> iterator() {
+				throw new UnsupportedOperationException("Not implememented yet");
+			}
+
+			@Override
+			public DataColumn getColumn(final QualifiedName name) {
+				return new DataColumn(){
+
+					@Override
+					public DataColumnModel getModel() {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public Object getValue() {
+						throw new UnsupportedOperationException("Not implememented yet");
+					}
+
+					@Override
+					public void setValue(Object value) {
+						ColumnValueConstraint v = new ColumnValueConstraint(
+								new ColumnNameValueLocator(name),
+								f.getOperator(),
+								new ExplicitValueLocator(value)
+								);
+
+						constraint.addConstraint(v);
+					}
+
+				};
+
+			}
 
 		}
 

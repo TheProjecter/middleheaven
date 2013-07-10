@@ -3,8 +3,7 @@ package org.middleheaven.domain.store;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.services.ServiceRegistry;
-import org.middleheaven.domain.model.DomainModel;
+import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.transactions.TransactionService;
 
 /**

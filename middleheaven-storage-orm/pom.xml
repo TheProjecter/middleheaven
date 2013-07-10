@@ -52,6 +52,11 @@
 			<version>1.9-beta-1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-validation</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 </project>

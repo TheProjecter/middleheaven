@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.query.ListQuery;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 
 public abstract class AbstractRepository<E> implements Repository<E> {
 
@@ -62,11 +62,11 @@ public abstract class AbstractRepository<E> implements Repository<E> {
 		fireChangeEvent(instance,true, false, false);
 	}
 	
-	public Query<E> findIdentical(E instance) {
+	public QueryResult<E> findIdentical(E instance) {
 		return findByIdentity(this.getIdentityFor(instance));
 	}
 	
-	public Query<E> findEquals(final E instance) {
+	public QueryResult<E> findEquals(final E instance) {
 		
 		return new ListQuery<E>(new Callable<List<E>>(){
 

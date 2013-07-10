@@ -1,8 +1,6 @@
 package org.middleheaven.domain.store;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.Query;
-import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
 
 abstract class AbstractDomainStoreDecorator implements DomainStore {
@@ -18,15 +16,22 @@ abstract class AbstractDomainStoreDecorator implements DomainStore {
 		this.original().addStorageListener(listener);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> Query<T> createQuery(EntityCriteria<T> criteria) {
 		return original().createQuery(criteria);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy) {
-		return original().createQuery(criteria, strategy);
+	public <T> Query<T> retriveNameQuery(String name, Class<T> type) {
+		return original().retriveNameQuery(name, type);
 	}
+
 
 	@Override
 	public Identity getIdentityFor(Object object) {

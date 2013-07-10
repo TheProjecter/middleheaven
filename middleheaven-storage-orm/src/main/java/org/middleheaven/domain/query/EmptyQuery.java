@@ -8,7 +8,7 @@ import java.util.Iterator;
  * 
  * @param <T>
  */
-public final class EmptyQuery<T> implements Query<T>{
+public final class EmptyQuery<T> implements QueryResult<T>{
 
 	@Override
 	public long count() {
@@ -31,7 +31,7 @@ public final class EmptyQuery<T> implements Query<T>{
 	}
 
 	@Override
-	public Query<T> limit(int startAt, int maxCount) {
+	public QueryResult<T> limit(int startAt, int maxCount) {
 		return this;
 	}
 

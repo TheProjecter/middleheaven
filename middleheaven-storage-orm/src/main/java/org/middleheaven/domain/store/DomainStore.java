@@ -1,7 +1,7 @@
 package org.middleheaven.domain.store;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
 
@@ -43,15 +43,13 @@ public interface DomainStore {
 	public <T> Query<T> createQuery(EntityCriteria<T> criteria);
 
 	/**
-	 * Create a query from a criteria informing the reading strategy that will be use
-	 * for the query.
+	 * Create a query from a criteria
 	 * @param <T>
 	 * @param criteria
-	 * @param strategy
-	 * @return
+	 * @return que {@link Query} that exists for the given name and type. If none exists, an always empty query will be returned.
 	 */
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy);
-	
+	public <T> Query<T> retriveNameQuery(String name, Class<T> type);
+
 	/**
 	 * Remove from storage all object that match the given criteria
 	 * @param <T>

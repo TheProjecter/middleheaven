@@ -6,8 +6,8 @@ package org.middleheaven.domain.store;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.domain.model.DomainModel;
-import org.middleheaven.util.collections.CollectionUtils;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.identity.Identity;
@@ -17,6 +17,53 @@ import org.middleheaven.util.identity.Identity;
  */
 public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 
+
+	/**
+	 * 
+	 */
+	private static final class DomainStoreCommiter implements
+			StoreActionCommiter {
+		
+		private AbstractDomainStoreManager abstractDomainStoreManager;
+
+		/**
+		 * Constructor.
+		 * @param abstractDomainStoreManager
+		 */
+		public DomainStoreCommiter(
+				AbstractDomainStoreManager abstractDomainStoreManager) {
+			this.abstractDomainStoreManager = abstractDomainStoreManager;
+		}
+
+		@Override
+		public void commit(StoreAction action) {
+			EntityInstance instance = action.getStorable();
+			
+			switch (action.getStoreActionType()){
+			case DELETE:
+				
+				abstractDomainStoreManager.deleteInstance(instance);
+		
+				instance.setStorableState(StorableState.DELETED);
+				break;
+			case INSERT:
+				
+				abstractDomainStoreManager.insertInstance(instance);
+
+				instance.setStorableState(StorableState.RETRIVED);
+				break;
+			case UPDATE:
+				
+				abstractDomainStoreManager.updateInstance(instance);
+				
+			
+				instance.setStorableState(StorableState.RETRIVED);
+				break;
+			 default:
+				throw new UnsupportedOperationException(action.getStoreActionType().name() + " is not suported StoreAction ");
+			}
+		}
+	}
 
 	private DomainModel domainModel;
 
@@ -29,37 +76,7 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 	 */
 	@Override
 	public final void commit(StorageUnit unit) {
-		unit.commitTo(new StoreActionCommiter() {
-			
-			@Override
-			public void commit(StoreAction action) {
-				EntityInstance instance = action.getStorable();
-				
-				switch (action.getStoreActionType()){
-				case DELETE:
-					
-					deleteInstance(instance);
-			
-					instance.setStorableState(StorableState.DELETED);
-					break;
-				case INSERT:
-					
-					insertInstance(instance);
-
-					instance.setStorableState(StorableState.RETRIVED);
-					break;
-				case UPDATE:
-					
-					updateInstance(instance);
-					
-				
-					instance.setStorableState(StorableState.RETRIVED);
-					break;
-				 default:
-					throw new UnsupportedOperationException(action.getStoreActionType().name() + " is not suported StoreAction ");
-				}
-			}
-		});
+		unit.commitTo(new DomainStoreCommiter(this));
 	}
 
 	protected abstract void deleteInstance(EntityInstance instance);

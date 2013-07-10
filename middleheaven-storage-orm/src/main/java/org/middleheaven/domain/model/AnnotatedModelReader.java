@@ -9,7 +9,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.collections.Enumerable;
+import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.ReflectionException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.EnumIntrospector;
@@ -41,7 +43,6 @@ import org.middleheaven.quantity.time.TimePoint;
 import org.middleheaven.storage.annotations.Transient;
 import org.middleheaven.storage.annotations.Unique;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.collections.Enumerable;
 import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.identity.Identity;
 
@@ -122,13 +123,13 @@ public class AnnotatedModelReader implements DomainModelReader {
 			rootModel.addDescriminatorValue(type, maybeDiscriminatorValue.get().value());
 		}
 		
-		Enumerable<PropertyAccessor> propertyAccessors = Introspector.of(type).inspect().properties().retriveAll();
+		Enumerable<PropertyHandler> propertyAccessors = Introspector.of(type).inspect().properties().retriveAll();
 
 		if (propertyAccessors.isEmpty()){
 			throw new ModelingException("No public properties found for entity " + type.getName() + ".");
 		} else {
 
-			for (PropertyAccessor pa : propertyAccessors){
+			for (PropertyHandler pa : propertyAccessors){
 
 				if (!em.hasField(pa.getName())){
 					processField(pa,em, context);
@@ -149,7 +150,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 		
 		// find @DescriminatorValue
 		
-		Method m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
+		MethodHandler m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
 		
 		if (m == null){
 			throw new IllegalModelStateException("Enum type " + enumType.getName() + " must have a method anotated with @Discriminator");
@@ -162,10 +163,6 @@ public class AnnotatedModelReader implements DomainModelReader {
 			try {
 				model.addValueMaping(value, m.invoke(value));
 			} catch (IllegalArgumentException e) {
-				throw ReflectionException.manage(e, enumType);
-			} catch (IllegalAccessException e) {
-				throw ReflectionException.manage(e, enumType);
-			} catch (InvocationTargetException e) {
 				throw ReflectionException.manage(e, enumType);
 			}
 		}
@@ -188,7 +185,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 		return new ReflectionMetaClass(type);
 	}
 
-	private void processField (PropertyAccessor pa ,EditableDomainEntityModel em, EntityModelBuildContext builder){
+	private void processField (PropertyHandler pa ,EditableDomainEntityModel em, EntityModelBuildContext builder){
 
 	
 		final QualifiedName fieldQualifiedName = QualifiedName.qualify(em.getEntityName(), pa.getName());

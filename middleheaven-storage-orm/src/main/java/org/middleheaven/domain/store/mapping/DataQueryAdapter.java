@@ -8,14 +8,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.persistance.DataQuery;
 import org.middleheaven.persistance.DataRowStream;
 
 /**
  * @param <T> the type of the  resulting entity.
  */
-public class DataQueryAdapter<T> implements Query<T> {
+public class DataQueryAdapter<T> implements QueryResult<T> {
 
 	
 	private DataQuery query;
@@ -25,7 +25,7 @@ public class DataQueryAdapter<T> implements Query<T> {
 	 * 
 	 * Constructor.
 	 * @param mapping a {@link EntityModelDataSetMapping} to use for this adapter
-	 * @param query a {@link DataQuery} to be adapted to a {@link Query} object.
+	 * @param query a {@link DataQuery} to be adapted to a {@link QueryResult} object.
 	 */
 	public DataQueryAdapter(EntityModelDataSetMapping mapping, DataQuery query) {
 		this.query = query;
@@ -93,7 +93,7 @@ public class DataQueryAdapter<T> implements Query<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Query<T> limit(int startAt, int maxCount) {
+	public QueryResult<T> limit(int startAt, int maxCount) {
 		return new DataQueryAdapter<T>(mapping, query.limit(startAt, maxCount));
 	}
 

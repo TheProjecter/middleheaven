@@ -1,6 +1,5 @@
 package org.middleheaven.domain.query;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,9 +7,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 
-public class ListQuery<T> implements Query<T> , Serializable{
+public class ListQuery<T> implements QueryResult<T> {
 	
-	private static final long serialVersionUID = 5921463303407006568L;
 	private Callable<List<T>> callable;
 	
 	public ListQuery(Callable<List<T>> callable) {
@@ -68,7 +66,7 @@ public class ListQuery<T> implements Query<T> , Serializable{
 	}
 
 	@Override
-	public Query<T> limit(final int startAt, final int maxCount) {
+	public QueryResult<T> limit(final int startAt, final int maxCount) {
 		
 		if (startAt < 1){
 			throw new IllegalArgumentException("Range must start at position 1 or further");

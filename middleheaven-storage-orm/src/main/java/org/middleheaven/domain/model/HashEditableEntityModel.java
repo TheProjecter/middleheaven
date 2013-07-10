@@ -3,11 +3,11 @@ package org.middleheaven.domain.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 import org.middleheaven.core.reflection.metaclass.MetaClass;
 import org.middleheaven.model.annotations.InheritanceStrategy;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
 
 /**
  * Editable implementation of EntityModel

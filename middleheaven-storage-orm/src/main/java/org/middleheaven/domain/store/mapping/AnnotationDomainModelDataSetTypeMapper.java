@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.PropertyNotFoundException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
@@ -135,7 +135,6 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 
 		EntityModel model = queue.remove(typeName);
 
-
 		EditableEntityModelDataSetMapping mapping = new EditableEntityModelDataSetMapping();
 
 		mappings.put(model.getEntityName().toLowerCase(), mapping);
@@ -174,17 +173,13 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 
 			if (!field.isTransient() && !field.getDataType().isToManyReference()){
 				try {
-					PropertyAccessor pa = model.getEntityClass().getPropertyAcessor(field.getName().getDesignation());
+					PropertyHandler pa = model.getEntityClass().getPropertyAcessor(field.getName().getDesignation());
 
 					TypeMapper fieldType = readFieldTypeMapper(pa, field, queue);
 
 					DataColumnModel[] columns = readColumns(dsModel, pa, field , mapping);
 
-
-
 					EntityFieldTypeMapper fieldTypeMapper = new EntityFieldTypeMapper(field, fieldType, columns);
-
-
 
 					type.addFielTypeMapper(fieldTypeMapper);
 				} catch (PropertyNotFoundException e){
@@ -207,7 +202,7 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 	 * @param field
 	 * @param mapping 
 	 */
-	private DataColumnModel[] readColumns(EditableDataSet dsModel, PropertyAccessor pa, EntityFieldModel field, EditableEntityModelDataSetMapping mapping) {
+	private DataColumnModel[] readColumns(EditableDataSet dsModel, PropertyHandler pa, EntityFieldModel field, EditableEntityModelDataSetMapping mapping) {
 
 		Column[] all;
 
@@ -226,9 +221,7 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 					// auto mappping
 
 					return columnBeanFromField(dsModel, field); 
-
 				}
-
 			} else {
 				all = new Column[]{maybeColumn.get()};
 			}
@@ -337,7 +330,7 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 	 * @param queue 
 	 * @return
 	 */
-	private TypeMapper readFieldTypeMapper(PropertyAccessor pa, EntityFieldModel field, Map<String, EntityModel> queue) {
+	private TypeMapper readFieldTypeMapper(PropertyHandler pa, EntityFieldModel field, Map<String, EntityModel> queue) {
 
 
 		Maybe<Type> tm = pa.getAnnotation(Type.class);
@@ -347,7 +340,7 @@ public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSe
 		}
 
 		if (domainModel.containsModelFor(pa.getValueType().getName())){
-			// it is an entity. return it typemapper
+			// it is an entity. return its typemapper
 
 			EntityModelDataSetMapping map = this.mappings.get(pa.getValueType().getSimpleName().toLowerCase());
 

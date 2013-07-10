@@ -2,7 +2,7 @@ package org.middleheaven.domain.criteria;
 
 import java.util.Collection;
 
-import org.middleheaven.util.collections.Interval;
+import org.middleheaven.collections.Interval;
 
 /**
  * Extention for the CriteriaBuilder to support creation of fields 

@@ -4,9 +4,7 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.Query;
 import org.middleheaven.transactions.XAResourceAdapter;
-import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
 
 class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  {
@@ -25,12 +23,15 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 
 	@Override
 	public <T> Query<T> createQuery(EntityCriteria<T> criteria) {
-		return this.createQuery(criteria, ReadStrategy.fowardReadOnly());
+		return manager.createQuery(criteria, unit);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy) {
-		return manager.createQuery(criteria , strategy, unit);
+	public <T> Query<T> retriveNameQuery(String name, Class<T> type) {
+		return manager.retriveNameQuery(name, type);
 	}
 
 
@@ -47,7 +48,7 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 	@Override
 	public <T> void remove(final EntityCriteria<T> criteria) {
 		
-		for (T t : manager.createQuery(criteria, ReadStrategy.fowardReadOnly(), unit).fetchAll()){
+		for (T t : manager.createQuery(criteria, unit).execute().fetchAll()){
 			manager.remove(t, unit);
 		}
 	}
@@ -86,6 +87,7 @@ class SessionAwareDomainStore extends XAResourceAdapter implements DomainStore  
 	public synchronized void rollback(Xid xid) throws XAException {
 		manager.roolback(unit);
 	}
+
 
 
 

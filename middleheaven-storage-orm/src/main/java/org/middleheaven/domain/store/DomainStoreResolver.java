@@ -6,6 +6,7 @@ package org.middleheaven.domain.store;
 import org.middleheaven.core.wiring.ResolutionContext;
 import org.middleheaven.core.wiring.Resolver;
 import org.middleheaven.core.wiring.WiringQuery;
+import org.middleheaven.domain.criteria.EntityCriteria;
 
 /**
  * Resolver {@link DomainStore}s for wiring.
@@ -40,5 +41,6 @@ class DomainStoreResolver implements Resolver {
 			return (name==null) ? domainStoreService.getStore() : domainStoreService.getStore(name);	
 		}
 
+		
 	}
 }

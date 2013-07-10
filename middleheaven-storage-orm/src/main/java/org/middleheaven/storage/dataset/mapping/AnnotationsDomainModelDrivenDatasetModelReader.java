@@ -4,10 +4,9 @@
 package org.middleheaven.storage.dataset.mapping;
 
 import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.PropertyAccessor;
+import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.domain.model.DataType;
-import org.middleheaven.domain.model.DataTypeModel;
 import org.middleheaven.domain.model.DefaultReferenceDataTypeModel;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityModel;
@@ -104,10 +103,10 @@ DatasetRepositoryModelReader {
 
 		dsModel.setHardName(hardDatasetName);
 
-		introspector.inspect().properties().each(new Block<PropertyAccessor>(){
+		introspector.inspect().properties().each(new Block<PropertyHandler>(){
 
 			@Override
-			public void apply(PropertyAccessor object) {
+			public void apply(PropertyHandler object) {
 				EditableDatasetColumnModel columnModel = dsModel.getColumn(object.getName()); 
 
 				FieldModel fieldModel = entityModel.fieldModel(QualifiedName.qualify(entityName, object.getName()));

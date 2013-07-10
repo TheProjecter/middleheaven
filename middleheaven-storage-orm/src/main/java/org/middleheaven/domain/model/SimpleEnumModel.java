@@ -1,7 +1,7 @@
 package org.middleheaven.domain.model;
 
-import org.middleheaven.util.collections.BoundMap;
-import org.middleheaven.util.collections.HashBoundMap;
+import org.middleheaven.collections.BoundMap;
+import org.middleheaven.collections.HashBoundMap;
 
 public class SimpleEnumModel implements EditableEnumModel {
 

@@ -7,9 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.domain.query.ListQuery;
-import org.middleheaven.domain.query.Query;
-import org.middleheaven.util.collections.CollectionUtils;
+import org.middleheaven.domain.query.QueryResult;
 
 public class TestQuery {
 
@@ -17,13 +17,13 @@ public class TestQuery {
 	@Test
 	public void testQuery(){
 		
-		Query<String> q = new ListQuery<String>(Arrays.asList("A","B","C","D","E"));
+		QueryResult<String> q = new ListQuery<String>(Arrays.asList("A","B","C","D","E"));
 		
 		assertFalse(q.isEmpty());
 		assertEquals(5L, q.count());
 		assertEquals("A", q.fetchFirst());
 	
-		Query<String> r = q.limit(1, 2);
+		QueryResult<String> r = q.limit(1, 2);
 		
 		assertFalse(r.isEmpty());
 		assertEquals(2L, r.count());

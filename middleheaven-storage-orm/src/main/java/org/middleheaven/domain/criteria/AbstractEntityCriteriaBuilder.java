@@ -6,7 +6,6 @@ import org.middleheaven.util.criteria.BuildingOrdering;
 import org.middleheaven.util.criteria.Criterion;
 import org.middleheaven.util.criteria.OrderingConstrain;
 import org.middleheaven.util.criteria.OrderingCriterion;
-import org.middleheaven.util.validation.Consistencies;
 
 
 public abstract class AbstractEntityCriteriaBuilder<T , B extends AbstractEntityCriteriaBuilder<T,B>> extends AbstractCriteriaBuilder<T,B> {
@@ -43,8 +42,10 @@ public abstract class AbstractEntityCriteriaBuilder<T , B extends AbstractEntity
 	}
 	
 	public B hasIdentity(Object identity) {
-		Consistencies.consistNotNull(identity);
-		
+		if (identity == null){
+			throw new IllegalArgumentException("Identity is required. The identity is never null");
+		}
+
 		this.criteria.add(new IdentityCriterion(identity));
 		
 		return me();
@@ -53,11 +54,12 @@ public abstract class AbstractEntityCriteriaBuilder<T , B extends AbstractEntity
 	/**
 	 * The current navigation target entity is the same as the one given
 	 * @param instance the given instance of an entity
-	 * @return
+	 * @return the current builder.
 	 */
 	public B is(Object instance){
-		
-		Consistencies.consistNotNull(instance);
+		if (instance == null){
+			throw new IllegalArgumentException("An instance is required.");
+		}
 		
 		this.criteria.add(new EqualsOtherInstanceCriterion(this.criteria.getTargetClass(), instance));
 		

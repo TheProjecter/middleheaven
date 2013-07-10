@@ -4,12 +4,12 @@ import org.middleheaven.domain.model.DataType;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.model.TextDataTypeModel;
-import org.middleheaven.util.validation.BeanValidator;
-import org.middleheaven.util.validation.CompositeValidator;
-import org.middleheaven.util.validation.LengthValidator;
-import org.middleheaven.util.validation.NotEmptyValidator;
-import org.middleheaven.util.validation.NotNullValidator;
-import org.middleheaven.util.validation.SimpleEmailAddressValidator;
+import org.middleheaven.validation.BeanValidator;
+import org.middleheaven.validation.CompositeValidator;
+import org.middleheaven.validation.LengthValidator;
+import org.middleheaven.validation.NotEmptyValidator;
+import org.middleheaven.validation.NotNullValidator;
+import org.middleheaven.validation.SimpleEmailAddressValidator;
 
 public class AnnotatedBeanValidator<T> extends BeanValidator<T>{
 

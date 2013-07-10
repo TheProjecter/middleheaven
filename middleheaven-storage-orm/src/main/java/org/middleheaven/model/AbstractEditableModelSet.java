@@ -3,8 +3,8 @@ package org.middleheaven.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.util.collections.CollectionUtils;
-import org.middleheaven.util.collections.Enumerable;
+import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.Enumerable;
 
 /**
  * 

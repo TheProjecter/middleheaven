@@ -8,7 +8,7 @@ import java.util.Collections;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.query.ListQuery;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.domain.store.DomainStoreManager;
 import org.middleheaven.domain.store.EntityInstance;
 import org.middleheaven.domain.store.EntityInstanceStorage;
@@ -55,7 +55,7 @@ public class MemoryEntityInstanceStorage implements EntityInstanceStorage {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria,
+	public <T> QueryResult<T> createQuery(EntityCriteria<T> criteria,
 			ReadStrategy strategy) {
 		return new ListQuery<T>(Collections.<T>emptyList());
 	}

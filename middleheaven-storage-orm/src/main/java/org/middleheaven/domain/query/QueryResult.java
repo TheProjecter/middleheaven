@@ -2,7 +2,7 @@ package org.middleheaven.domain.query;
 
 import java.util.Collection;
 
-public interface Query<T> extends Iterable<T>{
+public interface QueryResult<T> extends Iterable<T>{
 	
 	/**
 	 * 
@@ -37,5 +37,5 @@ public interface Query<T> extends Iterable<T>{
 	 * @param maxCount the maximum quantity of elements to fecth. 
 	 * @return
 	 */
-	public Query<T> limit(int startAt, int maxCount);
+	public QueryResult<T> limit(int startAt, int maxCount);
 }

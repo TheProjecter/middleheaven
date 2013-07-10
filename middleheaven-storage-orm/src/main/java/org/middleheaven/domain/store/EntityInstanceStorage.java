@@ -3,7 +3,7 @@ package org.middleheaven.domain.store;
 import java.util.Collection;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.util.criteria.ReadStrategy;
 
 /**
@@ -44,7 +44,7 @@ public interface EntityInstanceStorage {
 	 * @param <code>ReadStrategy</code> read strategy
 	 * @return
 	 */
-	public <T> Query<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy);
+	public <T> QueryResult<T> createQuery(EntityCriteria<T> criteria, ReadStrategy strategy);
 
 	
 	/**

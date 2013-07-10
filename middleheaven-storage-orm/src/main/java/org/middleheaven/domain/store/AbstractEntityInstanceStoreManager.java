@@ -12,8 +12,8 @@ import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
-import org.middleheaven.domain.query.Query;
 import org.middleheaven.domain.query.QueryExecuter;
+import org.middleheaven.domain.query.QueryParametersBag;
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.util.criteria.ReadStrategy;
 
@@ -42,19 +42,28 @@ public abstract  class AbstractEntityInstanceStoreManager extends AbstractDomain
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Query<T> createQuery(final EntityCriteria<T> criteria, final ReadStrategy strategy, final StorageUnit unit) {
+	public <T> Query<T> createQuery(final EntityCriteria<T> criteria, final StorageUnit unit) {
 		
-		
-		return new LayzEntityCriteriaQuery<T>(criteria, new QueryExecuter (){
+
+		return new ParametrizedCriteriaQuery<T>(criteria, new QueryExecuter (){
 
 			@Override
-			public <E> Collection<E> execute(EntityCriteria<E> c) {
-				
-				return unit.<E>filter(storage.createQuery(c , strategy).fetchAll(), c);
+			public <E> Collection<E> retrive(EntityCriteria<E> query, ReadStrategy readStrategy,QueryParametersBag queryParametersBag) {
+				return unit.<E>filter(storage.createQuery(query , readStrategy).fetchAll(), query);
+			}
 
+			@Override
+			public <E> long count(EntityCriteria<E> query, QueryParametersBag queryParametersBag) {
+				return storage.createQuery(criteria, ReadStrategy.defaultStrategy()).count();
+			}
+
+			@Override
+			public <E> boolean existsAny(EntityCriteria<E> query, QueryParametersBag queryParametersBag) {
+				return !storage.createQuery(criteria, ReadStrategy.defaultStrategy()).isEmpty();
 			}
 			
 		});
+
 
 	}
 	

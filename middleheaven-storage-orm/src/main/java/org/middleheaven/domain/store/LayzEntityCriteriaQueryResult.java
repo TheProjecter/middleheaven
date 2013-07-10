@@ -7,30 +7,38 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.Query;
+import org.middleheaven.domain.query.QueryParametersBag;
+import org.middleheaven.domain.query.QueryResult;
 import org.middleheaven.domain.query.QueryExecuter;
+import org.middleheaven.util.criteria.ReadStrategy;
 
 
 
 /**
  * 
  */
-public class LayzEntityCriteriaQuery<T> implements Query<T>{
+public class LayzEntityCriteriaQueryResult<T> implements QueryResult<T>{
 
 	private EntityCriteria<T> criteria;
 	private QueryExecuter queryExecuter;
-
+	private QueryParametersBag queryParametersBag;
+	private ReadStrategy readStrategy;
+	
 	/**
 	 * Constructor.
 	 * @param criteria
 	 * @param strategy
 	 * @param queryExecuter
+	 * @param queryParametersBag 
+	 * @param readStrategy 
 	 */
-	public LayzEntityCriteriaQuery(EntityCriteria<T> criteria,QueryExecuter queryExecuter) {
+	public LayzEntityCriteriaQueryResult(EntityCriteria<T> criteria,QueryExecuter queryExecuter, QueryParametersBag queryParametersBag, ReadStrategy readStrategy) {
 		this.criteria = criteria;
 		this.queryExecuter = queryExecuter;
+		this.queryParametersBag= queryParametersBag;
+		this.readStrategy = readStrategy;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -44,7 +52,7 @@ public class LayzEntityCriteriaQuery<T> implements Query<T>{
 	 */
 	@Override
 	public T fetchFirst() {
-		Collection<T> result = fetchAll();
+		Collection<T> result = limit(0, 1).fetchAll();
 		if (result.isEmpty()){
 			return null;
 		} else {
@@ -57,7 +65,7 @@ public class LayzEntityCriteriaQuery<T> implements Query<T>{
 	 */
 	@Override
 	public Collection<T> fetchAll() {
-		return this.queryExecuter.execute(criteria);
+		return this.queryExecuter.retrive(criteria, readStrategy, queryParametersBag);
 	}
 
 	/**
@@ -65,7 +73,7 @@ public class LayzEntityCriteriaQuery<T> implements Query<T>{
 	 */
 	@Override
 	public long count() {
-		return fetchAll().size();
+		return this.queryExecuter.count(criteria, queryParametersBag);
 	}
 
 	/**
@@ -73,15 +81,15 @@ public class LayzEntityCriteriaQuery<T> implements Query<T>{
 	 */
 	@Override
 	public boolean isEmpty() {
-		return fetchAll().isEmpty();
+		return this.queryExecuter.existsAny(criteria, queryParametersBag);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Query<T> limit(int startAt, int maxCount) {
-		throw new UnsupportedOperationException("Not implememented yet");
+	public QueryResult<T> limit(int startAt, int maxCount) {
+		return new LayzEntityCriteriaQueryResult<T>(criteria.setRange(startAt, maxCount), queryExecuter, queryParametersBag, readStrategy);
 	}
 
 }
