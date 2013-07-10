@@ -32,8 +32,46 @@ import org.middleheaven.ui.rendering.UIUnitConverter;
 
 public class SwingRenderKit extends AbstractRenderKit {
 
+	/**
+	 * 
+	 */
+	private static final class SwingSceneNavigator implements SceneNavigator {
+		public void show(UIComponent component) {
+			if (component==null){
+				throw new IllegalArgumentException("Cannot show null component");
+			}
+			if (component instanceof JFrame){
+				((JFrame) component).setBounds(SwingUtils.availableScreenSize());
+			} else if (component instanceof JDialog){
+				SwingUtils.ensureMinimumSize(((JDialog)component),null);
+			} else if (component instanceof JDialog){
+				SwingUtils.ensureMinimumSize(((JDialog)component),null);
+			}
+			component.getVisibleProperty().set(true);
+		}
+
+		@Override
+		public void dispose(UIComponent component) {
+			if (component ==null){
+				return;
+			} 
+			
+			component.getVisibleProperty().set(false);
+			
+			if (component instanceof JFrame){
+				((JFrame) component).dispose();
+			} else if (component instanceof JDialog){
+				((JDialog) component).dispose();
+			} else if (component instanceof JWindow){
+				((JWindow)component).dispose();
+			}
+		
+		}
+	}
+
 	private static final long serialVersionUID = 2599277040849128427L;
 	
+	private static final SwingSceneNavigator swingSceneNavigator = new SwingSceneNavigator();
 	private SwingUnitConverter unitConverter = new SwingUnitConverter();
 	
 	public SwingRenderKit(){
@@ -92,40 +130,7 @@ public class SwingRenderKit extends AbstractRenderKit {
 	 */
 	@Override
 	public SceneNavigator getSceneNavigator() {
-		return new SceneNavigator(){
-
-			public void show(UIComponent component) {
-				if (component==null){
-					throw new IllegalArgumentException("Cannot show null component");
-				}
-				if (component instanceof JFrame){
-					((JFrame) component).setBounds(SwingUtils.availableScreenSize());
-				} else if (component instanceof JDialog){
-					SwingUtils.ensureMinimumSize(((JDialog)component),null);
-				} else if (component instanceof JDialog){
-					SwingUtils.ensureMinimumSize(((JDialog)component),null);
-				}
-				component.getVisibleProperty().set(true);
-			}
-
-			@Override
-			public void dispose(UIComponent component) {
-				if (component ==null){
-					return;
-				} 
-				
-				component.getVisibleProperty().set(false);
-				
-				if (component instanceof JFrame){
-					((JFrame) component).dispose();
-				} else if (component instanceof JDialog){
-					((JDialog) component).dispose();
-				} else if (component instanceof JWindow){
-					((JWindow)component).dispose();
-				}
-			
-			}
-		};
+		return swingSceneNavigator;
 	}
 
 }

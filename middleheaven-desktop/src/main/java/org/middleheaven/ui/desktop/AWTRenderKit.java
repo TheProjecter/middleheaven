@@ -9,6 +9,25 @@ import org.middleheaven.ui.rendering.UIUnitConverter;
 
 class AWTRenderKit extends AbstractRenderKit{
 
+	/**
+	 * 
+	 */
+	private static final class AWTSceneNavigator implements SceneNavigator {
+		@Override
+		public void show(UIComponent component) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void dispose(UIComponent splash) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+
+
+
 	private static final long serialVersionUID = -6998801713950007439L;
 	
 	public AWTRenderKit(){
@@ -32,19 +51,7 @@ class AWTRenderKit extends AbstractRenderKit{
 	 */
 	@Override
 	public SceneNavigator getSceneNavigator() {
-		return new SceneNavigator(){
-
-			@Override
-			public void show(UIComponent component) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void dispose(UIComponent splash) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
+		return new AWTSceneNavigator();
 	}
 
 }
