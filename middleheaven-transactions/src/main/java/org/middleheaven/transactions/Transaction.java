@@ -8,5 +8,5 @@ public interface Transaction {
 
 	public void roolback();
 	
-
+	public boolean isActive();
 }

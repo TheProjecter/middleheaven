@@ -1,8 +1,7 @@
 package org.middleheaven.transactions;
 
-import java.util.LinkedHashSet;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Set;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
@@ -16,7 +15,7 @@ import org.middleheaven.util.Hash;
  */
 public class AutoCommitTransactionService implements TransactionService {
 
-	LinkedList<XAResource> xar = new LinkedList<XAResource>(); // order of insertion must be mantained
+	Deque<XAResource> xar = new LinkedList<XAResource>(); // order of insertion must be mantained
 	ThreadLocal<MyTransaction> local = new ThreadLocal<MyTransaction>();
 
 	/**
@@ -24,13 +23,13 @@ public class AutoCommitTransactionService implements TransactionService {
 	 * Constructor.
 	 */
 	public AutoCommitTransactionService(){
-	
+
 	}
-	
+
 	@Override
 	public void enlistResource(XAResource xaResource) {
 		final MyTransaction transaction = local.get();
-		if (transaction != null && transaction.isBegun ){
+		if (transaction != null && transaction.isActive ){
 			try {
 				xaResource.prepare(transaction.xid);
 			} catch (XAException e) {
@@ -44,13 +43,13 @@ public class AutoCommitTransactionService implements TransactionService {
 	public Transaction getTransaction() {
 		MyTransaction t  = local.get();
 		if (t ==null ){
-			t = new MyTransaction();
+			t = new MyTransaction(xar, local);
 			local.set(t);
 		}
 		return t;
 	}
 
-	private class LongXid implements Xid {
+	private static class LongXid implements Xid {
 
 		long i = System.currentTimeMillis();
 
@@ -80,7 +79,7 @@ public class AutoCommitTransactionService implements TransactionService {
 		public boolean equals(Object other){
 			return other instanceof LongXid && i == ((LongXid)other).i;
 		}
-		
+
 		/**
 		 * 
 		 * {@inheritDoc}
@@ -92,69 +91,90 @@ public class AutoCommitTransactionService implements TransactionService {
 
 	}
 
-	private class  MyTransaction implements Transaction{
+	private static class  MyTransaction implements Transaction{
 
 		Xid xid;
-		boolean isBegun = false;
-		public MyTransaction(){
+		boolean isActive = false;
+		private Deque<XAResource> xar;
+		private ThreadLocal<MyTransaction> local;
+		
+		public MyTransaction(Deque<XAResource> xar , ThreadLocal<MyTransaction> local){
 			xid = new LongXid();
+			this.xar = xar;
+			this.local = local;
 		}
 
 		@Override
 		public void begin() {
-			try {
-				for (XAResource xa : xar){
-					xa.start(xid, 0);
+			if (!isActive){
+				try {
+					for (XAResource xa : xar){
+						xa.start(xid, 0);
+					}
+					isActive = true;
+				} catch (XAException e) {
+					Logger.onBookFor(this.getClass()).error("Error beginning", e);
+					roolback();
 				}
-				isBegun = true;
-			} catch (XAException e) {
-				Logger.onBookFor(this.getClass()).error("Error beginning", e);
-				roolback();
 			}
-
 		}
 
 		@Override
 		public void commit() {
-			try {
-				for (XAResource xa : xar){
-					xa.prepare(xid);
-				}
-			
-				for (XAResource xa : xar){
-					xa.commit(xid, true);
-				}
+			if (isActive){
+				try {
+					for (XAResource xa : xar){
+						xa.prepare(xid);
+					}
 
-				for (XAResource xa : xar){
-					xa.end(xid, 0);
-				}
+					for (XAResource xa : xar){
+						xa.commit(xid, true);
+					}
 
-				local.set(null);
-			} catch (XAException e) {
-				Logger.onBookFor(this.getClass()).error("Error commiting", e);
-				roolback();
+					for (XAResource xa : xar){
+						xa.end(xid, 0);
+					}
+
+					local.set(null);
+				} catch (XAException e) {
+					Logger.onBookFor(this.getClass()).error("Error commiting", e);
+					roolback();
+				} finally {
+					isActive = false;
+				}
 			}
 		}
 
 		@Override
 		public void roolback() {
-
-			for (XAResource xa : xar){
-				try {
-					xa.rollback(xid);
-				} catch (XAException e) {
-					Logger.onBookFor(this.getClass()).error("Error roolling back", e);
+			try{
+				for (XAResource xa : xar){
+					try {
+						xa.rollback(xid);
+					} catch (XAException e) {
+						Logger.onBookFor(this.getClass()).error("Error roolling back", e);
+					}
 				}
+
+				for (XAResource xa : xar){
+					try {
+						xa.forget(xid);
+					} catch (XAException e) {
+						Logger.onBookFor(this.getClass()).error("Error roolling back", e);
+					}
+				}
+			} finally {
+				isActive = false;
 			}
 
-			for (XAResource xa : xar){
-				try {
-					xa.forget(xid);
-				} catch (XAException e) {
-					Logger.onBookFor(this.getClass()).error("Error roolling back", e);
-				}
-			}
+		}
 
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean isActive() {
+			return isActive;
 		};
 	}
 
