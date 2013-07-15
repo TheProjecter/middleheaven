@@ -57,6 +57,34 @@ class BigDecimalMath {
 		    return absA.multiply(BigDecimal.valueOf(a.signum() * b.signum()));
 	}
 	
+	protected static BigInteger gcd(BigInteger a , BigInteger b){
+		
+		if (a.compareTo(BigInteger.ZERO)==0 && b.compareTo(BigInteger.ZERO)==0){
+			return BigInteger.ZERO;
+		} else if (b.compareTo(BigInteger.ZERO)==0){
+			return a.abs();
+		} else if (a.compareTo(BigInteger.ZERO)==0){
+			return gcd(b,a);
+		} else if (a.compareTo(BigInteger.ZERO)<0 && b.compareTo(BigInteger.ZERO)<0){
+			return gcd(a.negate(),b.negate()).negate();
+		} else if (a.signum() * b.signum() < 0 ){
+			return gcd(a.abs(),b.abs());
+		}
+		
+		BigInteger absA = a.abs();
+		BigInteger absB = b.abs();
+		
+		BigInteger remainder=null;  
+		
+	    do {
+	      remainder = absA.divideAndRemainder(absB)[1];
+	      absA = absB;
+	      absB = remainder;
+	    } while (remainder.compareTo(BigInteger.ZERO) > 0);
+	  
+	    return absA.multiply(BigInteger.valueOf(a.signum() * b.signum()));
+}
+	
 	/**
 	 * Least coomon Multiplier.
 	 * 

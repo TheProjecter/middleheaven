@@ -242,12 +242,11 @@ public class JavaCalendarCronology extends AbstractChronology{
 			return Calendar.MINUTE;
 		case HOURS:
 			return Calendar.HOUR_OF_DAY;
-		case DAYS:
-			return Calendar.DATE;
 		case MONTHS:
 			return Calendar.MONTH;
 		case YEARS:
 			return Calendar.YEAR;
+		case DAYS:
 		default:
 			return Calendar.DATE;
 		}
