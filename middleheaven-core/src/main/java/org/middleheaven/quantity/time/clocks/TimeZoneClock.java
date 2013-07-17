@@ -17,10 +17,6 @@ public class TimeZoneClock extends WrappedClock {
 		this.timeZone = timeZone;
 	}
 
-	public void setReferenceClock (Clock referenceClock){
-		super.setReferenceClock(referenceClock);
-	}
-	
 	@Override
 	public TimeZone getTimeZone() {
 		return timeZone;

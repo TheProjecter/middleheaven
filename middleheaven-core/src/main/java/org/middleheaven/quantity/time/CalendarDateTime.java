@@ -169,15 +169,6 @@ public class CalendarDateTime extends AbstractTimePoint implements  DateHolder ,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int compareTo(TimePoint other) {
-		return super.compareTo(other);
-	}
-	
-	/**
-	 * 
-	 * {@inheritDoc}
-	 */
-	@Override
 	public int compareTo(DateHolder other) {
 		int comp = this.year().ordinal() - other.year().ordinal();
 		if (comp ==0){
