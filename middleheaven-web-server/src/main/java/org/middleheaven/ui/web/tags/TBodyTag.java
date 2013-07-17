@@ -108,8 +108,8 @@ public class TBodyTag  extends AbstractBodyTagSupport {
 	private void createTFoot() throws JspException{
 		TagContext  context = new TagContext(pageContext);
 		String url = context.getRequestUrl().toString();
-		int beginIndex = url.lastIndexOf("/") + 1;
-		int endIndex = url.lastIndexOf(".");
+		int beginIndex = url.lastIndexOf('/') + 1;
+		int endIndex = url.lastIndexOf('.');
 
 		if(url.indexOf(".paginator.") < 0){
 			url = url.substring(beginIndex, endIndex) + ".paginator.srv";

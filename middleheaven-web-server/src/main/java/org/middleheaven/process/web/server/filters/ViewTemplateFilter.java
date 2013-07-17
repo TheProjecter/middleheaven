@@ -141,7 +141,7 @@ public class ViewTemplateFilter extends AbstractFilter {
 				// parse the page
 				result = pageResponse.getPage();
 			}
-			request.setAttribute(USING_STREAM, new Boolean (pageResponse.isUsingStream()));
+			request.setAttribute(USING_STREAM, Boolean.valueOf (pageResponse.isUsingStream()));
 			return result;
 		}catch (IllegalStateException  e) {
 			// weblogic throws an IllegalStateException when an error page is served.

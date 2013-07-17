@@ -13,14 +13,13 @@ import org.middleheaven.io.repository.ArrayManagedFilePath;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
-import org.middleheaven.io.repository.MediaManagedFile;
 import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.io.repository.empty.UnexistantManagedFile;
 
 /**
  * 
  */
-class UploadManagedFile extends AbstractMediaManagedFile implements MediaManagedFile {
+class UploadManagedFile extends AbstractMediaManagedFile {
 
 	private final FileItem fileItem;
 	private final ManagedFile parent;

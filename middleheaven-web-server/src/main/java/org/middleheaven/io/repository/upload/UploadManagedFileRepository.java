@@ -21,7 +21,7 @@ import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.RepositoryNotWritableException;
 import org.middleheaven.io.repository.watch.WatchService;
 
-public final class UploadManagedFileRepository extends AbstractManagedRepository implements  ManagedFileRepository {
+public final class UploadManagedFileRepository extends AbstractManagedRepository  {
 
 
 	public static ManagedFileRepository newInstance(HttpServletRequest request, Map<String, String[]> parameters) {

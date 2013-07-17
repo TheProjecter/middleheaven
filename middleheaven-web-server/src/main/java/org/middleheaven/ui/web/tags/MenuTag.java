@@ -121,20 +121,11 @@ public class MenuTag extends AbstractBodyTagSupport {
 		}
 		private int indicator = 0;
 		private BigInteger[] widths;
-		public MenuItem menu;
-		public Iterator<MenuItem> iterator;
-		public int count;
-		public BigInteger percentWitdh() {
-			if (widths == null){
-				return null;
-			}
-			if (indicator == 0){
-				indicator = 1;
-				return widths[0].add(widths[1]);
-			} else {
-				return widths[0];
-			}
-		}
+		private MenuItem menu;
+		private Iterator<MenuItem> iterator;
+		private int count;
+		
+		
 	}
 	
 	public int doAfterBody() throws JspException{
@@ -286,16 +277,16 @@ private void printMenu (StringBuilder builder , RMenuItem item ){
 			printMenu(subItens, sub);
 		}
 	
-		int pos = item.builder.indexOf(SUB_MENU_TAG);
+		int pos = item.itemBuilder.indexOf(SUB_MENU_TAG);
 		if (pos>0){
-			item.builder.replace(pos, pos+SUB_MENU_TAG.length(),ensureOneSurroundByTag(balanceTag(subItens, "ul").toString(), "ul"));
+			item.itemBuilder.replace(pos, pos+SUB_MENU_TAG.length(),ensureOneSurroundByTag(balanceTag(subItens, "ul").toString(), "ul"));
 		} else {
-			item.builder.append(subItens.toString());
+			item.itemBuilder.append(subItens.toString());
 		}
 
 	} 
 
-	builder.append(item.builder);
+	builder.append(item.itemBuilder);
 
 
 }
@@ -313,14 +304,14 @@ public void releaseState(){
 }
 
 private static class RMenuItem {
-	StringBuilder builder = new StringBuilder();
+	StringBuilder itemBuilder = new StringBuilder();
 	RMenuItem parent;
 	List<RMenuItem> children = new LinkedList<RMenuItem>();
 
 	public RMenuItem(){}
 
 	public void addLine(String line){
-		builder.append(line).append("\n");
+		itemBuilder.append(line).append("\n");
 	}
 	public void addChild(RMenuItem item){
 		item.parent = this;
@@ -328,16 +319,16 @@ private static class RMenuItem {
 	}
 
 	public String toString(){
-		StringBuilder builder = new StringBuilder();
-		toString(builder,this,0);
-		return builder.toString();
+		StringBuilder toStringBuilder = new StringBuilder();
+		toString(toStringBuilder,this,0);
+		return toStringBuilder.toString();
 	}
 
 	private static void toString(StringBuilder builder , RMenuItem item, int tabs){
 		for (int i=0; i < tabs; i++){
 			builder.append("---");
 		}
-		builder.append(item.builder.toString().trim()).append("\n");
+		builder.append(item.itemBuilder.toString().trim()).append("\n");
 		for (RMenuItem m : item.children){
 			toString(builder,m, tabs+1);
 		}

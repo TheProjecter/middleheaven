@@ -14,6 +14,8 @@ import org.middleheaven.ui.web.tags.TagContext;
 
 public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
 
+	private static final long serialVersionUID = 7088360536485642072L;
+
 	private String body;
 	
 	private final List<UIComponent> children = new LinkedList<UIComponent>();

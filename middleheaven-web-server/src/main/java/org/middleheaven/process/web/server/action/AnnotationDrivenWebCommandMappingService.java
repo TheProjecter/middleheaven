@@ -146,9 +146,7 @@ public class AnnotationDrivenWebCommandMappingService extends BuildableWebComman
 
 			}
 
-		} else if (introspector.isSubtypeOf(ActionPresenter.class)){
-
-		}
+		} 
 	}
 
 	public String resolvePath(String rootPath, String path ){
