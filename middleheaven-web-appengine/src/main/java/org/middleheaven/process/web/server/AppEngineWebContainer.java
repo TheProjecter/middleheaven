@@ -35,11 +35,11 @@ public class AppEngineWebContainer extends WebContainerBootstrapEnvironment {
 			/* ServletContext.getServerInfo() will return "Google App Engine Development/x.x.x"
 			* if will run locally, and "Google App Engine/x.x.x" if run on production envorinment */
 			
-			if (serverInfo.contains("Development")) {
-				// TODO  set profile to dev
-			} else {
-				// TODO set profile to production
-			}
+//			if (serverInfo.contains("Development")) {
+//				// TODO  set profile to dev
+//			} else {
+//				// TODO set profile to production
+//			}
 			
 		}
 	}
