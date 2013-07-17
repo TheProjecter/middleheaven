@@ -17,9 +17,6 @@ import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
-import org.middleheaven.core.services.ServiceEvent;
-import org.middleheaven.core.services.ServiceEvent.ServiceEventType;
-import org.middleheaven.core.services.ServiceListener;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.crypto.Base64CipherAlgorithm;
 import org.middleheaven.io.IO;
@@ -106,26 +103,26 @@ public class LicenseServiceActivator extends ServiceActivator {
 		serviceContext.register(LicenseService.class, implementation);
 	}
 
-	private class ServiceLock implements ServiceListener{
-
-		private int alreadySet = 0; 
-		@Override
-		public void onEvent(ServiceEvent event) {
-			if (event.getServiceClass().getName().equals(LicenseService.class.getName())){
-				if (event.getType().equals(ServiceEventType.ADDED)){
-					if (alreadySet>0){
-						throw new SecurityException("LicenceService is locked");
-					}
-
-					alreadySet++;
-				} else {
-					alreadySet--;
-				}
-			}
-
-		}
-
-	}
+//	private static class ServiceLock implements ServiceListener{
+//
+//		private int alreadySet = 0; 
+//		@Override
+//		public void onEvent(ServiceEvent event) {
+//			if (event.getServiceClass().getName().equals(LicenseService.class.getName())){
+//				if (event.getType().equals(ServiceEventType.ADDED)){
+//					if (alreadySet>0){
+//						throw new SecurityException("LicenceService is locked");
+//					}
+//
+//					alreadySet++;
+//				} else {
+//					alreadySet--;
+//				}
+//			}
+//
+//		}
+//
+//	}
 
 
 
