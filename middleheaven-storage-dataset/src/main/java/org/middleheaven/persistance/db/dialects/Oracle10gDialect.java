@@ -208,15 +208,15 @@ public class Oracle10gDialect extends SequenceSupportedDBDialect{
 
 		@Override
 		protected void writeEndLimitClause(SearchPlan plan, Clause selectBuffer){
-			if (plan.getMaxCount()>0 && plan.getOffSet()>1){
+			if (plan.getMaxCount()>0 && plan.getOffset()>1){
 				
 				if (selectBuffer.endsWith(')')){
 					selectBuffer.append(" AND ");
 				}
 				selectBuffer.append("rownum between ")
-				.append(plan.getOffSet())
+				.append(plan.getOffset())
 				.append(" and ")
-				.append(plan.getOffSet() + plan.getMaxCount()-1);
+				.append(plan.getOffset() + plan.getMaxCount()-1);
 			}
 		}
 

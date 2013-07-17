@@ -85,12 +85,12 @@ public final class SearchPlan {
 		this.distinct = distinct;
 	}
 	
-	public int getOffSet() {
+	public int getOffset() {
 		return offSet;
 	}
 	
-	public void setOffSet(int offSet) {
-		this.offSet = offSet;
+	public void setOffset(int offset) {
+		this.offSet = offset;
 	}
 	
 	public Collection<ResultColumnDefinition> getResultColumns() {

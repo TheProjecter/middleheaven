@@ -49,7 +49,7 @@ public class DataSourceServiceActivator extends ServiceActivator {
 		specs.add(ServiceSpecification.forService(NameDirectoryService.class, true));
 		specs.add(ServiceSpecification.forService(TransactionService.class, true));
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -57,20 +57,20 @@ public class DataSourceServiceActivator extends ServiceActivator {
 	public void collectPublishedServicesSpecifications(Collection<ServiceSpecification> specs) {
 		specs.add(ServiceSpecification.forService(DataSourceService.class));
 	}
-	
+
 	@Override
 	public void activate(final ServiceContext serviceContext ) {
-		
+
 		TransactionService transactionService = serviceContext.getService(TransactionService.class);
-		
+
 		if (transactionService == null){
 			this.dataSourceService =  new HashDataSourceService();
 		} else {
 			this.dataSourceService =  new TransactionAwareDataSourceService(transactionService);	
 		}
-	
+
 		NameDirectoryService nameDirectoryService = serviceContext.getService(NameDirectoryService.class);
-		
+
 		if (nameDirectoryService != null){
 
 			for (NameObjectEntry entry : nameDirectoryService.listObjects(JNDI_DATASOURCE_DIRECTORY)){
@@ -87,56 +87,40 @@ public class DataSourceServiceActivator extends ServiceActivator {
 			// look for the datasource mapping file
 			ManagedFile folder =  serviceContext.getService(FileContextService.class).getFileContext().getAppConfigRepository();
 
-			folder.children().filter(new Predicate<ManagedFile>(){
+			for (ManagedFile file : folder.children().filter(new FileNamePredicate())){
 
-				@Override
-				public Boolean apply(ManagedFile file) {
-					return file.getPath().getFileName().endsWith("-ds.properties");
-				}
+				Properties connectionParams = new Properties();
+				try {
+					connectionParams.load(file.getContent().getInputStream());
+					final String url = connectionParams.getProperty("datasource.url");
+					final String protocol = url.substring(0,url.indexOf(':'));
 
-			}).forEach(new Block<ManagedFile>(){
+					DataSourceProvider provider=null;
 
-				@Override
-				public void apply(ManagedFile file) {
-					
-					NameDirectoryService nameDirectoryService = serviceContext.getService(NameDirectoryService.class);
+					if ("jdbc".equals(protocol)){
+						provider = DriverManagerDSProvider.provider(connectionParams);
+					} else {
 
-					Properties connectionParams = new Properties();
-					try {
-						connectionParams.load(file.getContent().getInputStream());
-						final String url = connectionParams.getProperty("datasource.url");
-						final String protocol = url.substring(0,url.indexOf(':'));
-
-						DataSourceProvider provider=null;
-
-						if ("jdbc".equals(protocol)){
-							provider = DriverManagerDSProvider.provider(connectionParams);
+						if ("jndi".equals(protocol)){
+							Logger.onBookFor(this.getClass()).warn("DataSource configuration uses a Name and Directory location, but a Name Directory Service was not found");
+							continue;
 						} else {
-
-							if ("jndi".equals(protocol)){
-								if (nameDirectoryService == null){
-									Logger.onBookFor(this.getClass()).warn("DataSource configuration uses a Name and Directory location, but a Name Directory Service was not found");
-									return;
-								}
-								provider = NameDirectoryLookupDSProvider.provider(nameDirectoryService , connectionParams);
-							} else {
-								Logger.onBookFor(this.getClass()).error("Error loading datasource file. Provider type not recognized");
-							}
+							Logger.onBookFor(this.getClass()).error("Error loading datasource file. Provider type not recognized");
 						}
-						dataSourceService.addDataSourceProvider(connectionParams.getProperty("datasource.name"), provider );
+					}
+					dataSourceService.addDataSourceProvider(connectionParams.getProperty("datasource.name"), provider );
 
-					} catch (ManagedIOException e) {
-						Logger.onBookFor(this.getClass()).error(e,"Error loading datasource file");
-						throw new AtivationException(e);
-					} catch (IOException e) {
-						Logger.onBookFor(this.getClass()).error(e,"Error loading datasource file");
-						throw new AtivationException(e);
-					} 
-				}
-			});
+				} catch (ManagedIOException e) {
+					Logger.onBookFor(this.getClass()).error(e,"Error loading datasource file");
+					throw new AtivationException(e);
+				} catch (IOException e) {
+					Logger.onBookFor(this.getClass()).error(e,"Error loading datasource file");
+					throw new AtivationException(e);
+				} 
+			}
 		}
 
-	
+
 		serviceContext.register(DataSourceService.class, this.dataSourceService);
 
 	}
@@ -151,6 +135,16 @@ public class DataSourceServiceActivator extends ServiceActivator {
 		serviceContext.unRegister(DataSourceService.class);
 	}
 
+	private static class FileNamePredicate implements Predicate<ManagedFile>{
 
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Boolean apply(ManagedFile file) {
+			return file.getPath().getFileName().endsWith("-ds.properties");
+		}
+
+	}
 
 }

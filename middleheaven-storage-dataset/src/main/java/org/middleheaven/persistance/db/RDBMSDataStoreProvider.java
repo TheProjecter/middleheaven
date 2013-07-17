@@ -212,7 +212,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 					plan.setFowardOnly(true);
 					plan.setReadOnly(true);
 					plan.setMaxCount(criteria.getMaxCount());
-					plan.setOffSet(criteria.getOffset());
+					plan.setOffset(criteria.getOffset());
 					plan.setReadOnly(true);
 					plan.setResultColumns(criteria.getResultColumns());
 					plan.setConstraints(criteria.getDataSetRestrictions());
@@ -477,12 +477,12 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				if (!rdbmsDataStore.dialect.supportsOffSet()) {
 
 					try {
-						rs.absolute(plan.getOffSet() + 1);
+						rs.absolute(plan.getOffset() + 1);
 
 					} catch (SQLFeatureNotSupportedException e){
 						// iterate manually  until we arrive to the offset
 						int off = 1;
-						while (off < plan.getOffSet() && rs.next()) {
+						while (off < plan.getOffset() && rs.next()) {
 							//iterate
 							off++;
 						}
@@ -573,7 +573,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 	}
 
-	private class RDBMSDataSet implements DataSet {
+	private static class RDBMSDataSet implements DataSet {
 
 
 		private String datasetName;

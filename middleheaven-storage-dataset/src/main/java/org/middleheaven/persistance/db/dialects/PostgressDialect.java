@@ -149,8 +149,8 @@ public class PostgressDialect extends SequenceSupportedDBDialect{
 		protected void writeEndLimitClause(SearchPlan plan, Clause selectBuffer){
 			if ( plan.getMaxCount()>0){
 				selectBuffer.append(" LIMIT ").append( plan.getMaxCount());
-				if ( plan.getOffSet()>1){
-					selectBuffer.append(" OFFSET ").append( plan.getOffSet() - 1);
+				if ( plan.getOffset()>1){
+					selectBuffer.append(" OFFSET ").append( plan.getOffset() - 1);
 				}
 			}
 		}

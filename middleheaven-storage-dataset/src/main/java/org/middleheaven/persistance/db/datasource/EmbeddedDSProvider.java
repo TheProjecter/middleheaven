@@ -158,7 +158,7 @@ public class EmbeddedDSProvider implements DataSourceProvider{
 	}
 	
 	
-	private class EmbededRDBMSDataStoreProvider extends RDBMSDataStoreProvider {
+	private static class EmbededRDBMSDataStoreProvider extends RDBMSDataStoreProvider {
 
 		/**
 		 * Constructor.

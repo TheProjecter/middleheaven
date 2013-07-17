@@ -379,7 +379,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		 return tableMappings.values();
 	 }
 
-	 protected class ColumnTypeInfo {
+	 protected static class ColumnTypeInfo {
 
 		 ColumnValueType type;
 		 Integer size;

@@ -155,8 +155,8 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 			
 			if (!plan.isCountOnly() && plan.hasMaxCount()){
 				int offset = 0;
-				if (plan.getOffSet()>1){
-					offset = plan.getOffSet()-1;
+				if (plan.getOffset()>1){
+					offset = plan.getOffset()-1;
 				} 
 				
 				selectBuffer.append(" LIMIT ").append(offset).append(" ").append(plan.getMaxCount());
