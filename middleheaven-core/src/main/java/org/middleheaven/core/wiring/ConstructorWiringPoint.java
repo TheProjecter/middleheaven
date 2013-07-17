@@ -10,7 +10,7 @@ import org.middleheaven.core.reflection.ReflectionException;
 /**
  * Implements a {@link ProducingWiringPoint} using a {@link Constructor}.
  */
-public final class ConstructorWiringPoint extends AbstractProducingWiringPoint implements ProducingWiringPoint{
+public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 
 	private Constructor<?> constructor;
 
