@@ -164,7 +164,7 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> T store(T obj, final StorageUnit unit) {
+	public <T> T store(T obj, StorageUnit unit) {
 
 		if (obj == null){
 			throw new IllegalArgumentException("Cannot store null");
@@ -179,17 +179,10 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 
 			@Override
 			public StoreAction apply(EntityInstance s) {
-				return assignAction(s);
+				return AbstractDomainStoreManager.this.assignAction(s);
 			}
 
-		}).forEach(new Block<StoreAction>(){
-
-			@Override
-			public void apply(StoreAction action) {
-				unit.addAction(action);
-			}
-
-		});
+		}).forEach(new UnitAddBlock(unit));
 
 		return (T) obj.getClass().cast(p);
 	}
@@ -199,4 +192,16 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 	protected abstract void assignIdentity(EntityInstance p);
 	
 	protected abstract void flatten(EntityInstance p, Set<EntityInstance> all);
+	
+	private static class UnitAddBlock implements Block<StoreAction> {
+		
+		StorageUnit unit;
+		public UnitAddBlock (StorageUnit unit){
+			this.unit = unit;
+		}
+		@Override
+		public void apply(StoreAction action) {
+			unit.addAction(action);
+		}
+	}
 }

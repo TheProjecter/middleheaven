@@ -249,9 +249,9 @@ public class AnnotatedModelReader implements DomainModelReader {
 
 			if (fieldName.isEmpty()){
 				fieldName = targetModel.identityFieldModel().getName().getDesignation();
-			} else {
+			} /*else {
 				// TODO validate field exists
-			}
+			}*/
 
 			model.setTargetFieldType(targetModel.getIdentityType());
 

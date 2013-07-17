@@ -1,5 +1,6 @@
 package org.middleheaven.domain.model;
 
+import java.util.Deque;
 import java.util.LinkedList;
 
 import org.middleheaven.core.reflection.ClassSet;
@@ -22,7 +23,7 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 		
 		final SimpleModelBuilder builder = new SimpleModelBuilder();
 
-		LinkedList<Class> stack = new LinkedList<Class>();
+		Deque<Class> stack = new LinkedList<Class>();
 		
 		for (Class c : classes){
 			if (isDomainAbstraction(c)){
@@ -65,97 +66,8 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 		}
 		
 		return model;
-		
-
-//	
-//		new DependencyResolver(Log.onBookFor(this.getClass())).resolve(classes.getClasses(), new Starter<Class<?>>(){
-//
-//			@Override
-//			public void inicialize(Class<?> type)
-//			throws InicializationNotResolvedException,
-//			InicializationNotPossibleException {
-//
-//				builder.buildModelFor(type, reader());
-//				
-//				
-//			}
-//
-//			@Override
-//			public void inicializeWithProxy(Class<?> dependableProperties)
-//			throws InicializationNotResolvedException,
-//			InicializationNotPossibleException {
-//
-//				throw new UnsupportedOperationException();
-//			}
-//
-//			@Override
-//			public List<Class<?>> sort(final Collection<Class<?>> dependencies) {
-//
-//				List<ClassDependency> deps = new ArrayList<ClassDependency>(dependencies.size());
-//
-//				for (Class<?> c: dependencies){
-//					deps.add(new ClassDependency (c, dependencies));
-//				}
-//
-//				Collections.sort(deps, new Comparator<ClassDependency>(){
-//
-//					@Override
-//					public int compare(ClassDependency a,	ClassDependency b) {
-//						return a.getDepenciesCount() - b.getDepenciesCount();
-//					}
-//
-//				});
-//				List<Class<?>> result = new ArrayList<Class<?>>(dependencies.size());
-//				for (ClassDependency cd : deps){
-//					result.add(cd.getType());
-//				}
-//
-//				return result;
-//			}
-//
-//			class ClassDependency {
-//
-//				private Class<?> type;
-//				private Collection<Class<?>> depends;
-//
-//				public ClassDependency(Class<?> type, final Collection<Class<?>> dependencies){
-//					this.type = type;
-//
-//					this.depends = Introspector.of(type).inspect().properties().retriveAll().collect(new Classifier<Class<?>,PropertyAccessor>(){
-//
-//						@Override
-//						public Class<?> classify(PropertyAccessor obj) {
-//							if( dependencies.contains(obj.getValueType())){
-//								return obj.getValueType();
-//							}
-//							return null;
-//						}
-//
-//					});
-//
-//
-//				}
-//
-//				public int getDepenciesCount() {
-//					return depends.size();
-//				}
-//
-//				public Class getType(){
-//					return type;
-//				}
-//
-//			}
-//
-//			@Override
-//			public boolean isRequired(Class<?> dependency) {
-//				return true;
-//			}
-//
-//		});
-//
-//		return builder.getModel();
 	}
-
+	
 	/**
 	 * @param c
 	 * @return
