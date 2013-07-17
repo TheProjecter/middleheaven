@@ -14,6 +14,7 @@ import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.models.form.UIFormSheetModel;
+import org.middleheaven.util.SafeCastUtils;
 
 /**
  * Form implementation in swing. 
@@ -37,7 +38,7 @@ public class SForm extends SBaseContainerPanel implements UIForm ,NamingContaine
 		layout.setUIParent(this);
 		
 		this.add((Component)commandSet, BorderLayout.NORTH);
-		this.add((Component)layout, BorderLayout.CENTER);
+		this.add(SafeCastUtils.safeCast(layout, Component.class).get(), BorderLayout.CENTER);
 	}
 
 	
@@ -67,9 +68,7 @@ public class SForm extends SBaseContainerPanel implements UIForm ,NamingContaine
 		
 		if (UICommand.class.isAssignableFrom(component.getComponentType())){
 			this.commandSet.addComponent(component);
-		} else {
-			//this.layout.addComponent(component);
-		}
+		} 
 	}
 	
 	@Override
