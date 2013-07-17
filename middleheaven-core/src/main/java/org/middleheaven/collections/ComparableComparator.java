@@ -1,5 +1,6 @@
 package org.middleheaven.collections;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -7,9 +8,11 @@ import java.util.Comparator;
  * @param <T> the type to compare.
  */
 @SuppressWarnings("unchecked")
-public class  ComparableComparator<T extends Comparable<? super T>> implements Comparator<T> {
+public class  ComparableComparator<T extends Comparable<? super T>> implements Comparator<T>,  Serializable {
 
 
+	private static final long serialVersionUID = 3671696749177274792L;
+	
 	@SuppressWarnings("rawtypes")
 	private static final ComparableComparator ME = new ComparableComparator();
 	

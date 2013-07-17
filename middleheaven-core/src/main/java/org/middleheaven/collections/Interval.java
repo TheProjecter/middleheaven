@@ -50,7 +50,7 @@ public class Interval<T> {
 	 */
 	public static <V> Interval<V> between(V start, V end, Comparator<? super V> comparator){
 		if (comparator == null){
-			throw new NullPointerException("A comparator is required.");
+			throw new IllegalArgumentException("A comparator is required.");
 		}
 		if (start!=end && start!=null && end!=null && comparator.compare(start,end)>0){
 			throw new IllegalArgumentException("Interval`s start must preceed its end");
