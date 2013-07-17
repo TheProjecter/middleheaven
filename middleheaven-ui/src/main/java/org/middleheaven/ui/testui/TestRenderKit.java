@@ -17,14 +17,18 @@ public class TestRenderKit extends AbstractRenderKit {
 	
 	final TestUIRender render = new TestUIRender();
 	
-	final UIUnitConverter converter = new UIUnitConverter(){
+	final UIUnitConverter converter = new TestUIUnitConverter();
+	
+	private static class TestUIUnitConverter extends UIUnitConverter {
+
+		private static final long serialVersionUID = 8234808357882607288L;
 
 		@Override
 		protected double[] getDialogBaseUnits(Displayable layoutable) {
 			return new double[]{100.0,100.0};
 		}
 		
-	};
+	}
 	
 	@Override
 	protected boolean isRendered(UIComponent component) {

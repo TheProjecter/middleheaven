@@ -20,6 +20,7 @@ package org.middleheaven.text.indexing.lucene;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ScatteringByteChannel;
 
 import org.apache.lucene.store.IndexInput;
 import org.apache.lucene.store.IndexOutput;
@@ -80,7 +81,7 @@ class NIOFSDirectory extends ManagedFileDirectory {
 
     public NIOFSIndexInput(ManagedFile path, int bufferSize, int chunkSize) throws IOException {
       super(path, bufferSize, chunkSize);
-      channel = null;// TODO file.getChannel();
+      channel = file.getChannel();
     }
 
     @Override
@@ -122,8 +123,9 @@ class NIOFSDirectory extends ManagedFileDirectory {
             // on subsequent calls
             otherBuffer = b;
             otherByteBuf = ByteBuffer.wrap(b);
-          } else
+          } else{
             otherByteBuf.clear();
+          }
           otherByteBuf.limit(len);
           bb = otherByteBuf;
         } else {

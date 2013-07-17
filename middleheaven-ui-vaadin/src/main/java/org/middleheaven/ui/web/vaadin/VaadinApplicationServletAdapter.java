@@ -44,11 +44,6 @@ public class VaadinApplicationServletAdapter extends AbstractApplicationServlet{
 		this.binder = binder;
 	}
 
-	public void init(javax.servlet.ServletConfig servletConfig) throws javax.servlet.ServletException {
-		super.init(servletConfig);
-	}
-
-
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

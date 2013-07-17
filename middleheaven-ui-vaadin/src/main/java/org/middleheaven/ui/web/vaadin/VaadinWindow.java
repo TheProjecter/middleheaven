@@ -38,14 +38,6 @@ public class VaadinWindow extends VaadinUIComponentContainer implements UIWindow
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setGID(String id) {
-		super.setGID(id);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	protected void copyModel() {
 		
 	}

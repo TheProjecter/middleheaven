@@ -43,11 +43,11 @@ public class CriteriaInterpreter {
 				
 			} else if (criterion instanceof FieldCriterion){
 				interpret(masterQuery , (FieldCriterion) criterion,analyzer);
-			} else if (criterion instanceof FieldInSetCriterion){
+			} /*else if (criterion instanceof FieldInSetCriterion){
 				
 			} else if (criterion instanceof JunctionCriterion){
 				// ignore. these are not supported yet
-			}
+			}*/
 		}
 	}
 	

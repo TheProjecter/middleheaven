@@ -56,7 +56,7 @@ public class AutoCommitTransactionService implements TransactionService {
 		@Override
 		public byte[] getBranchQualifier() {
 			// TODO implement Xid.getBranchQualifier
-			return null;
+			return new byte[0];
 		}
 
 		@Override
@@ -68,7 +68,7 @@ public class AutoCommitTransactionService implements TransactionService {
 		@Override
 		public byte[] getGlobalTransactionId() {
 			// TODO implement Xid.getGlobalTransactionId
-			return null;
+			return new byte[0];
 		}
 
 		/**

@@ -14,9 +14,11 @@ public class UITest extends MiddleHeavenTestCase{
 	@Test
 	public void testRendering(){
 		
-		GenericUIComponent root =  (GenericUIComponent)GenericUIComponent.getInstance(UIClient.class, null);
+		UIClient root =  GenericUIComponent.getInstance(UIClient.class, null);
 		
-		UIComponent frame = root.addComponent(UIView.class, null);
+		UIView frame = GenericUIComponent.getInstance(UIView.class, null);
+		
+		root.addComponent(frame, null);
 
 		TestRenderKit rk = new TestRenderKit();
 		RenderingContext context = new RenderingContext(rk);

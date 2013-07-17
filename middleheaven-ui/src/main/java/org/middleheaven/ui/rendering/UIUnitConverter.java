@@ -108,7 +108,7 @@ public abstract class UIUnitConverter implements Serializable{
         } else if (unitValue.endsWith("dlu")){
             res =  (int)Math.round(getDialogBaseUnits(container)[1] * Integer.parseInt(unitValue.substring(0,unitValue.indexOf("dlu")).trim()));
         } else if (unitValue.endsWith("%")){
-            res = (int) (availableSpace * 1d * Integer.parseInt(unitValue.substring(0,unitValue.indexOf("%"))) / 100);
+            res = (int) (availableSpace * 1d * Integer.parseInt(unitValue.substring(0,unitValue.indexOf('%'))) / 100);
         } else if (Character.isDigit(unitValue.charAt(unitValue.length()-1))) {
             res = Integer.parseInt(unitValue);
         }

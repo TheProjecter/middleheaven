@@ -45,7 +45,7 @@ import org.middleheaven.util.function.Predicate;
  */
 public abstract class ManagedFileDirectory extends Directory {
 
-  private static MessageDigest DIGESTER;
+  private static final MessageDigest DIGESTER;
 
   static {
     try {
