@@ -62,7 +62,7 @@ public class XMLUtils {
         	// return null explicitly.
             return null;
         }else {
-            return new Boolean(booleanAttribute(attribName, el, false));
+            return Boolean.valueOf(booleanAttribute(attribName, el, false));
         }
     }
 
