@@ -83,7 +83,7 @@ public final class ResourceFolderTextLocalizableBundle extends LocalizableTextBu
 		try{
 			final String message = bundle.getString(label.getMessageKey());
 			final Object [] messageParams = label.getMessageParams();
-			if (messageParams.length >0 || message.indexOf("{") >=0){
+			if (messageParams.length >0 || message.indexOf('{') >=0){
 				return new MessageFormat(message).format(messageParams);
 			} else {
 				return message;

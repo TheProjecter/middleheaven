@@ -54,7 +54,7 @@ public abstract class NumberWriteoutFormatter implements Formatter<Number>{
 
 	protected final String format(String number){
 
-		if (number.indexOf(".")>=0){
+		if (number.indexOf('.')>=0){
 			String[] parts = number.split("\\.");
 			StringBuilder builder1 = new StringBuilder();
 			builder1 = doPart(builder1,parts[0], false);

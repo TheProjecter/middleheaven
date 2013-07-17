@@ -43,7 +43,7 @@ public abstract class LocalizableText implements Serializable{
 	 * @throws IllegalArgumentException if the given string is no qualified.
 	 */
 	public static LocalizableText valueOf(String qualifiedString, Serializable[] params){
-		if (qualifiedString.indexOf(":")<0){
+		if (qualifiedString.indexOf(':')<0){
 			return new TransaltedTextLocalizable(qualifiedString , "", "", params);
 		} else {
 			String[] str = Splitter.on(":").split(qualifiedString).intoArray(new String[2]);
