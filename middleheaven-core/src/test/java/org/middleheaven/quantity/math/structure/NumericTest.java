@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import org.junit.Test;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.math.RealField;
-import org.middleheaven.quantity.math.structure.BigDecimalMath;
+import org.middleheaven.quantity.math.structure.BigMath;
 import org.middleheaven.quantity.math.structure.BigDecimalReal;
 
 
@@ -27,9 +27,9 @@ public class NumericTest {
 	
 	@Test
 	public void testIsInteger(){
-		assertTrue( BigDecimalMath.isInteger(BigDecimal.valueOf(84)));
-		assertFalse( BigDecimalMath.isInteger(new BigDecimal("0.012")));
-		assertFalse( BigDecimalMath.isInteger(new BigDecimal("1.2")));
+		assertTrue( BigMath.isInteger(BigDecimal.valueOf(84)));
+		assertFalse( BigMath.isInteger(new BigDecimal("0.012")));
+		assertFalse( BigMath.isInteger(new BigDecimal("1.2")));
 	}
 	
 	@Test
@@ -39,11 +39,11 @@ public class NumericTest {
 		BigDecimal b = BigDecimal.valueOf(6);
 		BigDecimal c = BigDecimal.valueOf(42);
 
-		assertEquals(c , BigDecimalMath.lcm(a, b));
-		assertEquals(c , BigDecimalMath.lcm(b, a));
-		assertEquals(c.negate() , BigDecimalMath.lcm(a.negate(), b.negate()));
+		assertEquals(c , BigMath.lcm(a, b));
+		assertEquals(c , BigMath.lcm(b, a));
+		assertEquals(c.negate() , BigMath.lcm(a.negate(), b.negate()));
 		
-		assertEquals(c , BigDecimalMath.lcm(a.negate(), b));
+		assertEquals(c , BigMath.lcm(a.negate(), b));
 		
 
 	}
@@ -56,14 +56,14 @@ public class NumericTest {
 		
 		BigDecimal k = BigDecimal.valueOf(13); 
 		
-		assertEquals(c , BigDecimalMath.gcd(a, b));
-		assertEquals(c , BigDecimalMath.gcd(b, a));
-		assertEquals(c.negate() , BigDecimalMath.gcd(a.negate(), b.negate()));
+		assertEquals(c , BigMath.gcd(a, b));
+		assertEquals(c , BigMath.gcd(b, a));
+		assertEquals(c.negate() , BigMath.gcd(a.negate(), b.negate()));
 		
-		assertEquals(c , BigDecimalMath.gcd(a.negate(), b));
+		assertEquals(c , BigMath.gcd(a.negate(), b));
 		
 		// cgd (a.k, b.k) = k .gcd(a,b)
-		assertEquals(c.multiply(k) , BigDecimalMath.gcd(a.multiply(k), b.multiply(k)));
+		assertEquals(c.multiply(k) , BigMath.gcd(a.multiply(k), b.multiply(k)));
 	
 		
 	}
@@ -74,11 +74,11 @@ public class NumericTest {
 		final BigDecimal halfSqrt2 = new BigDecimal("0.707106781186547");
 		
 		int scale = 15;
-		assertNumberEquals(BigDecimal.ONE,BigDecimalMath.cos(BigDecimal.ZERO, scale));
-		assertNumberEquals(BigDecimal.ONE.negate(),BigDecimalMath.cos(pi, scale));
-		assertNumberEquals(BigDecimal.ZERO,BigDecimalMath.cos(pi.divide(BigDecimal.valueOf(2)), scale));
+		assertNumberEquals(BigDecimal.ONE,BigMath.cos(BigDecimal.ZERO, scale));
+		assertNumberEquals(BigDecimal.ONE.negate(),BigMath.cos(pi, scale));
+		assertNumberEquals(BigDecimal.ZERO,BigMath.cos(pi.divide(BigDecimal.valueOf(2)), scale));
 		
-		assertNumberEquals(halfSqrt2,BigDecimalMath.cos(pi.divide(BigDecimal.valueOf(4)), scale));
+		assertNumberEquals(halfSqrt2,BigMath.cos(pi.divide(BigDecimal.valueOf(4)), scale));
 		
 	}
 	
@@ -88,10 +88,10 @@ public class NumericTest {
 		final BigDecimal halfSqrt2 = new BigDecimal("0.707106781186547");
 		
 		int scale = 15;
-		assertNumberEquals(BigDecimal.ZERO,BigDecimalMath.sin(BigDecimal.ZERO, scale));
-		assertNumberEquals(BigDecimal.ZERO,BigDecimalMath.sin(pi, scale));
-		assertNumberEquals(BigDecimal.ONE,BigDecimalMath.sin(pi.divide(BigDecimal.valueOf(2)), scale));
-		assertNumberEquals(halfSqrt2,BigDecimalMath.sin(pi.divide(BigDecimal.valueOf(4)), scale));
+		assertNumberEquals(BigDecimal.ZERO,BigMath.sin(BigDecimal.ZERO, scale));
+		assertNumberEquals(BigDecimal.ZERO,BigMath.sin(pi, scale));
+		assertNumberEquals(BigDecimal.ONE,BigMath.sin(pi.divide(BigDecimal.valueOf(2)), scale));
+		assertNumberEquals(halfSqrt2,BigMath.sin(pi.divide(BigDecimal.valueOf(4)), scale));
 		
 	}
 	
