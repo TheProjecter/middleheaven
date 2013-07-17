@@ -4,6 +4,7 @@
 package org.middleheaven.io.repository;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 /**
  * 
@@ -34,4 +35,9 @@ public interface ManagedRandomAccessFileStrategy extends  java.io.DataOutput, ja
 		 * @throws IOException
 		 */
 		public int read(byte[] b, int i, int readLength) throws IOException;
+
+		/**
+		 * @return
+		 */
+		FileChannel getChannel();
 }

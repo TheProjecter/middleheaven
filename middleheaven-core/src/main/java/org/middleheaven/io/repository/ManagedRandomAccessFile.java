@@ -4,6 +4,7 @@
 package org.middleheaven.io.repository;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 import org.middleheaven.io.repository.machine.MachineFiles;
 
@@ -20,7 +21,13 @@ public class ManagedRandomAccessFile  implements java.io.DataOutput, java.io.Dat
 		strategy = resolveStrategy(file,mode);
 	}
 
-
+	/**
+	 * @return
+	 */
+	 public FileChannel getChannel() {
+		 return strategy.getChannel();
+	 }
+	 
 	/**
 	 * @param file
 	 * @param mode

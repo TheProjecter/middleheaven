@@ -180,9 +180,7 @@ public class ArrayManagedFilePath implements ManagedFilePath , Watchable {
 	 */
 	@Override
 	public ManagedFilePath resolve(String name) {
-		String[] names = Splitter.on("/").split(name).intoArray(new String[0]);
-		
-		return new ArrayManagedFilePath(this.repository, this.root,  CollectionUtils.addToArray(this.names, names));
+		return new ArrayManagedFilePath(this.repository, this.root,  CollectionUtils.addToArray(this.names, Splitter.on("/").split(name).intoArray(new String[0])));
 	}
 
 	/**
