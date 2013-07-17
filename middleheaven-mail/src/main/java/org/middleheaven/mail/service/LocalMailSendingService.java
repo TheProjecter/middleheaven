@@ -15,7 +15,7 @@ import org.middleheaven.mail.MailSendingService;
  * 
  */
 @Service
-public class LocalMailSendingService extends AbstractMailSessionSendingService implements MailSendingService {
+public class LocalMailSendingService extends AbstractMailSessionSendingService {
 
 	boolean debug = false;
 	private String stmpHost;

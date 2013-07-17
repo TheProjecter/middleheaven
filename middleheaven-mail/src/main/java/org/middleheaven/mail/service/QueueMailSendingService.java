@@ -1,5 +1,6 @@
 package org.middleheaven.mail.service;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -17,14 +18,20 @@ import org.middleheaven.mail.MailTransmissionResult;
  */
 public class QueueMailSendingService extends MailSendingServiceDecorator {
 
-	private BlockingQueue<QueuedMessage> queue = new PriorityBlockingQueue<QueuedMessage>(100,new Comparator<QueuedMessage>(){
+	private static class QueuedMessageComparator implements Comparator<QueuedMessage> , Serializable{
 
+		private static final long serialVersionUID = 8335456837596659332L;
+
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public int compare(QueuedMessage m1, QueuedMessage m2) {
 			return m1.message.getPriority().compareTo(m2.message.getPriority());
 		}
-
-	});
+		
+	}
+	private BlockingQueue<QueuedMessage> queue = new PriorityBlockingQueue<QueuedMessage>(100,new QueuedMessageComparator());
 
 	private MailSenderThread mailSenderThread;
 
