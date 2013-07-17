@@ -32,7 +32,7 @@ class BigDecimalReal extends Real{
 	}
 	
 	public static BigDecimalReal valueOf (BigDecimal value){
-		final BigDecimal scale = BigDecimalMath.intPower(BigDecimal.TEN, value.scale(), 0);
+		final BigDecimal scale = BigMath.intPower(BigDecimal.TEN, value.scale(), 0);
 		return valueOf(value.multiply( scale).toBigInteger(), scale.toBigInteger());
 	}
 	
@@ -67,7 +67,7 @@ class BigDecimalReal extends Real{
 	
 	private BigDecimalReal (BigInteger numerator,BigInteger denominator){
 		
-		BigInteger gcd = BigDecimalMath.gcd (numerator, denominator);
+		BigInteger gcd = BigMath.gcd (numerator, denominator);
 
 		if (gcd.signum() !=0 ){
 			this.numerator = numerator.divide(gcd);
@@ -138,7 +138,7 @@ class BigDecimalReal extends Real{
 			return this; // is zero or divided by 1
 		}
 
-		BigInteger gcd = BigDecimalMath.gcd ( numerator, denominator);
+		BigInteger gcd = BigMath.gcd ( numerator, denominator);
 
 		if (gcd.signum()==0){
 			return this;
@@ -304,35 +304,35 @@ class BigDecimalReal extends Real{
 
 	@Override
 	public Real arctan() {
-		return new BigDecimalReal(BigDecimalMath.arctan(this.asNumber(), SCALE));
+		return new BigDecimalReal(BigMath.arctan(this.asNumber(), SCALE));
 	}
 
 
 
 	@Override
 	public Real sqrt() {
-		return new BigDecimalReal(BigDecimalMath.sqrt(this.asNumber() , SCALE)).simplify();
+		return new BigDecimalReal(BigMath.sqrt(this.asNumber() , SCALE)).simplify();
 	}
 
 	@Override
 	public Real cos() {
-		return new BigDecimalReal(BigDecimalMath.cos(this.asNumber(), SCALE));
+		return new BigDecimalReal(BigMath.cos(this.asNumber(), SCALE));
 	}
 
 
 	@Override
 	public Real sin() {
-		return new BigDecimalReal(BigDecimalMath.sin(this.asNumber(), SCALE));
+		return new BigDecimalReal(BigMath.sin(this.asNumber(), SCALE));
 	}
 
 	@Override
 	public Real exp() {
-		return new BigDecimalReal(BigDecimalMath.exp(this.asNumber(), SCALE));
+		return new BigDecimalReal(BigMath.exp(this.asNumber(), SCALE));
 	}
 
 	@Override
 	public Real ln() {
-		return new BigDecimalReal(BigDecimalMath.ln(this.asNumber(), SCALE));
+		return new BigDecimalReal(BigMath.ln(this.asNumber(), SCALE));
 	}
 
 

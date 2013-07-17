@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 
 
-class BigDecimalMath {
+class BigMath {
 
 	
 	protected static boolean isInteger(BigDecimal a){
