@@ -25,7 +25,6 @@ public class AsynchronousWriter extends AbstractWriterAttachable{
 
     protected BlockingQueue<LoggingEvent> queue;
     protected boolean running;
-    protected boolean flushAll = false;
     protected int bufferSize = 10;
 
 
@@ -64,10 +63,6 @@ public class AsynchronousWriter extends AbstractWriterAttachable{
         for (int i = 0; i < writersArr.length;i++){
             ((LogBookWriter)writersArr[i]).log(event);
         }
-    }
-
-    public void finalize(){
-        this.flushAll = true;
     }
 
     public class LogThread extends Thread {

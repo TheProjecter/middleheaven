@@ -83,7 +83,6 @@ public class FileWriter extends StreamLogBookWriter {
             this.format.writerFooter(new PrintWriter(out));
             this.out.close();
         } catch (IOException e) {
-            System.err.println("Problem finalizing " + this.getClass().getName() + "\n");
             e.printStackTrace(System.err);
         }
     }
