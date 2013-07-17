@@ -11,7 +11,7 @@ import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.GroupAdditive;
 import org.middleheaven.util.function.Block;
 
-public abstract class AbstractVector<F extends FieldElement<F>> extends AbstractEnumerable<F> implements Vector<F> , Conjugatable<Vector<F>> , Iterable<F>{
+public abstract class AbstractVector<F extends FieldElement<F>> extends AbstractEnumerable<F> implements Vector<F> , Conjugatable<Vector<F>>{
 	
 	
 	private final VectorSpace<Vector<F>, F > vectorSpace;
