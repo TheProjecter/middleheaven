@@ -26,8 +26,8 @@ public class UrlStringUtils extends StringUtils {
 	 */
 	public static String filename(CharSequence url){
 		final String urlString = url.toString();
-		String fileName = urlString.substring(urlString.lastIndexOf("/")+1);
-		int pos = fileName.lastIndexOf(".");
+		String fileName = urlString.substring(urlString.lastIndexOf('/')+1);
+		int pos = fileName.lastIndexOf('.');
 		if (pos>=0){
 			return fileName;
 		} else {

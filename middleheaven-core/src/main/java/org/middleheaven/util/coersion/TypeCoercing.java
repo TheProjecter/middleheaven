@@ -165,8 +165,8 @@ public class TypeCoercing {
 
 	private static class Key{
 		
-		public Class<?> from;
-		public Class<?> to;
+		private Class<?> from;
+		private Class<?> to;
 
 
 		public Key(Class<?> from, Class<?> to) {
