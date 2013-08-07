@@ -41,11 +41,11 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 	public HSQLDialect() {
 		super("'", "'", ".");
 	}
-	
+
 	public  boolean supportsBatch(){
 		return false;
 	}
-	
+
 	// HSQL storedProcedures
 	public static boolean containsMatch(String target, String search) {
 		search = search.replaceAll("%", "");
@@ -56,13 +56,13 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		search = search.replaceAll("%", "");
 		return target.toLowerCase().endsWith((search.toLowerCase()));
 	}
-	
+
 	public static boolean startsWithMatch(String target, String search) {
 		search = search.replaceAll("%", "");
 		return target.toLowerCase().startsWith((search.toLowerCase()));
 	}
 	// end stored procedures
-	
+
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -71,7 +71,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper dataBaseMapper) {
 		return new HSQLCriteriaInterpreter(this, dataBaseMapper);
 	}
-		
+
 	@Override
 	public RDBMSException handleSQLException(SQLException e) {
 		if (e.getMessage().startsWith("Table already exists")){
@@ -79,7 +79,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		}
 		return new RDBMSException(e);
 	}
-	
+
 	@Override
 	public void writeJoinTableHardname(Clause joinClause, String hardNameForEntity) {
 		joinClause.append(hardNameForEntity);
@@ -90,7 +90,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 	public void writeJoinField(Clause joinClause, String alias ,String fieldName) {
 		joinClause.append(alias).append(fieldSeparator()).append(fieldName);
 	}
-	
+
 	@Override
 	public EditionDataBaseCommand createCreateSequenceCommand(SequenceModel sequence) {
 
@@ -103,18 +103,18 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		return new SQLEditCommand(this,sql.toString());
 	}
 
-//	@Override
-//	public void writeEditionHardname(Clause buffer , QualifiedName hardname){
-//		if (!hardname.getName().isEmpty()){
-//			buffer.append(hardname.getName().toLowerCase());
-//		}
-//	}
-	
+	//	@Override
+	//	public void writeEditionHardname(Clause buffer , QualifiedName hardname){
+	//		if (!hardname.getName().isEmpty()){
+	//			buffer.append(hardname.getName().toLowerCase());
+	//		}
+	//	}
+
 	@Override
 	public void writeEnclosureHardname(Clause buffer , String hardname){
 		buffer.append(hardname);
 	}
-	
+
 	@Override
 	public void writeQueryHardname(Clause buffer , QualifiedName hardname){
 		if (hardname.isAlias()){
@@ -123,7 +123,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 			buffer.append(hardname.getQualifier().toLowerCase())
 			.append(fieldSeparator())
 			.append(hardname.getDesignation().toLowerCase());
-			
+
 		}
 	}
 
@@ -133,48 +133,48 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		public HSQLCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper dataBaseMapper) {
 			super(dataBaseDialect, dataBaseMapper);
 		}
-		
-//		@Override
-//		protected void writeFromClause(String alias , Clause queryBuffer){
-//
-//			// FROM ClAUSE
-//			queryBuffer.append(" FROM ");
-//			queryBuffer.append(model().getEntityHardName().toLowerCase());
-//
-//			if (alias!=null){
-//				queryBuffer.append(" AS ") 
-//				.append(alias);
-//			}
-//		}
-//		
-		
+
+		//		@Override
+		//		protected void writeFromClause(String alias , Clause queryBuffer){
+		//
+		//			// FROM ClAUSE
+		//			queryBuffer.append(" FROM ");
+		//			queryBuffer.append(model().getEntityHardName().toLowerCase());
+		//
+		//			if (alias!=null){
+		//				queryBuffer.append(" AS ") 
+		//				.append(alias);
+		//			}
+		//		}
+		//		
+
 		protected void writeStartLimitClause(SearchPlan plan , Clause selectBuffer){
 			if (plan.isDistinct()){
 				selectBuffer.append(" DISTINCT ");
 			} 
-			
+
 			if (!plan.isCountOnly() && plan.hasMaxCount()){
 				int offset = 0;
 				if (plan.getOffset()>1){
 					offset = plan.getOffset()-1;
 				} 
-				
+
 				selectBuffer.append(" LIMIT ").append(offset).append(" ").append(plan.getMaxCount());
-				
+
 			}
 		}
 	}
-	
+
 
 	@Override
 	protected <T> RetriveDataBaseCommand createNextSequenceValueCommand(String sequenceName) {
 		return new SQLRetriveCommand( this,
 				new StringBuilder("SELECT NEXT VALUE FOR ")
-				.append(hardSequenceName(sequenceName))
-				.append(" FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES")
-				.toString(),
-				new LinkedList<ValueHolder>()
-		);
+		.append(hardSequenceName(sequenceName))
+		.append(" FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES")
+		.toString(),
+		new LinkedList<ValueHolder>()
+				);
 	}
 
 	@Override
@@ -211,13 +211,13 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		sql.append(")");
 		return new SQLEditCommand(this,sql.toString());
 	}
-	
+
 	@Override
 	protected void appendNativeTypeFor(Clause sql, DBColumnModel column) {
 		if (column == null){
 			throw new IllegalArgumentException("Column is required");
 		}
-		
+
 		if (column.getType() == null){
 			throw new IllegalArgumentException("Column type is required");
 		}
@@ -254,93 +254,110 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		PreparedStatement psTables = null;
 		PreparedStatement psColumns = null;
 		ResultSet tables = null;
+		PreparedStatement psSequences = null;
+		ResultSet sequences = null;
+
 		try{
 			con = ds.getConnection();
-	
+
 			EditableDataBaseModel dbm = new EditableDataBaseModel();
-			
+
 			psTables = con.prepareStatement(
-				"SELECT table_name FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_TYPE = 'TABLE'"
-			);
+					"SELECT table_name FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_TYPE = 'TABLE'"
+					);
 			psColumns = con.prepareStatement(
-				"SELECT column_name,data_type, column_size, nullable, decimal_digits FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_NAME = ? "
-			);
-			
+					"SELECT column_name,data_type, column_size, nullable, decimal_digits FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_SCHEM = 'PUBLIC' AND TABLE_NAME = ? "
+					);
+
 
 			tables = psTables.executeQuery();
 			while (tables.next()) {
-			
-					final String hardTableName = tables.getString(1);
-					
-					EditableDBTableModel tm = new EditableDBTableModel(hardTableName.toLowerCase());
 
-					psColumns.setString(1, hardTableName);
+				final String hardTableName = tables.getString(1);
 
-					ResultSet columns = psColumns.executeQuery();
-					while (columns.next()) {
+				EditableDBTableModel tm = new EditableDBTableModel(hardTableName.toLowerCase());
 
-						ColumnValueType type = this.typeFromNative(columns.getInt(2));
-						EditableColumnModel col = new EditableColumnModel(columns.getString(1).toLowerCase(), type);
-						if (type.isTextual()){
-							col.setSize(columns.getInt(3));
-						}
-						if (type.isDecimal()){
-							col.setPrecision(columns.getInt(5));
-							col.setSize(columns.getInt(3));
-						}
+				psColumns.setString(1, hardTableName);
 
-						col.setNullable(columns.getInt(4) == 1 );
-						tm.addColumn(col);
+				ResultSet columns = psColumns.executeQuery();
+				while (columns.next()) {
+
+					ColumnValueType type = this.typeFromNative(columns.getInt(2));
+					EditableColumnModel col = new EditableColumnModel(columns.getString(1).toLowerCase(), type);
+					if (type.isTextual()){
+						col.setSize(columns.getInt(3));
 					}
-					
-					columns.close();
-					
+					if (type.isDecimal()){
+						col.setPrecision(columns.getInt(5));
+						col.setSize(columns.getInt(3));
+					}
 
-					dbm.addDataBaseObjectModel(tm);
-				
+					col.setNullable(columns.getInt(4) == 1 );
+					tm.addColumn(col);
+				}
+
+				columns.close();
+
+
+				dbm.addDataBaseObjectModel(tm);
+
 			}
 
-			tables.close();
-			psTables.close();
-			psColumns.close();
 
-			PreparedStatement psSequences = con.prepareStatement(
-				"SELECT  sequence_name , start_with , increment  FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES WHERE SEQUENCE_SCHEMA = 'PUBLIC'"
-			);
-			
-			ResultSet sequences = psSequences.executeQuery();
+			psSequences = con.prepareStatement(
+					"SELECT  sequence_name , start_with , increment  FROM INFORMATION_SCHEMA.SYSTEM_SEQUENCES WHERE SEQUENCE_SCHEMA = 'PUBLIC'"
+					);
+
+			sequences = psSequences.executeQuery();
 			while (sequences.next()) {
 				SequenceModel sm = new SequenceModel(logicSequenceName(
 						sequences.getString(1)) , 
 						sequences.getInt(2), 
 						sequences.getInt(3)
-				);
+						);
 				dbm.addDataBaseObjectModel(sm);
 			}
-			
-			sequences.close();
-			psSequences.close();
-			
+
 			return dbm;
 		} catch (SQLException e) {
 			throw this.handleSQLException(e);
-		} finally {
-			try {
-				if (tables != null) {
-					tables.close();
-				}
-				if (psColumns != null) {
-					psColumns.close();
-				}
-				if (psTables != null) {
-					psTables.close();
-				}
-				if (con != null) {
-					con.close();
-				}
-			} catch (SQLException e) {
-				throw this.handleSQLException(e);
+		} finally {			
+			closeResultSet(tables);
+			closePreparedStatement(psColumns);
+			closePreparedStatement(psTables);
+			closeResultSet(sequences);
+			closePreparedStatement(psSequences);
+			closeConnection(con);
+		}
+	}
+
+	private void closePreparedStatement(PreparedStatement ps){
+		try {
+			if (ps != null) {
+				ps.close();
 			}
+		} catch (SQLException e) {
+			throw this.handleSQLException(e);
+		}
+	}
+
+	private void closeResultSet(ResultSet rs){
+		try {
+			if (rs != null) {
+				rs.close();
+			}
+		} catch (SQLException e) {
+			throw this.handleSQLException(e);
+		}
+	}
+
+	private void closeConnection(Connection con){
+		try {
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
+			throw this.handleSQLException(e);
 		}
 	}
 
@@ -368,18 +385,18 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public RetriveDataBaseCommand createExistsSchemaCommand(String schemaName) {
-	// HSQL only has one database. However it can have multiple schemas.
-		
+		// HSQL only has one database. However it can have multiple schemas.
+
 		Clause sql = new Clause("select count(*) = 1  from INFORMATION_SCHEMA.SYSTEM_SCHEMAS WHERE TABLE_SCHEM = '" + schemaName.toUpperCase() + "'");
 
 		return new SQLRetriveCommand(this,sql.toString(), Collections.<ValueHolder>emptyList());
-	
+
 	}
 
 

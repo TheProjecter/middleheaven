@@ -11,7 +11,7 @@ import org.middleheaven.persistance.PersistanceException;
 /**
  * Provides DataSource objects from a location in a NameDirectoryService
  */
-class NameDirectoryLookupDSProvider implements DataSourceProvider{
+final class NameDirectoryLookupDSProvider implements DataSourceProvider{
 
 	private NameDirectoryService service;
 	private String url;

@@ -203,8 +203,10 @@ public abstract class RDBMSDialect {
 
 		// iterate all columns
 		for (DBColumnModel cm : dsModel) {
-			this.writeEditionHardname(sql, cm);
-			sql.append("=? ,");
+			if (!dsModel.identityColumns().contains(cm)){
+				this.writeEditionHardname(sql, cm);
+				sql.append("=? ,");
+			}
 		}
 
 		sql.removeLastChar().append(" WHERE ");

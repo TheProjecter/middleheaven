@@ -21,7 +21,7 @@ import org.middleheaven.util.function.Block;
 /**
  * 
  */
-public class DatasetRepositoryModelDataBaseMapper implements DataBaseMapper {
+public final class DatasetRepositoryModelDataBaseMapper implements DataBaseMapper {
 
 	
 	public static DatasetRepositoryModelDataBaseMapper newInstance(DatasetRepositoryModel model){

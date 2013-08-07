@@ -1,13 +1,13 @@
 package org.middleheaven.persistance.db.metamodel;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class ColumnModelGroup implements Iterable<DBColumnModel> {
 
-	private List<DBColumnModel> columns = new ArrayList<DBColumnModel>();
+	private Map<String,DBColumnModel> columns = new LinkedHashMap<String,DBColumnModel>();
 	private String name;
 	
 	
@@ -20,17 +20,17 @@ public class ColumnModelGroup implements Iterable<DBColumnModel> {
 	}
 
 	public void addColumn(DBColumnModel column){
-		columns.add(column);
+		columns.put(column.getLogicName(), column);
 	}
 	
 	public void removeColumn(DBColumnModel column){
-		columns.remove(column);
+		columns.remove(column.getLogicName());
 	}
 	
 	
 	@Override
 	public Iterator<DBColumnModel> iterator() {
-		return columns.iterator();
+		return columns.values().iterator();
 	}
 
 	/**
@@ -47,5 +47,13 @@ public class ColumnModelGroup implements Iterable<DBColumnModel> {
 	 */
 	public int size(){
 		return columns.size();
+	}
+
+	/**
+	 * @param cm
+	 * @return
+	 */
+	public boolean contains(DBColumnModel cm) {
+		return columns.containsKey(cm.getLogicName());
 	}
 }

@@ -19,7 +19,7 @@ import org.middleheaven.persistance.db.RDBMSDataStoreProvider;
 /**
  * {@link DataSourceProvider} thaht embedes a HSQL implementation.
  */
-public class EmbeddedDSProvider implements DataSourceProvider{
+public final class EmbeddedDSProvider implements DataSourceProvider{
 
 
 	/**

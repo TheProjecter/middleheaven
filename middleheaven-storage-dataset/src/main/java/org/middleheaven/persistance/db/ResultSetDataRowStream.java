@@ -14,7 +14,7 @@ import org.middleheaven.persistance.model.DataColumnModel;
 /**
  * Implementation of {@link DataRowStream} that encapsulates a {@link ResultSet}
  */
-public class ResultSetDataRowStream implements DataRowStream {
+public final class ResultSetDataRowStream implements DataRowStream {
 
 	
 

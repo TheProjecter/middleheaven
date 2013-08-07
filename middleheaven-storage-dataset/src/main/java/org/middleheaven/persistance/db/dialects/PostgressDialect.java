@@ -29,7 +29,7 @@ import org.middleheaven.util.criteria.CriterionOperator;
  */
 public class PostgressDialect extends SequenceSupportedDBDialect{
 
-	private final String SEQUENCE_PREFIX = "pgseq_";
+	private static final String SEQUENCE_PREFIX = "pgseq_";
 	
 	public PostgressDialect() {
 		super("\"", "\"", ".");

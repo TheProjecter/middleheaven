@@ -3,12 +3,10 @@ package org.middleheaven.persistance.db.datasource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
 
 public class DriverDataSource extends AbstractDataSource{
 
-	private String URL;
+	private String url;
 	private String login;
 	private String pass;
 
@@ -16,7 +14,7 @@ public class DriverDataSource extends AbstractDataSource{
 
     protected DriverDataSource(String driver,String url,String username,String password){
 
-    	this.URL = url;
+    	this.url = url;
         this.login = username;
         this.pass = password;
         try {
@@ -30,7 +28,7 @@ public class DriverDataSource extends AbstractDataSource{
     
 	@Override
 	public Connection getConnection() throws SQLException {
-		Connection con = DriverManager.getConnection(URL, login, pass);
+		Connection con = DriverManager.getConnection(url, login, pass);
 		con.setAutoCommit(isAutoCommit());
 		return con;
 	}
@@ -38,17 +36,17 @@ public class DriverDataSource extends AbstractDataSource{
 	@Override
 	public Connection getConnection(String nlogin, String npass) throws SQLException {
 		
-		Connection con = DriverManager.getConnection(URL, nlogin, npass);
+		Connection con = DriverManager.getConnection(url, nlogin, npass);
 		con.setAutoCommit(isAutoCommit());
 		return con;
 	}
 
 	protected String getURL() {
-		return URL;
+		return url;
 	}
 
 	protected void setURL(String url) {
-		URL = url;
+		this.url = url;
 	}
 
 	protected String getLogin() {

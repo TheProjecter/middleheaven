@@ -6,7 +6,7 @@ package org.middleheaven.persistance;
 /**
  * 
  */
-public class DataStoreSchemaName {
+public final class DataStoreSchemaName {
 	
 	private String database;
 	private String schema;

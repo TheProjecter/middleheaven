@@ -8,7 +8,7 @@ import org.middleheaven.util.Hash;
 /**
  * 
  */
-public class DataStoreName {
+public final class DataStoreName {
 
 	
 	private String name;
