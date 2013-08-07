@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -166,10 +168,9 @@ public class LicenseServiceActivator extends ServiceActivator {
 		@Override
 		public void apply(BufferedReader reader) {
 			try {
-				final AddocClassLoader cloader = new AddocClassLoader();
-
+				final AddocClassLoader cloader = AccessController.doPrivileged(AddocClassLoaderPrivilegedAction.getInstance());
+				
 				Base64CipherAlgorithm base64 = new Base64CipherAlgorithm();
-
 
 				StringBuilder buffer = new StringBuilder();
 				String line;
