@@ -30,7 +30,6 @@ public class SMenuButton extends JMenuItem implements UICommand {
 
 	private final Property<Boolean> visible = BindedProperty.bind("visible" , this);
 	private final Property<Boolean> enable = BindedProperty.bind("enable" , this);
-	private final Property<String> name = BindedProperty.bind("name" , this);
 	private final Property<LocalizableText> text = ValueProperty.writable("text", LocalizableText.class);
 	
 	private final EventListenersSet<CommandListener> commandListeners = EventListenersSet.newSet(CommandListener.class);

@@ -1,5 +1,6 @@
 package org.middleheaven.ui.desktop.swing;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -41,7 +42,7 @@ public class SDateFieldInput extends SDocumentInput implements UIDateField {
 		});
 	}
 	
-	protected Object format(String raw){
+	protected Serializable format(String raw){
 		
 		try {
 			return  getFormaterProperty() !=null ? getFormaterProperty().get().format(raw) : new SimpleDateFormat("dd/MM/yyyy").parse(raw);

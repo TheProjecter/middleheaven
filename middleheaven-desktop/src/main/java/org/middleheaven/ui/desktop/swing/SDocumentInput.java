@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import java.io.Serializable;
+
 import javax.swing.BoxLayout;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -58,7 +60,7 @@ public abstract class SDocumentInput extends SBaseFieldInput implements UIField{
 		return currentDocument;
 	}
 	
-	protected Object format(String raw){
+	protected Serializable format(String raw){
 		return  raw;
 	}
 	

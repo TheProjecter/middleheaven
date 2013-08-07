@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -17,7 +18,10 @@ import org.middleheaven.ui.UIColor;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIColorField;
 import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.util.SafeCastUtils;
 import org.middleheaven.util.function.Block;
+import org.middleheaven.util.function.Maybe;
+
 
 public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 
@@ -44,15 +48,15 @@ public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 			
 		});
 		
-		getValueProperty().onChange(new Block<Object>(){
+		getValueProperty().onChange(new Block<Serializable>(){
 
 			@Override
-			public void apply(Object value) {
-				UIColor uiColor = (UIColor)value;
-				if (uiColor==null){
+			public void apply(Serializable value) {
+				Maybe<UIColor> uiColor =  SafeCastUtils.safeCast(value, UIColor.class);
+				if (uiColor.isAbsent()){
 					color = Color.WHITE;
 				} else {
-					color = new Color(uiColor.getRGB(), true);
+					color = new Color(uiColor.get().getRGB(), true);
 				}
 				button.repaint();
 			}
@@ -68,26 +72,26 @@ public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 
 		}
 
-		final int BORDER = 10;
+		private static final int border = 10;
 		Dimension dim;
 	
 		@Override
 		public int getIconHeight() {
-			return dim.height-BORDER;
+			return dim.height-border;
 		}
 
 		@Override
 		public int getIconWidth() {
-			return dim.width-BORDER;
+			return dim.width-border;
 		}
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int width, int height) {
 			dim = c.getSize();
 			g.setColor(color);
-			g.fillRect(BORDER/2, BORDER/2, getIconWidth(),getIconHeight());
+			g.fillRect(border/2, border/2, getIconWidth(),getIconHeight());
 			g.setColor(Color.BLACK);
-			g.drawRect(BORDER/2,BORDER/2,getIconWidth(), getIconHeight());
+			g.drawRect(border/2,border/2,getIconWidth(), getIconHeight());
 		}
 		
 	}

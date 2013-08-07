@@ -16,13 +16,13 @@ public class SNumericFieldInput extends SDocumentInput implements UINumericField
 
 	private static final long serialVersionUID = -8779476270509974866L;
 
-	private Property<Integer> decimalDigits = ValueProperty.writable("decimalDigits", Integer.class);
-	
+	private Property<Integer> decimalDigits = ValueProperty.writable("decimalDigits", 0);
+
 	public SNumericFieldInput(){
 		super(new JFormattedTextField());
-	
+
 	}
-	
+
 	protected void setupTextField(JTextComponent text){
 		text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 	}
@@ -31,14 +31,15 @@ public class SNumericFieldInput extends SDocumentInput implements UINumericField
 	public <T extends UIComponent> Class<T> getComponentType() {
 		return (Class<T>) UINumericField.class;
 	}
-	
+
 	public Document getDocument(Document current){
 		boolean isDecimal = false;
-		try{
-			isDecimal = this.decimalDigits.get().compareTo(0)>0;
-		} catch (NullPointerException e){
-			
+
+		Integer a = this.decimalDigits.get();
+		if (a != null){
+			isDecimal = a.compareTo(0)>0;
 		}
+
 		((AbstractDocument)current).setDocumentFilter(new NumericTextFilter(isDecimal));
 		return current;
 	}
@@ -52,5 +53,5 @@ public class SNumericFieldInput extends SDocumentInput implements UINumericField
 	}
 
 
-	
+
 }

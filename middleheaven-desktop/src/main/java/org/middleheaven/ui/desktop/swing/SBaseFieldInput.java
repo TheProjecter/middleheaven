@@ -1,5 +1,7 @@
 package org.middleheaven.ui.desktop.swing;
 
+import java.io.Serializable;
+
 import javax.swing.BoxLayout;
 
 import org.middleheaven.global.text.ParsableFormatter;
@@ -20,7 +22,7 @@ public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	private Property<Boolean> required = ValueProperty.writable("required", Boolean.class);
 	private Property<Integer> maxLength= ValueProperty.writable("maxLength", Integer.class);
 	private Property<Integer> minLength= ValueProperty.writable("minLength", Integer.class);
-	private Property<Object> value= ValueProperty.writable("value", Object.class);
+	private Property<Serializable> value= ValueProperty.writable("value", Serializable.class);
 	private Property<ParsableFormatter> formatter = ValueProperty.writable("formatter", ParsableFormatter.class);
 	
 	/**
@@ -40,7 +42,7 @@ public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	public Property<Integer> getMinLengthProperty(){
 		return minLength;
 	}
-	public Property<Object> getValueProperty(){
+	public Property<Serializable> getValueProperty(){
 		return value;
 	}
 	
