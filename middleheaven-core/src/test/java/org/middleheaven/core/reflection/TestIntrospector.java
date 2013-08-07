@@ -3,7 +3,6 @@ package org.middleheaven.core.reflection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 import org.junit.Test;

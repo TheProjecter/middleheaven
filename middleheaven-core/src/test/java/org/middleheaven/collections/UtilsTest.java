@@ -1,4 +1,4 @@
-package org.middleheaven.util;
+package org.middleheaven.collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.Test;
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.collections.Enumerable;
-import org.middleheaven.collections.IteratorsIterator;
 import org.middleheaven.util.function.BinaryOperator;
 import org.middleheaven.util.function.Mapper;
 
