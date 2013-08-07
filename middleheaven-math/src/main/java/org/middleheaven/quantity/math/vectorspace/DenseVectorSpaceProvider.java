@@ -9,7 +9,7 @@ import org.middleheaven.quantity.math.structure.FieldElement;
 /**
  * 
  */
-public class DenseVectorSpaceProvider implements VectorSpaceProvider {
+public final class DenseVectorSpaceProvider implements VectorSpaceProvider {
 
 	private static final long serialVersionUID = 7559322914362799713L;
 
@@ -19,17 +19,10 @@ public class DenseVectorSpaceProvider implements VectorSpaceProvider {
 		return ME;
 	}
 	
-	
 	private DenseVectorSpaceProvider(){}
-	
-	
-
 
 	@Override
 	public <F extends FieldElement<F>> DenseVectorSpace<F> getVectorSpaceOver(Field<F> field, int dimensions) {
 		return new DenseVectorSpace<F>(dimensions, field);
 	}
-	
-
-
 }

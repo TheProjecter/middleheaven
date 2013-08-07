@@ -15,7 +15,7 @@ singular, so the constructor will never fail.  The primary use of the
 LU decomposition is in the solution of square systems of simultaneous
 linear equations.  This will fail if {@link #isNonsingular()} returns <code>false</code>.
  */
-public class LUDecomposition<F extends FieldElement<F>> {
+public final class LuDecomposition<F extends FieldElement<F>> {
 
 
 	private Matrix<F> L;
@@ -29,7 +29,7 @@ public class LUDecomposition<F extends FieldElement<F>> {
 	 * ------------------------ */
 
 
-	public static <R extends FieldElement<R>> LUDecomposition<R> decompose(Matrix<R> LU){
+	public static <R extends FieldElement<R>> LuDecomposition<R> decompose(Matrix<R> LU){
 
 		R ZERO = LU.getField().zero();
 		R ONE = LU.getField().one();
@@ -38,7 +38,7 @@ public class LUDecomposition<F extends FieldElement<F>> {
 			throw new IllegalArgumentException ("Field is not ordable");
 		}
 
-		LUDecomposition<R> d = new LUDecomposition<R>();
+		LuDecomposition<R> d = new LuDecomposition<R>();
 
 		DenseMatrix<R> L = new DenseMatrix<R>(LU.columnsCount(),LU.columnsCount(),ZERO);
 		DenseMatrix<R> U = new DenseMatrix<R>(LU.columnsCount(),LU.columnsCount(),ZERO);
@@ -88,7 +88,7 @@ public class LUDecomposition<F extends FieldElement<F>> {
 	}
 
 
-	private LUDecomposition () {
+	private LuDecomposition () {
 
 	}
 

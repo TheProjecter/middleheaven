@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.middleheaven.quantity.math.vectorspace.DenseVectorSpaceProvider;
-import org.middleheaven.quantity.math.vectorspace.LUDecomposition;
+import org.middleheaven.quantity.math.vectorspace.LuDecomposition;
 import org.middleheaven.quantity.math.vectorspace.Matrix;
 import org.middleheaven.quantity.math.vectorspace.Vector;
 import org.middleheaven.quantity.math.vectorspace.VectorSpace;
@@ -199,7 +199,7 @@ public class StructuresTest {
 				1.5 , 1
 		));
 
-		LUDecomposition<Real> lud = LUDecomposition.decompose(A);
+		LuDecomposition<Real> lud = LuDecomposition.decompose(A);
 
 		
 		assertEquals("Incorrect 2x2 L", L , lud.getL());
@@ -231,7 +231,7 @@ public class StructuresTest {
 		
 		assertEquals("wrong test data" , A , L.times(U));
 		
-		lud = LUDecomposition.decompose(A);
+		lud = LuDecomposition.decompose(A);
 
 		assertEquals("Incorrect decomposition product" ,A , lud.getL().times(lud.getU()));
 		
@@ -248,7 +248,7 @@ public class StructuresTest {
 				2, 1, 1
 		));
 
-		lud = LUDecomposition.decompose(N);
+		lud = LuDecomposition.decompose(N);
 
 		assertEquals(N , lud.getL().times(lud.getU()));
 	}
