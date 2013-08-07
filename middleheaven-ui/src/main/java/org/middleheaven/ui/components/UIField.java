@@ -1,5 +1,7 @@
 package org.middleheaven.ui.components;
 
+import java.io.Serializable;
+
 import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.data.UIDataDisplay;
 import org.middleheaven.util.property.Property;
@@ -14,5 +16,5 @@ public interface UIField extends UIInput , UIDataDisplay {
 	public Property<Boolean> getRequiredProperty();
 	public Property<Integer> getMaxLengthProperty();
 	public Property<Integer> getMinLengthProperty();
-	public Property<Object> getValueProperty();
+	public Property<Serializable> getValueProperty();
 }

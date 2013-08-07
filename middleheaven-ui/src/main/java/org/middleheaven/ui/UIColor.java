@@ -34,25 +34,25 @@ public final class UIColor implements Serializable {
 
 		// see http://en.wikipedia.org/wiki/HSL_color_space
 		double h = hue / 60;
-		double C = value * saturation;
-		double x = C * (1 - Math.abs(h % 2  - 1));
+		double cube = value * saturation;
+		double x = cube * (1 - Math.abs(h % 2  - 1));
 		
 		double[] rgb = new double[]{0,0,0};
 		
 		if (h >= 0 && h < 1){
-			 rgb = new double[]{C,x,0};
+			 rgb = new double[]{cube,x,0};
 		} else if (h >= 1 && h < 2){
-			 rgb = new double[]{x,C,0};
+			 rgb = new double[]{x,cube,0};
 		} else if (h >= 2 && h < 3){
-			 rgb = new double[]{0,C,x};
+			 rgb = new double[]{0,cube,x};
 		} else if (h >= 3 && h < 4){
-			 rgb = new double[]{0,x,C};
+			 rgb = new double[]{0,x,cube};
 		} else if (h >=4 && h < 5){
-			 rgb = new double[]{x,0,C};
+			 rgb = new double[]{x,0,cube};
 		} else {
-			 rgb = new double[]{C,0,x};
+			 rgb = new double[]{cube,0,x};
 		}
-		double m = value - C;
+		double m = value - cube;
 		
 		int[] irgb = new int [3];
 		
@@ -112,17 +112,20 @@ public final class UIColor implements Serializable {
 		if ( (argb & BLACK) == 0) {
 			return new UIColor(inverse, inverse, inverse,this.getAlpha());
 		}
-
-
+		
 		int r = getRed();
 		int g = getGreen();
 		int b = getBlue();
 
-
-
-		if ( r > 0 && r < inverse ) r = inverse;
-		if ( g > 0 && g < inverse ) g = inverse;
-		if ( b > 0 && b < inverse ) b = inverse;
+		if ( r > 0 && r < inverse ) {
+			r = inverse;
+		}
+		if ( g > 0 && g < inverse ) {
+			g = inverse;
+		}
+		if ( b > 0 && b < inverse ) {
+			b = inverse;
+		}
 
 		return new UIColor(
 				Math.min((int)(r/FACTOR), MAX_UNSINGED_BYTE),
@@ -158,7 +161,7 @@ public final class UIColor implements Serializable {
 			badComponentString = badComponentString + " Blue";
 			badValue = b;
 		}
-		if ( rangeError == true ) {
+		if (rangeError) {
 			throw new IllegalArgumentException("Color parameter outside of expected range:"
 					+ badComponentString + "(" + badValue + ")");
 		}
@@ -264,20 +267,20 @@ public final class UIColor implements Serializable {
 		return Math.toDegrees(Math.atan2(beta, a));
 		*/
 		
-		double M = Math.max(Math.max(r, g), b);
+		double matiz = Math.max(Math.max(r, g), b);
 		double m = Math.min(Math.min(r, g), b);
-		double C = M-m;
+		double cube = matiz-m;
 		
 		double h;
 		
-		if (Double.compare(C, 0) == 0){
+		if (Double.compare(cube, 0) == 0){
 			return 0;
-		} else if ( Double.compare(M, r) == 0){
-			h =  60 * (((g-b)/ C) % 6);
-		} else if (Double.compare(M, g) == 0){
-			h = 60 * ((b-r) / C + 2);   
-		}else if ( Double.compare(M, b) == 0){
-			h = 60 * ((r-g) / C + 4);   
+		} else if ( Double.compare(matiz, r) == 0){
+			h =  60 * (((g-b)/ cube) % 6);
+		} else if (Double.compare(matiz, g) == 0){
+			h = 60 * ((b-r) / cube + 2);   
+		}else if ( Double.compare(matiz, b) == 0){
+			h = 60 * ((r-g) / cube + 4);   
 		} else {
 			return 0;
 		}
@@ -299,14 +302,14 @@ public final class UIColor implements Serializable {
 //		double C = Math.hypot(a, beta);
 //		
 		
-		double M = Math.max(Math.max(r, g), b);
+		double matiz = Math.max(Math.max(r, g), b);
 		double m = Math.min(Math.min(r, g), b);
-		double C = M-m;
+		double cube = matiz-m;
 		
-		if (Double.compare(C, 0) == 0 ) {
+		if (Double.compare(cube, 0) == 0 ) {
 			return 0;
 		} else {
-			return round((C / this.getValue()));
+			return round((cube / this.getValue()));
 		}
 	}
 

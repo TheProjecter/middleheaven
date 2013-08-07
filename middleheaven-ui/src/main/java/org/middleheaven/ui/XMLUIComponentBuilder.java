@@ -1,6 +1,7 @@
 package org.middleheaven.ui;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,7 +187,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 			
 			final Maybe<String> maybe = propertiesValues.get(prop.getName());
 			if (maybe != null && maybe.isPresent()){
-				prop.set(TypeCoercing.coerce(maybe.get() , prop.getValueType()));
+				prop.set((Serializable)TypeCoercing.coerce(maybe.get() , prop.getValueType()));
 			}
 		}
 

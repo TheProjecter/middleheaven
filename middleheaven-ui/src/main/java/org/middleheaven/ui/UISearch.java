@@ -274,8 +274,8 @@ public class UISearch {
 
 		@Override
 		public UIComponent find(int index) {
-			final List<UIComponent> list = list();
-			return list.isEmpty() ? null : list.get(index);
+			final List<UIComponent> theList = list();
+			return theList.isEmpty() ? null : theList.get(index);
 		}
 
 		@Override

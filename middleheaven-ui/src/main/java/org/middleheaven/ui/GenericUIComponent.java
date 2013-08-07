@@ -1,5 +1,6 @@
 package org.middleheaven.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,7 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer , 
 	private Property<Boolean> required  = ValueProperty.writable("required", false);
 	private Property<Integer> maxLength  = ValueProperty.writable("maxLength",Integer.MAX_VALUE );
 	private Property<Integer> minLength  = ValueProperty.writable("minLength", 0);
-	private Property<Object> value  = ValueProperty.writable("value", Object.class);
+	private Property<Serializable> value  = ValueProperty.writable("value", Serializable.class);
 	
 	private UIDataContainer dataContainer;
 	
@@ -304,7 +305,7 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer , 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Property<Object> getValueProperty() {
+	public Property<Serializable> getValueProperty() {
 		return value;
 	}
 
