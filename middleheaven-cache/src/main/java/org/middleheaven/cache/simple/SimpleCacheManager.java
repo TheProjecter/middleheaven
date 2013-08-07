@@ -17,7 +17,7 @@ import org.middleheaven.cache.TimedCacheSpecification;
  */
 public class SimpleCacheManager implements CacheManager{
 
-	
+
 	@Override
 	public boolean canUse(CacheSpecification specification) {
 		return specification instanceof LRUCacheSpecification || specification instanceof TimedCacheSpecification;
@@ -35,7 +35,7 @@ public class SimpleCacheManager implements CacheManager{
 	}
 
 	private static class SimpleTimedCacheRegion extends AbstractCacheRegion implements Cache {
-		private final long MILISECOUNDS_IN_A_SECOUND = 1000L;
+		private static final long MILISECOUNDS_IN_A_SECOUND = 1000L;
 		
 		private class SimpleTimedCacheInfo{
 
