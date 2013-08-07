@@ -13,7 +13,7 @@ import org.middleheaven.io.repository.RepositoryCreationException;
 /**
  * {@link ManagedFileRepositoryProvider} based upon the machines file system.
  */
-public class MachineFileSystemRepositoryProvider implements ManagedFileRepositoryProvider {
+public final class MachineFileSystemRepositoryProvider implements ManagedFileRepositoryProvider {
 
 
 	private static final MachineFileSystemRepositoryProvider provider = new MachineFileSystemRepositoryProvider();

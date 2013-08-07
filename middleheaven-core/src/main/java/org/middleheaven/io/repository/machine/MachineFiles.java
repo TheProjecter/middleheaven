@@ -17,7 +17,7 @@ import org.middleheaven.io.repository.ModificationTracableManagedFile;
 /**
  * Utility class to provide access to recurrently used machine file system's {@link ManagedFile}. 
  */
-public class MachineFiles {
+public final class MachineFiles {
 
 	private MachineFiles (){}
 

@@ -8,7 +8,7 @@ package org.middleheaven.global.text;
  * 
  * @param <T> the type of the formated object.
  */
-public interface ParsableFormatter<T> extends Formatter<T>{
+public interface ParsableFormatter<T> extends Formatter<T> {
 
     /**
      * Retrives an object from it's formated {@link String} value.

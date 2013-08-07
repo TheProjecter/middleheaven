@@ -4,6 +4,8 @@
  */
 package org.middleheaven.global.text;
 
+import java.io.Serializable;
+
 /**
  * Formats an object value to a {@link String}.
  * The {@link Formatter} do not was to be able to parse back to the object form. 
@@ -11,7 +13,7 @@ package org.middleheaven.global.text;
  * 
  * @param <T> the type of the formated object.
  */
-public interface Formatter<T> {
+public interface Formatter<T> extends Serializable {
 
 	/**
 	 * Formats the object value as a {@link String}.

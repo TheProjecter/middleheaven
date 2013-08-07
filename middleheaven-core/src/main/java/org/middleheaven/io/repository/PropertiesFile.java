@@ -11,7 +11,7 @@ import org.middleheaven.io.ManagedIOException;
 /**
  * 
  */
-public class PropertiesFile extends ManagedFileDecorator {
+public final class PropertiesFile extends ManagedFileDecorator {
 	
 	/**
 	 * @param file

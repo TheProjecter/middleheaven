@@ -9,16 +9,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class ArrayByteBuffer implements ByteBuffer{
 
+	private final ReentrantReadWriteLock  lock = new ReentrantReadWriteLock(); 
+	
 	private byte[] buffer = new byte[0];
-	private final ReentrantReadWriteLock  lock = new ReentrantReadWriteLock(); /// Redo
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public InputStream getInputStream(){
-		//no contention
-		return new ByteArrayInputStream(buffer);
+		try {
+			lock.readLock().lock(); // wait for possible writing operations
+			return new ByteArrayInputStream(buffer);
+		} finally {
+			lock.readLock().unlock(); // free for further writes
+		}
 	}
 	
 	/**
@@ -26,20 +31,20 @@ public final class ArrayByteBuffer implements ByteBuffer{
 	 */
 	@Override
 	public OutputStream getOutputStream(){
-		lock.writeLock().lock();
+		// the client code will write to the stream inner buffer
 		return new BufferByteArrayOutputStream();
-	}
-	
-	public byte[] getBytes(){
-		return buffer;
 	}
 	
 	private class BufferByteArrayOutputStream extends ByteArrayOutputStream{
 
 		public void close() throws IOException{
-			super.close();
-			buffer = this.toByteArray();
-			lock.writeLock().unlock();
+			super.close(); // dump the inner buffer to the array
+			try {
+				lock.writeLock().lock(); // stop reads and other writes
+				buffer = this.toByteArray(); // change the data
+			} finally {
+				lock.writeLock().unlock(); // allows for reads and other writes
+			}
 		}
 	}
 
@@ -49,16 +54,24 @@ public final class ArrayByteBuffer implements ByteBuffer{
 	 */
 	@Override
 	public long getSize() {
-		return this.buffer.length;
+		try {
+			lock.readLock().lock(); // wait for possible writing operations
+			return this.buffer.length;
+		} finally {
+			lock.readLock().unlock(); // free for further writes
+		}
 	}
 
 	private boolean setSize(int size) {
-		byte[] newStream = new byte[size];
-		System.arraycopy(buffer, 0, newStream, 0, buffer.length);
-		lock.writeLock().lock();
-		buffer = newStream;
-		lock.writeLock().unlock();
-		return this.buffer.length == size;
+		try {
+			lock.writeLock().lock();
+			byte[] newStream = new byte[size];
+			System.arraycopy(buffer, 0, newStream, 0, buffer.length);
+			buffer = newStream;
+			return this.buffer.length == size;
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**

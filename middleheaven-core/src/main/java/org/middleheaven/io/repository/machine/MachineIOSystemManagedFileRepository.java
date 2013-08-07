@@ -70,9 +70,9 @@ class MachineIOSystemManagedFileRepository extends AbstractManagedRepository imp
 		
 		if (isDriveRoot(file)){
 			File[] roots = File.listRoots();
-			for (File  root : roots){
-				if (root.equals(file)){
-					return new FileIOManagedFileAdapter(this, root, pathForFile(file));
+			for (File  r : roots){
+				if (r.equals(file)){
+					return new FileIOManagedFileAdapter(this, r, pathForFile(file));
 				}
 			}
 			throw new FileNotFoundManagedException(file.getAbsolutePath());

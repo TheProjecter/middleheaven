@@ -19,7 +19,7 @@ import org.middleheaven.io.repository.watch.WatchService;
  */
 public class MemoryManagedFileRepository extends AbstractManagedRepository implements ManagedFileRepository {
 
-	private MemoryFolder folder = new MemoryFolder("/", this);
+	private ManagedFile root = MemoryFile.folder("/", this);
 	
 	/**
 	 * {@inheritDoc}
@@ -66,7 +66,7 @@ public class MemoryManagedFileRepository extends AbstractManagedRepository imple
 	 */
 	@Override
 	public WatchService getWatchService() {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // TODO create memory watachable
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class MemoryManagedFileRepository extends AbstractManagedRepository imple
 	 */
 	@Override
 	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
-		return folder.retrive(path);
+		return root.retrive(path);
 	}
 
 	/**

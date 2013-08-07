@@ -6,45 +6,55 @@ import java.util.TreeMap;
 
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.collections.Enumerable;
+import org.middleheaven.io.IOTransport;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.AbstractContainerManagedFile;
 import org.middleheaven.io.repository.ArrayManagedFilePath;
+import org.middleheaven.io.repository.BufferedMediaManagedFileContent;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
 
-class MemoryFolder extends AbstractContainerManagedFile  {
+// TODO implement tests
+class MemoryFile extends AbstractContainerManagedFile  {
 
 	private final Map<String,ManagedFile> files = new TreeMap<String,ManagedFile>();
 	private final ManagedFile parent;
-	private String name;
-	private ManagedFilePath path;
-	
-	public MemoryFolder(String name, ManagedFileRepository repository){
-		super(repository);
-		this.name = name;
-		this.parent = null;
-		this.path = new ArrayManagedFilePath(repository, name);
-	}
-	
-	
-	@Override
-	public void copyTo(ManagedFile other) throws ManagedIOException {
-		// TODO implement
-		throw new UnsupportedOperationException();
-	}
 
+	private BufferedMediaManagedFileContent content = null;
+	private ManagedFileType type;
+	private boolean isCreated = false;
+	private String name;
+	
+	public static ManagedFile folder (String name, ManagedFileRepository repository){
+		return new MemoryFile(ManagedFileType.FOLDER, null, name, repository);
+	}
+	
+	private static ManagedFile virtual (MemoryFile parent, String name, ManagedFileRepository repository){
+		return new MemoryFile(ManagedFileType.VIRTUAL, parent, name, repository);
+	}
+	
+	private MemoryFile( ManagedFileType type, MemoryFile parent, String name, ManagedFileRepository repository){
+		super(repository);
+		this.parent = null;
+		this.type = type;
+		this.name = name;
+	}
+	
 	@Override
 	public ManagedFile doCreateFile() {
-		// no-op
+		this.type = ManagedFileType.FILE;
+		this.content = new BufferedMediaManagedFileContent();
+		this.isCreated = true;
 		return this;
 	}
 
 	@Override
 	public ManagedFile doCreateFolder() {
-		// no-op
+		this.type = ManagedFileType.FOLDER;
+		this.isCreated = true;
 		return this;
 	}
 
@@ -55,32 +65,44 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 
 	@Override
 	public boolean exists() {
-		return true;
+		return isCreated;
 	}
 
 	@Override
 	public StreamableContent getContent() {
-		throw new UnsupportedOperationException();
+		if (type == ManagedFileType.FILE){
+			return content;
+		} else {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	@Override
 	public long getSize() throws ManagedIOException {
-		long sum =0;
-		for (ManagedFile file : this.files.values()){
-			sum+= file.getSize();
+		switch (type){
+		case FILE:
+			return  this.content.getSize();
+		case FOLDER:
+			long sum =0;
+			for (ManagedFile file : this.files.values()){
+				sum+= file.getSize();
+			}
+			return sum;
+		case VIRTUAL:
+		case FILEFOLDER:
+		default:
+			return 0;
 		}
-		return sum;
 	}
 
 	@Override
 	public ManagedFileType getType() {
-		return ManagedFileType.FOLDER;
+		return type;
 	}
 
 	@Override
 	public URI getURI() {
-		// TODO implement ManagedFile.getURL
-		return null;
+	    return URI.create("mem:/" + this.getPath().toString());
 	}
 
 	@Override
@@ -106,7 +128,14 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 
 	@Override
 	public ManagedFile retrive(String filepath) {
-		return this.files.get(filepath);
+		ManagedFile file = this.files.get(filepath);
+		
+		if (file != null){
+			return file;
+		} else {
+			return MemoryFile.virtual(this, filepath, this.getRepository());  
+		}
+		
 	}
 
 	public void add(ManagedFile file) {
@@ -138,8 +167,12 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 	 */
 	@Override
 	public ManagedFilePath getPath() {
-		// TODO Auto-generated method stub
-		return null;
+		if ( this.parent == null){
+			return new ArrayManagedFilePath(this.getRepository(), name);
+		} else {
+			return this.parent.getPath().resolve(name);
+		}
+		
 	}
 
 	/**
@@ -147,8 +180,7 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 	 */
 	@Override
 	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
-		// TODO Auto-generated method stub
-		return null;
+		return MemoryFile.virtual(this, path.getFileName(), this.getRepository()); 
 	}
 
 	/**
@@ -156,8 +188,7 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 	 */
 	@Override
 	protected ManagedFile doRetriveFromFolder(String path) {
-		// TODO Auto-generated method stub
-		return null;
+		return files.get(path);
 	}
 
 	/**
@@ -175,8 +206,7 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 	 */
 	@Override
 	protected Iterable<ManagedFile> childrenIterable() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.files.values();
 	}
 
 
@@ -187,11 +217,5 @@ class MemoryFolder extends AbstractContainerManagedFile  {
 	protected int childrenCount() {
 		return files.size();
 	}
-
-
-
-
-
-
 
 }

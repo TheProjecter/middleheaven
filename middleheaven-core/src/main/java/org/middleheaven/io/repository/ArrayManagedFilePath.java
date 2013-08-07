@@ -218,12 +218,12 @@ public class ArrayManagedFilePath implements ManagedFilePath , Watchable {
 	 */
 	@Override
 	public ManagedFilePath resolveSibling(String name) {
-		String[] names = Splitter.on("/").split(name).intoArray(new String[0]);
+		String[] pathNames = Splitter.on("/").split(name).intoArray(new String[0]);
 		
-		String[] all = new String[this.names.length-1+names.length];
+		String[] all = new String[this.names.length-1+pathNames.length];
 		
 		System.arraycopy(this.names, 0, all, 0, this.names.length -1); // do not copy the last
-		System.arraycopy(names, 0, all, this.names.length -1, names.length);
+		System.arraycopy(pathNames, 0, all, this.names.length -1, pathNames.length);
 		
 		
 		return new ArrayManagedFilePath(this.repository, this.root,  all); 

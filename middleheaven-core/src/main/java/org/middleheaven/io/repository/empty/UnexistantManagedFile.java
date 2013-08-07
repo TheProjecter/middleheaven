@@ -24,12 +24,6 @@ public class UnexistantManagedFile extends AbstractMediaManagedFile{
 		this.path = path;
 	}
 	
-
-	@Override
-	public void copyTo(ManagedFile other) throws ManagedIOException {
-		// no-op
-	}
-
 	@Override
 	public boolean delete() {
 		return true;

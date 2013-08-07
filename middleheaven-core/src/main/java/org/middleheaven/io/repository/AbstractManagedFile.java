@@ -84,14 +84,22 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void copyTo(ManagedFile other) throws ManagedIOException {
-		if (other.getType()==ManagedFileType.FILE){
+	public final void copyTo(ManagedFile other) throws ManagedIOException {
+		if (this.getType().isFile() && other.getType().isFile()){
 			IOTransport.copy(this).to(other);
-		} else {
+		} else if (this.getType().isFile() && other.getType().isFolder()){
 			ManagedFile newFile = other.retrive(this.getPath());
 			newFile.createFile();
 			IOTransport.copy(this).to(newFile);
+		} else if (this.getType().isFolder() && other.getType().isFolder()){
+			for(ManagedFile file : this.children()){
+				ManagedFile otherFile = other.createFile();
+				IOTransport.copy(file).to(otherFile);
+			}
+		} else {
+			throw new ManagedIOException("Cannot copy folder to file");
 		}
+
 	}
 
 
