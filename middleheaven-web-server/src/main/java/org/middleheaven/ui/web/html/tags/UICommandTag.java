@@ -11,10 +11,12 @@ import org.middleheaven.ui.web.tags.TagContext;
 
 public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 
+	private static final long serialVersionUID = 921722698337553462L;
+	
 	private String name;
-	private boolean validate;
+//	private boolean validate;
 	private String caption;
-	private String content = "";
+	//private String content = "";
 	private boolean enabled = true;
 	
 	
@@ -23,7 +25,7 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 	}
 
 	public void setValidate(boolean validate) {
-		this.validate = validate;
+//		this.validate = validate;
 	}
 
 	public void setCaption(String caption) {
@@ -36,11 +38,11 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 
 	public final int doAfterBody() throws JspException{
 
-		BodyContent bc = getBodyContent();
-		// get the bc as string
-		content = bc.getString();
-		// clean up
-		bc.clearBody();
+//		BodyContent bc = getBodyContent();
+//		// get the bc as string
+//		content = bc.getString();
+//		// clean up
+//		bc.clearBody();
 
 
 		return SKIP_BODY;
@@ -53,6 +55,7 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 		
 		UICommand command = (UICommand) templateComponent;
 		command.getEnableProperty().set(enabled);
+		command.getNameProperty().set(name);
 		command.getTextProperty().set(LocalizableText.valueOf(caption));
 		
 	}

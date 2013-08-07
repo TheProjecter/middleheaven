@@ -4,15 +4,11 @@ import org.middleheaven.application.ApplicationContext;
 import org.middleheaven.application.ModuleActivationEvent;
 import org.middleheaven.application.ModuleActivatorListener;
 import org.middleheaven.application.web.WebModule;
-import org.middleheaven.core.wiring.WiringService;
 
 /**
  * Represent an action based application running the the web container.
  */
 public abstract class ActionBasedWebModule  extends WebModule{
-
-
-	private WiringService wiringService;
 
 	/**
 	 * 

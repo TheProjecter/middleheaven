@@ -3,9 +3,6 @@
  */
 package org.middleheaven.ui.web.html;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.ProxyHandler;
 import org.middleheaven.ui.CommandListener;
@@ -20,8 +17,6 @@ import org.middleheaven.ui.rendering.RenderingContext;
 public class HTMLUIComponentProxyHandler implements ProxyHandler {
 
 	private GenericHtmlUIComponent original;
-	private UIComponent parent;
-	private final Map<String , Object> properties = new HashMap<String,Object>();
 
 	/**
 	 * Constructor.

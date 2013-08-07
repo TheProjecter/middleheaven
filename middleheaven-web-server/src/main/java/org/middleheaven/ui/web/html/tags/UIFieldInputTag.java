@@ -1,5 +1,7 @@
 package org.middleheaven.ui.web.html.tags;
 
+import java.io.Serializable;
+
 import javax.servlet.jsp.JspException;
 
 import org.middleheaven.ui.UIComponent;
@@ -10,7 +12,7 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 
 	private static final long serialVersionUID = 2674939376659644287L;
 	
-	private Object value;
+	private Serializable value;
 	private String type;
 	private boolean required = false;
 	private boolean readOnly = false;
@@ -25,7 +27,7 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 		this.minLength = minLength;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(Serializable value) {
 		this.value = value;
 	}
 

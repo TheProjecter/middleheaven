@@ -255,7 +255,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 				return (Outcome)result;
 			}else if (result instanceof String) {
 				return new Outcome(BasicOutcomeStatus.SUCCESS, result.toString(), "text/html");
-			} else if (result==null || !(result instanceof OutcomeStatus)){
+			} else if (!(result instanceof OutcomeStatus)){
 				return resolveOutcome(action,BasicOutcomeStatus.SUCCESS,context);
 			} else if (BasicOutcomeStatus.NOT_FOUND.equals(result)){
 				return new Outcome(BasicOutcomeStatus.ERROR, HttpStatusCode.NOT_FOUND);

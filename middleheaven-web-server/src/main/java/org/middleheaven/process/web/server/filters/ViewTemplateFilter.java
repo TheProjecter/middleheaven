@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.middleheaven.logging.Logger;
 import org.middleheaven.process.web.server.PageResponseWrapper;
 import org.middleheaven.web.rendering.Decorator;
 import org.middleheaven.web.rendering.Page;
@@ -108,9 +109,9 @@ public class ViewTemplateFilter extends AbstractFilter {
 			// added a print message here because otherwise Tomcat swallows
 			// the error and you never see it = bad!
 			//if (Container.get() == Container.TOMCAT)
-			e.printStackTrace();
+			Logger.onBookFor(this.getClass()).error("Unexpected exception", e);
 
-			throw e;
+			throw new ServletException(e);
 		}
 	}
 
@@ -148,7 +149,8 @@ public class ViewTemplateFilter extends AbstractFilter {
 			// it's ok to ignore this, however for all other containers it should be thrown
 			// properly.
 			//if (Container.get() != Container.WEBLOGIC){
-			throw e;
+			Logger.onBookFor(this.getClass()).error("Unexpected exception", e);
+			throw new ServletException(e);
 			//}
 			//return null;
 		}
