@@ -34,8 +34,7 @@ public abstract class Chronology {
 		return milisecondsFor(lenient, year, month, day, 0, 0, 0);
 	}
 	
-	
-	public abstract long milisecondsFor(boolean lenient,int year, int month, int day , int hour, int minute, int second );
+	public abstract long milisecondsFor(boolean lenient,int ... fields);
 	
 	/**
 	 * Add an {@link ElapsedTime} to a {@link TimePoint}.

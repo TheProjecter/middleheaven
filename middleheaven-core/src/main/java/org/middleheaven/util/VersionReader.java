@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class VersionReader {
+public final class VersionReader {
 	
 	private VersionReader(){};
 	

@@ -15,7 +15,7 @@ import org.middleheaven.logging.LoggingEvent;
  */
 public abstract class StreamLogBookWriter extends LogBookWriter implements FormatableLogWriter{
 
-    protected LogFormat format = new SimpleLogFormat();
+    private LogFormat format = new SimpleLogFormat();
 
 	public StreamLogBookWriter(){
 		

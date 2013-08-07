@@ -88,7 +88,7 @@ public class BigIntField implements OrderedField<BigInt> {
 
 	@Override
 	public Comparator<BigInt> getComparator() {
-		return ComparableComparator.getInstance();
+		return ComparableComparator.<BigInt>getInstance();
 	}
 
 

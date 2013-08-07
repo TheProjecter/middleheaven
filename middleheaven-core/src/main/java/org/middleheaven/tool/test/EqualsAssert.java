@@ -143,8 +143,8 @@ public class EqualsAssert {
 			if( a.equals( null ) ) {
 				fail( "original.equals(null) returned true");
 			}
-		} catch( final NullPointerException e ) {
-			fail( "original.equals(null) threw a NullPointerException.  It should have returned false" );
+		} catch( Exception e ) {
+			fail( "original.equals(null) threw an Exception.  It should have returned false" );
 		}
 	}
 

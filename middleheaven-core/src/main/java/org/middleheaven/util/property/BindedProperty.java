@@ -9,6 +9,7 @@ import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 
 import org.middleheaven.core.reflection.ReflectionException;
 
@@ -16,15 +17,15 @@ import org.middleheaven.core.reflection.ReflectionException;
 /**
  * 
  */
-public class BindedProperty<T> extends AbstractProperty<T> {
+public class BindedProperty<T extends Serializable> extends AbstractProperty<T> {
 
-
-
-	public static <X> Property<X> bind(String myName, Object bean ){
+	private static final long serialVersionUID = 4490435847245882241L;
+	
+	public static <X extends Serializable> Property<X > bind(String myName, Object bean ){
 		return bind( myName,  bean,  myName);
 	}
 
-	public static <X> Property<X> bind(String myName, Object bean, String objectProperty){
+	public static <X extends Serializable> Property<X> bind(String myName, Object bean, String objectProperty){
 	
 		try {
 			PropertyDescriptor descriptor = null;
@@ -62,13 +63,25 @@ public class BindedProperty<T> extends AbstractProperty<T> {
 	private PropertyDescriptor descriptor;
 	private Object target;
 
-	private PropertyChangeListener listener = new PropertyChangeListener (){
+	private PropertyChangeListener listener = new FirePropertyChangeListener<T> (this);
+	
+	private static class FirePropertyChangeListener<P extends Serializable> implements PropertyChangeListener , Serializable{
+
+		private static final long serialVersionUID = -5936046463014354493L;
 		
+		private AbstractProperty<P> property;
+		public FirePropertyChangeListener(AbstractProperty<P> property){
+			this.property = property;
+		}
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			fireChange((T) evt.getOldValue(), (T) evt.getNewValue());
+			property.fireChange((P) evt.getOldValue(), (P) evt.getNewValue());
 		}
-	};
+		
+	}
 
 	/**
 	 * Constructor.

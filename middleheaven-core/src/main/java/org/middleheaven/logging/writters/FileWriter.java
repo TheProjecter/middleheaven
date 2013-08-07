@@ -20,7 +20,7 @@ public class FileWriter extends StreamLogBookWriter {
 	private BufferedOutputStream out;
 
     public FileWriter(){
-        this.format = new HTMLFormat();
+        this.setLogFormat(new HTMLFormat());
     }
 
     /**
@@ -71,7 +71,7 @@ public class FileWriter extends StreamLogBookWriter {
             boolean exists = file.exists();
             this.out = new BufferedOutputStream(new FileOutputStream(file,append));
             if (!exists){
-                this.format.writerHeader(new PrintWriter(out));
+                this.getLogFormat().writerHeader(new PrintWriter(out));
             }
         } catch (FileNotFoundException e) {
             // TODO
@@ -80,7 +80,7 @@ public class FileWriter extends StreamLogBookWriter {
 
     public void finalized(){
         try {
-            this.format.writerFooter(new PrintWriter(out));
+        	 this.getLogFormat().writerFooter(new PrintWriter(out));
             this.out.close();
         } catch (IOException e) {
             e.printStackTrace(System.err);

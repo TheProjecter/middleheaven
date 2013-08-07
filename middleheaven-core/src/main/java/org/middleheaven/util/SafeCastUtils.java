@@ -8,7 +8,7 @@ import org.middleheaven.util.function.Maybe;
 /**
  * 
  */
-public class SafeCastUtils {
+public final class SafeCastUtils {
 
 	
 	private SafeCastUtils(){}

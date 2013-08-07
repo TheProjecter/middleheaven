@@ -3,7 +3,7 @@ package org.middleheaven.util.criteria;
 import org.middleheaven.util.QualifiedName;
 
 
-public class OrderingCriterion {
+public final class OrderingCriterion {
 
 	private boolean descendant = true;
 	private QualifiedName name;

@@ -4,13 +4,14 @@
 package org.middleheaven.util.property;
 
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import org.middleheaven.util.function.Block;
 
 /**
  * 
  */
-public interface Property<T> {
+public interface Property<T extends Serializable> extends Serializable{
 
 	public T get();
 	public Property<T> set(T value);

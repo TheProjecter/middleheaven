@@ -5,6 +5,7 @@ package org.middleheaven.util.property;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 /**
  * 
@@ -16,7 +17,7 @@ public class PropertyBinder {
 	 * @param a
 	 * @param b
 	 */
-	public static <T> void bind(final Property<T> a, final Property<T> b){
+	public static <T extends Serializable> void bind(final Property<T> a, final Property<T> b){
 		
 		b.addListener(new PropertyChangeListener() {
 			

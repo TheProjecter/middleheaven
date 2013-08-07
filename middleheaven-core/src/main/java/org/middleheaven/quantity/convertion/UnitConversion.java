@@ -83,16 +83,16 @@ public class UnitConversion {
 	
 	public static class MapKey {
 
-		private  Object A; 
-		private  Object B;
+		private  Object a; 
+		private  Object b;
 		
 		public MapKey(Object a, Object b) {
-			A = a;
-			B = b;
+			this.a = a;
+			this.b = b;
 		}
 		
 		public int hashCode(){
-			return A.hashCode() ^ B.hashCode();
+			return a.hashCode() ^ b.hashCode();
 		}
 		
 		public boolean equals(Object other) {
@@ -100,7 +100,7 @@ public class UnitConversion {
 		}
 
 		public boolean equalsOther(MapKey other) {
-			 return  (A.equals(other.A) &&  B.equals(other.B)) || (A.equals(other.B) &&  B.equals(other.A));
+			 return  (a.equals(other.a) &&  b.equals(other.b)) || (a.equals(other.b) &&  b.equals(other.a));
 		}
 	}
 }

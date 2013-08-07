@@ -5,6 +5,7 @@ package org.middleheaven.util.property;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.function.Function;
@@ -12,11 +13,11 @@ import org.middleheaven.util.function.Function;
 /**
  * 
  */
-public class ComposedProperty<T> extends AbstractProperty<T> {
+public class ComposedProperty<T extends Serializable> extends AbstractProperty<T> {
 
 
 
-	public static <X> ComposedProperty<X> bind (String name, Function<X, Property[]> composition, Property<?> ... others ){
+	public static <X extends Serializable> ComposedProperty<X> bind (String name, Function<X, Property[]> composition, Property<?> ... others ){
 		return new ComposedProperty<X> (name, others , composition);
 	}
 

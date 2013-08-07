@@ -23,7 +23,7 @@ public class ObjectArrayLoggingEventParametersCollector implements
 	 */
 	@Override
 	public Object[] collect() {
-		return params;
+		return CollectionUtils.duplicateArray(params);
 	}
 
 }

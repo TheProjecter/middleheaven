@@ -5,6 +5,7 @@ package org.middleheaven.util.property;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.util.function.Block;
@@ -12,8 +13,10 @@ import org.middleheaven.util.function.Block;
 /**
  * 
  */
-public abstract class AbstractProperty<T> implements Property<T>{
+public abstract class AbstractProperty<T extends Serializable> implements Property<T>{
 
+	private static final long serialVersionUID = -1897529345682490777L;
+	
 	private EventListenersSet<PropertyChangeListener> listeners;
 
 	protected final void fireChange(T oldValue, T newValue){

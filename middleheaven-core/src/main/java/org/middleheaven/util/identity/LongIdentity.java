@@ -6,7 +6,7 @@ import org.middleheaven.util.Hash;
  * Representation of an {@link Identity} using a {@link Long}.
  * 
  */
-public class LongIdentity extends Identity {
+public final class LongIdentity extends Identity {
 
 
 	private static final long serialVersionUID = -5911648867578196321L;

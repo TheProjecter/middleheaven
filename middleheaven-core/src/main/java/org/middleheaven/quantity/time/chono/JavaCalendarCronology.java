@@ -54,35 +54,49 @@ public class JavaCalendarCronology extends AbstractChronology{
 
 
 	@Override
-	public long milisecondsFor(boolean lenient, int year, int month, int day, int hour, int minute, int second) {
-		if (year <=0){
+	public long milisecondsFor(boolean lenient, int ... fields) {
+		
+		if (fields.length > 0 && fields[0] <=0){
 			throw new IllegalArgumentException("Year must be a positive integer");
 		}
-		if (day <=0){
-			throw new IllegalArgumentException("Day must be a positive integer");
-		}
-		if (month <=0){
+		if (fields.length > 1 && fields[1] <=0){
 			throw new IllegalArgumentException("Month must be a positive integer");
 		}
-		if (hour <0){
+		if (fields.length > 2 && fields[2] <=0){
+			throw new IllegalArgumentException("Day must be a positive integer");
+		}
+		if (fields.length > 3 && fields[3]  <0){
 			throw new IllegalArgumentException("Hour must be a positive integer");
 		}
-		if (minute <0){
+		if (fields.length > 4 && fields[4]  <0){
 			throw new IllegalArgumentException("Minute must be a positive integer");
 		}
-		if (second <0){
+		if (fields.length > 5 && fields[5]  <0){
 			throw new IllegalArgumentException("Second must be a positive integer");
 		}
 
 		Calendar calendar = (Calendar)prototype.clone();
 		clearCalendar(calendar);
 		calendar.setLenient(lenient);
-		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, month-1);
-		calendar.set(Calendar.DATE, day);
-		calendar.set(Calendar.HOUR_OF_DAY, hour);
-		calendar.set(Calendar.MINUTE, minute);
-		calendar.set(Calendar.SECOND, second);
+		if (fields.length > 0){
+			calendar.set(Calendar.YEAR, fields[0]);
+		}
+		if (fields.length > 1){
+			calendar.set(Calendar.MONTH, fields[1] - 1);
+		}
+		if (fields.length > 2){
+			calendar.set(Calendar.DATE, fields[1]);
+		}
+		if (fields.length > 3){
+			calendar.set(Calendar.HOUR_OF_DAY, fields[3]);
+		}
+		if (fields.length > 4){
+			calendar.set(Calendar.MINUTE, fields[4]);
+		}
+		if (fields.length > 5){
+			calendar.set(Calendar.SECOND, fields[5]);
+		}
+
 		calendar.clear(Calendar.MILLISECOND);
 		
 		return calendar.getTimeInMillis();

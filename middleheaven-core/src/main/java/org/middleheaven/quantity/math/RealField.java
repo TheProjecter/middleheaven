@@ -87,7 +87,7 @@ public class RealField implements OrderedField<Real> {
 
 	@Override
 	public Comparator<Real> getComparator() {
-		return ComparableComparator.getInstance();
+		return ComparableComparator.<Real>getInstance();
 	}
 	
 	
