@@ -12,6 +12,7 @@ import java.sql.Types;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
+import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 
@@ -21,21 +22,35 @@ import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 public class EnumType implements UserType { 
 	    
 		private final EnumModel model;
-		private int[] SQL_TYPE;
+		private final int[] sqlTypes;
 		
 	    protected EnumType(EnumModel model) { 
 	        this.model = model; 
 	        
 	        if (String.class.equals(model.getPersistableType())){
-	        	SQL_TYPE = new int[]{Types.VARCHAR};
+	        	sqlTypes = new int[]{Types.VARCHAR};
 	        } else if (Integer.class.equals(model.getPersistableType())){
-	        	SQL_TYPE = new int[]{Types.INTEGER};
+	        	sqlTypes = new int[]{Types.INTEGER};
+	        } else if (Long.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.BIGINT};
+	        } else if (Boolean.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.BIT};
+	        } else if (Double.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.DECIMAL};
+	        } else if (Float.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.FLOAT};
+	        } else if (Byte.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.SMALLINT};
+	        } else if (Character.class.equals(model.getPersistableType())){
+	        	sqlTypes = new int[]{Types.CHAR};
+	        } else {
+	        	sqlTypes = new int[0];
 	        }
 	    } 
 	 
 
 	    public int[] sqlTypes() { 
-	        return SQL_TYPE; 
+	        return CollectionUtils.duplicateArray(sqlTypes);
 	    } 
 	 
 	    public Class returnedClass() { 
@@ -68,7 +83,7 @@ public class EnumType implements UserType {
 				SQLException {
 			
 			  if (null == value) { 
-		            preparedStatement.setNull(index, SQL_TYPE[0]); 
+		            preparedStatement.setNull(index, sqlTypes[0]); 
 		        } else if (String.class.equals(model.getPersistableType())){
 		        	 preparedStatement.setString(index, model.getPersistableValue(value).toString() ); 
 		        } else if (Integer.class.equals(model.getPersistableType())){

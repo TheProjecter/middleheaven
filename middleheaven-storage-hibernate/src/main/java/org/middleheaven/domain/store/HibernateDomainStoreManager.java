@@ -319,8 +319,8 @@ public final class HibernateDomainStoreManager extends AbstractDomainStoreManage
 					throw new IllegalStateException("Cant interpreter criterion");
 				} 
 
-			} else if (c instanceof FieldJuntionCriterion){
-				// TODO
+//			} else if (c instanceof FieldJuntionCriterion){
+//				// TODO
 			} else if (c instanceof FieldInSetCriterion){
 				hcriteria.add(Restrictions.in( ((FieldInSetCriterion) c).getFieldName().getDesignation(), ((FieldInSetCriterion)c).valueHolder().getValue()));
 				
