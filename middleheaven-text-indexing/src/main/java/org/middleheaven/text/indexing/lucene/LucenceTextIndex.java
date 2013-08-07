@@ -35,7 +35,7 @@ import org.middleheaven.util.criteria.text.TextSearchCriteria;
 
 public class LucenceTextIndex implements TextIndex {
 
-	private final int PAGE_SIZE = 10;
+	private static final int PAGE_SIZE = 10;
 
 	private Directory directory;
 	private Analyzer analizer;
