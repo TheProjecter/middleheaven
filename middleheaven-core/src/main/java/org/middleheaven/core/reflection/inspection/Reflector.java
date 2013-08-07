@@ -29,7 +29,7 @@ import org.middleheaven.core.reflection.ReflectionStrategy;
 import org.middleheaven.core.reflection.WrapperProxy;
 import org.middleheaven.util.function.Predicate;
 
-class Reflector {
+final class Reflector {
 
 	private ReflectionStrategy stategy;
 

@@ -1,6 +1,8 @@
 package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.core.reflection.MethodHandler;
@@ -12,7 +14,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 
 	private MethodHandler method;
 	private WiringSpecification methodSpecification;
-	private WiringSpecification[] paramsSpecifications;
+	private List<WiringSpecification> paramsSpecifications;
 
 	//	public WiringSpecification<?> getMethodSpecification() {
 	//		return methodSpecification;
@@ -23,7 +25,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 	//	}
 
 	
-	public WiringSpecification[] getSpecifications(){
+	public List<WiringSpecification> getSpecifications(){
 		return paramsSpecifications;
 	}
 	
@@ -38,7 +40,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 		super();
 		this.method = method;
 		this.methodSpecification = methodSpecification;
-		this.paramsSpecifications = CollectionUtils.duplicateArray(paramsSpecifications);
+		this.paramsSpecifications = Arrays.asList(paramsSpecifications);
 	}
 
 

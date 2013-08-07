@@ -92,12 +92,12 @@ public class WiringSpecification implements Mergable<WiringSpecification> {
 	@Override
 	public WiringSpecification merge(WiringSpecification other) {
 		
-		Map<String,Object> params = new HashMap<String, Object>(this.params);
-		params.putAll(other.params);
+		Map<String,Object> newParams = new HashMap<String, Object>(this.params);
+		newParams.putAll(other.params);
 
 		return new WiringSpecification(
 			this.contract,
-			params
+			newParams
 		);
 	}
 }

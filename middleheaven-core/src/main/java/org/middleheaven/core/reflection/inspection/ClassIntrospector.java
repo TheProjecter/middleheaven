@@ -157,10 +157,10 @@ public class ClassIntrospector<T> extends Introspector{
 	public ClassIntrospector<T> load( String className, ClassLoader loader){
 		try{
 			@SuppressWarnings("unchecked")
-			Class<T> type = (Class<T>) loader.loadClass(className).asSubclass(this.type);
-			return new ClassIntrospector<T>(type);
+			Class<T> atype = (Class<T>) loader.loadClass(className).asSubclass(this.type);
+			return new ClassIntrospector<T>(atype);
 		} catch (ClassNotFoundException e) {
-			throw new NoSuchClassReflectionException(className);
+			throw new NoSuchClassReflectionException(className, e);
 		}
 	}
 

@@ -36,7 +36,7 @@ public abstract class AbstractProducingWiringPoint implements ProducingWiringPoi
 	 */
 	@Override
 	public WiringSpecification[] getParamsSpecifications() {
-		return paramsSpecifications;
+		return CollectionUtils.duplicateArray(paramsSpecifications);
 	}
 	
 

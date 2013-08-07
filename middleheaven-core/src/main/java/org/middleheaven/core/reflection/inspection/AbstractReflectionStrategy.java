@@ -31,10 +31,10 @@ public abstract class AbstractReflectionStrategy implements ReflectionStrategy{
 
 		if (type.isInterface()){
 			Reflector.getReflector().getMethods(type).into(methods);
-			
+
 			readInterfacesMethods(type, methods);
 		} else {
-			
+
 			Class<?> topType = this.getRealType(type);
 			while ( topType != null && !topType.equals(Object.class)){
 				Reflector.getReflector().getMethods(topType).into(methods);
@@ -63,15 +63,12 @@ public abstract class AbstractReflectionStrategy implements ReflectionStrategy{
 						}
 					} 
 				}
-			} else if (m.getParameterTypes().length==1){
-				if (m.getName().startsWith("set") ){
-					final String propertyName = StringUtils.firstLetterToLower(m.getName().substring(3));
+			} else if (m.getParameterTypes().length==1 && m.getName().startsWith("set")){
+				final String propertyName = StringUtils.firstLetterToLower(m.getName().substring(3));
 
-					if (propertyNames.add(propertyName)){
-						result.add(getPropertyAccessor(type, propertyName));
-					}
-
-				} 
+				if (propertyNames.add(propertyName)){
+					result.add(getPropertyAccessor(type, propertyName));
+				}
 			}
 		}
 

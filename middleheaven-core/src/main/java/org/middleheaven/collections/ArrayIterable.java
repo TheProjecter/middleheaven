@@ -3,17 +3,19 @@
  */
 package org.middleheaven.collections;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * 
  */
 public final class ArrayIterable<T> implements Iterable<T> {
 
-	private final T[] array;
+	private final List<T> list;
 
-	public ArrayIterable(T[] array){
-		this.array = array;
+	public ArrayIterable(T[] list){
+		this.list = Arrays.asList(list);
 	}
 
 	/**
@@ -21,7 +23,7 @@ public final class ArrayIterable<T> implements Iterable<T> {
 	 */
 	@Override
 	public Iterator<T> iterator() {
-		return new ArrayIterator<T>(array);
+		return new ArrayIterator<T>(list);
 	}
 
 }

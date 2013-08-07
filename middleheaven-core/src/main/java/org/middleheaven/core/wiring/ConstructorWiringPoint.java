@@ -38,6 +38,7 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 	 * @param binder the current wiring binder.
 	 * @return the constructed object.
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T produceWith(InstanceFactory factory){
 		try {
 			constructor.setAccessible(true);
@@ -59,9 +60,7 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 				}
 			}
 
-
-			@SuppressWarnings("unchecked") T newInstance = (T) constructor.newInstance(params);
-			return newInstance;
+			return (T) constructor.newInstance(params);
 		} catch (BindingException e){
 			throw e;
 		} catch (Exception e) {

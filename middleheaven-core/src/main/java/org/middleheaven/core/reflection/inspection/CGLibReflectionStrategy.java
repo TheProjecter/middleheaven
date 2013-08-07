@@ -131,9 +131,8 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				Class[] interfaces = new Class[adicionalInterfaces.length + 2];
 				interfaces[0] = facadeType;
 				interfaces[1] = proxyInterface;
-				for (int i =0; i < adicionalInterfaces.length; i++){
-					interfaces[i+1] = adicionalInterfaces[i];
-				}
+				
+				System.arraycopy(adicionalInterfaces, 0, interfaces, 2, adicionalInterfaces.length);
 
 				return proxyInterface.cast(Enhancer.create(
 						Object.class,
@@ -144,9 +143,7 @@ public class CGLibReflectionStrategy extends AbstractReflectionStrategy{
 				Class[] interfaces = new Class[adicionalInterfaces.length + 1];
 				interfaces[0] = proxyInterface;
 
-				for (int i =0; i < adicionalInterfaces.length; i++){
-					interfaces[i+1] = adicionalInterfaces[i];
-				}
+				System.arraycopy(adicionalInterfaces, 0, interfaces, 1, adicionalInterfaces.length);
 
 				return proxyInterface.cast(Enhancer.create(
 						facadeType,

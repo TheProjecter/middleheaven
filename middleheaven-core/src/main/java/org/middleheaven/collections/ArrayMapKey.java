@@ -17,7 +17,7 @@ public final class ArrayMapKey extends ComposedMapKey{
 	}
 	
 	public Object[] getObjects(){
-		return this.objects;
+		return CollectionUtils.duplicateArray(this.objects);
 	}
 	
 	public boolean equals(Object other){

@@ -1,6 +1,8 @@
 package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
 
 import org.middleheaven.core.reflection.ReflectionException;
 
@@ -24,8 +26,8 @@ public class FieldAfterWiringPoint implements AfterWiringPoint{
 		this.specs = specs;
 	}
 
-	public WiringSpecification[] getSpecifications(){
-		return new WiringSpecification[]{specs};
+	public List<WiringSpecification> getSpecifications(){
+		return Collections.singletonList(specs);
 	}
 	
 	/**

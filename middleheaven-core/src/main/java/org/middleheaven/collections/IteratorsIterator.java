@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class IteratorsIterator<T> implements Iterator<T>{
+/**
+ * Creates an Iterator<T> over a collection of Iterables<T>.
+ * @param <T>
+ */
+public final class IteratorsIterator<T> implements Iterator<T>{
 
 	public static <T> IteratorsIterator<T> aggregateIterables(Iterable<? extends Iterable<T>> collections){
 		

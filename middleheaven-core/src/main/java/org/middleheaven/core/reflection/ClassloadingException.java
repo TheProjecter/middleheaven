@@ -6,12 +6,18 @@ package org.middleheaven.core.reflection;
 
 public class ClassloadingException extends ReflectionException {
 
-    public ClassloadingException(String msg) {
+	private static final long serialVersionUID = 9177321454586747094L;
+
+	public ClassloadingException(String msg) {
         super(msg);
     }
 
 	public ClassloadingException(Exception e) {
 		super(e);
+	}
+	
+	public ClassloadingException(String msg, Exception e) {
+		super(msg, e);
 	}
 
 }

@@ -46,6 +46,11 @@ public class ArrayEnumerable<T> extends AbstractEnumerable<T> {
 	 */
 	@Override
 	public T[] intoArray(T[] array) {
-		return this.array;
+		if (array.length <= this.array.length){
+			System.arraycopy(this.array, 0, array, 0, array.length);
+			return array;
+		} else {
+			return CollectionUtils.duplicateArray(this.array);
+		}
 	}
 }

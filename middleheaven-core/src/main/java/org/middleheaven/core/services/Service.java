@@ -27,7 +27,7 @@ public final class Service {
 		this.contractInterface = contractInterface;
 		this.params = params;
 		this.activator = activator;
-		
+
 		activator.collectRequiredServicesSpecifications(dependencies);
 	}
 
@@ -46,11 +46,11 @@ public final class Service {
 	public Collection<ServiceSpecification> getDependencies(){
 		return dependencies;
 	}
-	
+
 	public void addDependency(ServiceSpecification dependency){
 		this.dependencies.add(dependency);
 	}
-	
+
 	public String toString(){
 		return getName();
 	}
@@ -68,12 +68,8 @@ public final class Service {
 			throw new IllegalStateException("Service already activated");
 		}
 
-		try {
-			this.activator.activate(serviceContext);
-			this.activated = true;
-		} catch (RuntimeException e){
-			throw e;
-		}
+		this.activator.activate(serviceContext);
+		this.activated = true;
 	}
 
 	/**
@@ -83,7 +79,7 @@ public final class Service {
 	public int hashCode(){
 		return contractInterface.getName().hashCode();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

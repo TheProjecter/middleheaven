@@ -1,10 +1,11 @@
 package org.middleheaven.core.wiring;
 
+import java.util.List;
 import java.util.Map;
 
 public interface PublishPoint extends WiringPoint {
 
-	public WiringSpecification[] getSpecifications();
+	public List<WiringSpecification> getSpecifications();
 	
 	public Class<?> getPublishedType();
 	

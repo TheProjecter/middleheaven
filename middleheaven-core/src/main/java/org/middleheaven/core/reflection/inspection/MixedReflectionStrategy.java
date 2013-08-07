@@ -43,15 +43,17 @@ public class MixedReflectionStrategy extends CGLibReflectionStrategy{
 			return proxyObject(delegationTarget,proxyInterface);
 		} else {
 			try{
-				Class[] newInterfaces = new Class[adicionalInterfaces.length+2];
-				newInterfaces[0] = proxyInterface;
-				newInterfaces[1] = WrapperProxy.class;
 				for (int i=0; i < adicionalInterfaces.length ;i ++){
 					if (!adicionalInterfaces[i].isInterface()){
 						throw new IllegalArgumentException("Proxy must be applied with an interface");
 					}
-					newInterfaces[i+2] = adicionalInterfaces[i];
 				}
+				
+				Class[] newInterfaces = new Class[adicionalInterfaces.length+2];
+				newInterfaces[0] = proxyInterface;
+				newInterfaces[1] = WrapperProxy.class;
+				
+				System.arraycopy(adicionalInterfaces, 0, newInterfaces, 2, adicionalInterfaces.length);
 				
 				return proxyInterface.cast(Proxy.newProxyInstance(
 						proxyInterface.getClassLoader(), 

@@ -31,7 +31,7 @@ import org.middleheaven.util.function.Predicate;
 public class LibraryJarModuleScanner implements ModuleScanner {
 
 	private ManagedFile libraryFolder;
-
+	
 	/**
 	 * 
 	 * Constructor.

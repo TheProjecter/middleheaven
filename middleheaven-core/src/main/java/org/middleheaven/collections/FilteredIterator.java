@@ -12,7 +12,8 @@ import org.middleheaven.util.function.Predicate;
  */
 public class FilteredIterator<T> implements Iterator<T> {
 
-	private final Item<T> EMPTY_ITEM = new Item<T>();
+	@SuppressWarnings("rawtypes")
+	private static final Item EMPTY_ITEM = new Item();
 	
 	private Predicate<T> predicate;
 	private Iterator<T> original;
@@ -63,6 +64,7 @@ public class FilteredIterator<T> implements Iterator<T> {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Item<T> fetchNext(){
 		while(original.hasNext()){
 			T n = original.next();

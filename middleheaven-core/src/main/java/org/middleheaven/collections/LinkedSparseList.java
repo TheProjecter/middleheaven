@@ -62,7 +62,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 		return true;
 	}
 
-	private Entry<T> FindEntryByIndex(int index){
+	private Entry<T> findEntryByIndex(int index){
 		Entry<T> entry = first;
 		while (entry.next != null){
 			entry = entry.next;
@@ -73,7 +73,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 		return null;
 	}
 	
-	private Entry<T> FindEntryByObject(Object obj){
+	private Entry<T> findEntryByObject(Object obj){
 		Entry<T> entry = first;
 		while (entry.next != null){
 			entry = entry.next;
@@ -84,7 +84,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 		return null;
 	}
 	
-	private Entry<T> FindNearestByIndex(int index){
+	private Entry<T> findNearestByIndex(int index){
 		Entry<T> near = first;
 		Entry<T> entry = first;
 		while (entry.next != null){
@@ -107,7 +107,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	 */
 	@Override
 	public T remove(int index) {
-		Entry<T> entry = FindEntryByIndex(index);
+		Entry<T> entry = findEntryByIndex(index);
 		
 		if (entry == null){
 			return emptyValue;
@@ -128,7 +128,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	 */
 	@Override
 	public boolean remove(Object obj) {
-	    Entry<T> entry = FindEntryByObject(obj);
+	    Entry<T> entry = findEntryByObject(obj);
 		
 		if (entry == null){
 			return false;
@@ -165,7 +165,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	 */
 	@Override
 	public boolean addAll(int index, Collection<? extends T> all) {
-		Entry<T> nearest = FindNearestByIndex(index);
+		Entry<T> nearest = findNearestByIndex(index);
 		Entry<T> current = nearest;
 		if ( nearest.index == index){
 			shiftForwardFrom(nearest);
@@ -178,7 +178,6 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 			current.next = newEntry;
 			newEntry.previous = current;
 			current = newEntry;
-			return true;
 		}
 		
 		return true;
@@ -189,7 +188,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	 */
 	@Override
 	public void add(int index, T obj) {
-		Entry<T> nearest = FindNearestByIndex(index);
+		Entry<T> nearest = findNearestByIndex(index);
 		if ( nearest.index == index){
 			// exactly
 			Entry<T> newEntry = new Entry<T>(index, obj);
@@ -228,7 +227,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	@Override
 	public T get(int index) {
 		checkBounds(index);
-		Entry<T> entry = FindEntryByIndex(index);
+		Entry<T> entry = findEntryByIndex(index);
 		
 		if (entry == null){
 			return emptyValue;
@@ -332,12 +331,9 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	 */
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		Entry<T> it = FindEntryByIndex(index);
-		return new SparseListIterator <T>(it);
+		Entry<T> it = findEntryByIndex(index);
+		return new SparseListIterator <T>(it, this.size());
 	}
-
-
-
 
 	/**
 	 * {@inheritDoc}
@@ -371,7 +367,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 	@Override
 	public T set(int index, T obj) {
 		
-		Entry<T> entry =  FindNearestByIndex(index);
+		Entry<T> entry =  findNearestByIndex(index);
 		T other = null;
 		if (entry.index == index){
 			other = entry.object;
@@ -439,10 +435,10 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 			this.index = i;
 			this.object = obj;
 		}
-		public int index;
-		public T object;
-		public Entry<T> previous;
-		public Entry<T> next;
+		private int index;
+		private T object;
+		private Entry<T> previous;
+		private Entry<T> next;
 	}
 	
 	private static class SparseIterator<T> implements Iterator<T>
@@ -472,6 +468,9 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 		@Override
 		public T next() {
 			this.current = current.next;
+			if (this.current == null){
+				throw new NoSuchElementException ();
+			}
 			return this.current.object;
 		}
 
@@ -491,19 +490,20 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 		
 	}
 	
-	private class SparseListIterator<T> implements ListIterator<T>
+	private static class SparseListIterator<T> implements ListIterator<T>
 	{
 
 		private Entry<T> current;
-
+		private int size;
 		/**
 		 * Constructor.
 		 * @param it
 		 * @param last
 		 * @param index
 		 */
-		public SparseListIterator(Entry<T> current) {
+		public SparseListIterator(Entry<T> current , int size) {
 			this.current = current.previous;
+			this.size = size;
 		}
 
 		/**
@@ -550,7 +550,7 @@ public final class LinkedSparseList<T> implements SparseList<T> {
 			if (current.next!= null){
 				return current.next.index;
 			} else {
-				return LinkedSparseList.this.size();
+				return size;
 			}
 		}
 

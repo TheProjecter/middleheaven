@@ -30,8 +30,8 @@ public class Module {
 		this.activator = activator;
 	}
 
-	
-	
+
+
 	/**
 	 * Obtains {@link String}.
 	 * @return the applicationId
@@ -45,8 +45,8 @@ public class Module {
 	public void addDependency(ModuleDependency dependency){
 		this.dependencies.add(dependency);
 	}
-	
-	
+
+
 	public boolean isActivated(){
 		return activated;
 	}
@@ -60,14 +60,10 @@ public class Module {
 			throw new IllegalStateException("Module already activated");
 		}
 
-		try {
-			this.activator.start(applicationContext);
-			this.activated = true;
-		} catch (RuntimeException e){
-			throw e;
-		}
+		this.activator.start(applicationContext);
+		this.activated = true;
 	}
-	
+
 	/**
 	 * Inactivate de service. If the service is already inactivated do nothing 
 	 * @param applicationContext the current application context
@@ -77,12 +73,8 @@ public class Module {
 			return;
 		}
 
-		try {
-			this.activator.stop(applicationContext);
-			this.activated = false;
-		} catch (RuntimeException e){
-			throw e;
-		}
+		this.activator.stop(applicationContext);
+		this.activated = false;
 	}
 
 	/**

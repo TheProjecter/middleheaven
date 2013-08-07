@@ -13,9 +13,6 @@ import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
 
-import org.middleheaven.util.function.Function;
-import org.middleheaven.util.function.Mapper;
-
 /**
  * Several utilitary methods 
  */
@@ -44,6 +41,54 @@ public class CollectionUtils {
 		return copy;
 	}
 
+	public static byte[] duplicateArray (byte[] array){
+		byte[] copy = new byte[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static short[] duplicateArray (short[] array){
+		short[] copy = new short[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static int[] duplicateArray (int[] array){
+		int[] copy = new int[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static long[] duplicateArray (long[] array){
+		long[] copy = new long[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static char[] duplicateArray (char[] array){
+		char[] copy = new char[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static boolean[] duplicateArray (boolean[] array){
+		boolean[] copy = new boolean[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static double[] duplicateArray (double[] array){
+		double[] copy = new double[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
+	public static float[] duplicateArray (float[] array){
+		float[] copy = new float[array.length];
+		System.arraycopy(array, 0, copy, 0, array.length);
+		return copy;
+	}
+	
 	/**
 	 * Merges two arrays of {@link Mergable} objects.
 	 * @param a first array
@@ -313,7 +358,7 @@ public class CollectionUtils {
 
 		Class<?> componentType = array1.getClass().getComponentType();
 
-		Object newArray = Array.newInstance(componentType, array1.length+array2.length);
+		final Object newArray = Array.newInstance(componentType, array1.length+array2.length);
 
 		System.arraycopy(array1, 0, newArray, 0, array1.length);
 		System.arraycopy(array2, 0, newArray, array1.length,array2.length);
@@ -360,9 +405,7 @@ public class CollectionUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T[] newArray(Class<T> arrayType, int length) {
-
-		Object newArray = Array.newInstance(arrayType, length);
-		return (T[]) newArray;
+		return (T[]) Array.newInstance(arrayType, length);
 	}
 
 	public static <T> boolean arrayContains(T[] array, T candidate ) {
@@ -419,6 +462,14 @@ public class CollectionUtils {
 	 */
 	public static <T> Enumerable<T> emptyEnumerable() {
 		return EmptyEnumerable.getInstance();
+	}
+
+	/**
+	 * @param sQL_TYPE
+	 * @return
+	 */
+	public static int[] imutableList(int[] sQL_TYPE) {
+		throw new UnsupportedOperationException("Not implememented yet");
 	}
 
 
