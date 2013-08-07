@@ -7,7 +7,7 @@ import java.util.Iterator;
  * Condition with with the ResourceAccessor must comply 
  * in order to access a specific resource.
  */
-public class ResourcePermission implements Permission {
+public final class ResourcePermission implements Permission {
 
 
 	private static final long serialVersionUID = -8169569097407381165L;

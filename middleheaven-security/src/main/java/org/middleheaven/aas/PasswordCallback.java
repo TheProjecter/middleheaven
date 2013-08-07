@@ -1,5 +1,7 @@
 package org.middleheaven.aas;
 
+import org.middleheaven.collections.CollectionUtils;
+
 /**
  * The password {@link Callback}.
  */
@@ -25,12 +27,12 @@ public class PasswordCallback implements Callback {
 	 * @return the password as a char array.
 	 */
 	public char[] getPassword() {
-		return password;
+		return CollectionUtils.duplicateArray(password);
 	}
 
 
 	public void setPassword(char[] password) {
-		this.password = password;
+		this.password = CollectionUtils.duplicateArray(password);
 	}
 
 
