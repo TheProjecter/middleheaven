@@ -21,10 +21,10 @@ public abstract class AbstractRepository<E> implements Repository<E> {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	protected Class<E> getEntityClass () {
 		ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-		@SuppressWarnings("unchecked") Class<E> type = (Class<E>) parameterizedType.getActualTypeArguments()[0];
-		return type;
+		return (Class<E>) parameterizedType.getActualTypeArguments()[0];
 	}
 	
 	@Override

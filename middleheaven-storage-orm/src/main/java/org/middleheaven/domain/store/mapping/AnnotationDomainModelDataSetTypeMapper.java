@@ -50,7 +50,7 @@ import org.middleheaven.util.identity.LongIdentity;
 /**
  * 
  */
-public class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSetTypeMapper {
+public final class AnnotationDomainModelDataSetTypeMapper implements DomainModelDataSetTypeMapper {
 
 	private final Map<String, TypeMapper> types = new HashMap<String, TypeMapper>();
 

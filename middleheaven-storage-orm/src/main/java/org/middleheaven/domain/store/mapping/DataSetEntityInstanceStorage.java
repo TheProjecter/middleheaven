@@ -41,6 +41,7 @@ import org.middleheaven.persistance.criteria.building.ColumnValueConstraint;
 import org.middleheaven.persistance.criteria.building.ExplicitValueLocator;
 import org.middleheaven.persistance.criteria.building.OrderConstraint;
 import org.middleheaven.persistance.criteria.building.RelationOperator;
+import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataSetModel;
 import org.middleheaven.sequence.Sequence;
@@ -406,6 +407,10 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 				final FieldValueCriterion f) {
 			
 			final EntityFieldTypeMapper entityFieldTypeMapper = mapper.getEntityFieldTypeMapper(f.getFieldName());
+			
+			if (entityFieldTypeMapper == null){
+				throw new IllegalModelStateException("There is not field " + f.getFieldName());
+			}
 			final DataRow row = new ConstraintDataRow(constraint, f);
 
 			entityFieldTypeMapper.write(null, f.valueHolder().getValue(), row, entityFieldTypeMapper.getColumns());

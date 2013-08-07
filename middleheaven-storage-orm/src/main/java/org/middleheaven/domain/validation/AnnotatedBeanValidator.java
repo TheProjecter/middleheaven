@@ -11,7 +11,7 @@ import org.middleheaven.validation.NotEmptyValidator;
 import org.middleheaven.validation.NotNullValidator;
 import org.middleheaven.validation.SimpleEmailAddressValidator;
 
-public class AnnotatedBeanValidator<T> extends BeanValidator<T>{
+public final class AnnotatedBeanValidator<T> extends BeanValidator<T>{
 
 	
 	@SuppressWarnings("unchecked")

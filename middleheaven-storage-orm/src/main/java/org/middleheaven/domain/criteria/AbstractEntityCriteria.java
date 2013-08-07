@@ -25,7 +25,7 @@ public abstract class AbstractEntityCriteria <T> extends AbstractCriteria<T> imp
 	private int start = -1;
 
 	private List<OrderingCriterion> ordering = new LinkedList<OrderingCriterion>();
-	private Projection aggregation;
+	private Projection aggregation = null;
 	private List<QualifiedName> resultFields = new LinkedList<QualifiedName>();
 	
 	
@@ -33,6 +33,10 @@ public abstract class AbstractEntityCriteria <T> extends AbstractCriteria<T> imp
 		this.targetClass = targetClass;
 	}
 	
+    protected void setProjection(Projection aggregation){
+    	this.aggregation = aggregation;
+    }
+    
 	protected AbstractEntityCriteria(AbstractEntityCriteria<T> other){
 		this.targetClass = other.targetClass;
 		this.keyOnly = other.keyOnly;

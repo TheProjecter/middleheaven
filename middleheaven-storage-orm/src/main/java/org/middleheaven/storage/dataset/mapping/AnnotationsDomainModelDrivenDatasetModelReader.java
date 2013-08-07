@@ -26,7 +26,7 @@ import org.middleheaven.util.function.Maybe;
 /**
  * 
  */
-public class AnnotationsDomainModelDrivenDatasetModelReader implements
+public final class AnnotationsDomainModelDrivenDatasetModelReader implements
 DatasetRepositoryModelReader {
 
 

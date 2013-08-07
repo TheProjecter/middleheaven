@@ -35,16 +35,14 @@ public class DataQueryAdapter<T> implements QueryResult<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	@Override @SuppressWarnings("unchecked")
 	public T fetchFirst() {
 		DataQuery q = query.limit(1, 1);
 		
 		DataRowStream stream = q.getRowStream();
 		try {
 			if (stream.next()){
-				@SuppressWarnings("unchecked")
-				final T t =  (T) mapping.read(stream.currentRow());
-				return t;
+				return (T) mapping.read(stream.currentRow());
 			} else {
 				return null;
 			}

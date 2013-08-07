@@ -33,10 +33,9 @@ public class EntityFieldTypeMapper implements TypeMapper {
 	}
 
 	public DataColumnModel[] getColumns(){
-		return columns;
+		return CollectionUtils.duplicateArray(columns);
 	}
-	
-	
+
 	public QualifiedName getFieldName(){
 		return field.getName();
 	}
