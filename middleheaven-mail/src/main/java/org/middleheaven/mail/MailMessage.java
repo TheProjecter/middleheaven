@@ -172,7 +172,7 @@ public class MailMessage implements Serializable {
 	 * The send date. If not defined return the current date
 	 */
 	public Date getSendDate() {
-		return this.sendDate==null ? new Date(): this.sendDate;
+		return this.sendDate==null ? new Date(): (Date)this.sendDate.clone();
 	}
 	 
     /**
@@ -182,7 +182,7 @@ public class MailMessage implements Serializable {
      * @param date - email sending date
      */
 	public void setSendDate(Date date) {
-        this.sendDate = date; 
+        this.sendDate = (Date)date.clone(); 
 	}
 
 	 
