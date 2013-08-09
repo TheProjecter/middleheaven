@@ -48,6 +48,7 @@
 		<module>../middleheaven-licence</module>
 		<module>../middleheaven-storage-odb</module>
 		<module>../middleheaven-storage-hibernate</module>
+		<module>../middleheaven-web-commonsupload</module>
 	</modules>
 
 	<developers>
