@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>middleheaven</groupId>
+	<artifactId>middleheaven-web-commonsupload</artifactId>
+	<version>1.0.0</version>
+	
+	<name>MiddleHeaven Web Commons Upload</name>
+	<description>MiddleHeaven web adds support to download in pre servlet 3.0 
+	</description>
+
+ 	<packaging>jar</packaging>
+ 
+	<parent>
+	  <groupId>middleheaven</groupId>
+	  <artifactId>middleheaven-project</artifactId>
+	  <version>1.0.0</version>
+	  <relativePath>..\middleheaven-project\pom.xml</relativePath>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-core</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-web-server</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>

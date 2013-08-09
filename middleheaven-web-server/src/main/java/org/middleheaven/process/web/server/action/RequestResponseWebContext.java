@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.upload.UploadFilesContext;
-import org.middleheaven.io.repository.upload.UploadFilesRequestAnalyzer;
+import org.middleheaven.io.repository.upload.UploadFilesRequestFactory;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.web.HttpProcessingUtils;
 import org.middleheaven.process.web.HttpUserAgent;
@@ -32,7 +32,7 @@ public class RequestResponseWebContext extends ServletWebContext {
 		
 		this.request.setAttribute("__" + HttpCultureResolver.class.getName(), httpCultureResolveService);
 		
-		UploadFilesContext context = UploadFilesRequestAnalyzer.getContext(request);
+		UploadFilesContext context = UploadFilesRequestFactory.getInstance().getContext(request);
 		
 		this.parameters = context.getParametersMap();
 		this.uploadRepository = context.getManagedFileRepository();

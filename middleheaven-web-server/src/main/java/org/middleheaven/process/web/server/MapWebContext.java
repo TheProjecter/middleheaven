@@ -2,11 +2,13 @@ package org.middleheaven.process.web.server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.List;
 
 import org.middleheaven.aas.Subject;
 import org.middleheaven.global.Culture;
 import org.middleheaven.io.repository.ManagedFileRepository;
+import org.middleheaven.io.repository.empty.EmptyFileRepository;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.MapContext;
 import org.middleheaven.process.web.HttpChannel;
@@ -26,6 +28,7 @@ public final class MapWebContext  extends WebContext{
 	private InetAddress address;
 	private String url;
 	private String contextPath;
+	private ManagedFileRepository uploadRepository = EmptyFileRepository.repository();
 	
 	public MapWebContext(String url , String contextPath, HttpMethod service) {
 		this(url,contextPath, service, new RequestAgentHttpCultureResolver());
@@ -115,8 +118,7 @@ public final class MapWebContext  extends WebContext{
 	 */
 	@Override
 	public ManagedFileRepository getUploadRepository() {
-		// TODO Auto-generated method stub
-		return null;
+		return uploadRepository;
 	}
 
 	/**
@@ -124,8 +126,7 @@ public final class MapWebContext  extends WebContext{
 	 */
 	@Override
 	public AttributeContext getAttributes() {
-		// TODO Auto-generated method stub
-		return null;
+		return mapContext;
 	}
 
 	/**
@@ -133,8 +134,7 @@ public final class MapWebContext  extends WebContext{
 	 */
 	@Override
 	public List<Culture> getCultures() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.singletonList(Culture.defaultValue());
 	}
 
 	/**
@@ -142,8 +142,7 @@ public final class MapWebContext  extends WebContext{
 	 */
 	@Override
 	public Culture getCulture() {
-		// TODO Auto-generated method stub
-		return null;
+		return Culture.defaultValue();
 	}
 
 	/**

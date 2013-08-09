@@ -168,7 +168,7 @@ public class UploadRootFolder extends AbstractManagedFile {
 	/**
 	 * @param uploadManagedFile
 	 */
-	public void add(UploadManagedFile uploadManagedFile) {
+	public void add(ManagedFile uploadManagedFile) {
 		files.put(uploadManagedFile.getPath(), uploadManagedFile);
 	}
 
