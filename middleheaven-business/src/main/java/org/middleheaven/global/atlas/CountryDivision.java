@@ -2,7 +2,7 @@ package org.middleheaven.global.atlas;
 
 import java.io.Serializable;
 
-import org.middleheaven.global.IsoCode;
+import org.middleheaven.culture.IsoCode;
 
 public abstract class CountryDivision extends AbstractAtlasLocale implements  Serializable{
 

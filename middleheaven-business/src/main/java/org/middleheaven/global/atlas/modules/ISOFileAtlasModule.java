@@ -10,8 +10,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.global.CountryIsoCode;
-import org.middleheaven.global.IsoCode;
+import org.middleheaven.culture.CountryIsoCode;
+import org.middleheaven.culture.IsoCode;
 import org.middleheaven.global.atlas.Atlas;
 import org.middleheaven.global.atlas.AtlasContext;
 import org.middleheaven.global.atlas.AtlasLocaleInfo;

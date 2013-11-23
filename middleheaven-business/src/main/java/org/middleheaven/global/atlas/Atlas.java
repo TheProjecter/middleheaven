@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.global.IsoCode;
-import org.middleheaven.global.StringIsoCode;
+import org.middleheaven.culture.IsoCode;
+import org.middleheaven.culture.StringIsoCode;
 
 
 public class Atlas implements AtlasLocale{

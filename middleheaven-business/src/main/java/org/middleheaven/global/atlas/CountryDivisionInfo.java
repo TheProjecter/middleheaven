@@ -1,6 +1,6 @@
 package org.middleheaven.global.atlas;
 
-import org.middleheaven.global.CountryIsoCode;
+import org.middleheaven.culture.CountryIsoCode;
 
 public class CountryDivisionInfo extends AtlasLocaleInfo{
 

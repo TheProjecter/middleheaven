@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.middleheaven.global.CountryIsoCode;
-import org.middleheaven.global.IsoCode;
-import org.middleheaven.global.Language;
+import org.middleheaven.culture.CountryIsoCode;
+import org.middleheaven.culture.IsoCode;
+import org.middleheaven.culture.Language;
 
 public abstract class AtlasModule {
 

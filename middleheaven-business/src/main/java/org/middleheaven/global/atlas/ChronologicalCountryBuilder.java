@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.middleheaven.global.IsoCode;
-import org.middleheaven.global.Language;
+import org.middleheaven.culture.IsoCode;
+import org.middleheaven.culture.Language;
 
 public class ChronologicalCountryBuilder implements AtlasContext{
 

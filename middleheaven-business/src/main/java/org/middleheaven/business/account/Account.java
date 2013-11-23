@@ -2,7 +2,7 @@ package org.middleheaven.business.account;
 
 import java.util.List;
 
-import org.middleheaven.collections.Interval;
+import org.middleheaven.collections.interval.Interval;
 import org.middleheaven.quantity.measure.Amount;
 import org.middleheaven.quantity.time.DateHolder;
 

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.middleheaven.global.CountryIsoCode;
-import org.middleheaven.global.Language;
+import org.middleheaven.culture.CountryIsoCode;
+import org.middleheaven.culture.Language;
 import org.middleheaven.quantity.time.DateHolder;
 
 

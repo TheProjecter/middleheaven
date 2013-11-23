@@ -2,7 +2,7 @@ package org.middleheaven.global.atlas.modules;
 
 import java.util.Locale;
 
-import org.middleheaven.global.CountryIsoCode;
+import org.middleheaven.culture.CountryIsoCode;
 import org.middleheaven.global.atlas.AtlasContext;
 import org.middleheaven.global.atlas.AtlasModule;
 import org.middleheaven.global.atlas.CountryInfo;

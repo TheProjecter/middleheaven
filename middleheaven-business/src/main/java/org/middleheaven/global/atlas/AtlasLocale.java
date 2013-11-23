@@ -2,7 +2,7 @@ package org.middleheaven.global.atlas;
 
 import java.util.Collection;
 
-import org.middleheaven.global.IsoCode;
+import org.middleheaven.culture.IsoCode;
 
 public interface AtlasLocale {
 

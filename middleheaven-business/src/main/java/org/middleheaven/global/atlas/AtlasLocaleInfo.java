@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.middleheaven.global.CountryIsoCode;
-import org.middleheaven.global.IsoCode;
+import org.middleheaven.culture.CountryIsoCode;
+import org.middleheaven.culture.IsoCode;
 
 public class AtlasLocaleInfo {
 

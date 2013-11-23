@@ -3,7 +3,8 @@ package org.middleheaven.global.atlas;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.middleheaven.global.IsoCode;
+import org.middleheaven.culture.IsoCode;
+
 
 public abstract class AbstractAtlasLocale implements AtlasLocale , Serializable{
 
