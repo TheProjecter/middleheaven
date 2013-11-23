@@ -77,4 +77,12 @@ public final class UploadManagedFileRepository extends AbstractRequestFileReposi
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected long resolveRequestFileSize(ManagedFile managedFile) {
+		 return ((UploadManagedFile)managedFile).fileItem.getSize();
+	}
+
 }

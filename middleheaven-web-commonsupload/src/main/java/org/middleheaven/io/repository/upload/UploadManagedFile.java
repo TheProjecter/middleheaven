@@ -2,26 +2,26 @@ package org.middleheaven.io.repository.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collections;
 
 import org.apache.commons.fileupload.FileItem;
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.io.repository.AbstractMediaManagedFile;
+import org.middleheaven.io.StreamableContent;
+import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ArrayManagedFilePath;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
-import org.middleheaven.io.repository.MediaStreamableContent;
+import org.middleheaven.io.repository.ManagedFileType;
 import org.middleheaven.io.repository.empty.UnexistantManagedFile;
 
 /**
  * 
  */
-class UploadManagedFile extends AbstractMediaManagedFile {
+class UploadManagedFile extends AbstractManagedFile {
 
-	private final FileItem fileItem;
+	final FileItem fileItem;
 	private final ManagedFile parent;
 	private ManagedFilePath path;
 	
@@ -56,7 +56,7 @@ class UploadManagedFile extends AbstractMediaManagedFile {
 	}
 
 	@Override
-	public MediaStreamableContent getContent() {
+	protected StreamableContent doGetContent() {
 		return new FileItemManagedFileContent();
 	}
 
@@ -79,23 +79,13 @@ class UploadManagedFile extends AbstractMediaManagedFile {
 	}
 
 
-	private class FileItemManagedFileContent implements  MediaStreamableContent{
+	private class FileItemManagedFileContent extends AbstractRequestFileStreamableContent{
 
 		@Override
-		public InputStream getInputStream() throws ManagedIOException{
+		public InputStream resolveInputStream() throws ManagedIOException{
 
 			try {
 				return fileItem.getInputStream();
-			} catch (IOException e) {
-				throw ManagedIOException.manage(e);
-			}
-
-		}
-
-		@Override
-		public OutputStream getOutputStream() throws ManagedIOException{
-			try {
-				return fileItem.getOutputStream();
 			} catch (IOException e) {
 				throw ManagedIOException.manage(e);
 			}
@@ -107,25 +97,10 @@ class UploadManagedFile extends AbstractMediaManagedFile {
 		}
 
 		@Override
-		public boolean setSize(long size) throws ManagedIOException {
-			return false;
-		}
-
-		@Override
 		public String getContentType() {
 			return fileItem.getContentType();
 		}
 
-		@Override
-		public void setContentType(String contentType) {
-			// not supported. fail silently
-		}
-
-	}
-
-	@Override
-	public long getSize() throws ManagedIOException {
-		return fileItem.getSize();
 	}
 
 	/**
@@ -182,16 +157,56 @@ class UploadManagedFile extends AbstractMediaManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteTree() {
-		//no-op. there is no tree.
+	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
+		return new UnexistantManagedFile(this.getRepository(), path);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
-		return new UnexistantManagedFile(this.getRepository(), path);
+	public boolean isWatchable() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isReadable() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isWriteable() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ManagedFile doCreateFile() {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ManagedFile doCreateFolder(ManagedFile parent) {
+		throw new UnsupportedOperationException("Not implememented yet");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagedFileType getType() {
+		return ManagedFileType.FILE;
 	}
 
 

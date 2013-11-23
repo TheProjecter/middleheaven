@@ -27,6 +27,13 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-io</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.2</version>

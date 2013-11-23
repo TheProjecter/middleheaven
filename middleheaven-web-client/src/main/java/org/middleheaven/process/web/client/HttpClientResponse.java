@@ -3,7 +3,7 @@
  */
 package org.middleheaven.process.web.client;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.web.HttpCookieReader;
 import org.middleheaven.process.web.HttpEntry;
