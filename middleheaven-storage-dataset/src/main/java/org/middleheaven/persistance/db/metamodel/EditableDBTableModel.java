@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
 import org.middleheaven.util.Hash;
 
 public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
@@ -203,7 +204,7 @@ public class EditableDBTableModel implements DataBaseObjectModel, DBTableModel {
 	 */
 	@Override
 	public Enumerable<DBColumnModel> columns() {
-		return CollectionUtils.asEnumerable(CollectionUtils.secureCoerce(this.columns.values(), DBColumnModel.class));
+		return Enumerables.asEnumerable(CollectionUtils.secureCoerce(this.columns.values(), DBColumnModel.class));
 				
 				
 	}

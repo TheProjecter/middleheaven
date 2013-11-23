@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 import javax.sql.DataSource;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.PersistanceException;
@@ -28,8 +28,6 @@ import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.sequence.Sequence;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Function;
 
 public abstract class RDBMSDialect {
 

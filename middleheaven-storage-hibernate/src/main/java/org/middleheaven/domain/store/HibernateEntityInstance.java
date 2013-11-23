@@ -3,7 +3,7 @@
  */
 package org.middleheaven.domain.store;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.util.identity.Identity;
 

@@ -3,7 +3,7 @@
  */
 package org.middleheaven.storage.dataset.mapping;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 
 
 /**

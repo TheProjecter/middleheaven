@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
+import org.middleheaven.domain.query.QueryExecuter;
 import org.middleheaven.domain.query.QueryParametersBag;
 import org.middleheaven.domain.query.QueryResult;
-import org.middleheaven.domain.query.QueryExecuter;
 import org.middleheaven.util.criteria.ReadStrategy;
 
 

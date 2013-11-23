@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.web.server.ServletWebContext;
 import org.middleheaven.ui.SceneNavigator;
@@ -23,8 +23,8 @@ import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;

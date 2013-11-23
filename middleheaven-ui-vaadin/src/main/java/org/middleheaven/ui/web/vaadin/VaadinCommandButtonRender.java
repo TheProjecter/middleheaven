@@ -3,7 +3,6 @@
  */
 package org.middleheaven.ui.web.vaadin;
 
-import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommand;

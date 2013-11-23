@@ -6,7 +6,7 @@ package org.middleheaven.domain.store;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.enumerable.Enumerables;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.util.function.Block;
 import org.middleheaven.util.function.Mapper;
@@ -175,7 +175,7 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 		flatten(p,all);
 
 
-		CollectionUtils.asEnumerable(all).map(new Mapper<StoreAction, EntityInstance>(){
+		Enumerables.asEnumerable(all).map(new Mapper<StoreAction, EntityInstance>(){
 
 			@Override
 			public StoreAction apply(EntityInstance s) {

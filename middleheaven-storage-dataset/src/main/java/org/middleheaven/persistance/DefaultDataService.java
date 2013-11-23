@@ -45,6 +45,9 @@ class DefaultDataService implements DataService {
 			
 			DataStore store = null;
 			
+			if (providers.isEmpty()){
+				throw new DataStoreNotFoundException("Data Store not found. No providers.");
+			}
 			for (DataStoreProvider p : providers){
 				if (p.isProviderDataStore(name)){
 					store = p.getDataStore(name);
@@ -55,7 +58,7 @@ class DefaultDataService implements DataService {
 			stores.put(name, store);
 			
 			if (store == null){
-				throw new DataStoreNotFoundException();
+				throw new DataStoreNotFoundException("Data Store not found.");
 			}
 			
 			return store;

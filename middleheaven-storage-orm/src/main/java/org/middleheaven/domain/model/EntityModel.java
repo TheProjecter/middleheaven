@@ -1,7 +1,7 @@
 package org.middleheaven.domain.model;
 
-import org.middleheaven.collections.Enumerable;
-import org.middleheaven.core.reflection.metaclass.MetaClass;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.model.annotations.InheritanceStrategy;
 import org.middleheaven.util.QualifiedName;
 

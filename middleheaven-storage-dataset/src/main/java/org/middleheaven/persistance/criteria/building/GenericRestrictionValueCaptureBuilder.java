@@ -51,7 +51,6 @@ public class GenericRestrictionValueCaptureBuilder<TERMBUILDER> implements Restr
 	}
 	
 	private TERMBUILDER collect (ColumnValueLocator locator){
-
 		parent.addConstraint(new ColumnValueConstraint(parent.leftSideValueLocator, operator,  locator));
 		
 		return parent.termBuilder;
@@ -62,7 +61,14 @@ public class GenericRestrictionValueCaptureBuilder<TERMBUILDER> implements Restr
 	 */
 	@Override
 	public TERMBUILDER column(TypeDefinition<?> typeDef) {
-		return collect( new ColumnNameValueLocator(typeDef.getQualifiedName()));
+		if (parent.termBuilder instanceof DelegatingRelationsBuilder){
+			DelegatingRelationsBuilder builder = (DelegatingRelationsBuilder) parent.termBuilder;
+			builder.setTargetDataSetModelName(typeDef.getQualifiedName().getQualifier());
+			return parent.termBuilder;
+		} else {
+			return collect( new ColumnNameValueLocator(typeDef.getQualifiedName()));
+		}
+		
 	}
 
 	/**

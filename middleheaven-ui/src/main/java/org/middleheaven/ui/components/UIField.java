@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.data.UIDataDisplay;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 
 /**

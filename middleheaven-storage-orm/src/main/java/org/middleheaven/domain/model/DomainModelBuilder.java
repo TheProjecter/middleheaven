@@ -3,9 +3,9 @@ package org.middleheaven.domain.model;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import org.middleheaven.core.metaclass.ReflectionMetaClass;
 import org.middleheaven.core.reflection.ClassSet;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.metaclass.ReflectionMetaClass;
 import org.middleheaven.model.AbstractModelBuilder;
 import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 

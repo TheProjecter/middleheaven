@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.reflection.InterceptorProxyHandler;
 import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.MethodHandler;

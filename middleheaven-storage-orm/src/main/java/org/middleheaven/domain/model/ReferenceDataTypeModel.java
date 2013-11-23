@@ -1,6 +1,6 @@
 package org.middleheaven.domain.model;
 
-import org.middleheaven.core.reflection.metaclass.MetaClass;
+import org.middleheaven.core.metaclass.MetaClass;
 
 public interface ReferenceDataTypeModel extends DataTypeModel{
 

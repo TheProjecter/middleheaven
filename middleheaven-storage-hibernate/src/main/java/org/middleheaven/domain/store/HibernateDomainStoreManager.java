@@ -33,7 +33,6 @@ import org.hibernate.type.TimeType;
 import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.criteria.FieldJuntionCriterion;
 import org.middleheaven.domain.criteria.IdentityCriterion;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
@@ -46,6 +45,7 @@ import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.storage.dataset.mapping.DatasetColumnModel;
 import org.middleheaven.storage.dataset.mapping.DatasetModel;
 import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.criteria.Criterion;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.criteria.FieldInSetCriterion;
@@ -53,7 +53,6 @@ import org.middleheaven.util.criteria.FieldValueCriterion;
 import org.middleheaven.util.criteria.LogicCriterion;
 import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.function.Function;
-import org.middleheaven.util.function.Maybe;
 
 /**
  * Impleemntation of {@link DomainStoreManager} using the Hiberante framework.

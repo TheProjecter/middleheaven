@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.components;
 
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 
 /**

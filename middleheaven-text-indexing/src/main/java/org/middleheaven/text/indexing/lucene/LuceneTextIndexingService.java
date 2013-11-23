@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
-import org.middleheaven.io.repository.ModificationTracableManagedFile;
+import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.text.indexing.DocumentModel;
 import org.middleheaven.text.indexing.TextIndex;
 import org.middleheaven.text.indexing.TextIndexingException;
@@ -29,7 +29,20 @@ public class LuceneTextIndexingService implements TextIndexingService{
 		this.debug = debug;
 	}
 
-	public void configurateIndex(Object indexIdentifier, ModificationTracableManagedFile managedFile, Analyzer analizer) {
+	/**
+	 * 
+	 * @param indexIdentifier
+	 * @param managedFile a folder 
+	 * @param analizer
+	 * @throws IllegalArgumentException if managedFile.isModificationTraceable returns false or it is not a folder
+	 */
+	public void configurateIndex(Object indexIdentifier, ManagedFile managedFile, Analyzer analizer) {
+		if (!managedFile.isModificationTraceable()){
+			throw new IllegalArgumentException("Managed file must be ModificationTraceable");
+		}
+		if (!managedFile.getType().isFolder()){
+			throw new IllegalArgumentException("Managed file must be a folder");
+		}
 		try {
 			
 //			managedFile = MachineFiles.ensureMachineFile(managedFile);

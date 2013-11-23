@@ -15,20 +15,19 @@ import org.apache.lucene.store.Lock;
 import org.apache.lucene.store.LockFactory;
 import org.apache.lucene.store.LockReleaseFailedException;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ModificationTracableManagedFile;
 
 /**
  * 
  */
 class ManagedFileLockFactory extends LockFactory {
 
-	private ModificationTracableManagedFile directory;
+	private ManagedFile directory;
 
 	/**
 	 * Constructor.
 	 * @param directory
 	 */
-	public ManagedFileLockFactory(ModificationTracableManagedFile directory) {
+	public ManagedFileLockFactory(ManagedFile directory) {
 		this.directory = directory;
 	}
 

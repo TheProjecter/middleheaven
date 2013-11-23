@@ -18,7 +18,6 @@ package org.middleheaven.text.indexing.lucene;
  */
 
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 
 import org.apache.lucene.store.BufferedIndexInput;
 import org.apache.lucene.store.BufferedIndexOutput;
@@ -29,7 +28,6 @@ import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.NativeFSLockFactory;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedRandomAccessFile;
-import org.middleheaven.io.repository.ModificationTracableManagedFile;
 
 /** A straightforward implementation of {@link ManagedFileDirectory}
  *  using java.io.RandomAccessFile.  However, this class has
@@ -45,7 +43,7 @@ class SimpleFSDirectory extends ManagedFileDirectory {
 	 * @param path the path of the directory
 	 * @throws IOException
 	 */
-	public SimpleFSDirectory(ModificationTracableManagedFile path) throws IOException {
+	public SimpleFSDirectory(ManagedFile path) throws IOException {
 		super(path);
 	}
 

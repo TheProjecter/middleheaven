@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.middleheaven.core.metaclass.MetaBean;
+import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.reflection.metaclass.MetaBean;
-import org.middleheaven.core.reflection.metaclass.MetaClass;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.store.EntityInstance;

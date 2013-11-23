@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.metaclass.MetaClass;
+import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.sequence.Sequence;
 

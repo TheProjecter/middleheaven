@@ -3,7 +3,6 @@ package org.middleheaven.domain.criteria;
 import java.util.Collection;
 import java.util.List;
 
-import org.middleheaven.domain.criteria.projection.Projection;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.criteria.Criteria;
 import org.middleheaven.util.criteria.Criterion;

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.middleheaven.core.reflection.metaclass.MetaBean;
-import org.middleheaven.core.reflection.metaclass.ReflectionBean;
+import org.middleheaven.core.metaclass.MetaBean;
+import org.middleheaven.core.metaclass.ReflectionBean;
 import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.criteria.EqualsOtherInstanceCriterion;
 import org.middleheaven.domain.criteria.FieldJuntionCriterion;

@@ -42,8 +42,8 @@ import org.middleheaven.storage.types.NumberTypeMapper;
 import org.middleheaven.storage.types.RealTypeMapper;
 import org.middleheaven.storage.types.StringTypeMapper;
 import org.middleheaven.storage.types.TypeMapper;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.identity.IntegerIdentity;
 import org.middleheaven.util.identity.LongIdentity;
 

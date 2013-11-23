@@ -9,8 +9,8 @@ import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.layout.UIBorderLayoutConstraint;
 import org.middleheaven.ui.web.vaadin.BorderLayout.Constraint;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.SafeCastUtils;
-import org.middleheaven.util.function.Maybe;
 
 /**
  * 

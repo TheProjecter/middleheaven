@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
@@ -16,8 +16,8 @@ import org.middleheaven.ui.UIDimensionUnit;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;

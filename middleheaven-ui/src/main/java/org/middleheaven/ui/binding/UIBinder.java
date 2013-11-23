@@ -19,7 +19,7 @@ import org.middleheaven.ui.UISearch;
 import org.middleheaven.ui.annotations.UIActionBind;
 import org.middleheaven.ui.annotations.UIBind;
 import org.middleheaven.ui.components.UICommand;
-import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.Maybe;
 
 /**
  * 

@@ -3,8 +3,8 @@ package org.middleheaven.ui;
 import java.util.List;
 
 import org.middleheaven.ui.components.UIInput;
+import org.middleheaven.ui.property.Property;
 import org.middleheaven.ui.rendering.RenderKit;
-import org.middleheaven.util.property.Property;
 
 
 /**

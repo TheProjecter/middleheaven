@@ -1,6 +1,6 @@
 package org.middleheaven.model;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 
 /**
  * The set of models, mapped by modeled classs.
@@ -14,7 +14,7 @@ public interface ModelSet<M> {
 	 * @param <T> the model type
 	 * @return and Enumerable  with all the EntityModel of the domain.
 	 */
-	public <T extends M> Enumerable<T> models();	
+	public  Enumerable<M> models();	
 
 	/**
 	 * 

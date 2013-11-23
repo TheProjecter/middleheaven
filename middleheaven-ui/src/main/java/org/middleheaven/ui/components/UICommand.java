@@ -3,7 +3,7 @@ package org.middleheaven.ui.components;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 public interface UICommand extends UIComponent {
 

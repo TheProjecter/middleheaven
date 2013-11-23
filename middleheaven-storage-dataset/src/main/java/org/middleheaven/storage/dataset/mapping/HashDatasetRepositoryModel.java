@@ -6,8 +6,8 @@ package org.middleheaven.storage.dataset.mapping;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
 
 /**
  * 
@@ -21,7 +21,7 @@ public class HashDatasetRepositoryModel implements EditableDatasetRepositoryMode
 	 */
 	@Override
 	public Enumerable<DatasetModel> models() {
-		return CollectionUtils.asEnumerable(models.values()).cast(DatasetModel.class);
+		return Enumerables.asEnumerable(models.values()).cast(DatasetModel.class);
 	}
 
 	/**

@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.global.text.LocalizableText;
+import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UILayoutManager;
 import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.ui.rendering.RenderKit;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 /**
  * Generic, {@link RenderKit} agnostic representation of a {@link UIComponent}.
@@ -75,19 +75,11 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer , 
 	/**
 	 * 
 	 * Constructor.
-	 */
-	public GenericUIComponent(){
-		this.id = Integer.toHexString(nextID++);
-	}
-
-	/**
-	 * 
-	 * Constructor.
 	 * @param renderType
 	 * @param familly
 	 */
 	protected GenericUIComponent(Class<T> renderType, String familly){
-		this();
+		this.id = Integer.toHexString(nextID++);
 		this.renderType = renderType;
 		this.familly = familly;
 		
@@ -347,5 +339,13 @@ public class GenericUIComponent<T extends UIComponent> implements UIContainer , 
 	@Override
 	public void setLayoutManager(UILayoutManager layoutManager) {
 		this.layoutManager = layoutManager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIDataContainer getUIDataContainer() {
+		return dataContainer;
 	}
 }

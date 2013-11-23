@@ -5,9 +5,9 @@ package org.middleheaven.ui.web.vaadin;
 
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.components.UILabel;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 import com.vaadin.ui.Label;
 

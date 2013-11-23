@@ -6,18 +6,18 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.bootstrap.activation.AtivationException;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.namedirectory.NameDirectoryService;
 import org.middleheaven.namedirectory.NameObjectEntry;
 import org.middleheaven.transactions.TransactionService;
-import org.middleheaven.util.function.Block;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.function.Predicate;
 
 /**
@@ -61,18 +61,19 @@ public class DataSourceServiceActivator extends ServiceActivator {
 	@Override
 	public void activate(final ServiceContext serviceContext ) {
 
-		TransactionService transactionService = serviceContext.getService(TransactionService.class);
+	
+		Maybe<TransactionService> maybeTransactionService = serviceContext.getPossibleUnAvailableService(TransactionService.class);
 
-		if (transactionService == null){
+		if (maybeTransactionService.isAbsent()){
 			this.dataSourceService =  new HashDataSourceService();
 		} else {
-			this.dataSourceService =  new TransactionAwareDataSourceService(transactionService);	
+			this.dataSourceService =  new TransactionAwareDataSourceService(maybeTransactionService.get());	
 		}
 
-		NameDirectoryService nameDirectoryService = serviceContext.getService(NameDirectoryService.class);
+		Maybe<NameDirectoryService> maybeNameDirectoryService = serviceContext.getPossibleUnAvailableService(NameDirectoryService.class);
 
-		if (nameDirectoryService != null){
-
+		if (maybeNameDirectoryService.isPresent()){
+			NameDirectoryService nameDirectoryService = maybeNameDirectoryService.get();
 			for (NameObjectEntry entry : nameDirectoryService.listObjects(JNDI_DATASOURCE_DIRECTORY)){
 
 				if (entry.getObject() instanceof DataSource) {

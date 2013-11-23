@@ -11,7 +11,7 @@ import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.components.UIWindowsListener;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Panel;

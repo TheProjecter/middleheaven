@@ -4,7 +4,7 @@
 package org.middleheaven.ui.web.vaadin;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;

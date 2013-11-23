@@ -228,7 +228,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 			sql.append("datetime");
 			break;
 		case TEXT:
-			sql.append("varchar (").append(column.getSize()).append(")");
+			sql.append("varchar(").append(column.getSize()).append(")");
 			break;
 		case MEMO:
 			sql.append("varchar");
@@ -241,7 +241,9 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 			sql.append("int");
 			break;
 		case DECIMAL:
-			sql.append("numeric (").append(column.getPrecision()).append(",").append(column.getSize()).append(")");
+			sql.append("decimal(")
+			.append(column.getSize()).append(",").append(column.getPrecision())
+			.append(")");
 			break;
 		default:
 			throw new PersistanceException(column.getType() + " is not convertible to a native column type");
@@ -293,6 +295,7 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 					}
 
 					col.setNullable(columns.getInt(4) == 1 );
+					col.setLogicName(col.getName().getQualifier());
 					tm.addColumn(col);
 				}
 

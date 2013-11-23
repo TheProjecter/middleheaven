@@ -12,8 +12,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.middleheaven.collections.Enumerable;
-import org.middleheaven.collections.Pair;
+import org.middleheaven.collections.KeyValuePair;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.DataColumn;
 import org.middleheaven.persistance.DataQuery;
@@ -121,7 +121,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		DataStore ds = this.stores.get(name);
 
 		if (ds == null) {
-			throw new DataStoreNotFoundException();
+			throw new DataStoreNotFoundException(" Data Store not found");
 		}
 
 		return ds;
@@ -193,7 +193,6 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		@Override
 		public DataStoreSchema getDataStoreSchema(final DataStoreSchemaName schemaName) {
 
-
 			return new DataStoreSchema(){
 
 				/**
@@ -235,17 +234,14 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 									QualifiedName q = ( (ColumnValueConstraint) c).getLeftValuelocator().getName();
 
 									if (q != null){
-
 										relation.setSourceTableModel(mapper.getTableColumnModel(q).getTableModel());
 									}
 
 									q = ( (ColumnValueConstraint) c).getRightValueLocator().getName();
 
 									if (q != null){
-
 										relation.setTargetTableModel(mapper.getTableColumnModel(q).getTableModel());
 									}
-
 
 									relation.getRelationConstraint().addConstraint(rd.getRelationConstraint());
 
@@ -338,10 +334,10 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 											return obj.getUniqueGroupName();
 										}
 
-									}).forEach( new Block<Pair<String,Enumerable<DBColumnModel>>>(){
+									}).forEach( new Block<KeyValuePair<String,Enumerable<DBColumnModel>>>(){
 
 										@Override
-										public void apply(Pair<String,Enumerable<DBColumnModel>> entry) {
+										public void apply(KeyValuePair<String,Enumerable<DBColumnModel>> entry) {
 
 											indexComands.add(dialect.createCreateIndexCommand(entry.getValue() , true));
 

@@ -5,13 +5,14 @@ import static org.junit.Assert.assertNotNull;
 
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.core.wiring.BindConfiguration;
-import org.middleheaven.core.wiring.Binder;
-import org.middleheaven.core.wiring.WiringService;
+import org.middleheaven.core.bootstrap.BootstrapChain;
+import org.middleheaven.core.bootstrap.BootstrapContainerExtention;
+import org.middleheaven.core.bootstrap.BootstrapContext;
+import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.machine.MachineFiles;
@@ -19,23 +20,25 @@ import org.middleheaven.persistance.DataQuery;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.DataRowStream;
 import org.middleheaven.persistance.DataService;
+import org.middleheaven.persistance.DataServiceActivator;
 import org.middleheaven.persistance.DataStore;
-import org.middleheaven.persistance.DataStoreName;
 import org.middleheaven.persistance.DataStoreNotFoundException;
-import org.middleheaven.persistance.DataStoreProvider;
 import org.middleheaven.persistance.DataStoreSchema;
 import org.middleheaven.persistance.DataStoreSchemaName;
 import org.middleheaven.persistance.DataStoreSchemaNotFoundException;
 import org.middleheaven.persistance.ModelNotEditableException;
 import org.middleheaven.persistance.criteria.building.DataSetCriteriaBuilder;
+import org.middleheaven.persistance.db.datasource.DataSourceService;
+import org.middleheaven.persistance.db.datasource.DataSourceServiceActivator;
 import org.middleheaven.persistance.db.datasource.EmbeddedDSProvider;
-import org.middleheaven.persistance.db.mapping.DataBaseMapper;
 import org.middleheaven.persistance.db.mapping.ModelParsingException;
 import org.middleheaven.persistance.model.DataSetDefinition;
 import org.middleheaven.persistance.model.DataSetDefinitions;
 import org.middleheaven.persistance.model.TypeDefinition;
 import org.middleheaven.quantity.money.CentsMoney;
 import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
+import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModelBuilder;
+import org.middleheaven.storage.dataset.mapping.XmlDrivenDatasetRepositoryModelReader;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
 import org.middleheaven.util.QualifiedName;
 
@@ -75,53 +78,33 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 
 	private DataService dataPersistanceService;
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void setupWiringBundles(WiringService service) {
 
-		service.addConfiguration(new BindConfiguration(){
+	protected void readExtentions(List<BootstrapContainerExtention> extentions) {
+		extentions.add(new BootstrapContainerExtention(){
 
 			@Override
-			public void configure(Binder binder) {
-				binder.bind(DataService.class).inSharedScope().toInstance(new DataService(){
+			public void extend(BootstrapContext context, BootstrapChain chain) {
+				
 
-					@Override
-					public void addProvider(DataStoreProvider provider) {
-						throw new UnsupportedOperationException("Not implememented yet");
-					}
+				context.registerService(ServiceBuilder
+						.forContract(DataSourceService.class)
+						.activatedBy(new DataSourceServiceActivator())
+						.newInstance()
+				);
+				
+				context.registerService(ServiceBuilder
+						.forContract(DataService.class)
+						.activatedBy(new DataServiceActivator())
+						.newInstance()
+				);
 
-					@Override
-					public void removeProvider(DataStoreProvider provider) {
-						throw new UnsupportedOperationException("Not implememented yet");
-					}
 
-					@Override
-					public void registerDataStore(DataStoreName name,
-							DatasetRepositoryModel dataSetModel) {
-						throw new UnsupportedOperationException("Not implememented yet");
-					}
-
-					@Override
-					public DataStore getDataStore(DataStoreName name)
-							throws DataStoreNotFoundException {
-						throw new UnsupportedOperationException("Not implememented yet");
-					}
-
-					@Override
-					public DataStoreSchema getDataStoreSchema(
-							DataStoreSchemaName name)
-							throws DataStoreSchemaNotFoundException {
-						throw new UnsupportedOperationException("Not implememented yet");
-					}
-					
-				});
+				chain.doChain(context);
 			}
 			
 		});
-		
 	}
+
 	
 	@Wire 
 	public void setDataPersistanceService (DataService dataPersistanceService){
@@ -137,38 +120,33 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 		
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testWriting() throws ManagedIOException, ModelParsingException, DataStoreNotFoundException, MalformedURLException, DataStoreSchemaNotFoundException, ModelNotEditableException{
-		
 		
 		ManagedFile vfs =  MachineFiles.getDefaultFolder();
 		
-		ManagedFile xmlMappingFile = vfs.retrive("src/test/resources/dsmapping.xml");
+		ManagedFile config = vfs.retrive("src/test/resources/dsmapping.xml");
+
+		final DataStoreSchemaName dataStoreSchemaName = DataStoreSchemaName.name("testdb", "public");
+
+		DatasetRepositoryModel datasetModel = DatasetRepositoryModelBuilder.newInstance()
+				.addReader(XmlDrivenDatasetRepositoryModelReader.newInstance(config))
+				.build();
 		
-		DataBaseMapper mapper = null; // TODO XmlDataBaseMapper.newInstance(xmlMappingFile);
-		
-		ManagedFile dataFolder = vfs.retrive("data/db");
-		
-		if (!dataFolder.exists()){
-			dataFolder.createFolder();
-		}
-		
-		EmbeddedDSProvider eds = EmbeddedDSProvider.provider("testdb", dataFolder.getURI().toURL(), "sa", "");
-		
+		EmbeddedDSProvider eds = EmbeddedDSProvider.provider("testdb", "sa", "");
 		eds.start();
 
-		
-		
-		
 		dataPersistanceService.addProvider(eds.getDataStoreProvider());
 		
+		// config datastore 
+		dataPersistanceService.registerDataStore(dataStoreSchemaName.getDataStoreName(), datasetModel);
 
-		DataStoreSchema schema = dataPersistanceService.getDataStoreSchema(DataStoreSchemaName.name("testdb" , "public"));
-		
-	
+		// Update DB Model
+		DataStore store = dataPersistanceService.getDataStore(dataStoreSchemaName.getDataStoreName());
+
+		DataStoreSchema schema = store.getDataStoreSchema(dataStoreSchemaName);
+
 		schema.updateModel();
-		
-		
 		
 		DataSetCriteria criteriaA = DataSetCriteriaBuilder
 		.retrive()
@@ -241,7 +219,7 @@ public class DataSetCriteriaBuilderTest extends MiddleHeavenTestCase {
 				 
 				 DataRow row = st.currentRow();
 				 
-				 
+				assertNotNull(row);
 			 }
 		 } finally {
 			 st.close();

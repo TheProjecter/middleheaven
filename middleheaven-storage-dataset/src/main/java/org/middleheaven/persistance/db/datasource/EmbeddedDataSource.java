@@ -5,22 +5,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.jar.Attributes;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
-import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.io.IO;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.PersistanceException;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.transactions.XAResourceAdapter;
-import org.middleheaven.util.function.Block;
+import org.middleheaven.util.Maybe;
 
 
 /**
@@ -81,12 +76,8 @@ public class EmbeddedDataSource extends AbstractDataSource {
 		if(!inMemory){
 			Logger.onBookFor(this.getClass()).info("Starting : {0}", url);
 			
-			String[] params = new String[4];
-			params[0] = "-database.0";
-			params[1] = location.toString();
-			params[2] = "-dbname.0";
-			params[3] = catalog;
-
+			String[] params = new String[]{"-database.0", location.toString(), "-dbname.0"};
+	
 			Introspector.of(Object.class).load("org.hsqldb.Server").invokeMain(params);
 		} else {
 			Logger.onBookFor(this.getClass()).info("Starting in memory database");
@@ -115,7 +106,7 @@ public class EmbeddedDataSource extends AbstractDataSource {
 				if (ps != null){
 					ps.close();
 				}
-				if (con!=null){
+				if (con!=null && !con.isClosed()){
 					con.close();
 				}
 			}
@@ -142,21 +133,23 @@ public class EmbeddedDataSource extends AbstractDataSource {
 		Connection c = local.get();
 		
 		if ( c == null ){
-			TransactionService ts = ServiceRegistry.getService(TransactionService.class);
+			Maybe<TransactionService> maybeTransactionService = ServiceRegistry.getPossibleUnAvailableService(TransactionService.class);
 			Connection con = riseConnection(nlogin,npass);
 			
-			if (ts.isTransactional()){
+			if (maybeTransactionService.isPresent() && maybeTransactionService.get().isTransactional()){
 				con.setAutoCommit(false);
 		
-				ts.enlistResource(new XAConnectionControl(con));
+				maybeTransactionService.get().enlistResource(new XAConnectionControl(con));
 				
 				c = new EmbededConnection(con);
 				local.set(c);
+			} else if (maybeTransactionService.isAbsent()){
+				con.setAutoCommit(true);
+				return con;
 			} else {
 				con.setAutoCommit(this.isAutoCommit());
 				return con;
 			}
-		
 		}
 		
 		return c;

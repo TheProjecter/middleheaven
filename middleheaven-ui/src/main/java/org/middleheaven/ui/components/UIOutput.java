@@ -2,7 +2,7 @@ package org.middleheaven.ui.components;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 public interface UIOutput extends UIComponent {
 

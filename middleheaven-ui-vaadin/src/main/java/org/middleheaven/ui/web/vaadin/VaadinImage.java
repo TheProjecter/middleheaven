@@ -5,9 +5,9 @@ package org.middleheaven.ui.web.vaadin;
 
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIImage;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 import com.vaadin.ui.Label;
 

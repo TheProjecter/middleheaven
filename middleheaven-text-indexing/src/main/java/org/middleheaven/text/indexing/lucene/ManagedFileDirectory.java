@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.lucene.store.BufferedIndexInput;
 import org.apache.lucene.store.Directory;
@@ -36,7 +34,7 @@ import org.apache.lucene.util.Constants;
 import org.apache.lucene.util.ThreadInterruptedException;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ModificationTracableManagedFile;
+import org.middleheaven.quantity.time.EpocTimePoint;
 import org.middleheaven.util.function.Mapper;
 import org.middleheaven.util.function.Predicate;
 
@@ -56,14 +54,14 @@ public abstract class ManagedFileDirectory extends Directory {
   }
 
   /** The underlying filesystem directory */
-  protected ModificationTracableManagedFile directory = null;
+  protected ManagedFile directory = null;
   
   private boolean checked;
 
   final void createDir() throws ManagedIOException {
     if (!checked) {
       if (!directory.exists()) {
-    	  directory = (ModificationTracableManagedFile) directory.createFolder();
+    	  directory = directory.createFolder();
       }
     	  
       checked = true;
@@ -88,7 +86,7 @@ public abstract class ManagedFileDirectory extends Directory {
    * ({@link NativeFSLockFactory});
    * @throws IOException
    */
-  protected ManagedFileDirectory(ModificationTracableManagedFile directory) throws IOException {
+  protected ManagedFileDirectory(ManagedFile directory) throws IOException {
 
    
     lockFactory = new ManagedFileLockFactory(directory);
@@ -107,7 +105,7 @@ public abstract class ManagedFileDirectory extends Directory {
 
   /** Just like {@link #open(File)}, but allows you to
    *  also specify a custom {@link LockFactory}. */
-  public static ManagedFileDirectory open(ModificationTracableManagedFile directory) throws IOException {
+  public static ManagedFileDirectory open(ManagedFile directory) throws IOException {
 
    // if (Constants.WINDOWS) {
       return new SimpleFSDirectory(directory);
@@ -124,16 +122,15 @@ public abstract class ManagedFileDirectory extends Directory {
    *   does not exist, or does exist but is not a
    *   directory.
    *  @throws IOException if list() returns null */
-  public static String[] listAll(ManagedFile dir) throws IOException {
+  private static String[] listAll(ManagedFile dir) throws IOException {
     if (!dir.exists()) {
       throw new NoSuchDirectoryException("directory '" + dir + "' does not exist");
    } else if (!dir.getType().isFolder()){
       throw new NoSuchDirectoryException("file '" + dir + "' exists but is not a directory");
     }
-    
-    
-    // Exclude subdirs
-    Set<String> childrenNames = dir.children().filter(new Predicate<ManagedFile>(){
+
+    // Exclude subdirs 
+    return dir.children().filter(new Predicate<ManagedFile>(){
 
 		@Override
 		public Boolean apply(ManagedFile file) {
@@ -147,14 +144,7 @@ public abstract class ManagedFileDirectory extends Directory {
 			return obj.getPath().getFileName();
 		}
     	
-    }).into(new HashSet<String>());
-    
-    
-    String[] result = new String[childrenNames.size()];
-    
-    result = childrenNames.toArray(result);
-    
-    return result;
+    }).distinct().asArray();
   }
 
   /** Lists all files (not subdirectories) in the
@@ -178,7 +168,7 @@ public abstract class ManagedFileDirectory extends Directory {
   @Override
   public long fileModified(String name) {
     ensureOpen();
-    return directory.retrive(name).lastModified();
+    return directory.retrive(name).getModificationTrace().getLastModified().getMilliseconds();
   }
 
   /** Returns the time the named file was last modified. */
@@ -191,7 +181,7 @@ public abstract class ManagedFileDirectory extends Directory {
   @Override
   public void touchFile(String name) {
     ensureOpen();
-    directory.retrive(name).setLastModified(System.currentTimeMillis());
+    directory.retrive(name).getModificationTrace().setLastModified(new EpocTimePoint(System.currentTimeMillis()));
   }
 
   /** Returns the length in bytes of a file in the directory. */

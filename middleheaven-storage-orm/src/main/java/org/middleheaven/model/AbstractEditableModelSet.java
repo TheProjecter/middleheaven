@@ -3,8 +3,8 @@ package org.middleheaven.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
 
 /**
  * 
@@ -20,8 +20,8 @@ public abstract class AbstractEditableModelSet<M> implements ModelSet<M> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T extends M> Enumerable<T> models() {
-		return  (Enumerable<T>) CollectionUtils.asEnumerable(models.values());
+	public Enumerable<M> models() {
+		return  Enumerables.asEnumerable(models.values());
 	}
 
 	/**

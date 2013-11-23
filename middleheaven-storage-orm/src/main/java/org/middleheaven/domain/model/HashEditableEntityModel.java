@@ -3,9 +3,9 @@ package org.middleheaven.domain.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Enumerable;
-import org.middleheaven.core.reflection.metaclass.MetaClass;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
+import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.model.annotations.InheritanceStrategy;
 import org.middleheaven.util.QualifiedName;
 
@@ -131,7 +131,7 @@ public final class HashEditableEntityModel implements EditableDomainEntityModel 
 	 */
 	@Override
 	public Enumerable<? extends EditableEntityFieldModel> fields() {
-		return CollectionUtils.asEnumerable(this.fields.values());
+		return Enumerables.asEnumerable(this.fields.values());
 	}
 
 

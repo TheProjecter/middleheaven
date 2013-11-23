@@ -20,13 +20,11 @@ package org.middleheaven.text.indexing.lucene;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ScatteringByteChannel;
 
 import org.apache.lucene.store.IndexInput;
 import org.apache.lucene.store.IndexOutput;
 import org.apache.lucene.store.NativeFSLockFactory;
 import org.middleheaven.io.repository.ManagedFile;
-import org.middleheaven.io.repository.ModificationTracableManagedFile;
 
 /**
  * An {@link ManagedFileDirectory} implementation that uses
@@ -52,7 +50,7 @@ class NIOFSDirectory extends ManagedFileDirectory {
    * @param path the path of the directory
    * @throws IOException
    */
-  public NIOFSDirectory(ModificationTracableManagedFile path) throws IOException {
+  public NIOFSDirectory(ManagedFile path) throws IOException {
     super(path);
   }
 

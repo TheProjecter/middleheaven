@@ -11,10 +11,10 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import org.middleheaven.sequence.AbstractStatePersistanteSequence;
 import org.middleheaven.sequence.SequenceState;
 import org.middleheaven.sequence.SequenceToken;
 import org.middleheaven.sequence.StateEditableSequence;
+import org.middleheaven.sequence.service.AbstractStatePersistanteSequence;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.transactions.XAResourceAdapter;
 import org.middleheaven.util.Hash;

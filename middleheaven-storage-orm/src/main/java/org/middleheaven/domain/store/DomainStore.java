@@ -1,8 +1,6 @@
 package org.middleheaven.domain.store;
 
 import org.middleheaven.domain.criteria.EntityCriteria;
-import org.middleheaven.domain.query.QueryResult;
-import org.middleheaven.util.criteria.ReadStrategy;
 import org.middleheaven.util.identity.Identity;
 
 /**

@@ -3,10 +3,10 @@ package org.middleheaven.domain.store;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.middleheaven.collections.Enumerable;
-import org.middleheaven.collections.TransformedEnumerable;
-import org.middleheaven.core.reflection.metaclass.ListenableMetaBean;
-import org.middleheaven.core.reflection.metaclass.MetaBean;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.TransformedEnumerable;
+import org.middleheaven.core.metaclass.ListenableMetaBean;
+import org.middleheaven.core.metaclass.MetaBean;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.util.QualifiedName;

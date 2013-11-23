@@ -1,7 +1,5 @@
 package org.middleheaven.domain.model;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -9,15 +7,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.core.metaclass.MetaClass;
+import org.middleheaven.core.metaclass.ReflectionMetaClass;
 import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.PropertyHandler;
 import org.middleheaven.core.reflection.ReflectionException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.EnumIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.reflection.metaclass.MetaClass;
-import org.middleheaven.core.reflection.metaclass.ReflectionMetaClass;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.model.annotations.Discriminator;
 import org.middleheaven.model.annotations.DiscriminatorValue;
@@ -42,8 +40,8 @@ import org.middleheaven.quantity.time.CalendarDateTime;
 import org.middleheaven.quantity.time.TimePoint;
 import org.middleheaven.storage.annotations.Transient;
 import org.middleheaven.storage.annotations.Unique;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.function.Maybe;
 import org.middleheaven.util.identity.Identity;
 
 /**

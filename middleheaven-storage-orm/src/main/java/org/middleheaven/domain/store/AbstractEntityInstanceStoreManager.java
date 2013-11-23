@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import org.middleheaven.core.metaclass.MetaBean;
+import org.middleheaven.core.metaclass.ReflectionBean;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.core.reflection.metaclass.MetaBean;
-import org.middleheaven.core.reflection.metaclass.ReflectionBean;
 import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;

@@ -10,14 +10,12 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.text.indexing.IndexableDocument;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.criteria.Criterion;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.criteria.FieldCriterion;
-import org.middleheaven.util.criteria.FieldInSetCriterion;
-import org.middleheaven.util.criteria.JunctionCriterion;
 import org.middleheaven.util.criteria.LogicCriterion;
 import org.middleheaven.util.criteria.text.TextSearchCriteria;
 

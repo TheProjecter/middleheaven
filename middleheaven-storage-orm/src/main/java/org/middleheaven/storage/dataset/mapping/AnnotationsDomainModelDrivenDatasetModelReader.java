@@ -18,10 +18,10 @@ import org.middleheaven.storage.annotations.Dataset;
 import org.middleheaven.storage.annotations.Indexed;
 import org.middleheaven.storage.annotations.Transient;
 import org.middleheaven.storage.annotations.Unique;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Maybe;
 
 /**
  * 

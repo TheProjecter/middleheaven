@@ -10,5 +10,5 @@ public interface UIDataDisplay {
 
 	
 	public void setUIDataContainer(UIDataContainer container);
-	
+	public UIDataContainer getUIDataContainer();
 }

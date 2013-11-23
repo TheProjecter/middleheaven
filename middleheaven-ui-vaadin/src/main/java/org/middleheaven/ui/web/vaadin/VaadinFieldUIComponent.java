@@ -9,8 +9,8 @@ import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIField;
 import org.middleheaven.ui.data.UIDataContainer;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 import com.vaadin.ui.Component;
 
@@ -26,6 +26,7 @@ public class VaadinFieldUIComponent extends VaadinOutputUIComponent implements U
 	private Property<ParsableFormatter> formatter = ValueProperty.writable("formatter", ParsableFormatter.class);
 
 	private Property<String> name = ValueProperty.writable("name", String.class);
+	private UIDataContainer container;
 	
 	/**
 	 * Constructor.
@@ -72,7 +73,7 @@ public class VaadinFieldUIComponent extends VaadinOutputUIComponent implements U
 	 */
 	@Override
 	public void setUIDataContainer(UIDataContainer container) {
-		throw new UnsupportedOperationException("Not implememented yet");
+		this.container = container;
 	}
 
 	/**
@@ -81,6 +82,14 @@ public class VaadinFieldUIComponent extends VaadinOutputUIComponent implements U
 	@Override
 	public Property<ParsableFormatter> getFormaterProperty() {
 		return formatter;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIDataContainer getUIDataContainer() {
+		return container;
 	}
 
 }

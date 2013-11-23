@@ -7,7 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-import org.middleheaven.collections.IncrementIterator;
+import org.middleheaven.collections.enumerable.IncrementIterator;
 import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataColumnsModel;

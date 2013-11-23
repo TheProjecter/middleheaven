@@ -3,7 +3,7 @@
  */
 package org.middleheaven.domain.store;
 
-import org.middleheaven.core.reflection.metaclass.MetaClass;
+import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.util.identity.Identity;
 import org.middleheaven.util.identity.IntegerIdentity;
 import org.middleheaven.util.identity.LongIdentity;

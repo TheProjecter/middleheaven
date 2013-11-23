@@ -7,7 +7,7 @@ import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;

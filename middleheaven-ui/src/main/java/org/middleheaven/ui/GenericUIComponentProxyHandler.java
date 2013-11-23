@@ -11,7 +11,7 @@ import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.PropertyBagProxyHandler;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 class GenericUIComponentProxyHandler extends PropertyBagProxyHandler {
 

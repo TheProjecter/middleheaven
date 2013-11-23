@@ -12,9 +12,9 @@ import org.middleheaven.ui.UISearch.UISearchFilter;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIForm;
 import org.middleheaven.ui.events.UIActionEvent;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

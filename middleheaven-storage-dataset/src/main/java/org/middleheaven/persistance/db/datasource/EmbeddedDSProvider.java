@@ -170,12 +170,11 @@ public final class EmbeddedDSProvider implements DataSourceProvider{
 
 				@Override
 				public String resolveDataSourceName(DataStoreName name) {
-					throw new UnsupportedOperationException("Not implememented yet");
+					return name.getName();
 				}
 				
 			});
 		}
-		
-		
+
 	}
 }

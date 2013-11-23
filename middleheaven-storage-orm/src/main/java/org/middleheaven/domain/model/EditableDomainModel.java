@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.model.AbstractEditableModelSet;
-import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.Maybe;
 
 /**
  * 

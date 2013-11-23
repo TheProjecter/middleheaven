@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public abstract class AbstractUIClient implements UIClient , NamingContainer {
 
