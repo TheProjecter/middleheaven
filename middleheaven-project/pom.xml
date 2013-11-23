@@ -19,14 +19,17 @@
 	<modules>
 		<!-- not official 
 		<module>../middleheaven-business/module>
+		<module>../middleheaven-chart</module>
 		-->
+		<module>../middleheaven-utils</module>
 		<module>../middleheaven-cache</module>
 		<module>../middleheaven-core</module>
-		<module>../middleheaven-chart</module>
 		<module>../middleheaven-math</module>
 		<module>../middleheaven-desktop</module>
 		<module>../middleheaven-reports</module>
 		<module>../middleheaven-io</module>
+		<module>../middleheaven-io-ftp</module>
+		<module>../middleheaven-io-vfs</module>
 		<module>../middleheaven-mail</module>
 		<module>../middleheaven-namedirectory</module>
 		<module>../middleheaven-enterprise</module>
