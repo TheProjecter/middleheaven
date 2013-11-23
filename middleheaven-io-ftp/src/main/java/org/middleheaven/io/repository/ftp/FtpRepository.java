@@ -16,14 +16,13 @@ import java.util.List;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileFilter;
 import org.middleheaven.io.ArrayByteBuffer;
 import org.middleheaven.io.AutoInputStreamCopy;
 import org.middleheaven.io.AutoOutputStreamCopy;
-import org.middleheaven.io.FileNotFoundManagedException;
 import org.middleheaven.io.IOTransport;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.StreamableContent;
+import org.middleheaven.io.StreamableContentAdapter;
 import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.AbstractManagedRepository;
 import org.middleheaven.io.repository.ArrayManagedFilePath;
@@ -31,6 +30,7 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
+import org.middleheaven.util.Joiner;
 
 /**
  * 
@@ -45,7 +45,6 @@ public class FtpRepository extends AbstractManagedRepository{
 		this.ftpCredentials = ftpCredentials;
 
 	}
-
 
 	@Override
 	public void close() throws IOException {
@@ -74,25 +73,8 @@ public class FtpRepository extends AbstractManagedRepository{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterable<ManagedFilePath> getRoots() {
-
-		//		try {
+	public Iterable<ManagedFilePath> getRootPaths() {
 		return Collections.singleton((ManagedFilePath)new ArrayManagedFilePath(this, "/"));
-		//			FTPClient ftp = connect();
-		//
-		//			String[] arq = ftp.listNames();
-		//
-		//			List<ManagedFilePath> result = new ArrayList<ManagedFilePath>(arq.length);
-		//			for (String f : arq){
-		//				if ((f.equals("."))){
-		//					result.add();
-		//				}
-		//			}
-		//
-		//			return result;
-		//		} catch (IOException e){
-		//			throw  ManagedIOException.manage(e);
-		//		}
 	}
 
 	/**
@@ -101,10 +83,12 @@ public class FtpRepository extends AbstractManagedRepository{
 	@Override
 	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
 
+		FTPClient ftp = connect();
+		String currentDirectory = null;
 		try {
-			FTPClient ftp = connect();
-
+			currentDirectory = ftp.printWorkingDirectory();
 			if (path.getFileName() == null){
+				ftp.changeWorkingDirectory(path.toString());
 				FTPFile[] files = ftp.listFiles();
 				for (FTPFile f : files){
 					if (f.getName().equals("."))
@@ -112,18 +96,45 @@ public class FtpRepository extends AbstractManagedRepository{
 						return new FtpManagedFile(this, f, path);
 					}
 				}
-				throw new FileNotFoundManagedException("No file found");
+				return new FtpManagedFile(this, null, path);
 			}
 			else 
 			{
-				FTPFile[] files = ftp.listFiles(path.getPath());
-				return new FtpManagedFile(this, files[0], path);
+				if (ftp.changeWorkingDirectory(path.getParent().toString()))
+				{
+					FTPFile[] files = ftp.listFiles();
+					for (FTPFile f : files){
+						if (f.getName().equals(path.getFileName()))
+						{
+							return new FtpManagedFile(this, f, path);
+						}
+					}
+				} else if (ftp.getReplyCode() == 550 /* Not found */){
+					if (ftp.changeWorkingDirectory(path.toString()))
+					{
+						FTPFile[] files = ftp.listFiles();
+						for (FTPFile f : files){
+							if (f.getName().equals("."))
+							{
+								return new FtpManagedFile(this, f, path);
+							}
+						}
+					} 
+				}
+
+				return new FtpManagedFile(this, null, path);
 			}
-
-
-
+			
 		} catch (IOException e){
 			throw  ManagedIOException.manage(e);
+		} finally {
+			if (currentDirectory != null){
+				try {
+					ftp.changeWorkingDirectory(currentDirectory);
+				} catch (IOException e) {
+					throw  ManagedIOException.manage(e);
+				}
+			}
 		}
 	}
 
@@ -174,14 +185,6 @@ public class FtpRepository extends AbstractManagedRepository{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public long getSize() throws ManagedIOException {
-			return file == null || file.isDirectory() ? 0 :   file.getSize();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
 		public boolean exists() {
 			if (file == null){
 				return false;
@@ -223,7 +226,7 @@ public class FtpRepository extends AbstractManagedRepository{
 			if (file == null){
 				return ManagedFileType.VIRTUAL;
 			}
-			return file.isDirectory() ? ManagedFileType.FOLDER : (file.isFile() ? ManagedFileType.FILE : ManagedFileType.VIRTUAL); 
+			return file.isDirectory() ? ManagedFileType.FOLDER : (file.isFile() || file.isSymbolicLink() ? ManagedFileType.FILE : ManagedFileType.VIRTUAL); 
 		}
 
 		/**
@@ -332,11 +335,11 @@ public class FtpRepository extends AbstractManagedRepository{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public StreamableContent getContent() {
-			return new StreamableContent (){ // TODO check for read and  write permissions
+		public StreamableContent doGetContent() {
+			return new StreamableContentAdapter (){ // TODO check for read and  write permissions
 
 				@Override
-				public InputStream getInputStream() throws ManagedIOException {
+				public InputStream resolveInputStream() throws ManagedIOException {
 
 					try {
 						FTPClient ftp = connect();
@@ -347,18 +350,6 @@ public class FtpRepository extends AbstractManagedRepository{
 
 						IOTransport.copy(in).to(out);
 
-						//						org.apache.commons.net.io.Util.copyStream(
-						//								stO,
-						//								stD,
-						//								ftp.getBufferSize(),
-						//								file.getSize(),
-						//								new org.apache.commons.net.io.CopyStreamAdapter() {
-						//									public void bytesTransferred(long totalBytesTransferred,
-						//											int bytesTransferred,
-						//											long streamSize) {
-						//										// Your progress Control code here
-						//									}
-						//								});
 						ftp.completePendingCommand();
 
 						return buffer.getInputStream();
@@ -369,23 +360,27 @@ public class FtpRepository extends AbstractManagedRepository{
 				}
 
 				@Override
-				public OutputStream getOutputStream() throws ManagedIOException {
+				public OutputStream resolveOutputStream() throws ManagedIOException {
 					return new CloseDetectOutputStream(FtpManagedFile.this);
 
 				}
 
 				@Override
 				public long getSize() throws ManagedIOException {
-					throw new UnsupportedOperationException("Not implememented yet");
+					return FtpManagedFile.this.file.getSize();
 				}
 
 				@Override
-				public boolean setSize(long size) throws ManagedIOException {
-					throw new UnsupportedOperationException("Not implememented yet");
+				public boolean isReadable() {
+					return FtpManagedFile.this.isReadable();
+				}
+
+				@Override
+				public boolean isWritable() {
+					return FtpManagedFile.this.isWriteable();
 				}
 
 			};
-
 
 		}
 
@@ -471,13 +466,15 @@ public class FtpRepository extends AbstractManagedRepository{
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected ManagedFile doCreateFolder() {
+		protected ManagedFile doCreateFolder(ManagedFile parent) {
 			try {
 				FTPClient ftp = connect();
-
-				ftp.makeDirectory(this.path.toString());
-
-				return this.getParent().retrive(this.path.getFileName());
+				
+				if (ftp.makeDirectory(this.path.toString())){
+					return parent.retrive(this.path.getFileName());
+				}
+				throw  new ManagedIOException(Joiner.with("\n").join(ftp.getReplyStrings()));
+				
 			} catch (IOException e){
 				throw  ManagedIOException.manage(e);
 			}
@@ -524,7 +521,6 @@ public class FtpRepository extends AbstractManagedRepository{
 			}
 
 		}
-
 
 	}
 
