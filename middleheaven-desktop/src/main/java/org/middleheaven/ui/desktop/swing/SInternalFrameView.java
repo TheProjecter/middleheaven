@@ -21,8 +21,8 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
 
 public class SInternalFrameView extends JInternalFrame implements UIView{
 

@@ -17,8 +17,8 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
 
 public class SMenu extends JMenu implements UICommandSet {
 

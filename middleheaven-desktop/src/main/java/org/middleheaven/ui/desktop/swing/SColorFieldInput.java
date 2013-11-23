@@ -18,9 +18,9 @@ import org.middleheaven.ui.UIColor;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIColorField;
 import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.SafeCastUtils;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Maybe;
 
 
 public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
@@ -102,13 +102,7 @@ public class SColorFieldInput extends SBaseFieldInput implements UIColorField {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setUIDataContainer(UIDataContainer container) {
-		throw new UnsupportedOperationException("Not implememented yet");
-	}
+
 
 	
 

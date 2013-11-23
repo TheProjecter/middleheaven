@@ -16,8 +16,8 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommandSet;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 /**
  * {@link UICommandSet} as a {@link JToolBar}

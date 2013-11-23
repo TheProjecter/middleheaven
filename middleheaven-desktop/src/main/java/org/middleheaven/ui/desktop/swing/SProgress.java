@@ -4,9 +4,9 @@ import javax.swing.JProgressBar;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIProgress;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 public class SProgress extends SBaseOutputPanel implements UIProgress{
 

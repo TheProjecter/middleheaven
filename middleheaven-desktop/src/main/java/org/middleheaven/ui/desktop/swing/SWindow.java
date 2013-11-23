@@ -23,8 +23,8 @@ import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.components.UIWindowsListener;
 import org.middleheaven.ui.events.UIPrespectiveEvent;
 import org.middleheaven.ui.events.UIWindowEvent;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
 
 public class SWindow extends JFrame implements UIWindow{
 

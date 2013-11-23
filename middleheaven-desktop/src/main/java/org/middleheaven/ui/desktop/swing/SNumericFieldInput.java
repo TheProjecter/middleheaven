@@ -9,8 +9,8 @@ import javax.swing.text.JTextComponent;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UINumericField;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public class SNumericFieldInput extends SDocumentInput implements UINumericField {
 

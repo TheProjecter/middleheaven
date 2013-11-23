@@ -6,8 +6,9 @@ import javax.swing.BoxLayout;
 
 import org.middleheaven.global.text.ParsableFormatter;
 import org.middleheaven.ui.components.UIField;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.data.UIDataContainer;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	
@@ -24,6 +25,7 @@ public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	private Property<Integer> minLength= ValueProperty.writable("minLength", Integer.class);
 	private Property<Serializable> value= ValueProperty.writable("value", Serializable.class);
 	private Property<ParsableFormatter> formatter = ValueProperty.writable("formatter", ParsableFormatter.class);
+	private UIDataContainer container;
 	
 	/**
 	 * {@inheritDoc}
@@ -44,6 +46,22 @@ public abstract class SBaseFieldInput extends SBaseInput implements UIField {
 	}
 	public Property<Serializable> getValueProperty(){
 		return value;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setUIDataContainer(UIDataContainer container) {
+		this.container = container;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIDataContainer getUIDataContainer() {
+		return container;
 	}
 	
 }

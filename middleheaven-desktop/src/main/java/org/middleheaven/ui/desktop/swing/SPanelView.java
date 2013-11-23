@@ -6,8 +6,8 @@ import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UIPrespectiveListener;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIView;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public class SPanelView extends SBaseContainerPanel implements UIView {
 

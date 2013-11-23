@@ -16,9 +16,9 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UILabel;
 import org.middleheaven.ui.events.UIActionEvent;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public class SMenuButton extends JMenuItem implements UICommand {
 

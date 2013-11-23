@@ -10,8 +10,8 @@ import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UIDesktopTrayIcon;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 class AWTTrayIcon extends TrayIcon implements UIDesktopTrayIcon{
 

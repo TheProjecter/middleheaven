@@ -11,9 +11,9 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILabel;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public class SLabel extends JLabel implements UILabel {
 

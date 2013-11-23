@@ -8,8 +8,8 @@ import org.middleheaven.collections.DelegatingList;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
 
 public abstract class SBasePanel extends JPanel implements UIComponent {
 

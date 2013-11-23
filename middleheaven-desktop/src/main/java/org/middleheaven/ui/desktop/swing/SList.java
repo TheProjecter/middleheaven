@@ -15,6 +15,7 @@ public class SList extends SBaseFieldInput implements UISelectOne{
 
 	private static final long serialVersionUID = 4655745102374363086L;
 	JList list = new JList();
+	private UIDataContainer container;
 
 	public SList(){
 		this.add(new JScrollPane(list));
@@ -112,7 +113,7 @@ public class SList extends SBaseFieldInput implements UISelectOne{
 	 */
 	@Override
 	public void setUIDataContainer(UIDataContainer container) {
-		throw new UnsupportedOperationException("Not implememented yet");
+		this.container = container;
 	}
 
 	/**
@@ -121,5 +122,14 @@ public class SList extends SBaseFieldInput implements UISelectOne{
 	@Override
 	public int getDataSize() {
 		return list.getModel().getSize();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UIDataContainer getUIDataContainer() {
+		return container;
 	}
 }

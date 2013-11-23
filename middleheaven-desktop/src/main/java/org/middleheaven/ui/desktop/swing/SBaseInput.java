@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIInput;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 public abstract class SBaseInput extends SBaseOutputPanel implements UIInput  {
 

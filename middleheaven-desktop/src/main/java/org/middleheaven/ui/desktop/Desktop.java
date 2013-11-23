@@ -18,7 +18,7 @@ import org.middleheaven.ui.UILayoutConstraint;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UIDesktop;
 import org.middleheaven.ui.components.UILayout;
-import org.middleheaven.util.property.Property;
+import org.middleheaven.ui.property.Property;
 
 public class Desktop extends AbstractUIClient implements UIDesktop {
 

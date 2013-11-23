@@ -13,7 +13,6 @@ import org.middleheaven.ui.components.UIDesktop;
 import org.middleheaven.ui.desktop.swing.SwingRenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
 
-
 public class DesktopUIBootstrapEnvironment extends AbstractStandaloneBootstrapEnvironment {
 
 	RenderingContext renderedContext;

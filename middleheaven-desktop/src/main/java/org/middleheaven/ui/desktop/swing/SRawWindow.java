@@ -18,9 +18,9 @@ import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.components.UIWindow;
 import org.middleheaven.ui.components.UIWindowsListener;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 
 class SRawWindow extends JWindow implements UIWindow{
 

@@ -15,10 +15,10 @@ import org.middleheaven.ui.UIPosition;
 import org.middleheaven.ui.UISize;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.events.UIActionEvent;
+import org.middleheaven.ui.property.BindedProperty;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.property.BindedProperty;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 public class SButton extends JButton implements UICommand {
 

@@ -4,9 +4,9 @@
 package org.middleheaven.ui.desktop.swing;
 
 import org.middleheaven.ui.UIReadState;
+import org.middleheaven.ui.property.Property;
+import org.middleheaven.ui.property.ValueProperty;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.property.Property;
-import org.middleheaven.util.property.ValueProperty;
 
 /**
  * 
