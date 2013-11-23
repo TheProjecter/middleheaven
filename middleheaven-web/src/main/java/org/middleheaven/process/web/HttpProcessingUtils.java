@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.OperatingSystemInfo;
 import org.middleheaven.util.VersionReader;

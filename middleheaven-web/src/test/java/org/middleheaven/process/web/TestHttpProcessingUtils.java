@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Test;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 
 
 public class TestHttpProcessingUtils {
