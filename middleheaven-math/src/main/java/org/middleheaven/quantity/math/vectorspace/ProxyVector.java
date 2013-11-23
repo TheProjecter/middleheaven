@@ -3,12 +3,13 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.quantity.math.structure.FieldElement;
 
 /**
  * 
  */
-abstract class ProxyVector<F extends FieldElement<F>> extends AbstractVector<F> {
+abstract class ProxyVector<F extends FieldElement<F>> extends AbstractVector<F> implements FastCountEnumerable{
 
 	private final int size;
 
@@ -22,7 +23,6 @@ abstract class ProxyVector<F extends FieldElement<F>> extends AbstractVector<F> 
 		
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -31,5 +31,4 @@ abstract class ProxyVector<F extends FieldElement<F>> extends AbstractVector<F> 
 		return size;
 	}
 
-	
 }

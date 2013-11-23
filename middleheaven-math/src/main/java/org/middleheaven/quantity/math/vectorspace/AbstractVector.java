@@ -3,8 +3,8 @@ package org.middleheaven.quantity.math.vectorspace;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.middleheaven.collections.AbstractEnumerable;
-import org.middleheaven.collections.IndexBasedIterator;
+import org.middleheaven.collections.enumerable.AbstractEnumerable;
+import org.middleheaven.collections.iterators.IndexBasedIterator;
 import org.middleheaven.quantity.math.Conjugatable;
 import org.middleheaven.quantity.math.UnivariateFunction;
 import org.middleheaven.quantity.math.structure.FieldElement;
@@ -100,20 +100,6 @@ public abstract class AbstractVector<F extends FieldElement<F>> extends Abstract
 		}
 		return result;
 	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final F[] toArray(F[] elements) {
-		for (int i = 0; i < elements.length ; i++){
-			elements[i] = this.get(i);
-		}
-		
-		return elements;
-	}
-	
 
 	@Override
 	public Vector<F> times(final F a) {
@@ -298,6 +284,7 @@ public abstract class AbstractVector<F extends FieldElement<F>> extends Abstract
 			public N lazyGet(int index) {
 				return function.apply(AbstractVector.this.get(index));
 			}
+
 
 		};
 	}

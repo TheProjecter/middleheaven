@@ -116,7 +116,6 @@ public class LogEmailWriter extends LogBookWriter implements FormatableLogWriter
             emailService.send(email);
             buffer.clear();
         }
-
     }
     
     public static InetAddress getPrimaryAddress(){

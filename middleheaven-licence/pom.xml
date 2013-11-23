@@ -29,6 +29,13 @@
 		</dependency>
 		<dependency>
 			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-io</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
 			<artifactId>middleheaven-crypto</artifactId>
 			<version>1.0.0</version>
 		</dependency>

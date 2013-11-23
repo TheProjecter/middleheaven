@@ -6,13 +6,13 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import org.middleheaven.io.repository.MediaManagedFile;
+import org.middleheaven.io.repository.ManagedFile;
 
 class ManagedFileDataSource implements DataSource {
 
-	private MediaManagedFile file;
+	private ManagedFile file;
 
-	ManagedFileDataSource(MediaManagedFile file) {
+	ManagedFileDataSource(ManagedFile file) {
 		this.file = file;
 	}
 	

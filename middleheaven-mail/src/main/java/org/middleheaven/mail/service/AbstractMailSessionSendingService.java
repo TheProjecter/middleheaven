@@ -17,7 +17,6 @@ import javax.mail.internet.MimeMultipart;
 
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileRepository;
-import org.middleheaven.io.repository.MediaManagedFile;
 import org.middleheaven.mail.MailAsynchrounsCallback;
 import org.middleheaven.mail.MailException;
 import org.middleheaven.mail.MailMessage;
@@ -102,12 +101,12 @@ public abstract class AbstractMailSessionSendingService implements MailSendingSe
 
 
 		final ManagedFileRepository attachments = email.getAttachments();
-		ManagedFile root  = attachments.retrive(attachments.getRoots().iterator().next());
+		ManagedFile root  = attachments.retrive(attachments.getRootPaths().iterator().next());
 
 		for (ManagedFile attachment : root.children()){
 			try{
 				MimeBodyPart part = new MimeBodyPart();
-				part.setDataHandler(new DataHandler(new ManagedFileDataSource((MediaManagedFile)attachment)));
+				part.setDataHandler(new DataHandler(new ManagedFileDataSource(attachment)));
 				mp.addBodyPart(part);
 			} catch (MessagingException e) {
 				throw MailException.manage(e);

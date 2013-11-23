@@ -140,9 +140,7 @@ public class FourierTransform implements Transformation<Vector<Complex>>{
 
     private Vector<Complex> pad(Vector<Complex> original, Complex pad, int max) {
     	
-    	Complex[] all = new Complex[original.size()];
-    	
-    	all = original.toArray(all);
+    	Complex[] all = original.asArray();
     	
 		Complex[] res = Arrays.copyOf(all, max);
 		Arrays.fill(res, all.length, max, pad);

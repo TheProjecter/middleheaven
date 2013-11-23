@@ -3,6 +3,7 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.quantity.math.structure.FieldElement;
 
 /**
@@ -52,6 +53,10 @@ class LazyDelegationVector<F extends FieldElement<F>> extends AbstractVector<F> 
 	}
 
 
+	@Override
+	protected boolean isFastCount() {
+		return original instanceof FastCountEnumerable;
+	}
 
 
 }

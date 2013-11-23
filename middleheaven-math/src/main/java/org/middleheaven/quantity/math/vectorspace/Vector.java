@@ -3,7 +3,7 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.quantity.math.UnivariateFunction;
 import org.middleheaven.quantity.math.structure.FieldElement;
 import org.middleheaven.quantity.math.structure.GroupAdditiveElement;
@@ -46,7 +46,7 @@ public interface Vector<F extends FieldElement<F>> extends  Enumerable<F> , Grou
 	 * @param elements the elements of the vector.
 	 * @return
 	 */
-	public F[] toArray(F[] elements);
+	public F[] asArray(F ... elements);
 	
 
 	/**

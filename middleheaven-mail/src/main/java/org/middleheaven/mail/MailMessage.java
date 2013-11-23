@@ -9,10 +9,10 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.middleheaven.io.StreamableContent;
 import org.middleheaven.io.repository.CharSequenceMediaManagedFileContent;
+import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileRepository;
-import org.middleheaven.io.repository.MediaManagedFile;
-import org.middleheaven.io.repository.MediaStreamableContent;
 import org.middleheaven.io.repository.set.SetManagedFileRepository;
 
 
@@ -25,7 +25,7 @@ public class MailMessage implements Serializable {
  
 	private static final long serialVersionUID = 1L;
 	
-	private MediaStreamableContent body;
+	private StreamableContent body;
 	private String from;
     private String subject;
     private Map<MailRecipientType,List<String>> recipients = new EnumMap<MailRecipientType, List<String>>(MailRecipientType.class);
@@ -83,8 +83,11 @@ public class MailMessage implements Serializable {
      * Add an attachment
      * @param atachment to be added
      */
-	public MailMessage addAtachment(MediaManagedFile atachment) {
-        attachments.store(atachment);
+	public MailMessage addAtachment(ManagedFile attachment) {
+		if (!attachment.getContent().isContentTypeReadable()){
+			throw new IllegalArgumentException("Atachment must have readable content type");
+		}
+        attachments.store(attachment);
         return this;
 	}
 	
@@ -151,7 +154,7 @@ public class MailMessage implements Serializable {
      * 
      * @return message body
      */
-	public MediaStreamableContent getBody() {
+	public StreamableContent getBody() {
 		return this.body;
 	}
 	 

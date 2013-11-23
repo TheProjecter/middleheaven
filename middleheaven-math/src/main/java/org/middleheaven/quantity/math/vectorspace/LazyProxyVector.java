@@ -3,12 +3,13 @@
  */
 package org.middleheaven.quantity.math.vectorspace;
 
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.quantity.math.structure.FieldElement;
 
 /**
  * 
  */
-abstract class LazyProxyVector<F extends FieldElement<F>> extends AbstractVector<F> {
+abstract class LazyProxyVector<F extends FieldElement<F>> extends AbstractVector<F> implements FastCountEnumerable{
 
 	private final int size;
 	private final Object[] cache;

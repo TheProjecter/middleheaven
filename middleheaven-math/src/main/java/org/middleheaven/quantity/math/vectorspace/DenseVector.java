@@ -3,6 +3,7 @@ package org.middleheaven.quantity.math.vectorspace;
 import java.util.Arrays;
 import java.util.List;
 
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.quantity.math.structure.FieldElement;
 
 /**
@@ -11,7 +12,7 @@ import org.middleheaven.quantity.math.structure.FieldElement;
  *
  * @param <F>
  */
-public class DenseVector<F extends FieldElement<F>> extends AbstractVector<F> {
+public class DenseVector<F extends FieldElement<F>> extends AbstractVector<F>  implements FastCountEnumerable {
 
 
 	private Object[] elements;
@@ -64,7 +65,6 @@ public class DenseVector<F extends FieldElement<F>> extends AbstractVector<F> {
 	public final int size() {
 		return this.elements.length;
 	}
-
 
 
 

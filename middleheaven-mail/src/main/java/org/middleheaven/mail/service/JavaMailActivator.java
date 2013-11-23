@@ -5,8 +5,10 @@ import java.util.Collection;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
+import org.middleheaven.logging.Logger;
 import org.middleheaven.mail.MailSendingService;
 import org.middleheaven.namedirectory.NameDirectoryService;
+import org.middleheaven.util.Maybe;
 
 public class JavaMailActivator extends ServiceActivator {
 
@@ -32,14 +34,15 @@ public class JavaMailActivator extends ServiceActivator {
 	@Override
 	public void activate(ServiceContext serviceContext) {
 		
-		NameDirectoryService nameService = serviceContext.getService(NameDirectoryService.class);
+		Maybe<NameDirectoryService> maybeNameService = serviceContext.getPossibleUnAvailableService(NameDirectoryService.class);
 		
-
 		MailSendingService service;
 		
-		if(nameService!=null){
-			service = new NameDirectoryMailSessionSendingService(nameService);
+		if(maybeNameService.isPresent()){
+			Logger.onBookFor(this.getClass()).debug("Activating Mail Service from name directory");
+			service = new NameDirectoryMailSessionSendingService(maybeNameService.get());
 		} else {
+			Logger.onBookFor(this.getClass()).debug("Activating Mail Service locally");
 			service = new LocalMailSendingService();
 		}
 		
