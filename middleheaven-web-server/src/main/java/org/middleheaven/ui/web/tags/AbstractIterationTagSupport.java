@@ -10,6 +10,8 @@ import org.middleheaven.collections.CollectionUtils;
 
 public class AbstractIterationTagSupport extends AbstractBodyTagSupport {
 
+	private static final long serialVersionUID = -3878520819083064012L;
+	
 	private Iterator<?> iterator;
 	private String varName = "item"; 
 	private Object currentItem;
@@ -28,7 +30,7 @@ public class AbstractIterationTagSupport extends AbstractBodyTagSupport {
 			if(items instanceof Iterable){
 				this.iterator = ((Iterable)items).iterator();
 			} else if (items.getClass().isArray()){
-				this.iterator =  CollectionUtils.arrayIterator((Object[])items);
+				this.iterator =  CollectionUtils.asIterator((Object[])items);
 			}
 		}
 		

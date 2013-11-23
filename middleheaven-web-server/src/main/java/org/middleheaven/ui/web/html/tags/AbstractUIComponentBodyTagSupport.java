@@ -1,12 +1,14 @@
 package org.middleheaven.ui.web.html.tags;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.jsp.JspException;
 
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.ui.GenericUIComponent;
 import org.middleheaven.ui.UIComponent;
+import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.rendering.RenderKit;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.web.Browser;
@@ -60,7 +62,7 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 	}
 
 	@Override
-	public UIComponent getUIComponent() {
+	public final UIComponent getUIComponent() {
 		UIComponent uic = GenericUIComponent.getInstance(getComponentType(), familly);
 
 		uic.getVisibleProperty().set(this.visible);
@@ -71,7 +73,27 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		}
 		
 		uic.setFamily(this.familly);
+		
+		final TagContext tagContext = new TagContext(pageContext);
+		
+		populateProperties(tagContext, uic);
+		
+		if (uic.isType(UIContainer.class)){
+			
+			UIContainer container = (UIContainer) uic;
+			for(UIComponent c : getUIComponentChildren()){
+				container.addComponent(c);
+			}
+		}
+	
 		return uic;
+	}
+
+	/**
+	 * @return
+	 */
+	protected Iterable<UIComponent> getUIComponentChildren() {
+		return Collections.emptySet();
 	}
 
 	protected void doRender() throws IOException {
@@ -80,24 +102,21 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		
 		UIComponent templateComponent = getUIComponent();
 		
-		prepareRender(tagContext, templateComponent);
-		
 		RenderKit renderKit = tagContext.getAttribute(ContextScope.REQUEST, RenderKit.class.getName(),RenderKit.class);
-		
-		
+
 		RenderingContext context = new RenderingContext(tagContext.getAttributes() , renderKit );
 		
-		UIComponent parent = new Browser(renderKit.getSceneNavigator()); // TODO Fragment
+		UIComponent client = new Browser(renderKit.getSceneNavigator()); // TODO Fragment
 		try{
 			UIComponentTag parentTag = (UIComponentTag)this.getParent();
 			if(parentTag != null){
-				parent = parentTag.getUIComponent();
+				client = parentTag.getUIComponent();
 			}
 		} catch (ClassCastException e){
 			
 		}
 		
-		HtmlUIComponent html = (HtmlUIComponent) renderKit.renderComponent(context, parent,  templateComponent);
+		HtmlUIComponent html = (HtmlUIComponent) renderKit.renderComponent(context, client,  templateComponent);
 
 		HtmlDocument doc = HtmlDocument.newInstance(tagContext.getContextPath(), tagContext.getCulture());
 		
@@ -106,7 +125,7 @@ public abstract class AbstractUIComponentBodyTagSupport extends AbstractBodyTagS
 		doc.writeToResponse(pageContext.getOut());
 	}
 	
-	protected void prepareRender(TagContext attributeContext, UIComponent templateComponent) {
+	protected void populateProperties(TagContext attributeContext, UIComponent templateComponent) {
 
 	}
 

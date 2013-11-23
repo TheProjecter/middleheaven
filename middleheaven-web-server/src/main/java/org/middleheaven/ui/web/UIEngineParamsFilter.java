@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.web;
 
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.web.server.HttpServerContext;
 import org.middleheaven.process.web.server.filters.HttpFilter;
@@ -29,7 +29,7 @@ public class UIEngineParamsFilter implements HttpFilter {
 			Enumerable<String> parts = Splitter.on('&').split(params);
 
 			for (String part : parts){
-				String[] s = Splitter.on('=').split(part).intoArray(new String[0]);
+				String[] s = Splitter.on('=').split(part).asArray();
 				if (s.length == 1) {
 					context.getAttributes().setAttribute(ContextScope.REQUEST, s[0], null);
 				} else {

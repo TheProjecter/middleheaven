@@ -4,9 +4,6 @@
  */
 package org.middleheaven.web.container;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-
 import javax.servlet.ServletContext;
 
 import org.middleheaven.core.bootstrap.BootstrapContext;
@@ -124,10 +121,8 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	
 		String catalinaBasePath = PropertiesBag.bagOfSystemProperties().getProperty("catalina.base", String.class);
 		
-		File catalinaBase = new File(catalinaBasePath);
-
-		fileSystem.setEnvironmentConfigRepository(MachineFiles.resolveFile(new File(catalinaBase ,  "conf")));
-		fileSystem.setEnvironmentDataRepository(MachineFiles.resolveFile(new File(catalinaBase , "data")).createFolder());
+		fileSystem.setEnvironmentConfigRepository(MachineFiles.resolveFile(catalinaBasePath).retrive("conf"));
+		fileSystem.setEnvironmentDataRepository(MachineFiles.resolveFile(catalinaBasePath).retrive("data").createFolder());
 
 		super.setupDefaultFilesRepositories(context, fileSystem);
 		

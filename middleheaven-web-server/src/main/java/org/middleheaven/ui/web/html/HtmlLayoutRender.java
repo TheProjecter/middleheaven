@@ -42,9 +42,7 @@ public class HtmlLayoutRender extends AbstractHtmlRender {
 			
 			writer.append("</div>");
 		}
-		
-	
-		
+
 		writer.append("</div>");
 
 	}

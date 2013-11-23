@@ -3,6 +3,8 @@ package org.middleheaven.ui.web.html.tags;
 
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UISelectOne;
+import org.middleheaven.ui.data.ListUIDataContainer;
+import org.middleheaven.ui.data.ListUIDataItem;
 import org.middleheaven.ui.data.UIDataContainer;
 import org.middleheaven.ui.data.UIDataItem;
 import org.middleheaven.ui.web.tags.TagContext;
@@ -12,7 +14,7 @@ public class UISelectOneTag extends AbstractUIComponentIterationTagSupport  {
 
 	private static final long serialVersionUID = -5139062294190732749L;
 	private UIDataItem selected;
-	private UIDataContainer data;
+	private UIDataContainer data = new ListUIDataContainer();
 	
 
 	public void setSelectedItemValue(UIDataItem selected){
@@ -28,14 +30,6 @@ public class UISelectOneTag extends AbstractUIComponentIterationTagSupport  {
 		this.selected = null;
 	}
 
-	protected boolean beforeStart() {
-		if(this.data != null){
-			return false; // do not iterate
-		}
-	//	this.model = new HtmlSelectionModel();
-		return true;
-	}
-	
 	@Override
 	public Class<? extends UIComponent> getComponentType() {
 		return UISelectOne.class;
@@ -64,7 +58,7 @@ public class UISelectOneTag extends AbstractUIComponentIterationTagSupport  {
 	
 	public void addElement(String caption , Object value){
 		// TODO
-		// data.add(new UIDataItem(caption, value.toString(), false)); // false = not selected.
+		 ((ListUIDataContainer)data).add(new ListUIDataItem(caption, value.toString(), false)); // false = not selected.
 	
 		
 	}

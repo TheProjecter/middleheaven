@@ -4,8 +4,6 @@
  */
 package org.middleheaven.web.container;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 
 import org.middleheaven.core.bootstrap.BootstrapContext;
@@ -62,19 +60,19 @@ public abstract class AbstractJBossASBootstrapEnvironment extends StandardSevlet
     }
 
     public ManagedFile getEnvironmentDeployRepository() {
-        return MachineFiles.resolveFile(new File(System.getProperty("jboss.server.home.dir") , "deploy"));
+        return MachineFiles.resolveFile(System.getProperty("jboss.server.home.dir")).retrive("deploy");
     }
 
     public ManagedFile getAppConfigRepository() {
-        return MachineFiles.resolveFile(new File(System.getProperty("jboss.server.home.dir") , "conf"));
+        return MachineFiles.resolveFile(System.getProperty("jboss.server.home.dir")).retrive("conf");
     }
 
     public ManagedFile getAppDataRepository() {
-        return MachineFiles.resolveFile(new File(System.getProperty("jboss.server.home.dir") ,"app-data"));
+        return MachineFiles.resolveFile(System.getProperty("jboss.server.home.dir")).retrive("app-data");
     }
 
     public ManagedFile getAppLogRepository() {
-        return MachineFiles.resolveFile(new File(System.getProperty("jboss.server.home.dir") , "log"));
+        return MachineFiles.resolveFile(System.getProperty("jboss.server.home.dir")).retrive("log");
     }
 
     public ManagedFile getAppClasspathRepository() {

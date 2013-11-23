@@ -15,7 +15,6 @@ import org.middleheaven.aas.NameCallback;
 import org.middleheaven.aas.PasswordCallback;
 import org.middleheaven.aas.Permission;
 import org.middleheaven.process.ContextScope;
-import org.middleheaven.process.web.HttpMethod;
 import org.middleheaven.process.web.HttpProcessException;
 import org.middleheaven.process.web.HttpUrl;
 import org.middleheaven.process.web.server.filters.CallbacksSetCallbackHandler;

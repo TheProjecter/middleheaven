@@ -10,11 +10,12 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.middleheaven.global.Culture;
-import org.middleheaven.io.StreamableContentSource;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.io.IOTransport;
 import org.middleheaven.io.ManagedIOException;
-import org.middleheaven.io.repository.MediaStreamableContent;
+import org.middleheaven.io.StreamNotReadableIOException;
+import org.middleheaven.io.StreamableContent;
+import org.middleheaven.io.StreamableContentSource;
 import org.middleheaven.process.web.HttpCookieWriter;
 import org.middleheaven.process.web.HttpEntry;
 import org.middleheaven.process.web.HttpProcessIOException;
@@ -144,13 +145,13 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public MediaStreamableContent getContent() {
-			return new MediaStreamableContent(){
+		public StreamableContent getContent() {
+			return new StreamableContent(){
 			
 				
 				@Override
 				public InputStream getInputStream() {
-					throw new UnsupportedOperationException("Response Virtual File as no input stream associated");
+					throw new StreamNotReadableIOException();
 				}
 
 				@Override
@@ -164,8 +165,6 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 					} 
 				}
 
-
-
 				@Override
 				public boolean setSize(long expectedSize)  {
 					if (streamIsOpen){
@@ -175,6 +174,11 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 					return true;
 				}
 
+				@Override
+				public boolean isContentTypeWritable() {
+					return !streamIsOpen;
+				}
+				
 				@Override
 				public void setContentType(String mimeContentType){
 					if (streamIsOpen){
@@ -192,6 +196,23 @@ class ServletBasedHttpServerResponse implements HttpServerResponse {
 				public long getSize() {
 					return response.getBufferSize();
 				}
+
+				@Override
+				public boolean isReadable() {
+					return false;
+				}
+
+				@Override
+				public boolean isContentTypeReadable() {
+					return false;
+				}
+
+				@Override
+				public boolean isWritable() {
+					return true;
+				}
+
+				
 			};
 		}
 

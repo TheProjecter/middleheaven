@@ -2,7 +2,7 @@ package org.middleheaven.process.web.server.global;
 
 import java.util.List;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.process.web.server.HttpServerContext;
 
 /**

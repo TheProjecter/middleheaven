@@ -19,7 +19,7 @@ import org.middleheaven.io.repository.watch.WatchService;
 /**
  * 
  */
-public class AbstractRequestFileRepository extends AbstractManagedRepository{
+public abstract class AbstractRequestFileRepository extends AbstractManagedRepository{
 
 	private UploadRootFolder root;
 	private final HttpServletRequest request;
@@ -99,7 +99,21 @@ public class AbstractRequestFileRepository extends AbstractManagedRepository{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterable<ManagedFilePath> getRoots() {
+	public Iterable<ManagedFilePath> getRootPaths() {
 		return Arrays.<ManagedFilePath>asList(root.getPath());
 	}
+	
+	public  long resolveFileSize(ManagedFile managedFile) {
+		if (managedFile instanceof UploadRootFolder){
+			long size = 0;
+			for (ManagedFile file : managedFile.children()){
+				size += resolveRequestFileSize(file);
+			}
+			return size;
+		} else {
+			return resolveRequestFileSize(managedFile);
+		}
+	}
+	
+	protected abstract long resolveRequestFileSize(ManagedFile managedFile);
 }

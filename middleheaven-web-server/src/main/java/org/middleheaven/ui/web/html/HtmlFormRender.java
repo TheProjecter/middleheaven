@@ -6,7 +6,7 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UIField;

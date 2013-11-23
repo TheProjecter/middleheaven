@@ -9,13 +9,13 @@ import javax.servlet.ServletContextListener;
 
 import org.middleheaven.aas.AccessControlService;
 import org.middleheaven.aas.StandardAccessControlService;
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.bootstrap.AbstractBootstrap;
 import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.bootstrap.BootstrapEnvironment;
 import org.middleheaven.core.bootstrap.BootstrapEnvironmentResolver;
 import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.core.wiring.PropertiesPropertyManager;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.logging.ConfigurableLogListener;
 import org.middleheaven.logging.LoggingConfiguration;
 import org.middleheaven.logging.LoggingConfigurator;

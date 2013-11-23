@@ -2,7 +2,7 @@ package org.middleheaven.process.web.server;
 
 import javax.servlet.ServletContext;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.ScopedAttributesResolutionStrategy;

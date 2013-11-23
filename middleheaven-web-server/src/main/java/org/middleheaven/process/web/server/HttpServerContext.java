@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.util.List;
 
 import org.middleheaven.aas.Subject;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.web.HttpChannel;

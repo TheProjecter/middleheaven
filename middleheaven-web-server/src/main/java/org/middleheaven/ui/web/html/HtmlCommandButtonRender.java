@@ -29,14 +29,8 @@ public class HtmlCommandButtonRender extends AbstractHtmlCommandRender {
 		document.addRelativeStylesheet("css/ui/jquery-ui-1.8.20.custom.css");
 		document.addRelativeStylesheet("css/ui/extention.css");
 		
-		HtmlScript jquery = new HtmlScript("jquery");
-		jquery.setRelativeSource("js/jquery-1.7.2.min.js");
-		document.addScript(jquery);
-		
-		HtmlScript jqueryUI = new HtmlScript("jquery-ui");
-		jqueryUI.setRelativeSource("js/jquery-ui-1.8.20.custom.min.js");
-		document.addScript(jqueryUI);
-		
+		document.addScript(new HtmlScript("jquery").setRelativeSource("js/jquery-1.7.2.min.js"));
+		document.addScript(new HtmlScript("jquery-ui").setRelativeSource("js/jquery-ui-1.8.20.custom.min.js"));
 		document.addScript(new HtmlScript("mh-ui-exec").setRelativeSource("js/mh-ui-exec.js"));
 		
 	
@@ -49,7 +43,6 @@ public class HtmlCommandButtonRender extends AbstractHtmlCommandRender {
 		.append(" uiType=\"").append("command").append("\"");
 		
 		writer.append(" type=\"submit\" ");
-		
 		
 		if(!component.getEnableProperty().get()){
 			writer.append(" disabled=\"disabled\" ");

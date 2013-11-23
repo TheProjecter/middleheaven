@@ -16,14 +16,18 @@ import org.middleheaven.ui.rendering.RenderingContext;
  */
 public class HTMLUIComponentProxyHandler implements ProxyHandler {
 
-	private GenericHtmlUIComponent original;
+	private UIComponent original;
+	private AbstractHtmlRender htmlRender;
+
 
 	/**
 	 * Constructor.
-	 * @param original
+	 * @param component
+	 * @param abstractHtmlRender
 	 */
-	public HTMLUIComponentProxyHandler(GenericHtmlUIComponent original) {
+	public HTMLUIComponentProxyHandler(UIComponent original, AbstractHtmlRender htmlRender) {
 		this.original = original;
+		this.htmlRender = htmlRender;
 	}
 
 
@@ -54,8 +58,10 @@ public class HTMLUIComponentProxyHandler implements ProxyHandler {
 //			return null;
 //		} else 
 		
-		if (delegator.getName().equals("writeTo")){
-			this.original.abstractHTMLRender.write((HtmlDocument)args[0], (RenderingContext) args[1], (UIComponent) self);
+		if (delegator.getName().equals("isRendered")){
+			return true;
+		} else if (delegator.getName().equals("writeTo")){
+			htmlRender.write((HtmlDocument)args[0], (RenderingContext) args[1], (UIComponent) self);
 			return null;
 		} else if (delegator.getName().equals("fireEvent")){
 			this.fireEvent((UIActionEvent) args[0]);

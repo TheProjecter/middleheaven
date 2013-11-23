@@ -1,7 +1,7 @@
 package org.middleheaven.ui.web.html.tags;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -9,7 +9,6 @@ import javax.servlet.jsp.tagext.BodyContent;
 import org.middleheaven.process.ContextScope;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommandSet;
-import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.web.tags.TagContext;
 
 public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
@@ -18,23 +17,15 @@ public class UICommandSetTag extends AbstractUIComponentBodyTagSupport{
 
 	private String body;
 	
-	private final List<UIComponent> children = new LinkedList<UIComponent>();
+	private final Collection<UIComponent> children = new ArrayList<UIComponent>(3);
 
 	@Override
 	public Class<? extends UIComponent> getComponentType() {
 		return UICommandSet.class;
 	}
 	
-
-
-	public UIComponent getUIComponent() {
-		UIContainer uic = (UIContainer) super.getUIComponent();
-		
-		for(UIComponent c : children){
-			uic.addComponent(c);
-		}
-		
-		return uic;
+	protected Iterable<UIComponent> getUIComponentChildren() {
+		return children;
 	}
 	
 	void addChildren(UIComponent child){

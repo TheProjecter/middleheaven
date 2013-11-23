@@ -1,7 +1,6 @@
 package org.middleheaven.ui.web.html.tags;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyContent;
 
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
@@ -49,8 +48,8 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 
 	}
 	
-	protected void prepareRender(TagContext attributeContext,UIComponent templateComponent) {
-		super.prepareRender(attributeContext , templateComponent);
+	protected void populateProperties(TagContext attributeContext,UIComponent templateComponent) {
+		super.populateProperties(attributeContext , templateComponent);
 		
 		
 		UICommand command = (UICommand) templateComponent;
@@ -65,8 +64,9 @@ public class UICommandTag extends AbstractUIComponentBodyTagSupport{
 		try {
 			
 			UICommandSetTag commandSet = this.findAncestorTag(UICommandSetTag.class);
-
-			commandSet.addChildren(this.getUIComponent());
+			UICommand command = (UICommand) this.getUIComponent();
+			
+			commandSet.addChildren(command);
 			return EVAL_PAGE;
 		} finally {
 			releaseState();

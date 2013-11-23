@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
-import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileRepository;
 
 /**
@@ -40,6 +40,14 @@ public class ServletRequestPartFileRepository extends AbstractRequestFileReposit
 	 */
 	public ServletRequestPartFileRepository(HttpServletRequest request) {
 		super(request);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected long resolveRequestFileSize(ManagedFile managedFile) {
+		return ((ServletUploadFile)managedFile).part.getSize();
 	}
 
 

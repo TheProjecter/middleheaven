@@ -23,7 +23,7 @@ import org.middleheaven.process.web.server.filters.HttpFilter;
 import org.middleheaven.process.web.server.filters.HttpFilterChain;
 import org.middleheaven.process.web.server.global.HttpCultureResolver;
 import org.middleheaven.process.web.server.global.RequestAgentHttpCultureResolver;
-import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.web.rendering.RenderingProcessor;
 import org.middleheaven.web.rendering.RenderingProcessorResolver;
 

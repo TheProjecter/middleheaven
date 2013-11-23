@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
 import org.middleheaven.core.reflection.inspection.Introspector;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.ui.UIComponent;
@@ -44,9 +44,9 @@ public abstract class AbstractHtmlRender extends UIRender{
 	@Override
 	protected UIComponent build(RenderingContext context, UIComponent parent, UIComponent component) {
 		
-		GenericHtmlUIComponent uic = new GenericHtmlUIComponent(component, this);
-	 
-		HtmlUIComponent ruic =   Introspector.of(uic.getComponentType()).newProxyInstance(new HTMLUIComponentProxyHandler(uic), HtmlUIComponent.class);
+		//GenericHtmlUIComponent uic = new GenericHtmlUIComponent(component, this);
+		
+		HtmlUIComponent ruic =   Introspector.of(UIComponent.class).newProxyInstance(new HTMLUIComponentProxyHandler(component, this), HtmlUIComponent.class, component.getClass().getInterfaces());
 		
 		ruic.setUIParent(parent);
 

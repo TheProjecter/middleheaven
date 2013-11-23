@@ -13,7 +13,7 @@ import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 
 /**
  * An utility class to help write strutureed HTML files 

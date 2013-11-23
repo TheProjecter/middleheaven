@@ -3,7 +3,7 @@
  */
 package org.middleheaven.process.web.server;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.process.web.HttpCookieWriter;
 import org.middleheaven.process.web.HttpEntry;
 import org.middleheaven.process.web.HttpProcessIOException;

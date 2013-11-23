@@ -7,6 +7,7 @@ import javax.servlet.jsp.JspException;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UIReadState;
 import org.middleheaven.ui.components.UIField;
+import org.middleheaven.ui.web.tags.TagContext;
 
 public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 
@@ -44,11 +45,10 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 		return UIField.class;
 	}
 
-	public UIComponent getUIComponent() {
-		
+	protected void populateProperties(TagContext attributeContext, UIComponent templateComponent) {
 		this.setFamilly("field:" + type);
 		
-		UIField uic = (UIField)super.getUIComponent();
+		UIField uic = (UIField)templateComponent;
 		
 		uic.getReadStateProperty().set(UIReadState.computeFrom(this.getVisible(), this.getEnabled(), readOnly));
 		uic.getRequiredProperty().set(this.required);
@@ -56,8 +56,6 @@ public class UIFieldInputTag extends AbstractUIComponentBodyTagSupport{
 		uic.getValueProperty().set(value);
 		uic.getMaxLengthProperty().set(this.maxLength);
 		
-		
-		return uic;
 	}
 	
 	public int doStartTag() throws JspException{

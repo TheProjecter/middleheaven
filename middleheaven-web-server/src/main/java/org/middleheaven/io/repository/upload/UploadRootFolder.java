@@ -13,7 +13,6 @@ import org.middleheaven.io.repository.AbstractManagedFile;
 import org.middleheaven.io.repository.ArrayManagedFilePath;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFilePath;
-import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.ManagedFileType;
 
 /**
@@ -28,7 +27,7 @@ public class UploadRootFolder extends AbstractManagedFile {
 	 * Constructor.
 	 * @param repository
 	 */
-	protected UploadRootFolder(ManagedFileRepository repository) {
+	protected UploadRootFolder(AbstractRequestFileRepository repository) {
 		super(repository);
 		path = new ArrayManagedFilePath(repository, "/");
 	}
@@ -39,18 +38,6 @@ public class UploadRootFolder extends AbstractManagedFile {
 	@Override
 	public ManagedFilePath getPath() {
 		return path;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public long getSize() throws ManagedIOException {
-		long count = 0;
-		for (ManagedFile f : files.values()){
-			count += f.getSize();
-		}
-		return count;
 	}
 
 	/**
@@ -105,7 +92,7 @@ public class UploadRootFolder extends AbstractManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StreamableContent getContent() {
+	protected StreamableContent doGetContent() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -153,7 +140,7 @@ public class UploadRootFolder extends AbstractManagedFile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ManagedFile doCreateFolder() {
+	protected ManagedFile doCreateFolder(ManagedFile parent) {
 		return this;
 	}
 
@@ -194,5 +181,6 @@ public class UploadRootFolder extends AbstractManagedFile {
 	public ManagedFile retrive(ManagedFilePath path) throws ManagedIOException {
 		return files.get(this.getPath().resolve(path));
 	}
+
 
 }

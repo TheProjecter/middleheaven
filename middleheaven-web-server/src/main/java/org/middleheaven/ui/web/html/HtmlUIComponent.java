@@ -12,10 +12,8 @@ import org.middleheaven.ui.rendering.RenderingContext;
 /**
  * 
  */
-public interface HtmlUIComponent extends UIComponent, UIContainer{
+public interface HtmlUIComponent extends UIComponent, UIContainer {
 
 	public abstract void writeTo(HtmlDocument doc, RenderingContext context) throws IOException;
-
-
 
 }

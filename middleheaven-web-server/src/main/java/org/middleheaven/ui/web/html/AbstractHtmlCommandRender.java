@@ -3,8 +3,8 @@
  */
 package org.middleheaven.ui.web.html;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.ui.UIComponent;
+import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.rendering.RenderingContext;
 
 
@@ -22,10 +22,8 @@ public abstract class AbstractHtmlCommandRender extends AbstractHtmlRender {
 	@Override
 	protected UIComponent build(RenderingContext context, UIComponent parent, UIComponent component) {
 		
-		GenericHtmlUIComponent uic = new GenericHtmlUIComponent(component, this);
-	 
-		HtmlUICommand ruic =   Introspector.of(uic.getComponentType()).newProxyInstance(new HTMLUIComponentProxyHandler(uic), HtmlUICommand.class);
-		
+		HtmlUIComponent ruic =  new HtmlUICommandImpl((UICommand)component, this);
+
 		ruic.setUIParent(parent);
 
 		init(ruic);
