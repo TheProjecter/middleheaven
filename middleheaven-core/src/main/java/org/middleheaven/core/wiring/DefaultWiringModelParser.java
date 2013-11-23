@@ -3,14 +3,13 @@ package org.middleheaven.core.wiring;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.annotations.Component;
 import org.middleheaven.core.annotations.Factory;
 import org.middleheaven.core.annotations.Named;
@@ -26,8 +25,8 @@ import org.middleheaven.core.reflection.MemberAccess;
 import org.middleheaven.core.reflection.MethodHandler;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Maybe;
 
 
 /**

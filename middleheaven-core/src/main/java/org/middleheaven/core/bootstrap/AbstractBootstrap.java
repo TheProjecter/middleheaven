@@ -20,8 +20,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.middleheaven.application.ApplicationScanningService;
 import org.middleheaven.application.StandardApplicationScannerServiceActivator;
 import org.middleheaven.application.StandardApplicationServiceActivator;
-import org.middleheaven.core.FileContext;
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.bootstrap.activation.ActivatorDependencyResolver;
 import org.middleheaven.core.bootstrap.activation.AnnotationBasedDependencyResolver;
 import org.middleheaven.core.dependency.DependencyGraph;
@@ -47,6 +45,8 @@ import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.CultureModelLocalizationService;
 import org.middleheaven.graph.Graph;
+import org.middleheaven.io.filecontext.FileContext;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.PropertiesFile;
 import org.middleheaven.logging.BroadcastLoggingService;
@@ -185,8 +185,6 @@ public abstract class AbstractBootstrap {
 		// Determine Bootstrap Service
 		bootstrapService = new SimpleBootstrapService(this);
 
-		bootstrapService.addListener(new WiringBootstrapListener( this.wiringService, this.serviceRegistryContext));
-
 		// Register Bootstrap Service
 		serviceRegistryContext.register(BootstrapService.class,
 				bootstrapService);
@@ -212,7 +210,7 @@ public abstract class AbstractBootstrap {
 
 		// configure permanent logging
 		this.loggingService.removeAllListeners();
-		listener = new ConfigurableLogListener(new LoggingConfiguration(null), this.getPermanentLoggingConfigurator());
+		listener = new ConfigurableLogListener(new LoggingConfiguration(fileSystem.getAppLogRepository()), this.getPermanentLoggingConfigurator());
 		this.loggingService.addLogListener(listener);
 
 		doBeforeStart(context);
@@ -388,6 +386,16 @@ public abstract class AbstractBootstrap {
 			}
 		}
 
+		// treat possible all optional not present
+//		
+//		for (Service s : services) {
+//			
+//			final Collection<ServiceSpecification> optionalDependencies = s.getOptionalDependencies();
+//			if (optionalDependencies.size() == s.getDependencies().size()){
+//				serviceGraphMapping.put(s, new DependencyGraph());
+//			}
+//		}
+//		
 		DependencyInicilizer ini = new ServiceDependencyInicilizer(serviceContext);
 		// Create DependencyGraph
 
@@ -444,7 +452,7 @@ public abstract class AbstractBootstrap {
 		for (Map.Entry<Service, DependencyGraph> entry : serviceGraphMapping.entrySet()){
 			DependencyGraph graph = entry.getValue();
 			if (graph.isEmpty()){
-				// there is no vertice in the graph so inicilize the mapped service directly
+				// there is no vertice in the graph so initilize the mapped service directly
 				ini.inicialize(new DependencyGraphNode(entry.getKey(), ini));
 			} else {
 				graph.resolve();
@@ -454,11 +462,9 @@ public abstract class AbstractBootstrap {
 		for (Iterator<Service> it = services.iterator(); it.hasNext();) {
 			final Service service = it.next();
 			if (!service.isActivated()){
-				throw new IllegalStateException("Service " + service.getName() + " was not inicilized." );
+				throw new IllegalStateException("Service " + service.getName() + " was not initialized." );
 			} 
 		}
-
-
 
 	}
 
@@ -523,18 +529,23 @@ public abstract class AbstractBootstrap {
 
 	public final void stop() {
 		logger.info("Terminating Environment");
-		bootstrapService.fireBootdownStart();
+		
 		doBeforeStop(context);
 
+		bootstrapService.fireBootdownStart();
+		
 		serviceRegistryContext.unRegister(BootstrapService.class);
 		serviceRegistryContext.unRegister(WiringService.class);
 
-		// TODO unregister all
-
+		this.wiringService.close();
+		serviceRegistryContext.clear();
+		
 		doAfterStop(context);
 
 		bootstrapService.fireBootdownEnd();
 		logger.info("Environment terminated");
+		
+	
 	}
 
 	protected void doBeforeStart(BootstrapContext context) {
@@ -595,7 +606,7 @@ public abstract class AbstractBootstrap {
 		 */
 		@Override
 		public void activate(ServiceContext serviceContext) {
-		
+			Logger.onBookFor(this.getClass()).debug("Activating with do nothing");
 		}
 
 		/**
@@ -677,32 +688,7 @@ public abstract class AbstractBootstrap {
 
 	}
 
-	private static class WiringBootstrapListener implements BootstapListener{
 
-		private WiringService wiringService;
-		private RegistryServiceContext serviceRegistryContext;
-
-
-		public WiringBootstrapListener(WiringService wiringService,
-				RegistryServiceContext serviceRegistryContext) {
-			super();
-			this.wiringService = wiringService;
-			this.serviceRegistryContext = serviceRegistryContext;
-		}
-
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void onBoostapEvent(BootstrapEvent event) {
-			if (event.isBootdown()) {
-				wiringService.close();
-				serviceRegistryContext.clear();
-			}
-		}
-
-	}
 
 	private static class FileSystemFileContextService implements FileContextService {
 

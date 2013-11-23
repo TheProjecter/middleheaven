@@ -2,6 +2,7 @@ package org.middleheaven.util.criteria;
 
 import org.middleheaven.util.Hash;
 
+
 public class ReadStrategy {
 
 	private boolean isReadOnly = false;

@@ -6,14 +6,14 @@ import static org.junit.Assert.assertFalse;
 import java.util.LinkedList;
 
 import org.junit.Test;
-import org.middleheaven.collections.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.reflection.inspection.Introspector;
 
 
 public class TestIntrospector {
 
-	@Test(expected=WriteOnlyPropertyException.class)
+	@Test(expected=NotReadablePropertyException.class)
 	public void testPropertyAcessor(){
 		
 		SomeBean sb = new SomeBean();

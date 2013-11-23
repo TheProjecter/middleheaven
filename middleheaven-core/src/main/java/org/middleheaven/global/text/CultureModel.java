@@ -6,7 +6,7 @@ package org.middleheaven.global.text;
 
 import java.text.Format;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.writeout.NumberWriteoutFormatter;
 
 /**

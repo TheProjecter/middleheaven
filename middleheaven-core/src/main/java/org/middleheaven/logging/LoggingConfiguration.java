@@ -3,6 +3,7 @@ package org.middleheaven.logging;
 import org.middleheaven.io.repository.ManagedFile;
 
 
+
 public class LoggingConfiguration {
 
 	private ManagedFile baseRepository;

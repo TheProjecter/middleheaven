@@ -1,6 +1,7 @@
 package org.middleheaven.core.wiring;
 
-import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.Maybe;
+
 
 
 

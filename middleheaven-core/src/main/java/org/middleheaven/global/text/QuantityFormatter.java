@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Currency;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.quantity.Quantity;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.measure.DecimalMeasure;

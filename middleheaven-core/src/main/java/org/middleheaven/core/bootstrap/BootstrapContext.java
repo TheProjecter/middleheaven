@@ -1,12 +1,12 @@
 package org.middleheaven.core.bootstrap;
 
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceNotAvailableException;
 import org.middleheaven.core.services.ServiceProvider;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.core.wiring.ProfilesBag;
 import org.middleheaven.core.wiring.PropertyManagers;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.logging.LoggingService;
 
 /**

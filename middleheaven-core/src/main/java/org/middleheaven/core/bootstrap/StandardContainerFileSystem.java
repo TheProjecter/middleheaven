@@ -1,6 +1,6 @@
 package org.middleheaven.core.bootstrap;
 
-import org.middleheaven.core.FileContext;
+import org.middleheaven.io.filecontext.FileContext;
 import org.middleheaven.io.repository.ManagedFile;
 
 public class StandardContainerFileSystem implements FileContext{

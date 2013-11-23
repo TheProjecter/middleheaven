@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import org.junit.Test;
 import org.middleheaven.quantity.math.Real;
 import org.middleheaven.quantity.math.RealField;
-import org.middleheaven.quantity.math.structure.BigMath;
-import org.middleheaven.quantity.math.structure.BigDecimalReal;
 
 
 public class NumericTest {

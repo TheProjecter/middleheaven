@@ -2,8 +2,9 @@ package org.middleheaven.util.criteria;
 
 import java.util.Collection;
 
-import org.middleheaven.collections.Interval;
+import org.middleheaven.collections.interval.Interval;
 import org.middleheaven.util.QualifiedName;
+
 
 public abstract class AbstractBuildingConstraint<T,B extends AbstractCriteriaBuilder<T,B>> {
 

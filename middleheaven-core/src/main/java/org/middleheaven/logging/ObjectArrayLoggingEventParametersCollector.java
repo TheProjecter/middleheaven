@@ -5,6 +5,7 @@ package org.middleheaven.logging;
 
 import org.middleheaven.collections.CollectionUtils;
 
+
 /**
  * 
  */

@@ -11,7 +11,8 @@ import java.util.Collections;
 
 import org.junit.Test;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.io.repository.FileRepositoryService;
+import org.middleheaven.io.filerepository.ClassPathRepositoryProvider;
+import org.middleheaven.io.filerepository.FileRepositoryService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.RepositoryCreationException;

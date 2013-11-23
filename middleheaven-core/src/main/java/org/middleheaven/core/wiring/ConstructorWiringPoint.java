@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Mergable;
+import org.middleheaven.collections.Mergeable;
 import org.middleheaven.core.reflection.ReflectionException;
 
 /**
@@ -83,10 +83,10 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 			thisSpecification = thisSpecification.merge(other.getSpecification());
 		}
 		
-		Mergable[] a = 	this.getParamsSpecifications();
-		Mergable[] b = 	other.getParamsSpecifications();
+		Mergeable[] a = 	this.getParamsSpecifications();
+		Mergeable[] b = 	other.getParamsSpecifications();
 		
-		Mergable[] c  = CollectionUtils.merge(a,b);
+		Mergeable[] c  = CollectionUtils.merge(a,b);
 		
 
 		return new ConstructorWiringPoint (this.constructor, thisSpecification, (WiringSpecification[]) c);

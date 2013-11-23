@@ -23,9 +23,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>2.2</version>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-io</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>middleheaven</groupId>
+			<artifactId>middleheaven-utils</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 

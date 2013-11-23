@@ -12,7 +12,8 @@ import java.util.Map;
  */
 public class ConfigurableLogListener implements LoggingEventListener {
 
-
+	static final String DEFAULT_BOOK_NAME = "DefaultBook";
+	
     final Map<String, LogBook> books = new HashMap<String, LogBook>();
     LoggingConfiguration configuration ;
     
@@ -76,7 +77,7 @@ public class ConfigurableLogListener implements LoggingEventListener {
         }
         
         if (book == null){
-          book =  books.get("");
+          book =  books.get(DEFAULT_BOOK_NAME);
         }
         
         return book;

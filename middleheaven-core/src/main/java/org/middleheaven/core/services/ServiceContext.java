@@ -2,6 +2,8 @@ package org.middleheaven.core.services;
 
 import java.util.Map;
 
+import org.middleheaven.util.Maybe;
+
 
 /**
  * Primary interface to retrive and register services from {@link ServiceActivator}s.
@@ -82,9 +84,16 @@ public interface ServiceContext {
 	 * 
 	 * @param contractInterface the contract interface to find.
 	 * @return the found implementation of the given contract interface
+	 * @throws ServiceNotAvailableException if the service is unavailable
 	 */
-	public <T> T getService (Class<T> contractInterface);
+	public <T> T getService (Class<T> contractInterface) throws ServiceNotAvailableException;
 
-	
+	/**
+	 * Obtain any implementation of the given contract interface.
+	 * 
+	 * @param contractInterface the contract interface to find.
+	 * @return the found implementation of the given contract interface
+	 */
+	public <T> Maybe<T> getPossibleUnAvailableService (Class<T> contractInterface);
 
 }

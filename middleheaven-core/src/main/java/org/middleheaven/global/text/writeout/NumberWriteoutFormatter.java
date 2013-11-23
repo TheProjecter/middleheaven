@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.middleheaven.core.reflection.NoSuchClassReflectionException;
 import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.Formatter;
 
 /**

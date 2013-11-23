@@ -14,6 +14,4 @@ import java.lang.annotation.Target;
 	})
 @Documented
 @ScopeSpecification(name ="default")
-public @interface Default {
-	
-}
+public @interface Default {}

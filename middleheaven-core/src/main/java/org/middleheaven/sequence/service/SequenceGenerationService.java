@@ -7,6 +7,7 @@ package org.middleheaven.sequence.service;
 import org.middleheaven.sequence.Sequence;
 import org.middleheaven.sequence.SequenceScope;
 
+
 public interface SequenceGenerationService{
 
     /**

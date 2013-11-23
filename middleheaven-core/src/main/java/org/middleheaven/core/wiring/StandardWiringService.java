@@ -26,7 +26,7 @@ import org.middleheaven.core.services.ServiceScope;
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.graph.DirectGraph;
 import org.middleheaven.logging.Logger;
-import org.middleheaven.util.function.Maybe;
+import org.middleheaven.util.Maybe;
 import org.middleheaven.util.function.Predicate;
 
 @Service

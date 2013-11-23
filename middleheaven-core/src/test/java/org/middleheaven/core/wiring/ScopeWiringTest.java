@@ -7,8 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.middleheaven.core.FileContext;
 import org.middleheaven.core.annotations.Wire;
+import org.middleheaven.io.filecontext.FileContext;
 import org.middleheaven.logging.LoggingService;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;
 

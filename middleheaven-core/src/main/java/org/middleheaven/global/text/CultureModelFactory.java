@@ -5,7 +5,7 @@ package org.middleheaven.global.text;
 
 import java.util.Collection;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 
 
 /**

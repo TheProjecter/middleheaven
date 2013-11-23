@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.util.QualifiedName;
 
+
 class CollectionFieldInSetCriteria implements FieldInSetCriterion {
 
 

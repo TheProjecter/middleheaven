@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.middleheaven.collections.ParamsMap;
-import org.middleheaven.core.FileContext;
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.annotations.Service;
 import org.middleheaven.core.bootstrap.BootstrapEnvironment;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
 import org.middleheaven.io.ManagedIOException;
+import org.middleheaven.io.filecontext.FileContext;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.sequence.SequenceState;
 import org.middleheaven.sequence.StateChangedEvent;

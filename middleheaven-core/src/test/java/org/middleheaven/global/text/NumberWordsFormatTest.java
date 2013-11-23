@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.writeout.FormatNotFoundException;
 import org.middleheaven.global.text.writeout.NumberWriteoutFormatter;
 import org.middleheaven.tool.test.MiddleHeavenTestCase;

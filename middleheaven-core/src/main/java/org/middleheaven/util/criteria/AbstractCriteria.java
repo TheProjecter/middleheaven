@@ -2,6 +2,7 @@ package org.middleheaven.util.criteria;
 
 import org.middleheaven.util.classification.LogicOperator;
 
+
 public abstract class AbstractCriteria<T> implements Criteria<T> {
 
 	private LogicCriterion restrictions = new LogicCriterion(LogicOperator.and());

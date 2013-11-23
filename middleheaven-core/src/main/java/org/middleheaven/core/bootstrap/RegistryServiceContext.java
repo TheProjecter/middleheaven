@@ -19,8 +19,8 @@ import org.middleheaven.core.services.ServiceEvent;
 import org.middleheaven.core.services.ServiceListener;
 import org.middleheaven.core.services.ServiceNotAvailableException;
 import org.middleheaven.core.services.ServiceProxy;
-import org.middleheaven.core.services.ServiceEvent.ServiceEventType;
 import org.middleheaven.util.Hash;
+import org.middleheaven.util.Maybe;
 
 /**
  * Simple implementation for {@link ServiceContext}.
@@ -381,6 +381,18 @@ public final class RegistryServiceContext implements ServiceContext{
 	@Override
 	public <T> T getService(Class<T> serviceClass) {
 		return this.getService(serviceClass, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T> Maybe<T> getPossibleUnAvailableService(Class<T> serviceClass) {
+		try {
+			return Maybe.of(this.getService(serviceClass, null));
+		}catch (ServiceNotAvailableException e){
+			return Maybe.absent();
+		}	
 	}
 
 

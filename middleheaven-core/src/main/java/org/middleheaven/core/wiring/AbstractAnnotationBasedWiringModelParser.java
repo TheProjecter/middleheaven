@@ -3,9 +3,9 @@ package org.middleheaven.core.wiring;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.middleheaven.core.reflection.MethodHandler;
+
 
 /**
  * 

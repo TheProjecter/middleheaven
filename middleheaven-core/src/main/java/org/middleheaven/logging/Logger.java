@@ -8,7 +8,7 @@ import org.middleheaven.core.bootstrap.ServiceRegistry;
 
 
 /**
- * Provides a convinent set of method to create and send {@link LoggingEvent} to the {@link LoggingService}.
+ * Provides a convinent set of method to create and send {@link LoggingEvent}s to a {@link LoggingService}.
  * 
  */
 public abstract class Logger {

@@ -29,9 +29,6 @@ public class WiringProfilesNotExistantTestCase extends MiddleHeavenTestCase {
 			}
 
 		});
-
-		
-	
 	}
 
 	

@@ -8,6 +8,7 @@ import javax.management.ServiceNotFoundException;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceContextUndefinedException;
 import org.middleheaven.core.services.ServiceNotAvailableException;
+import org.middleheaven.util.Maybe;
 
 public final class ServiceRegistry {
 
@@ -27,6 +28,19 @@ public final class ServiceRegistry {
     	return getService(serviceClass, Collections.<String,Object>emptyMap());
     }
     
+    /**
+	 * Obtain any implementation of the given contract interface.
+	 * 
+	 * @param contractInterface the contract interface to find.
+	 * @return the found implementation of the given contract interface
+	 */
+	public static <T> Maybe<T> getPossibleUnAvailableService (Class<T> serviceClass){
+		try {
+			return Maybe.of(getService(serviceClass));
+		}catch (ServiceNotAvailableException e){
+			return Maybe.absent();
+		}
+	}
     /**
      * Returns a service implementation compatible with <code>serviceClass</code>
      * and the specified service properties

@@ -16,6 +16,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @BindingSpecification
 @Documented
-public @interface Factory {
-
-}
+public @interface Factory {}

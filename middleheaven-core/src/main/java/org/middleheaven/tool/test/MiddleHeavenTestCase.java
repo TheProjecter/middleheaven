@@ -6,8 +6,8 @@ import org.middleheaven.core.annotations.Component;
 import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.core.wiring.WiringService;
-import org.middleheaven.io.repository.FileRepositoryActivator;
-import org.middleheaven.io.repository.FileRepositoryService;
+import org.middleheaven.io.filerepository.FileRepositoryActivator;
+import org.middleheaven.io.filerepository.FileRepositoryService;
 
 @Component
 public abstract class MiddleHeavenTestCase extends TestBootstrap {
@@ -25,9 +25,8 @@ public abstract class MiddleHeavenTestCase extends TestBootstrap {
 	@Before
 	public final void setUp(){
 	
-		//getWiringService().addItem(new TypeWiringItem(this.getClass()));
 		this.start();
-		
+
 		setupWiringBundles(getWiringService());
 
 		getWiringService().wireMembers(this);

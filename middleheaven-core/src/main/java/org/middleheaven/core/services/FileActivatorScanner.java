@@ -13,7 +13,6 @@ import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 
-import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.bootstrap.activation.AbstractActivatorScanner;
 import org.middleheaven.core.bootstrap.activation.ActivatorScanner;

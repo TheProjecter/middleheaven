@@ -8,8 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.middleheaven.collections.AbstractEnumerableAdapter;
 import org.middleheaven.collections.TransformedIterator;
+import org.middleheaven.collections.enumerable.AbstractEnumerableAdapter;
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.util.coersion.TypeCoercing;
 import org.middleheaven.util.function.Mapper;
 
@@ -68,7 +69,7 @@ public class MapContext extends AbstractAttributeContext {
 		return new MapScopedAttributesResolutionStrategy(scope);
 	}
 
-	private class MapScopedAttributesResolutionStrategy extends AbstractEnumerableAdapter<Attribute> implements ScopedAttributesResolutionStrategy {
+	private class MapScopedAttributesResolutionStrategy extends AbstractEnumerableAdapter<Attribute> implements ScopedAttributesResolutionStrategy , FastCountEnumerable {
 
 		private ContextScope scope;
 		
@@ -151,6 +152,7 @@ public class MapContext extends AbstractAttributeContext {
 		public boolean isWritable() {
 			throw new UnsupportedOperationException("Not implememented yet");
 		}
+	
 
 	}
 	

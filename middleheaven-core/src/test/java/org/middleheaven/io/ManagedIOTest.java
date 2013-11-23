@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.io.repository.FileRepositoryService;
+import org.middleheaven.io.filerepository.FileRepositoryService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.machine.MachineFiles;

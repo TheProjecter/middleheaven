@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.core.reflection.MethodHandler;
+
 
 /**
  * Used a {@link Method} as a {@link AfterWiringPoint}.

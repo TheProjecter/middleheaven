@@ -5,9 +5,11 @@ package org.middleheaven.core.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.logging.Logger;
 
 /**
  * Representation of a service metadata. This class does not represent the service it self or an instance of it, but 
@@ -46,6 +48,16 @@ public final class Service {
 	public Collection<ServiceSpecification> getDependencies(){
 		return dependencies;
 	}
+	
+	public Collection<ServiceSpecification> getOptionalDependencies(){
+		Collection<ServiceSpecification> filtered = new LinkedList<ServiceSpecification>();
+		for (ServiceSpecification s : dependencies){
+			if(s.isOptional()){
+				filtered.add(s);
+			}
+		}
+		return filtered;
+	}
 
 	public void addDependency(ServiceSpecification dependency){
 		this.dependencies.add(dependency);
@@ -68,6 +80,7 @@ public final class Service {
 			throw new IllegalStateException("Service already activated");
 		}
 
+		Logger.onBookFor(this.getClass()).debug("Activating service {0}",  this.getName());
 		this.activator.activate(serviceContext);
 		this.activated = true;
 	}
@@ -99,4 +112,5 @@ public final class Service {
 	public ServiceSpecification getServiceSpecification() {
 		return ServiceSpecification.forService(this.contractInterface, this.params);
 	}
+
 }

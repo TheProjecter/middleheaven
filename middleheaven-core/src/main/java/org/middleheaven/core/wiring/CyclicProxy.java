@@ -3,6 +3,7 @@ package org.middleheaven.core.wiring;
 import org.middleheaven.core.reflection.MethodDelegator;
 import org.middleheaven.core.reflection.ProxyHandler;
 
+
 public class CyclicProxy implements ProxyHandler{
 
 	private Object realObject;

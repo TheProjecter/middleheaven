@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.middleheaven.core.reflection.MethodHandler;
 
+
 public final class MethodPublishPoint extends AbstractMethodWiringPoint implements PublishPoint {
 
 	private MethodHandler method;

@@ -3,7 +3,6 @@ package org.middleheaven.core.wiring;
 import org.middleheaven.core.reflection.ClassSet;
 
 
-
 public interface Binder {
 
 

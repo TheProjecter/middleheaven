@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.collections.Mergable;
+import org.middleheaven.collections.Mergeable;
 
 /**
  * Maintains data about the wiring contract to be fulfill by the wiring context.  
  *
  * @param <T> the type that must be retrieved
  */
-public class WiringSpecification implements Mergable<WiringSpecification> {
+public class WiringSpecification implements Mergeable<WiringSpecification> {
 
 	private Class<?> contract;
 	private Map<String, Object> params;

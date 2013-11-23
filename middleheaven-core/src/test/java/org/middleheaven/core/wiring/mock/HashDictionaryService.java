@@ -3,7 +3,7 @@ package org.middleheaven.core.wiring.mock;
 
 
 public class HashDictionaryService implements DictionaryService{
-
+	
 	private String lang;
 
 	public HashDictionaryService(String lang) {

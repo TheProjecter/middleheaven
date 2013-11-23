@@ -5,11 +5,11 @@ package org.middleheaven.application;
 
 import java.util.Collection;
 
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.bootstrap.BootstrapService;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.logging.LoggingService;
 
 /**

@@ -24,6 +24,16 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Wire {
 
+	/**
+	 * Indicates the dependency must exist and be wirable. true by default.
+	 * @return true if the dependency must exist and be wirable
+	 */
 	boolean required() default true;
+	
+	/**
+	 * Indicates the dependency can be shared with other objects, oterwise forces a new object to be wired
+	 * 
+	 * @return true if the dependency can be shared with other objects.
+	 */
 	boolean shareable() default true;
 }

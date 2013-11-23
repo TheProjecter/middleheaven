@@ -3,11 +3,11 @@ package org.middleheaven.logging;
 import java.net.MalformedURLException;
 import java.util.Collection;
 
-import org.middleheaven.core.FileContext;
-import org.middleheaven.core.FileContextService;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
+import org.middleheaven.io.filecontext.FileContext;
+import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.io.repository.ManagedFile;
 
 /**

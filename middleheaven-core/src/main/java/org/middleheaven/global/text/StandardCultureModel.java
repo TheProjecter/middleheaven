@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 
-import org.middleheaven.global.Culture;
+import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.writeout.NumberWriteoutFormatter;
 
 /**
