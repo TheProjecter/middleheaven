@@ -6,7 +6,7 @@ package org.middleheaven.chart;
  *
  */
 public interface Dataset extends SeriesListener, Iterable<Series>{
-
+	
 	/**
 	 * 
 	 * @return number of series in the data set

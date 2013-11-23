@@ -2,8 +2,6 @@ package org.middleheaven.chart;
 
 import org.middleheaven.events.EventListenersSet;
 
-
-
 public abstract class AbstractDataset implements Dataset {
 
 	EventListenersSet<DatasetListener> listeners = EventListenersSet.newSet(DatasetListener.class);

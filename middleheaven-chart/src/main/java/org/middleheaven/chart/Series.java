@@ -6,7 +6,7 @@ package org.middleheaven.chart;
  *
  */
 public interface Series {
-
+	
 	/**
 	 * 
 	 * @return name of the series

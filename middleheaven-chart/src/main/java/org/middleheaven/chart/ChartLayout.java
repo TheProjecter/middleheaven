@@ -5,7 +5,6 @@ import java.util.List;
 
 public class ChartLayout {
 
-
 	private ChartType type;
 	private String title;
 	private List<String> axisNames = new ArrayList<String>();
