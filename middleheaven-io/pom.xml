@@ -22,16 +22,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>middleheaven</groupId>
-			<artifactId>middleheaven-core</artifactId>
+			<artifactId>middleheaven-utils</artifactId>
 			<version>1.0.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-vfs</groupId>
-			<artifactId>commons-vfs</artifactId>
-			<version>20050307052300</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
