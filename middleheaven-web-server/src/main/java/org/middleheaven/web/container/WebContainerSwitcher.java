@@ -2,7 +2,7 @@ package org.middleheaven.web.container;
 
 import javax.servlet.ServletContext;
 
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 
 /**
  * Determines the container from the current {@link ServletContext}.

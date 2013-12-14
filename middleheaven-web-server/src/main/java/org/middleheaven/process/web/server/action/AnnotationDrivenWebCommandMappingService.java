@@ -4,17 +4,17 @@
 package org.middleheaven.process.web.server.action;
 
 import org.middleheaven.collections.enumerable.Enumerable;
-import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.BindConfiguration;
 import org.middleheaven.core.wiring.Binder;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.process.web.server.action.annotaions.Interceptable;
 import org.middleheaven.process.web.server.action.annotaions.Presenter;
+import org.middleheaven.reflection.ClassSet;
+import org.middleheaven.reflection.MemberAccess;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Maybe;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.web.annotations.Path;
@@ -81,7 +81,7 @@ public class AnnotationDrivenWebCommandMappingService extends BuildableWebComman
 
 		final ClassIntrospector<?> introspector = Introspector.of(type);
 
-		if (introspector.isAnnotadedWith(Presenter.class)){
+		if (introspector.isAnnotationPresent(Presenter.class)){
 
 
 			String rootPath = readPath(introspector);
@@ -92,9 +92,9 @@ public class AnnotationDrivenWebCommandMappingService extends BuildableWebComman
 			//			.through(menuInterceptor)
 			//			.through(breadcrumsInterceptor)
 			//			
-			Enumerable<MethodHandler> methods = introspector.inspect().methods().notInheritFromObject().withAccess(MemberAccess.PUBLIC).retriveAll();
+			Enumerable<ReflectedMethod> methods = introspector.inspect().methods().notInheritFromObject().withAccess(MemberAccess.PUBLIC).retriveAll();
 
-			for (MethodHandler m : methods){
+			for (ReflectedMethod m : methods){
 
 				Maybe<Paths> mayBePaths = m.getAnnotation(Paths.class);
 

@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.core.reflection.MethodFilters;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.process.AttributeContext;
@@ -27,6 +25,11 @@ import org.middleheaven.process.web.HttpStatusCode;
 import org.middleheaven.process.web.server.HttpServerContext;
 import org.middleheaven.process.web.server.Outcome;
 import org.middleheaven.process.web.server.WebContext;
+import org.middleheaven.reflection.MethodFilters;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.ReflectedParameter;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.coersion.TypeCoercing;
 import org.middleheaven.util.function.Block;
@@ -48,13 +51,13 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 	private Object controllerObject;
 	private final List<ActionInterceptor> interceptors = new LinkedList<ActionInterceptor>();
 	private final Map<String, Map<OutcomeStatus, OutcomeResolver>> outcomes = new HashMap<String, Map<OutcomeStatus, OutcomeResolver>>();
-	private final Map<String , MethodHandler> actions = new HashMap<String,MethodHandler>();
+	private final Map<String , ReflectedMethod> actions = new HashMap<String,ReflectedMethod>();
 	private final List<PathMatcher> patterns = new LinkedList<PathMatcher>();
 	private final AttributeContextBeanLoader beanLoader = new AttributeContextBeanLoader();
 
-	private EnumMap<HttpMethod, MethodHandler> serviceMethods = new EnumMap<HttpMethod, MethodHandler>(HttpMethod.class);
+	private EnumMap<HttpMethod, ReflectedMethod> serviceMethods = new EnumMap<HttpMethod, ReflectedMethod>(HttpMethod.class);
 
-	private MethodHandler doService=null;
+	private ReflectedMethod doService=null;
 
 	/**
 	 * 
@@ -101,10 +104,10 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 		// each method on the presenter that is not a getter or a setter is an action
 		// only public not property methods
 		Introspector.of(presenterClass).inspect().methods().notInheritFromObject().match(MethodFilters.publicInstanceNonProperty())
-		.each(new Block<MethodHandler>(){
+		.each(new Block<ReflectedMethod>(){
 
 			@Override
-			public void apply(MethodHandler m) {
+			public void apply(ReflectedMethod m) {
 				// a method can have multiple bindings 
 				if (m.isAnnotationPresent(Post.class)){
 					serviceMethods.put(HttpMethod.POST,m);
@@ -203,7 +206,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 		AttributeContext attributes = context.getAttributes();
 
 		Outcome outcome;
-		MethodHandler actionMethod = null;
+		ReflectedMethod actionMethod = null;
 		String action = null;
 
 		try {
@@ -218,7 +221,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 				// try the name match if there are any parameters
 				final ScopedAttributesResolutionStrategy parameters = context.getAttributes().getScopeAttributeContext(ContextScope.REQUEST_PARAMETERS);
 				if (!parameters.isEmpty()){
-					for ( Map.Entry<String, MethodHandler> entry : actions.entrySet()){
+					for ( Map.Entry<String, ReflectedMethod> entry : actions.entrySet()){
 						String act = parameters.getAttribute(entry.getKey(), String.class);
 						if (act!=null){
 							actionMethod = entry.getValue();
@@ -277,45 +280,50 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 		return outcome;
 	}
 
-	private Object[] inicilizeActionParameters(MethodHandler action,HttpServerContext context){
-		Class<?>[] argClasses = action.getParameterTypes();
-		Object[] args = new Object[argClasses.length];
+	private Object[] inicilizeActionParameters(ReflectedMethod action,HttpServerContext context){
+		Enumerable<ReflectedParameter> parameters = action.getParameters();
+		Object[] args = new Object[parameters.size()];
 
 		Map<String, String> variables = resolvePathVariablesValues(context.getRequestUrl().getContexlessPath() + context.getRequestUrl().getFilename(true));
 
-		for (int i =0; i <argClasses.length; i++ ){
-			if (argClasses[i].isAssignableFrom(WebContext.class)){
+		int i =0;
+		for (ReflectedParameter parameter : parameters ){
+			final ReflectedClass<?> type = parameter.getType();
+			if (type.isAssignableFrom(WebContext.class)){
 				args[i] = context;
-			} else if (argClasses[i].isAssignableFrom(AttributeContext.class)){
+			} else if (type.isAssignableFrom(AttributeContext.class)){
 				args[i] = context.getAttributes();
-			} else if (argClasses[i].isAssignableFrom(HttpServletRequest.class)){
+			} else if (type.isAssignableFrom(HttpServletRequest.class)){
 				if (context instanceof RequestResponseWebContext){
 					args[i] = ((RequestResponseWebContext)context).getServletRequest();
 				} else {
 					throw new IllegalStateException("Is not possible to inject " + HttpServletRequest.class.getName() + " on current environment");
 				}
-			} else if (argClasses[i].isAssignableFrom(HttpServletResponse.class)){
+			} else if (type.isAssignableFrom(HttpServletResponse.class)){
 				if (context instanceof RequestResponseWebContext){
 					args[i] = ((RequestResponseWebContext)context).getServletResponse();
 				} else {
 					throw new IllegalStateException("Is not possible to inject " + HttpServletResponse.class.getName() + " on current environment");
 				}
-			}  else if (action.getParameterAnnotations()[i].length > 0){
+			} else {
+				final Enumerable<Annotation> annotations = parameter.getAnnotations();
+				if (annotations.size() > 0){
 
-				for (int a = 0; a < action.getParameterAnnotations()[i].length; a++){
-					Annotation anot = action.getParameterAnnotations()[i][a];
-					if (anot instanceof PathVariable){
-						String pathVariableName = ((PathVariable) anot).value();
-						args[i] = readPathVariable(pathVariableName ,  argClasses[i], variables);
-						break;
-					} else if (anot instanceof In){
-						args[i] = context.getAttributes().getAttribute(((In) anot).value(), argClasses[i]);
-						break;
+					for (Annotation anot : annotations){
+						if (anot instanceof PathVariable){
+							String pathVariableName = ((PathVariable) anot).value();
+							args[i] = readPathVariable(pathVariableName ,  type.getReflectedType(), variables);
+							break;
+						} else if (anot instanceof In){
+							args[i] = context.getAttributes().getAttribute(((In) anot).value(), type.getReflectedType());
+							break;
+						}
 					}
+				}else if (!type.isPrimitive()){
+					args[i]=beanLoader.loadBean(context, type.getReflectedType(), new Annotation[0]);
 				}
-			}else if (!argClasses[i].isPrimitive()){
-				args[i]=beanLoader.loadBean(context,argClasses[i], action.getParameterAnnotations()[i]);
 			}
+			i++;
 		}
 
 		return args;

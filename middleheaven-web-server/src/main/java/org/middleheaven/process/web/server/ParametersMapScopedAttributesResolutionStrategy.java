@@ -12,22 +12,22 @@ import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.ObjectAttribute;
 import org.middleheaven.process.ScopedAttributesResolutionStrategy;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 class ParametersMapScopedAttributesResolutionStrategy implements ScopedAttributesResolutionStrategy {
 
 	/**
 	 * 
 	 */
-	private static final class ObjectAttributeMapper implements
-			Mapper<Attribute, Map.Entry<String, String[]>> {
+	private static final class ObjectAttributeFunction implements
+			Function<Attribute, Map.Entry<String, String[]>> {
 		@Override
 		public Attribute apply(Map.Entry<String, String[]> next) {
 			return new ObjectAttribute(next.getKey(), next.getValue());
 		}
 	}
 
-	private static final ObjectAttributeMapper objectAttributeMapper = new ObjectAttributeMapper();
+	private static final ObjectAttributeFunction objectAttributeFunction = new ObjectAttributeFunction();
 	private Map<String, String[]> parameters;
 	
 	public ParametersMapScopedAttributesResolutionStrategy (Map<String, String[]> parameters){
@@ -55,7 +55,7 @@ class ParametersMapScopedAttributesResolutionStrategy implements ScopedAttribute
 	 */
 	@Override
 	public Iterator<Attribute> iterator() {
-		return TransformedIterator.transform(parameters.entrySet().iterator(), objectAttributeMapper);
+		return TransformedIterator.transform(parameters.entrySet().iterator(), objectAttributeFunction);
 	}
 
 	/**

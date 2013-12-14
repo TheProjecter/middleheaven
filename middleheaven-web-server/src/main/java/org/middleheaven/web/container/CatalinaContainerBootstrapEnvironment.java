@@ -8,8 +8,6 @@ import javax.servlet.ServletContext;
 
 import org.middleheaven.core.bootstrap.BootstrapContext;
 import org.middleheaven.core.bootstrap.EditableContainerFileRepositoryManager;
-import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceBuilder;
 import org.middleheaven.core.services.ServiceSpecification;
@@ -27,6 +25,8 @@ import org.middleheaven.persistance.db.JDBCDataBaseServiceActivator;
 import org.middleheaven.persistance.db.datasource.DataSourceService;
 import org.middleheaven.persistance.db.datasource.DataSourceServiceActivator;
 import org.middleheaven.process.web.CommonHttpServerContainers;
+import org.middleheaven.reflection.ReflectionException;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 import org.middleheaven.transactions.AutoCommitTransactionServiceActivator;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.util.PropertiesBag;
@@ -47,55 +47,55 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	@Override
 	public void preConfigurate(BootstrapContext context) {
 		super.preConfigurate(context);
-		
-		Boolean useNaming = context.getPropertyManagers().getProperty("catalina.useNaming", Boolean.class, Boolean.FALSE);
-		
-		if(useNaming.booleanValue()){
-			
-		    addService(context, ServiceBuilder
-								.forContract(NameDirectoryService.class)
-								.activatedBy(new JNDINamingDirectoryActivator())
-								.newInstance());
-		       
 
-		    addService(context,ServiceBuilder
+		Boolean useNaming = context.getPropertyManagers().getProperty("catalina.useNaming", Boolean.class, Boolean.FALSE);
+
+		if(useNaming.booleanValue()){
+
+			addService(context, ServiceBuilder
+					.forContract(NameDirectoryService.class)
+					.activatedBy(new JNDINamingDirectoryActivator())
+					.newInstance());
+
+
+			addService(context,ServiceBuilder
 					.forContract(TransactionService.class)
 					.activatedBy(new AutoCommitTransactionServiceActivator())
 					.newInstance());
-					
-			  addService(context,ServiceBuilder
+
+			addService(context,ServiceBuilder
 					.forContract(DataSourceService.class)
 					.activatedBy(new DataSourceServiceActivator())
 					.newInstance());
-			  
-			  addService(context,ServiceBuilder
+
+			addService(context,ServiceBuilder
 					.forContract(DataService.class)
 					.activatedBy(new DataServiceActivator())
 					.newInstance());
-			  
-			  addService(context,ServiceBuilder
+
+			addService(context,ServiceBuilder
 					.forContract(DataBaseService.class)
 					.activatedBy(new JDBCDataBaseServiceActivator())
 					.newInstance());
-			
+
 
 		}
 
 		final ServletContext servletContext = this.getServletContext();
 		final ServletContextLogListener listener = new ServletContextLogListener(servletContext);
-		
+
 		String level = servletContext.getInitParameter("logging.level");
-		
+
 		if (!StringUtils.isEmptyOrBlank(level)){
 			listener.setLevel(LoggingLevel.valueOf(level.toUpperCase()));
 		} else {
 			listener.setLevel(LoggingLevel.WARN);
 		}
-		
+
 		context.getLoggingService().addLogListener(listener);
-		
-		
-		
+
+
+
 	}
 
 	/**
@@ -103,29 +103,29 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	 */
 	@Override
 	protected Service resolverRequestedService(ServiceSpecification spec) {
-		
+
 		if (spec.getServiceContractType().equals(MailSendingService.class)){
 			return ServiceBuilder
 					.forContract(MailSendingService.class)
 					.activatedBy(new JavaMailActivator())
 					.newInstance();
 		}
-		
+
 		return null;
 	}
 
 
-	
+
 	@Override
 	protected void setupDefaultFilesRepositories(ServletContext context,EditableContainerFileRepositoryManager fileSystem){
-	
+
 		String catalinaBasePath = PropertiesBag.bagOfSystemProperties().getProperty("catalina.base", String.class);
-		
+
 		fileSystem.setEnvironmentConfigRepository(MachineFiles.resolveFile(catalinaBasePath).retrive("conf"));
 		fileSystem.setEnvironmentDataRepository(MachineFiles.resolveFile(catalinaBasePath).retrive("data").createFolder());
 
 		super.setupDefaultFilesRepositories(context, fileSystem);
-		
+
 	}
 
 	@Override
@@ -140,17 +140,14 @@ public class CatalinaContainerBootstrapEnvironment extends StandardSevletBootstr
 	@Override
 	public WebContainerInfo getWebContainerInfo() {
 		ClassIntrospector<?> introspector = ClassIntrospector.loadFrom("org.apache.catalina.util.ServerInfo");
-		try {
-			String number = (String) introspector.inspect().methods().beingStatic(true).named("getServerNumber").retrive().invoke(null);
-			String serverBuilt = (String) introspector.inspect().methods().beingStatic(true).named("getServerBuilt").retrive().invoke(null);
 
-			number = number  + "." + serverBuilt;
-			
-			return new WebContainerInfo(CommonHttpServerContainers.TOMCAT, Version.valueOf(number));
-			
-		} catch (IllegalArgumentException e) {
-			throw ReflectionException.manage(e, introspector.getIntrospected());
-		} 
+		String number = (String) introspector.inspect().methods().beingStatic(true).named("getServerNumber").retrive().invokeStatic();
+		String serverBuilt = (String) introspector.inspect().methods().beingStatic(true).named("getServerBuilt").retrive().invokeStatic();
+
+		number = number  + "." + serverBuilt;
+
+		return new WebContainerInfo(CommonHttpServerContainers.TOMCAT, Version.valueOf(number));
+
 	}
 
 

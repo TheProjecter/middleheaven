@@ -13,7 +13,7 @@ import org.middleheaven.process.ContextScope;
 import org.middleheaven.process.ObjectAttribute;
 import org.middleheaven.process.ScopedAttributesResolutionStrategy;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 /**
  * 
@@ -75,7 +75,7 @@ abstract class AbstractEnumerationBasedScopedAttributesResolutionStrategy implem
 	public Iterator<Attribute> iterator() {
 		Iterator<String> it = CollectionUtils.enumationIterator(this.getEnumeration());
 		
-		return TransformedIterator.transform(it, new Mapper<Attribute, String>(){
+		return TransformedIterator.transform(it, new Function<Attribute, String>(){
 
 			@Override
 			public Attribute apply(String next) {

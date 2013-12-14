@@ -3,8 +3,8 @@
  */
 package org.middleheaven.ui.web.html;
 
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.components.UICommand;

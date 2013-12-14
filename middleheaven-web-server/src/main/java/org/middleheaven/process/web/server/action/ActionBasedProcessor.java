@@ -10,10 +10,10 @@ import org.middleheaven.process.web.server.Outcome;
 
 public class ActionBasedProcessor extends AbstractHttpProcessor{
 
-	private WebCommandMappingService mapper;
+	private WebCommandMappingService Function;
 	
-	public ActionBasedProcessor (WebCommandMappingService mapper){
-		this.mapper = mapper;
+	public ActionBasedProcessor (WebCommandMappingService Function){
+		this.Function = Function;
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class ActionBasedProcessor extends AbstractHttpProcessor{
 
 			// resolve mapped WebCommand from url
 
-			WebCommandMapping webCommandMapping = mapper.resolve(stripedRequestPath(context));
+			WebCommandMapping webCommandMapping = Function.resolve(stripedRequestPath(context));
 			
 			Outcome outcome;
 			

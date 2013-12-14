@@ -1,11 +1,11 @@
 package org.middleheaven.process.web.server.action;
 
-import org.middleheaven.core.reflection.BeanAssembler;
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.process.AttributeContext;
 import org.middleheaven.process.ContextScope;
+import org.middleheaven.reflection.BeanAssembler;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.function.Block;
 
 public class ContextAssembler implements BeanAssembler {
@@ -27,14 +27,14 @@ public class ContextAssembler implements BeanAssembler {
 		
 		final B instance = Introspector.of(type).newInstance();
 		
-		Introspector.of(type).inspect().properties().each(new Block<PropertyHandler>(){
+		Introspector.of(type).inspect().properties().each(new Block<ReflectedProperty>(){
 
 			@Override
-			public void apply(PropertyHandler acessor) {
+			public void apply(ReflectedProperty acessor) {
 				acessor.setValue(instance,context.getAttribute(
 						scope,
 						(objectName ==null ? "" : objectName + ".") + acessor.getName(), 
-						acessor.getValueType()
+						acessor.getValueType().getReflectedType()
 						)
 				);
 			}

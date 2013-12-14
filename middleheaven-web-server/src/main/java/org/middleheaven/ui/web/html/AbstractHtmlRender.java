@@ -3,10 +3,10 @@ package org.middleheaven.ui.web.html;
 import java.io.IOException;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.culture.Culture;
 import org.middleheaven.global.LocalizationService;
 import org.middleheaven.global.text.LocalizableText;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.rendering.UIRender;

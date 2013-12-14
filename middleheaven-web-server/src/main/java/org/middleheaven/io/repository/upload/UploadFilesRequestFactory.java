@@ -2,8 +2,8 @@ package org.middleheaven.io.repository.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.logging.Logger;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 
 
 public final class UploadFilesRequestFactory {
