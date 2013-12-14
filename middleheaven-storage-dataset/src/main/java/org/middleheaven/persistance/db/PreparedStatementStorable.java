@@ -22,12 +22,12 @@ import org.middleheaven.util.identity.LongIdentity;
 public class PreparedStatementStorable {
 
 	private final PreparedStatement ps;
-	private final DataBaseMapper mapper;
+	private final DataBaseMapper Function;
 	private final RDBMSDialect dialect;
 	
-	public PreparedStatementStorable( DataBaseMapper mapper, RDBMSDialect dialect, PreparedStatement ps) {
+	public PreparedStatementStorable( DataBaseMapper Function, RDBMSDialect dialect, PreparedStatement ps) {
 		this.ps = ps; 
-		this.mapper = mapper;
+		this.Function = Function;
 		this.dialect = dialect;
 
 	}
@@ -36,12 +36,12 @@ public class PreparedStatementStorable {
 
 		
 		
-		DBTableModel tbModel = mapper.getTableForDataSet(row.iterator().next().getModel().getDataSetModel().getName());
+		DBTableModel tbModel = Function.getTableForDataSet(row.iterator().next().getModel().getDataSetModel().getName());
 		
 		int index = 1;
 		for (DBColumnModel tbColumnModel : tbModel){
 			
-		    QualifiedName dsColumnName = mapper.getLogicQualifiedName(tbColumnModel.getName());
+		    QualifiedName dsColumnName = Function.getLogicQualifiedName(tbColumnModel.getName());
 			
 			
 			if (dsColumnName == null){

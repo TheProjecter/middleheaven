@@ -26,7 +26,7 @@ public final class DatasetRepositoryModelDataBaseMapper implements DataBaseMappe
 	
 	public static DatasetRepositoryModelDataBaseMapper newInstance(DatasetRepositoryModel model){
 		
-		final DatasetRepositoryModelDataBaseMapper mapper =  new DatasetRepositoryModelDataBaseMapper();
+		final DatasetRepositoryModelDataBaseMapper Function =  new DatasetRepositoryModelDataBaseMapper();
 		
 		model.models().forEach(new Block<DatasetModel>(){
 
@@ -37,7 +37,7 @@ public final class DatasetRepositoryModelDataBaseMapper implements DataBaseMappe
 				
 				table.setName(dsModel.getHardName());
 				
-				mapper.tableMappings.put(dsModel.getName().toLowerCase(), table);
+				Function.tableMappings.put(dsModel.getName().toLowerCase(), table);
 				
 				
 				dsModel.columns().forEach(new Block<DatasetColumnModel>(){
@@ -65,8 +65,8 @@ public final class DatasetRepositoryModelDataBaseMapper implements DataBaseMappe
 						table.addColumn(column);
 						
 						final QualifiedName logicName = QualifiedName.qualify(dsModel.getName(), dsColumn.getName());
-						mapper.logicToPhysicalColumnMappings.put(logicName , column);
-						mapper.physicalToLogicColumnMappings.put(column.getName() , logicName);
+						Function.logicToPhysicalColumnMappings.put(logicName , column);
+						Function.physicalToLogicColumnMappings.put(column.getName() , logicName);
 					}
 					
 				});
@@ -75,7 +75,7 @@ public final class DatasetRepositoryModelDataBaseMapper implements DataBaseMappe
 			
 		});
 		
-		return mapper;
+		return Function;
 		
 	}
 

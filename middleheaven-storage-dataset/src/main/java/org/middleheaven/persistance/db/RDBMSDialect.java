@@ -137,23 +137,23 @@ public abstract class RDBMSDialect {
 	/**
 	 * Creates a {@link RetriveDataBaseCommand} based on the {@link SearchPlan} and the {@link DataBaseMapper}.
 	 * @param plan the plan to execute.
-	 * @param mapper the database-dataset mapper.
+	 * @param Function the database-dataset Function.
 	 * @return the executable retrieve command
 	 */
-	public final RetriveDataBaseCommand createSelectCommand (SearchPlan plan, DataBaseMapper mapper){
+	public final RetriveDataBaseCommand createSelectCommand (SearchPlan plan, DataBaseMapper Function){
 
-		return newCriteriaInterpreter(mapper).translateRetrive(plan);
+		return newCriteriaInterpreter(Function).translateRetrive(plan);
 	}
 
 	/**
 	 * Creates a {@link DataBaseCommand} based on the {@link SearchPlan} and the {@link DataBaseMapper}.
 	 * @param plan the plan to execute.
-	 * @param mapper the database-dataset mapper.
+	 * @param Function the database-dataset Function.
 	 * @return the executable command
 	 */
-	public DataBaseCommand createDeleteCommand(SearchPlan plan, DataBaseMapper mapper){
+	public DataBaseCommand createDeleteCommand(SearchPlan plan, DataBaseMapper Function){
 
-		return newCriteriaInterpreter(mapper).translateDelete(plan);
+		return newCriteriaInterpreter(Function).translateDelete(plan);
 
 	}
 
@@ -260,8 +260,8 @@ public abstract class RDBMSDialect {
 	public abstract RetriveDataBaseCommand createExistsSchemaCommand(String schemaName);
 
 
-	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper mapper) {
-		return new AbstractRDBMSDataSetCriteriaInterpreter(this, mapper);
+	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper Function) {
+		return new AbstractRDBMSDataSetCriteriaInterpreter(this, Function);
 	}
 
 	public abstract Sequence<Long> getSequence(DataSource ds, String identifiableName);

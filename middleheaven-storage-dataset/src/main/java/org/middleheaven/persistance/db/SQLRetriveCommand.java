@@ -29,10 +29,10 @@ public class SQLRetriveCommand extends SQLConditionableCommand implements Retriv
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean execute(DataBaseMapper mapper, Connection connection,
+	public boolean execute(DataBaseMapper Function, Connection connection,
 			QueryParameters parameters) throws SQLException {
 		   
-		ps = super.prepareStatement(mapper,connection, parameters);
+		ps = super.prepareStatement(Function,connection, parameters);
 		   
 		return true;
 	}

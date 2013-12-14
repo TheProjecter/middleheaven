@@ -68,8 +68,8 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper dataBaseMapper) {
-		return new HSQLCriteriaInterpreter(this, dataBaseMapper);
+	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper DataBaseMapper) {
+		return new HSQLCriteriaInterpreter(this, DataBaseMapper);
 	}
 
 	@Override
@@ -130,8 +130,8 @@ public class HSQLDialect extends SequenceSupportedDBDialect{
 
 	private static class HSQLCriteriaInterpreter extends AbstractRDBMSDataSetCriteriaInterpreter{
 
-		public HSQLCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper dataBaseMapper) {
-			super(dataBaseDialect, dataBaseMapper);
+		public HSQLCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper DataBaseMapper) {
+			super(dataBaseDialect, DataBaseMapper);
 		}
 
 		//		@Override

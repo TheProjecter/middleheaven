@@ -3,8 +3,8 @@ package org.middleheaven.io.repository;
 import java.net.URI;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.io.repository.machine.MachineFileSystemRepositoryProvider;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 
 /**
  * 

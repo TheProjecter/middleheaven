@@ -10,9 +10,9 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.middleheaven.core.bootstrap.ServiceRegistry;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.persistance.PersistanceException;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.transactions.TransactionService;
 import org.middleheaven.transactions.XAResourceAdapter;
 import org.middleheaven.util.Maybe;

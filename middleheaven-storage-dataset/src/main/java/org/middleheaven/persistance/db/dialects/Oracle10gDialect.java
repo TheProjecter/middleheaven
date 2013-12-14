@@ -11,9 +11,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.PropertyNotFoundException;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.persistance.PersistanceException;
 import org.middleheaven.persistance.criteria.building.ColumnValueLocator;
 import org.middleheaven.persistance.db.AbstractRDBMSDataSetCriteriaInterpreter;
@@ -36,6 +33,9 @@ import org.middleheaven.persistance.db.metamodel.EditableDBTableModel;
 import org.middleheaven.persistance.db.metamodel.EditableDataBaseModel;
 import org.middleheaven.persistance.db.metamodel.SequenceModel;
 import org.middleheaven.persistance.model.ColumnValueType;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.PropertyNotFoundException;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.criteria.CriterionOperator;
 
@@ -46,8 +46,8 @@ public class Oracle10gDialect extends SequenceSupportedDBDialect{
 	}
 
 	@Override
-	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper mapper) {
-		return new OracleCriteriaInterpreter(this, mapper);
+	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper Function) {
+		return new OracleCriteriaInterpreter(this, Function);
 	}
 
 
@@ -66,7 +66,7 @@ public class Oracle10gDialect extends SequenceSupportedDBDialect{
 			ds = unwrapp(ds);
 			
 			// faster
-			PropertyHandler pa = Introspector.of(ds.getClass()).inspect().properties().named("login").retrive();
+			ReflectedProperty pa = Introspector.of(ds.getClass()).inspect().properties().named("login").retrive();
 
 			return Collections.singletonList(pa.getValue(ds).toString().toUpperCase());
 		} catch (PropertyNotFoundException e){
@@ -190,8 +190,8 @@ public class Oracle10gDialect extends SequenceSupportedDBDialect{
 
 	private  class OracleCriteriaInterpreter extends AbstractRDBMSDataSetCriteriaInterpreter{
 
-		public OracleCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper dataBaseMapper) {
-			super(dataBaseDialect, dataBaseMapper);
+		public OracleCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper DataBaseMapper) {
+			super(dataBaseDialect, DataBaseMapper);
 		}
 
 		@Override

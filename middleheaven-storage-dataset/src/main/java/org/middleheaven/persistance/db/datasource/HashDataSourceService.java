@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-class HashDataSourceService implements DataSourceServiceClosable{
+public class HashDataSourceService implements DataSourceServiceClosable{
 
 	Map <String , DataSourceProvider> sources = new HashMap <String , DataSourceProvider>();
 

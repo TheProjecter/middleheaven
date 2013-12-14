@@ -25,7 +25,7 @@ public interface DataBaseCommand {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean execute(DataBaseMapper mapper, Connection connection, QueryParameters parameters)  throws SQLException;
+	public boolean execute(DataBaseMapper Function, Connection connection, QueryParameters parameters)  throws SQLException;
 
 	public String getSQL();
 

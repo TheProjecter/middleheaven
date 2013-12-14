@@ -59,7 +59,7 @@ public class AbstractRDBMSDataSetCriteriaInterpreter implements DataSetCriteriaI
 	 * 
 	 * @return the current {@link DataBaseMapper}
 	 */
-	protected DataBaseMapper dataBaseMapper(){
+	protected DataBaseMapper DataBaseMapper(){
 		return dataBaseMapper;
 	}
 

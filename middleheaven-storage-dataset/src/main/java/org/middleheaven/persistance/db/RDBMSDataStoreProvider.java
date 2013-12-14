@@ -58,7 +58,7 @@ import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.classification.LogicOperator;
 import org.middleheaven.util.criteria.CriterionOperator;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 /**
  * A {@link DataStore} that reads data from a Relational Data Base Management System (RDBMS)
@@ -79,7 +79,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 	 * 
 	 * Constructor.
 	 * @param datasource the source of data.
-	 * @param mapper the database mapper.
+	 * @param Function the database Function.
 	 */
 	protected RDBMSDataStoreProvider (DataSourceService dsService, DataSourceNameResolver dataSourceNameResolver){
 		this.dsService = dsService;
@@ -98,9 +98,9 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 		RDBMSDialect dialect = RDBMSDialectFactory.getDialect(datasource);
 
-		DataBaseMapper mapper = DatasetRepositoryModelDataBaseMapper.newInstance(dataSetModel);
+		DataBaseMapper Function = DatasetRepositoryModelDataBaseMapper.newInstance(dataSetModel);
 
-		DataStore ds = new RDBMSDataStore(name , mapper, dialect, datasource);
+		DataStore ds = new RDBMSDataStore(name , Function, dialect, datasource);
 
 		this.stores.put(name, ds);
 
@@ -141,13 +141,13 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 
 		private DataStoreName name;
-		private final DataBaseMapper mapper;
+		private final DataBaseMapper Function;
 		private final DataSource datasource;
 		private final RDBMSDialect dialect;
 
-		public RDBMSDataStore (DataStoreName name,  DataBaseMapper mapper, RDBMSDialect dialect , DataSource datasource){
+		public RDBMSDataStore (DataStoreName name,  DataBaseMapper Function, RDBMSDialect dialect , DataSource datasource){
 			this.name = name;
-			this.mapper = mapper;
+			this.Function = Function;
 			this.dialect = dialect;
 			this.datasource = datasource;
 		}
@@ -158,7 +158,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 			try {
 				con = datasource.getConnection();
 
-				command.execute(mapper, con, null);
+				command.execute(Function, con, null);
 
 			} catch (SQLException e) {
 				Logger.onBookFor(this.getClass()).trace("SQL : {0}", command.getSQL());
@@ -221,7 +221,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 					for (RelatedDataSet rd : criteria.getRelatedDataSets()){
 
 						TableRelation relation = new TableRelation(new LogicConstraint(rd.getRelationConstraint().getOperator()) , rd.getRelationOperator());
-						relation.setSourceTableModel(mapper.getTableForDataSet(rd.getSourceDataSetModel().getName()));
+						relation.setSourceTableModel(Function.getTableForDataSet(rd.getSourceDataSetModel().getName()));
 						plan.add(relation);
 
 						if (!rd.getRelationConstraint().getConstraints().isEmpty()){
@@ -234,13 +234,13 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 									QualifiedName q = ( (ColumnValueConstraint) c).getLeftValuelocator().getName();
 
 									if (q != null){
-										relation.setSourceTableModel(mapper.getTableColumnModel(q).getTableModel());
+										relation.setSourceTableModel(Function.getTableColumnModel(q).getTableModel());
 									}
 
 									q = ( (ColumnValueConstraint) c).getRightValueLocator().getName();
 
 									if (q != null){
-										relation.setTargetTableModel(mapper.getTableColumnModel(q).getTableModel());
+										relation.setTargetTableModel(Function.getTableColumnModel(q).getTableModel());
 									}
 
 									relation.getRelationConstraint().addConstraint(rd.getRelationConstraint());
@@ -276,7 +276,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 					EditableDataBaseModel dbModel = new EditableDataBaseModel();
 
-					for (DBTableModel tm  : mapper.getTableModels()){
+					for (DBTableModel tm  : Function.getTableModels()){
 						if (tm.isEmpty()){
 							throw new IllegalModelStateException("Table " + tm.getName() + " has no columns");
 						}
@@ -327,7 +327,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 									final List<DataBaseCommand> indexComands = new LinkedList<DataBaseCommand>();
 
-									tm.columns().groupBy(new Mapper<String, DBColumnModel>(){
+									tm.columns().groupBy(new Function<String, DBColumnModel>(){
 
 										@Override
 										public String apply(DBColumnModel obj) {
@@ -370,7 +370,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				public Sequence<Long> getSequence(
 						String sequenceName) throws SequenceNotFoundException {
 
-					DBTableModel tbModel = mapper.getTableForDataSet(sequenceName);
+					DBTableModel tbModel = Function.getTableForDataSet(sequenceName);
 
 					if (tbModel  != null){
 						sequenceName = tbModel.getName();
@@ -463,10 +463,10 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 
 				con = rdbmsDataStore.datasource.getConnection();
 
-				RetriveDataBaseCommand command = rdbmsDataStore.dialect.createSelectCommand(plan, rdbmsDataStore.mapper);
+				RetriveDataBaseCommand command = rdbmsDataStore.dialect.createSelectCommand(plan, rdbmsDataStore.Function);
 				Logger.onBook("SQL").trace(command.toString());
 
-				command.execute( rdbmsDataStore.mapper, con, null);
+				command.execute( rdbmsDataStore.Function, con, null);
 				rs = command.getResult();
 
 				// if dialect does not support offset
@@ -495,7 +495,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 			if (plan.isFowardOnly() && plan.isReadOnly()) {
 				// fastlane
 				try {
-					return  ResultSetDataRowStream.newInstance(rs, rdbmsDataStore.mapper, plan, rdbmsDataStore.dialect);
+					return  ResultSetDataRowStream.newInstance(con, rs, rdbmsDataStore.Function, plan, rdbmsDataStore.dialect);
 				} catch (SQLException e) {
 					throw rdbmsDataStore.dialect.handleSQLException(e);
 				} 
@@ -600,7 +600,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.Function.getTableForDataSet(datasetName);
 
 			if (model != null) {
 				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createInsertCommand(dataRows, model));
@@ -618,7 +618,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.Function.getTableForDataSet(datasetName);
 
 			if (model != null) {
 
@@ -674,7 +674,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 		 */
 		@Override
 		public void delete(DataSetCriteria criteria) {
-			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.Function.getTableForDataSet(datasetName);
 
 			if (model != null){
 				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createDeleteCommand(criteria, model));
@@ -691,7 +691,7 @@ public class RDBMSDataStoreProvider implements DataStoreProvider  {
 				return;
 			}
 
-			DBTableModel model = rdbmsDataStore.mapper.getTableForDataSet(datasetName);
+			DBTableModel model = rdbmsDataStore.Function.getTableForDataSet(datasetName);
 
 			if (model != null) {
 				rdbmsDataStore.executeCommand(rdbmsDataStore.dialect.createUpdateCommand(dataRows, model));

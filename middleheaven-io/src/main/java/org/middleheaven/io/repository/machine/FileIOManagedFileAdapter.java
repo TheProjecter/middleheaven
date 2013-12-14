@@ -26,7 +26,7 @@ import org.middleheaven.io.repository.empty.EmptyFileContent;
 import org.middleheaven.io.repository.watch.Watchable;
 import org.middleheaven.quantity.time.EpocTimePoint;
 import org.middleheaven.quantity.time.TimePoint;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 /**
  * 
@@ -185,7 +185,7 @@ class FileIOManagedFileAdapter  extends AbstractManagedFile implements Watchable
 		if (children == null){ // not a folder
 			return Collections.emptySet();
 		} else {
-			return TransformedCollection.transform(Arrays.asList(children), new Mapper<ManagedFile , File> (){
+			return TransformedCollection.transform(Arrays.asList(children), new Function<ManagedFile , File> (){
 
 				@Override
 				public ManagedFile apply(File obj) {

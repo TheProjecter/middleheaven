@@ -15,7 +15,7 @@ public interface EditableDatasetModel extends DatasetModel{
 
 
 	/**
-	 * @param cmapper
+	 * @param cFunction
 	 */
 	public void addDatasetColumnModel (EditableDatasetColumnModel column);
 

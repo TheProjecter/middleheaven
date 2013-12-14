@@ -29,11 +29,11 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		return c;
 	}
 
-	protected void addDataSetMapping(DataSetMapper dataSet) {
+	protected void addDataSetMapping(DataSetFunction dataSet) {
 
 		EditableDBTableModel tbm = new EditableDBTableModel (dataSet.hardName);
 
-		for (ColumnMapper cmap : dataSet.getColumns()){
+		for (ColumnFunction cmap : dataSet.getColumns()){
 
 
 			EditableColumnModel cm = new EditableColumnModel(
@@ -91,17 +91,17 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		
 
 
-	 protected static class DataSetMapper {
+	 protected static class DataSetFunction {
 
 		 String name;
 		 String hardName;
 
-		 Map<String,ColumnMapper > columns = new HashMap<String,ColumnMapper>();
+		 Map<String,ColumnFunction > columns = new HashMap<String,ColumnFunction>();
 
 		 public String getName() {
 			 return name;
 		 }
-		 public ColumnMapper getColumn(String name) {
+		 public ColumnFunction getColumn(String name) {
 			 return columns.get(name);
 		 }
 		 public void setName(String name) {
@@ -114,12 +114,12 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 			 this.hardName = hardName; //.toLowerCase();
 		 }
 
-		 public void addColumn(ColumnMapper cm) {
+		 public void addColumn(ColumnFunction cm) {
 			 columns.put(cm.getName(), cm);
-			 cm.setDataSetMapper(this);
+			 cm.setDataSetFunction(this);
 		 }
 
-		 public Collection<ColumnMapper> getColumns(){
+		 public Collection<ColumnFunction> getColumns(){
 			 return columns.values();
 		 }
 
@@ -128,12 +128,12 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 
 	 private class ColumnModelAdapter implements DBColumnModel {
 
-		 private ColumnMapper columnMapper;
+		 private ColumnFunction columnFunction;
 		 private DBTableModel tbm;
 
-		 protected ColumnModelAdapter(ColumnMapper columnMapper, DBTableModel tbm) {
+		 protected ColumnModelAdapter(ColumnFunction columnFunction, DBTableModel tbm) {
 			 super();
-			 this.columnMapper = columnMapper;
+			 this.columnFunction = columnFunction;
 			 this.tbm = tbm;
 		 }
 
@@ -142,7 +142,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public String getLogicName() {
-			 return columnMapper.getHardName();
+			 return columnFunction.getHardName();
 		 }
 
 		 /**
@@ -166,7 +166,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public boolean isNullable() {
-			 return columnMapper.isNullable();
+			 return columnFunction.isNullable();
 		 }
 
 		 /**
@@ -174,7 +174,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public boolean isKey() {
-			 return columnMapper.isKey();
+			 return columnFunction.isKey();
 		 }
 
 		 /**
@@ -182,7 +182,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public boolean isVersion() {
-			 return columnMapper.isVersion();
+			 return columnFunction.isVersion();
 		 }
 
 		 /**
@@ -190,7 +190,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public boolean isUnique() {
-			 return !StringUtils.isEmptyOrBlank(this.columnMapper.getUniqueGroup());
+			 return !StringUtils.isEmptyOrBlank(this.columnFunction.getUniqueGroup());
 		 }
 
 		 /**
@@ -198,7 +198,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public String getUniqueGroupName() {
-			 return this.columnMapper.getUniqueGroup();
+			 return this.columnFunction.getUniqueGroup();
 		 }
 
 		 /**
@@ -206,7 +206,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public int getSize() {
-			 return columnMapper.getSize();
+			 return columnFunction.getSize();
 		 }
 
 		 /**
@@ -214,7 +214,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public int getPrecision() {
-			 return this.columnMapper.getSize();
+			 return this.columnFunction.getSize();
 		 }
 
 		 /**
@@ -222,7 +222,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public ColumnValueType getType() {
-			 return mapType (columnMapper.getType());
+			 return mapType (columnFunction.getType());
 		 }
 
 		 /**
@@ -238,20 +238,20 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		  */
 		 @Override
 		 public QualifiedName getName() {
-			 return QualifiedName.qualify(tbm.getName(), this.columnMapper.getHardName());		}
+			 return QualifiedName.qualify(tbm.getName(), this.columnFunction.getHardName());		}
 
 		 /**
 		  * {@inheritDoc}
 		  */
 		 @Override
 		 public boolean isIndexed() {
-			 return this.columnMapper.isIndexed();
+			 return this.columnFunction.isIndexed();
 		 }
 
 	 }
 
 
-	 protected static class ColumnMapper {
+	 protected static class ColumnFunction {
 
 		 String name;
 		 String hardName;
@@ -262,7 +262,7 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 		 private int scale;
 		 private boolean version;
 		 private String uniqueGroupName;
-		 private DataSetMapper dataSetMapper;
+		 private DataSetFunction dataSetFunction;
 		 private String type;
 
 
@@ -279,10 +279,10 @@ public abstract class AbstractDataBaseMapper implements DataBaseMapper {
 			 return name;
 		 }
 		 /**
-		  * @param dataSetMapper
+		  * @param dataSetFunction
 		  */
-		 public void setDataSetMapper(DataSetMapper dataSetMapper) {
-			 this.dataSetMapper = dataSetMapper;
+		 public void setDataSetFunction(DataSetFunction dataSetFunction) {
+			 this.dataSetFunction = dataSetFunction;
 		 }
 
 		 /**

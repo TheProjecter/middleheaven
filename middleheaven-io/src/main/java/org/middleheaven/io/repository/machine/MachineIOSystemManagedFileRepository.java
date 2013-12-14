@@ -17,7 +17,7 @@ import org.middleheaven.io.repository.ManagedFileRepository;
 import org.middleheaven.io.repository.watch.WatchService;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 /**
  * 
@@ -200,7 +200,7 @@ class MachineIOSystemManagedFileRepository extends AbstractManagedRepository imp
 			if (children == null){ // not a folder
 				return Collections.emptySet();
 			} else {
-				return TransformedCollection.transform(Arrays.asList(children), new Mapper<ManagedFilePath , File> (){
+				return TransformedCollection.transform(Arrays.asList(children), new Function<ManagedFilePath , File> (){
 
 					@Override
 					public ManagedFilePath apply(File obj) {

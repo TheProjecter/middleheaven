@@ -4,8 +4,9 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.middleheaven.collections.enumerable.AbstractEnumerableAdapter;
+import org.middleheaven.collections.enumerable.AbstractEnumerable;
 import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.collections.tree.TreeEnumerable;
 import org.middleheaven.io.AutoInputStreamCopy;
 import org.middleheaven.io.AutoOutputStreamCopy;
@@ -293,7 +294,7 @@ public abstract class AbstractManagedFile implements ManagedFile {
 	protected abstract int childrenCount();
 
 
-	private class ManagedFileEnumerable extends AbstractEnumerableAdapter<ManagedFile> {
+	private class ManagedFileEnumerable extends AbstractEnumerable<ManagedFile> implements FastCountEnumerable {
 
 		/**
 		 * {@inheritDoc}

@@ -13,13 +13,13 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
-import org.middleheaven.core.reflection.SignatureProxy;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.namedirectory.NameDirectoryService;
 import org.middleheaven.namedirectory.NameObjectEntry;
 import org.middleheaven.namedirectory.NameTypeEntry;
 import org.middleheaven.namedirectory.NamingDirectoryException;
+import org.middleheaven.reflection.SignatureProxy;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 
 
 public class JNDINameDirectoryService implements NameDirectoryService{
@@ -53,7 +53,7 @@ public class JNDINameDirectoryService implements NameDirectoryService{
 
 			final ClassIntrospector<T> introspector = Introspector.of(type);
 			
-			if (introspector.isInstance(object)){
+			if (introspector.getIntrospected().isInstance(object)){
 				return type.cast(object);
 			} else if (object instanceof java.rmi.Remote){
 				return type.cast(PortableRemoteObject.narrow(object, type));

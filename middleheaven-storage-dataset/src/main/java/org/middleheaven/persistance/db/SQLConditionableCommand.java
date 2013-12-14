@@ -32,10 +32,10 @@ public abstract class SQLConditionableCommand implements ConditionableDataBaseCo
 		return dialect;
 	}
 	
-	protected final PreparedStatement prepareStatement(DataBaseMapper mapper, Connection connection, QueryParameters parameters) throws SQLException{
+	protected final PreparedStatement prepareStatement(DataBaseMapper Function, Connection connection, QueryParameters parameters) throws SQLException{
 		PreparedStatement ps = connection.prepareStatement(sql,ResultSet.TYPE_FORWARD_ONLY , ResultSet.CONCUR_READ_ONLY);
 
-		PreparedStatementStorable pss = new PreparedStatementStorable(mapper, this.dialect,ps);
+		PreparedStatementStorable pss = new PreparedStatementStorable(Function, this.dialect,ps);
 
 		int param = 1;
 		for (ValueHolder c : values){

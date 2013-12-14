@@ -18,11 +18,11 @@
 //public class XMLDataStoreProvider implements DataStoreProvider {
 //
 //	
-//	private DataBaseMapper mapper;
+//	private DataBaseMapper Function;
 //	private ManagedFile folder;
 //
-//	public XMLDataStoreProvider (ManagedFile folder, DataBaseMapper mapper) {
-//		this.mapper = mapper;
+//	public XMLDataStoreProvider (ManagedFile folder, DataBaseMapper Function) {
+//		this.Function = Function;
 //		this.folder = folder;
 //	}
 //	
@@ -41,7 +41,7 @@
 //
 //			@Override
 //			public DataStoreSchema getDataStoreSchema(DataStoreSchemaName name) {
-//				return new XMLDataStoreSchema(name, resolveDataStoreSchemaFile(name), mapper);
+//				return new XMLDataStoreSchema(name, resolveDataStoreSchemaFile(name), Function);
 //			}
 //			
 //			

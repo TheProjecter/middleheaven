@@ -6,9 +6,9 @@ package org.middleheaven.persistance.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.QualifiedName;
 
 

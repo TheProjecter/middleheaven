@@ -1,5 +1,6 @@
 package org.middleheaven.persistance.db;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -18,18 +19,20 @@ public final class ResultSetDataRowStream implements DataRowStream {
 
 	
 
-	public static ResultSetDataRowStream newInstance (ResultSet rs, DataBaseMapper mapper, SearchPlan plan, RDBMSDialect dialect) throws SQLException{
-		return new ResultSetDataRowStream(rs, mapper , ResultSetDataRow.newInstance(rs, dialect));
+	public static ResultSetDataRowStream newInstance (Connection con, ResultSet rs, DataBaseMapper Function, SearchPlan plan, RDBMSDialect dialect) throws SQLException{
+		return new ResultSetDataRowStream(con, rs, Function , ResultSetDataRow.newInstance(rs, dialect));
 	}
 	
 	private final ResultSet rs;
-	private final DataBaseMapper mapper;
+	private final DataBaseMapper Function;
 	private final DataRow row;
+	private final Connection connection;
 
 	
-	private ResultSetDataRowStream(ResultSet rs, DataBaseMapper mapper, ResultSetDataRow resultSetDataRow){
+	private ResultSetDataRowStream(Connection con, ResultSet rs, DataBaseMapper Function, ResultSetDataRow resultSetDataRow){
 		this.rs = rs;
-		this.mapper = mapper;
+		this.connection = con;
+		this.Function = Function;
 		this.row = resultSetDataRow;
 	}
 	
@@ -50,6 +53,7 @@ public final class ResultSetDataRowStream implements DataRowStream {
 	@Override
 	public void close() throws DataRowStreamException {
 		try {
+			connection.close();
 			rs.close();
 		} catch (SQLException e) {
 			throw new DataRowStreamException(e);

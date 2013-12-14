@@ -36,8 +36,8 @@ public class PostgressDialect extends SequenceSupportedDBDialect{
 	}
 
 	@Override
-	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper dataBaseMapper) {
-		return new PostgressCriteriaInterpreter(this, dataBaseMapper);
+	public DataSetCriteriaInterpreter newCriteriaInterpreter(DataBaseMapper DataBaseMapper) {
+		return new PostgressCriteriaInterpreter(this, DataBaseMapper);
 
 	}
 	
@@ -133,8 +133,8 @@ public class PostgressDialect extends SequenceSupportedDBDialect{
 
 	private static class PostgressCriteriaInterpreter extends AbstractRDBMSDataSetCriteriaInterpreter{
 
-		public PostgressCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper dataBaseMapper) {
-			super(dataBaseDialect, dataBaseMapper);
+		public PostgressCriteriaInterpreter(RDBMSDialect dataBaseDialect, DataBaseMapper DataBaseMapper) {
+			super(dataBaseDialect, DataBaseMapper);
 		}
 
 //		protected void writeFromClause(StringBuilder queryBuffer){

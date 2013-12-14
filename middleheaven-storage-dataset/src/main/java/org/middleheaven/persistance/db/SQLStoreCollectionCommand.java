@@ -30,13 +30,13 @@ public class SQLStoreCollectionCommand implements DataBaseCommand {
 	}
 	
 	@Override
-	public boolean execute(DataBaseMapper mapper, Connection connection, QueryParameters parameters) throws SQLException {
+	public boolean execute(DataBaseMapper Function, Connection connection, QueryParameters parameters) throws SQLException {
 
 		if (data.size() > 1 && dialect.supportsBatch()){
 		
 			PreparedStatement ps = connection.prepareStatement(sql , ResultSet.TYPE_FORWARD_ONLY , ResultSet.CONCUR_READ_ONLY);
 			
-			PreparedStatementStorable pss = new PreparedStatementStorable(mapper, this.dialect, ps);
+			PreparedStatementStorable pss = new PreparedStatementStorable(Function, this.dialect, ps);
 			
 			for (DataRow s : data){
 				
@@ -49,7 +49,7 @@ public class SQLStoreCollectionCommand implements DataBaseCommand {
 			PreparedStatement ps = connection.prepareStatement(sql,ResultSet.TYPE_FORWARD_ONLY , ResultSet.CONCUR_READ_ONLY);
 			
 			int count = 0;
-			PreparedStatementStorable pss = new PreparedStatementStorable(mapper,this.dialect,ps);
+			PreparedStatementStorable pss = new PreparedStatementStorable(Function,this.dialect,ps);
 			for (DataRow s : data){
 				
 				pss.copy(s);

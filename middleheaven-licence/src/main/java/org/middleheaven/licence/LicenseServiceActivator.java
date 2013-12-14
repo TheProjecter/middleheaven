@@ -11,9 +11,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.middleheaven.core.bootstrap.BootstrapService;
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
@@ -24,6 +21,9 @@ import org.middleheaven.io.filecontext.FileContext;
 import org.middleheaven.io.filecontext.FileContextService;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.logging.Logger;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.function.Block;
 
 

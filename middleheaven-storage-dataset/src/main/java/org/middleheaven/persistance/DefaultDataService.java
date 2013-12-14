@@ -13,7 +13,7 @@ import org.middleheaven.storage.dataset.mapping.DatasetRepositoryModel;
 /**
  * 
  */
-class DefaultDataService implements DataService {
+public class DefaultDataService implements DataService {
 
 	
 	private final List<DataStoreProvider>  providers = new LinkedList<DataStoreProvider>();

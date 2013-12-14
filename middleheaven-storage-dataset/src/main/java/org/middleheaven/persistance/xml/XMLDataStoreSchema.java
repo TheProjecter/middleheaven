@@ -40,11 +40,11 @@
 //
 //	private Document doc;
 //	private XMLCriteriaInterpreter interpreter = new XMLCriteriaInterpreter();
-//	private DataBaseMapper mapper;
+//	private DataBaseMapper Function;
 //
-//	public XMLDataStoreSchema(DataStoreSchemaName name , ManagedFile source ,  DataBaseMapper mapper){
+//	public XMLDataStoreSchema(DataStoreSchemaName name , ManagedFile source ,  DataBaseMapper Function){
 //
-//		this.mapper = mapper;
+//		this.Function = Function;
 //
 //		if (source.getType().isFile()){
 //			XMLStoreContructor c = new XMLStoreContructor();

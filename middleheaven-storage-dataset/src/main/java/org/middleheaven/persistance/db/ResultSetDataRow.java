@@ -12,7 +12,7 @@ import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataColumnsModel;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 /**
  * 
@@ -35,7 +35,7 @@ final class ResultSetDataRow implements DataRow{
 
 	@Override
 	public Iterator<DataColumn> iterator() {
-		return TransformedIterator.transform(model.iterator(), new Mapper<DataColumn, DataColumnModel>(){
+		return TransformedIterator.transform(model.iterator(), new Function<DataColumn, DataColumnModel>(){
 
 			@Override
 			public DataColumn apply(DataColumnModel next) {
