@@ -1,17 +1,12 @@
 package org.middleheaven.core.wiring.connectors;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.middleheaven.collections.enumerable.Enumerable;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.AbstractAnnotationBasedWiringModelParser;
 import org.middleheaven.core.wiring.BeanDependencyModel;
 import org.middleheaven.core.wiring.ConnectableBinder;
@@ -20,6 +15,12 @@ import org.middleheaven.core.wiring.FieldAfterWiringPoint;
 import org.middleheaven.core.wiring.MethodAfterWiringPoint;
 import org.middleheaven.core.wiring.WiringConnector;
 import org.middleheaven.core.wiring.WiringSpecification;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedConstructor;
+import org.middleheaven.reflection.ReflectedField;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.ReflectedParameter;
+import org.middleheaven.reflection.Reflector;
 import org.middleheaven.util.function.Block;
 
 /**
@@ -46,38 +47,32 @@ public class JavaEE5InjectonConnector implements WiringConnector {
 
 		private JavaEE5InjectonParser (){}
 		
+		@SuppressWarnings("unchecked")
 		@Override
-		public <T> void readBeanModel(Class<T> type, final BeanDependencyModel model) {
+		public <T> void readBeanModel(Class<T> atype, final BeanDependencyModel model) {
 
-
+			ReflectedClass<T> type = Reflector.getReflector().reflect(atype);
+					
 			// constructor
-			ClassIntrospector<T> introspector = Introspector.of(type);
-
-			Enumerable<Constructor<T>> constructors = introspector.inspect()
-			.constructors().retriveAll();
+			Enumerable<ReflectedConstructor<T>> constructors = type.getConstructors();
 
 			if (constructors.size()==1){
-				Constructor constructor = constructors.getFirst();
+				ReflectedConstructor<T> constructor = constructors.getFirst();
 				//ok, use this one
-				WiringSpecification[] params = this.readParamsSpecification(constructor);
+				Enumerable<WiringSpecification> params = this.readParamsSpecification(constructor);
 
 				model.setProducingWiringPoint(new ConstructorWiringPoint(constructors.getFirst(),null,params));
 			} else {
 				// search for one with parameters annotated with @Resource or @Resources
 
-				outer:for (Constructor<T> constructor : constructors){
-					Annotation[][] paramsAnnotation = constructor.getParameterAnnotations();
-
-					for (int p =0; p< paramsAnnotation.length;p++){
+				outer:for (ReflectedConstructor<T> constructor : constructors){
+					
+					for (ReflectedParameter parameter : constructor.getParameters()){
 						// inner classes have a added parameter on index 0 that 
 						// get annotations does not cover.
 						// read from end to start
 
-
-						int annotIndex = paramsAnnotation.length - 1 -p;
-
-						for (Annotation a : paramsAnnotation[annotIndex]){
-
+						for (Annotation a : parameter.getAnnotations()){
 							if (a.annotationType().isAnnotationPresent(Resource.class)){
 								model.setProducingWiringPoint(new ConstructorWiringPoint(constructor,null,null));
 								break outer;
@@ -92,28 +87,24 @@ public class JavaEE5InjectonConnector implements WiringConnector {
 			// injection points
 
 			// search all fields annotated with Resource
-			introspector.inspect().fields().annotatedWith(Resource.class)
-			.each(new Block<Field>(){
+			type.inspect().fields().annotatedWith(Resource.class)
+			.each(new Block<ReflectedField>(){
 
 				@Override
-				public void apply(Field f) {
-					WiringSpecification spec = readParamsSpecification(f);
-
-					model.addAfterWiringPoint(new FieldAfterWiringPoint(f, spec));
+				public void apply(ReflectedField f) {
+					model.addAfterWiringPoint(new FieldAfterWiringPoint(f, readParamsSpecification(f)));
 				}
 
 			});
 
 
 			// search all methods annotated with Resource
-			introspector.inspect().methods().annotatedWith(Resource.class)
-			.each( new Block<MethodHandler>(){
+			type.inspect().methods().annotatedWith(Resource.class)
+			.each( new Block<ReflectedMethod>(){
 
 				@Override
-				public void apply(MethodHandler method) {
-					WiringSpecification[] spec = readParamsSpecification(method);
-
-					model.addAfterWiringPoint(new MethodAfterWiringPoint(method,null,spec));
+				public void apply(ReflectedMethod method) {
+					model.addAfterWiringPoint(new MethodAfterWiringPoint(method,null,readParamsSpecification(method)));
 				}
 
 			});
@@ -124,8 +115,7 @@ public class JavaEE5InjectonConnector implements WiringConnector {
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected WiringSpecification parseAnnotations(
-				Annotation[] annnnotations, Class<?> type) {
+		protected WiringSpecification parseAnnotations(Enumerable<Annotation> annnnotations, ReflectedClass<?> type) {
 
 			boolean isParamRequired = true;
 			boolean isParamShareable = true;
@@ -144,7 +134,7 @@ public class JavaEE5InjectonConnector implements WiringConnector {
 				
 			}
 
-			WiringSpecification spec = WiringSpecification.search(type,params);
+			WiringSpecification spec = WiringSpecification.search(type.getReflectedType(),params);
 
 			spec.setRequired(isParamRequired);
 			spec.setShareable(isParamShareable);

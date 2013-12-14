@@ -6,7 +6,7 @@ import javax.swing.JWindow;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.middleheaven.core.reflection.IllegalAccessReflectionException;
+import org.middleheaven.reflection.IllegalAccessReflectionException;
 import org.middleheaven.ui.SceneNavigator;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
