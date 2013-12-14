@@ -3,20 +3,26 @@
  */
 package org.middleheaven.core.wiring;
 
+import java.util.Collections;
 import java.util.Map;
+
+import org.middleheaven.reflection.ReflectedClass;
 
 /**
  * 
  */
 public class WiringQuery {
 
-	
 	public static WiringQuery search(Class<?> type){
-		return new WiringQuery(WiringSpecification.search(type));
+		return search(type, Collections.<String,Object>emptyMap());
 	}
-	
+
 	public static WiringQuery search(Class<?> type, Map<String, Object> params){
 		return new WiringQuery(WiringSpecification.search(type, params));
+	}
+	
+	protected static WiringQuery search(ReflectedClass<?> type){
+		return new WiringQuery(new WiringSpecification(type,Collections.<String,Object>emptyMap()));
 	}
 	
 	public static WiringQuery search(WiringSpecification spec){
@@ -35,7 +41,7 @@ public class WiringQuery {
 		return this;
 	}
 	
-	public Class getContract(){
+	public ReflectedClass<?> getContract(){
 		return specification.getContract();
 	}
 	

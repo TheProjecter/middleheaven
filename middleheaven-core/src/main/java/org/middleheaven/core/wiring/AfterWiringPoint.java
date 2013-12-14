@@ -1,13 +1,13 @@
 package org.middleheaven.core.wiring;
 
-import java.util.List;
+import org.middleheaven.collections.enumerable.Enumerable;
 
 /**
  * After creation wiring point. The framework will use this Wiring point to bind other objects.
  */
 public interface AfterWiringPoint extends WiringPoint {
 
-	public List<WiringSpecification> getSpecifications();
+	public Enumerable<WiringSpecification> getSpecifications();
 		
 	/**
 	 * Indicates if this wiring is required. An exception will be thrown by the Wiring service if the wiring cannot be satisfied.

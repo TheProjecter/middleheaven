@@ -26,7 +26,6 @@ import org.middleheaven.core.dependency.DependencyGraph;
 import org.middleheaven.core.dependency.DependencyGraphEdge;
 import org.middleheaven.core.dependency.DependencyGraphNode;
 import org.middleheaven.core.dependency.DependencyInicilizer;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.Service;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceBuilder;
@@ -57,6 +56,7 @@ import org.middleheaven.logging.LoggingConfiguration;
 import org.middleheaven.logging.LoggingConfigurator;
 import org.middleheaven.logging.LoggingService;
 import org.middleheaven.logging.XMLLoggingConfigurator;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StopWatch;
 

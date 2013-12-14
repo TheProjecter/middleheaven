@@ -1,6 +1,7 @@
 package org.middleheaven.core.wiring;
 
 
+
 /**
  * Encapsulates an algorithm to determine wiring points for classes.
  * The algorithm can be based on the use of annotations and reflection to read them,

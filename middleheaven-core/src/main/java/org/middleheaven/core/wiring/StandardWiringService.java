@@ -16,17 +16,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.middleheaven.collections.ClassMap;
+import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.annotations.Component;
 import org.middleheaven.core.annotations.Service;
 import org.middleheaven.core.bootstrap.RegistryServiceContext;
-import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceScope;
 import org.middleheaven.events.EventListenersSet;
 import org.middleheaven.graph.DirectGraph;
 import org.middleheaven.logging.Logger;
+import org.middleheaven.reflection.ClassSet;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedConstructor;
+import org.middleheaven.reflection.ReflectedParameter;
+import org.middleheaven.reflection.Reflector;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Maybe;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.function.Predicate;
 
 @Service
@@ -95,13 +101,13 @@ public class StandardWiringService implements WiringService {
 
 		BeanDependencyModel model = models.get(type);
 
+		ReflectedClass<?> rtype = Reflector.getReflector().reflect(type);
 		if (model == null) {
 			model = new BeanDependencyModel(type);
 
-			models.put(type, model);
+			models.put(rtype, model);
 
-			if (String.class.isAssignableFrom(type)
-					|| Number.class.isAssignableFrom(type)) {
+			if (rtype.isSubTypeOf(String.class) || rtype.isSubTypeOf(Number.class)) {
 				return model;
 			}
 
@@ -124,13 +130,17 @@ public class StandardWiringService implements WiringService {
 
 		@Override
 		public <T> BindingBuilder<T> bind(Class<T> type) {
+			return bind(Reflector.getReflector().reflect(type));
+		}
+
+		public <T> BindingBuilder<T> bind(ReflectedClass<T> type) {
 			return new StandardBindingBuilder<T>(this, type);
 		}
 
 		@Override
 		public <T> PropertyBindingBuilder<T> bindProperty(Class<T> type) {
 			Binding binding = new Binding();
-			binding.setSourceType(type);
+			binding.setSourceType(Reflector.getReflector().reflect(type));
 			binding.setResolver(propertyResolver);
 
 			PropertyBindingBuilder<T> b = new PropertyBindingBuilder<T>(this,
@@ -160,6 +170,7 @@ public class StandardWiringService implements WiringService {
 			return revolveBeanModel(type);
 		}
 
+
 		@Override
 		public void addWiringModelParser(WiringModelReader parser) {
 			parsers.add(parser);
@@ -176,7 +187,6 @@ public class StandardWiringService implements WiringService {
 			return factory.getInstance(query);
 
 		}
-
 
 		public void wireMembers(Object obj) {
 			BeanDependencyModel model = this.getBeanModel(obj.getClass());
@@ -222,7 +232,7 @@ public class StandardWiringService implements WiringService {
 
 			for (String scope : model.getScopes()) {
 
-				for (Class<?> contract : model.getContractTypes()){
+				for (ReflectedClass<?> contract : model.getContractTypes()){
 					Binding binding = new Binding();
 
 					binding.addParams(model.getParams());
@@ -300,7 +310,7 @@ public class StandardWiringService implements WiringService {
 				&& !b.isLazy()
 				&& ("service".equals(b.getScope()) || "shared".equals(b.getScope()))) {
 			try {
-				getInstance(b.getSourceType());
+				getInstance(b.getSourceType().getReflectedType());
 				b.setInicialized(true);
 			} catch (Exception e){
 				//no-op. eager loading fail. try lazy
@@ -445,7 +455,7 @@ public class StandardWiringService implements WiringService {
 
 						processDependableBean(null, null, model, FactoryResolver.instanceFor(model));
 
-						if (Introspector.of(model.getBeanClass()).isSubtypeOf(WiringInterceptor.class)){
+						if (model.getBeanClass().isSubTypeOf(WiringInterceptor.class)){
 							wiringInterceptors.add(model);
 						}
 					}
@@ -459,7 +469,7 @@ public class StandardWiringService implements WiringService {
 
 					processDependableBean(null, null, model, resolver);
 
-					if (Introspector.of(model.getBeanClass()).isSubtypeOf(WiringInterceptor.class)){
+					if (model.getBeanClass().isSubTypeOf(WiringInterceptor.class)){
 						wiringInterceptors.add(model);
 					}
 
@@ -475,7 +485,7 @@ public class StandardWiringService implements WiringService {
 
 		while ((im = wiringInterceptors.poll()) != null){
 			try {
-				WiringInterceptor obj = WiringInterceptor.class.cast( binder.getInstance(WiringQuery.search(im.getBeanClass())));
+				WiringInterceptor obj = WiringInterceptor.class.cast( binder.getInstance(WiringQuery.search(im.getBeanClass().getReflectedType())));
 				this.interceptors.add((WiringInterceptor) obj);
 			} catch (BindingException e){
 				wiringInterceptors.add(im);
@@ -486,7 +496,7 @@ public class StandardWiringService implements WiringService {
 
 		for (Binding binding : bindingMap.getBindings()){
 			if (!binding.isInicialized() && binding.getScope().equals("shared") && !binding.isLazy()){
-				binder.getInstance(WiringQuery.search(binding.getSourceType(), binding.getParams()));
+				binder.getInstance(WiringQuery.search(binding.getSourceType().getReflectedType(), binding.getParams()));
 
 				binding.setInicialized(true);
 			}
@@ -522,7 +532,7 @@ public class StandardWiringService implements WiringService {
 
 				for (PublishPoint pp : model.getPublishPoints()){
 
-					BeanDependencyModel createdBeanModel = this.binder.getBeanModel(pp.getPublishedType());
+					BeanDependencyModel createdBeanModel = this.binder.getBeanModel(pp.getPublishedType().getReflectedType());
 
 					final Collection<DependendableBean> publishedBeans = DependendableBean.fromPublishing(createdBeanModel, pp, model.getBeanClass());
 
@@ -569,9 +579,9 @@ public class StandardWiringService implements WiringService {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Maybe<Object> peekCyclickProxy(Class<?> contract) {
+		public Maybe<Object> peekCyclickProxy(ReflectedClass<?> contract) {
 
-			Key key = Key.keyFor(contract, Collections.<String,Object>emptyMap());
+			Key key = Key.keyFor(contract.getName(), Collections.<String,Object>emptyMap());
 
 			if (!stack.isEmpty() && stack.contains(key) && !stack.peekLast().equals(key)) {
 				return Maybe.of(obtainCyclicProxy(contract, key));
@@ -599,11 +609,9 @@ public class StandardWiringService implements WiringService {
 				}
 			};
 
-
-
 			final InterceptorResolver interceptorResolver = new InterceptorResolver(interceptors, bean.getResolver());
 
-			pool.getInScope(context, WiringQuery.search(bean.getType()), interceptorResolver);
+			pool.getInScope(context, WiringQuery.search(bean.getType().getReflectedType()), interceptorResolver);
 
 
 		}
@@ -617,8 +625,6 @@ public class StandardWiringService implements WiringService {
 			if (query.getContract().equals(WiringTarget.class)){
 				return WiringTarget.class.cast(query.getTarget());
 			}
-
-
 
 			Binding binding = bindingMap.findNearestWithParams(query);
 			if (binding == null) {
@@ -658,9 +664,7 @@ public class StandardWiringService implements WiringService {
 				} else if (!Modifier.isAbstract(query.getContract().getModifiers())) {
 
 
-					binder.bind(query.getContract())
-					.inSharedScope()
-					.to(query.getContract());
+					autoBindInSharedScope(query.getContract());
 
 					return this.getInstance(query);
 
@@ -672,7 +676,7 @@ public class StandardWiringService implements WiringService {
 			} else {
 
 
-				Key key = Key.keyFor(query.getContract(), query.getParams());
+				Key key = Key.keyFor(query.getContract().getName(), query.getParams());
 
 				// binding was found
 				// resolve target
@@ -722,24 +726,25 @@ public class StandardWiringService implements WiringService {
 						stack.remove(key);
 					}
 				}
-
-
-
-
 			} 
 
 		}
 
 
-		private Object obtainCyclicProxy(Class contract, Key key) {
+		private <T> void autoBindInSharedScope(ReflectedClass<T> type) {
+			binder.bind(type)
+			.inSharedScope()
+			.to(type.getReflectedType());
+		}
+
+
+		private Object obtainCyclicProxy(ReflectedClass<?> contract, Key key) {
 
 			if (contract.equals(String.class)){
 				throw new BindingException("Propery must be bound for String injection");
 			} else if (Modifier.isFinal(contract.getModifiers())){
 				throw new BindingException("A cycle was detected up on a final type " + contract + ". Cycle can not be resolved.");
 			}
-
-			final ClassIntrospector introspector = Introspector.of(contract);
 
 			if (contract.isInterface()){
 				// return proxy
@@ -748,18 +753,21 @@ public class StandardWiringService implements WiringService {
 					proxy = new CyclicProxy();
 					cyclicProxies.put(key, proxy);
 				}
-				return introspector.newProxyInstance(proxy);
+				return contract.newProxyInstance(proxy);
 
 			} else {
 
 
-				Constructor c = (Constructor) introspector.inspect().constructors().sortedByQuantityOfParameters().retrive();
+				ReflectedConstructor<?> c =  contract.inspect().constructors().sortedByQuantityOfParameters().retrive();
 
-				Object[] params = new Object[c.getParameterTypes().length];
-				for (int i =0; i < params.length; i++){
-					params[i] = getInstance(WiringQuery.search(c.getParameterTypes()[i]));
-				}
+				Object[] params =c.getParameters().map(new Function<Object, ReflectedParameter>(){
 
+					@Override
+					public Object apply(ReflectedParameter parameter) {
+						return getInstance(WiringQuery.search(parameter.getType()));
+					}}
+			    ).asArray();
+				
 				// return proxy
 				CyclicProxy proxy = cyclicProxies.get(key);
 				if (proxy == null) {
@@ -767,7 +775,7 @@ public class StandardWiringService implements WiringService {
 					cyclicProxies.put(key, proxy);
 				}
 
-				return introspector.newProxyInstance(proxy, params);
+				return contract.newProxyInstance(proxy, params);
 
 			}
 		}

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.Reflector;
 
 
 
@@ -16,7 +18,7 @@ import org.middleheaven.collections.CollectionUtils;
 class DependencyRelation {
 
 	
-	private Class<?> targetType;
+	private ReflectedClass<?> targetType;
 	private boolean isRequired = false;
 	
 	private Map<String, Object> targetConstraints = new HashMap<String, Object>();
@@ -26,9 +28,13 @@ class DependencyRelation {
 	
 	public DependencyRelation(Class<?> targetType) {
 		super();
-		this.targetType = targetType;
+		this.targetType = Reflector.getReflector().reflect(targetType);
 	}
 	
+	public DependencyRelation(ReflectedClass<?> targetType) {
+		super();
+		this.targetType = targetType;
+	}
 	
 	public Map<String, Object> getTargetConstraints(){
 		return this.targetConstraints;
@@ -42,14 +48,14 @@ class DependencyRelation {
 	 * Obtains {@link Class<?>}.
 	 * @return the targetType
 	 */
-	protected Class<?> getTargetType() {
+	protected ReflectedClass<?> getTargetType() {
 		return targetType;
 	}
 	/**
 	 * Atributes {@link Class<?>}.
 	 * @param targetType the targetType to set
 	 */
-	protected void setTargetType(Class<?> targetType) {
+	protected void setTargetType(ReflectedClass<?> targetType) {
 		this.targetType = targetType;
 	}
 	/**

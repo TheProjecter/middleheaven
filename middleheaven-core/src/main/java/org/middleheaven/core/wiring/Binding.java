@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.Reflector;
 
 public final class Binding {
 
@@ -21,7 +23,7 @@ public final class Binding {
 	private EventListenersSet<BindingScopeListener> eventListeners;
 	
 	
-	private Class<?> sourceType;
+	private ReflectedClass<?> sourceType;
 	private Map<String, Object> params = new HashMap<String, Object>();
 	
 	private String scope;
@@ -112,11 +114,11 @@ public final class Binding {
 		return sourceType.getName() + "#" + params.toString() + "@" + this.profiles;
 	}
 	
-	public Class<?> getSourceType() {
+	public ReflectedClass<?> getSourceType() {
 		return sourceType;
 	}
 	
-	public void setSourceType(Class<?> sourceType) {
+	public void setSourceType(ReflectedClass<?> sourceType) {
 		this.sourceType = sourceType;
 	}
 	
@@ -129,7 +131,7 @@ public final class Binding {
 	}
 
 	public Key getKey(){
-		return Key.keyFor(this.sourceType, params);
+		return Key.keyFor(this.sourceType.getName(), params);
 	}
 
 	public void addParam(String key, Object value){

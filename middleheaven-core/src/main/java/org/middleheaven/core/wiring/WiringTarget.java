@@ -3,6 +3,8 @@
  */
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.reflection.ReflectedClass;
+
 
 /**
  * Represents the site where the injection will be made.
@@ -17,14 +19,14 @@ public interface WiringTarget {
 	 * 
 	 * @return the type of the target
 	 */
-	public Class<?> getType();
+	public ReflectedClass<?> getType();
 	
 	/**
 	 * Returns the {@link Class} of the type where the wiring target is defined.  
 	 * 
 	 * @return the {@link Class} of the type where the wiring target is defined.  
 	 */
-	public Class<?> getDeclaringType();
+	public ReflectedClass<?> getDeclaringType();
 	
 	/**
 	 * The instance of the object where the wiring target is defined.

@@ -6,8 +6,10 @@ package org.middleheaven.core.wiring;
 import java.util.List;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.ReflectionException;
+import org.middleheaven.collections.Pair;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.ReflectedParameter;
 
 /**
  * 
@@ -22,40 +24,31 @@ public class AbstractMethodWiringPoint {
 	 * @param paramsSpecifications a list with the parameters specifications. 
 	 * @return
 	 */
-	protected final Object callMethodPoint(InstanceFactory factory, MethodHandler method, Object object, List<WiringSpecification> paramsSpecifications){
+	protected final Object callMethodPoint(InstanceFactory factory, ReflectedMethod method, Object object, Enumerable<WiringSpecification> paramsSpecifications){
 	
-		paramsSpecifications = CollectionUtils.ensureRandomAcess(paramsSpecifications);
-		
 		Object[] params = new Object[paramsSpecifications.size()];
 		
-		Class<?>[] parameterTypes = method.getParameterTypes();
-		
-		for (int i=0;i<paramsSpecifications.size();i++){
-			final WiringSpecification paramSpec = paramsSpecifications.get(i);
+		for( Pair<ReflectedParameter,WiringSpecification> pair : method.getParameters().join(paramsSpecifications))
+		{
+			final WiringSpecification paramSpec = pair.right();
+			final ReflectedParameter parameter = pair.left();
 			try {
 				
-				WiringTarget target = new ParameterWiringTarget(parameterTypes[i], method.getDeclaringClass(), object);
+				WiringTarget target = new ParameterWiringTarget(parameter.getType(), method.getDeclaringClass(), object);
 				
-				params[i] = factory.getInstance(WiringQuery.search(paramSpec).on(target));
+				params[parameter.getIndex()] = factory.getInstance(WiringQuery.search(paramSpec).on(target));
 				
-				if (params[i]== null && paramSpec.isRequired()){
-					throw new BindingException("Can not find an instance of " + paramSpec.getContract() + " to bind with parameter of index " + i +  
-							" in method " + method.getDeclaringClass().getName() +"." + 
-							method.getName()+ " was not found ");
+				if (params[parameter.getIndex()]== null && paramSpec.isRequired()){
+					throw new BindingException("Can not find an instance of " + paramSpec.getContract() + " to bind with parameter of index " + parameter.getIndex() +  
+							" in method " + method.getDeclaringClass().getName() + "." + method.getName());
 				}
 			} catch (BindingNotFoundException e){
-				throw new BindingException("Can not find an instance of " + paramSpec.getContract() + " to bind with parameter of index " + i +  
+				throw new BindingException("Can not find an instance of " + paramSpec.getContract() + " to bind with parameter of index " + parameter.getIndex() +  
 						" in method " + method.getDeclaringClass().getName() +"." + 
 						method.getName()+ " was not found ");
 			}
 		}
-
-		try {
-
-			return method.invoke(object, params);
-		} catch (Exception e) {
-			throw ReflectionException.manage(e, object.getClass());
-		} 
-
+		
+		return method.invoke(object, params);
 	}
 }

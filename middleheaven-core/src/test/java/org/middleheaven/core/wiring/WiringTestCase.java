@@ -146,8 +146,8 @@ public class WiringTestCase extends MiddleHeavenTestCase {
 
 
 		assertNotNull(model.getProducingWiringPoint());
-		assertNotNull(model.getProducingWiringPoint().getParamsSpecifications()[0]);
-		assertFalse("construtor injection point as no params", model.getProducingWiringPoint().getParamsSpecifications()[0].getParams().isEmpty());
+		assertNotNull(model.getProducingWiringPoint().getParamsSpecifications().getFirst());
+		assertFalse("construtor injection point as no params", model.getProducingWiringPoint().getParamsSpecifications().getFirst().getParams().isEmpty());
 
 		DictionaryUser user = wiringService.getInstance(DictionaryUser.class);
 

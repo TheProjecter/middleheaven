@@ -1,10 +1,11 @@
 package org.middleheaven.core.wiring;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
 
-import org.middleheaven.core.reflection.ReflectionException;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
+import org.middleheaven.reflection.ReflectedField;
+import org.middleheaven.reflection.ReflectionException;
 
 
 /**
@@ -12,7 +13,7 @@ import org.middleheaven.core.reflection.ReflectionException;
  */
 public class FieldAfterWiringPoint implements AfterWiringPoint{
 
-	private Field field;
+	private ReflectedField field;
 	private WiringSpecification specs;
 	
 	/**
@@ -21,14 +22,14 @@ public class FieldAfterWiringPoint implements AfterWiringPoint{
 	 * @param f the field that objects will be wired to..
 	 * @param specs the wiring specification. 
 	 */
-	public FieldAfterWiringPoint(Field f, WiringSpecification specs) {
+	public FieldAfterWiringPoint(ReflectedField f, WiringSpecification specs) {
 		super();
 		this.field = f;
 		this.specs = specs;
 	}
 
-	public List<WiringSpecification> getSpecifications(){
-		return Collections.singletonList(specs);
+	public Enumerable<WiringSpecification> getSpecifications(){
+		return Enumerables.asEnumerable(specs);
 	}
 	
 	/**
@@ -60,8 +61,6 @@ public class FieldAfterWiringPoint implements AfterWiringPoint{
 		if(object == null){
 			return null;
 		}
-		
-		field.setAccessible(true);
 
 		WiringTarget fieldTarget = new FieldWiringTarget(field, object);
 		
@@ -71,13 +70,13 @@ public class FieldAfterWiringPoint implements AfterWiringPoint{
 			throw new BindingException("Cannot find instance to bind at " + field.getDeclaringClass().getName() +"." + field.getName());
 		}
 		
-		if(!field.getType().isInstance(value)){
-			throw new BindingException(value.getClass().getName() + " can not be assigned to " + field.getType().getName());
+		if(!field.getValueType().isInstance(value)){
+			throw new BindingException(value.getClass().getName() + " can not be assigned to " + field.getValueType().getName());
 		}
 		try {	
 			field.set( object, value );
 		} catch (Exception e) {
-			ReflectionException.manage(e, object.getClass());
+			ReflectionException.manage(e);
 		}
 		
 		return object;

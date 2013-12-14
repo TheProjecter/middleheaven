@@ -1,8 +1,8 @@
 package org.middleheaven.graph;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.graph.Graph.Edge;
 import org.middleheaven.graph.Graph.Vertex;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.function.Predicate;
 
 /**

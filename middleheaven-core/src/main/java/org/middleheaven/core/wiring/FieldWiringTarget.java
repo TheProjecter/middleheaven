@@ -3,14 +3,15 @@
  */
 package org.middleheaven.core.wiring;
 
-import java.lang.reflect.Field;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedField;
 
 /**
  * 
  */
 class FieldWiringTarget implements WiringTarget {
 
-	private Field field;
+	private ReflectedField field;
 	private Object instance;
 
 	/**
@@ -18,7 +19,7 @@ class FieldWiringTarget implements WiringTarget {
 	 * @param field
 	 * @param object
 	 */
-	public FieldWiringTarget(Field field, Object instance) {
+	public FieldWiringTarget(ReflectedField field, Object instance) {
 		this.field = field;
 		this.instance = instance;
 	}
@@ -27,15 +28,15 @@ class FieldWiringTarget implements WiringTarget {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?> getType() {
-		return field.getType();
+	public ReflectedClass<?> getType() {
+		return field.getValueType();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?> getDeclaringType() {
+	public ReflectedClass<?> getDeclaringType() {
 		return field.getDeclaringClass();
 	}
 

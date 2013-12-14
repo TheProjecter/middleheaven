@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.Reflector;
+
 
 /**
  * A model for wiring.
@@ -28,18 +31,20 @@ public class BeanDependencyModel {
 	private PostCreatePoint postCreatePoint = EmptyCallPoint.getInstance();
 	private PreDestroiPoint preDestroiPoint = EmptyCallPoint.getInstance();
 	
-	private Class<?> type;
-	private Collection<Class<?>> contractTypes = new ArrayList<Class<?>>();
+	private ReflectedClass<?> type;
+	private Collection<ReflectedClass<?>> contractTypes = new ArrayList<ReflectedClass<?>>();
 
 	private ProfilesBag profiles = new ProfilesBag();
 
-	private List<WiringSpecification> dependsOn = new ArrayList<WiringSpecification>();
+	public BeanDependencyModel(Class<?> type){
+		this(Reflector.getReflector().reflect(type));
+	}
 	
 	/**
 	 * 
 	 * Constructor.
 	 */
-	public BeanDependencyModel(Class<?> type){
+	public BeanDependencyModel(ReflectedClass<?> type){
 		this.type = type;
 		this.contractTypes.add(type);
 	}
@@ -49,7 +54,7 @@ public class BeanDependencyModel {
 	 * Obtains {@link Class<?>}.
 	 * @return the contractType
 	 */
-	public Collection<Class<?>> getContractTypes() {
+	public Collection<ReflectedClass<?>> getContractTypes() {
 		return contractTypes;
 	}
 
@@ -59,7 +64,7 @@ public class BeanDependencyModel {
 	 * Atributes {@link Class<?>}.
 	 * @param contractType the contractType to set
 	 */
-	public void addContractType(Class<?> contractType) {
+	public void addContractType(ReflectedClass<?> contractType) {
 		this.contractTypes.add(contractType);
 	}
 
@@ -150,7 +155,7 @@ public class BeanDependencyModel {
 	/**
 	 * @return
 	 */
-	public Class<?> getBeanClass() {
+	public ReflectedClass<?> getBeanClass() {
 		return type;
 	}
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 
 /**
- * 
+ * Represents Graph of Edges of type E an Vertex of type V. 
  * An {@link Edge} is a (possible directional) relation between 2 {@link Vertex}.
  * 
  *   [V1] ---[E]--->[V2] 

@@ -1,5 +1,8 @@
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.reflection.ReflectedClass;
+
+
 
 public final class InterceptionContext {
 
@@ -28,7 +31,7 @@ public final class InterceptionContext {
 		return query;
 	}
 	
-	public Class<?> getTarget() {
+	public ReflectedClass<?> getTarget() {
 		return query.getContract();
 	}
 

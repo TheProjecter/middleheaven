@@ -6,8 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
 import org.middleheaven.util.Hash;
 
 public class ServiceProxy<T> implements ServiceListener, ProxyHandler {

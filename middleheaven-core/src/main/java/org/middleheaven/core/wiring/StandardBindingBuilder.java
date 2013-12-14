@@ -5,7 +5,8 @@ import java.util.Map;
 import org.middleheaven.core.annotations.Default;
 import org.middleheaven.core.annotations.ScopeSpecification;
 import org.middleheaven.core.annotations.Shared;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.inspection.Introspector;
 
 /**
  * Standard implementation of {@link BindingBuilder}.
@@ -92,7 +93,7 @@ public class StandardBindingBuilder<T> implements BindingBuilder<T> {
 		 */
 		@Override
 		public QualificationBuilder<T> in(Class<? extends Annotation> scope){
-			if (!Introspector.of(scope).isAnnotadedWith(ScopeSpecification.class)){
+			if (!Introspector.of(scope).isAnnotationPresent(ScopeSpecification.class)){
 				throw new IllegalArgumentException(scope.getName() + " is not a " + ScopeSpecification.class.getName());
 			}
 			standardBindingBuilder.binding.setScope(WiringUtils.readScope(scope));
@@ -144,7 +145,7 @@ public class StandardBindingBuilder<T> implements BindingBuilder<T> {
 	protected EditableBinder binder;
 	protected StandardQualificationBuilder<T>  qualification = new StandardQualificationBuilder<T>(this);
 	
-	StandardBindingBuilder (EditableBinder binder , Class<T> type){
+	StandardBindingBuilder (EditableBinder binder , ReflectedClass<T> type){
 		this.binder = binder;
 		this.binding = new Binding();
 
@@ -188,7 +189,7 @@ public class StandardBindingBuilder<T> implements BindingBuilder<T> {
 	 */
 	@Override
 	public QualificationBuilder<T> in(Class<? extends Annotation> scope){
-		if (!Introspector.of(scope).isAnnotadedWith(ScopeSpecification.class)){
+		if (!Introspector.of(scope).isAnnotationPresent(ScopeSpecification.class)){
 			throw new IllegalArgumentException(scope.getName() + " is not a " + ScopeSpecification.class.getName());
 		}
 		binding.setScope(WiringUtils.readScope(scope));

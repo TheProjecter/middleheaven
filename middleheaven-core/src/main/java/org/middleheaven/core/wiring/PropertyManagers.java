@@ -6,6 +6,7 @@ package org.middleheaven.core.wiring;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import org.middleheaven.reflection.ReflectedClass;
 import org.middleheaven.util.coersion.TypeCoercing;
 
 /**

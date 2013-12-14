@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.middleheaven.reflection.ReflectedClass;
+
 /**
  * 
  */
@@ -17,7 +19,7 @@ public class BindingMap {
 	private Map<String , Map<Key, Binding>> bindings = new HashMap<String , Map<Key, Binding>>();
 
 	
-	private Map<Key, Binding> getMap(Class<?> contract){
+	private Map<Key, Binding> getMap(ReflectedClass<?> contract){
 		Map<Key, Binding> map = bindings.get(contract.getName());
 		
 		if (map == null){

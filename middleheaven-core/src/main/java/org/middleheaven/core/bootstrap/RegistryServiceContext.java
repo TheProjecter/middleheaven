@@ -13,12 +13,12 @@ import java.util.SortedMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.middleheaven.collections.CollectionUtils;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceEvent;
 import org.middleheaven.core.services.ServiceListener;
 import org.middleheaven.core.services.ServiceNotAvailableException;
 import org.middleheaven.core.services.ServiceProxy;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.Maybe;
 

@@ -5,14 +5,19 @@ import java.lang.reflect.Modifier;
 
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.collections.Mergeable;
-import org.middleheaven.core.reflection.ReflectionException;
+import org.middleheaven.collections.Pair;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.collections.enumerable.Enumerables;
+import org.middleheaven.reflection.ReflectedConstructor;
+import org.middleheaven.reflection.ReflectedParameter;
+import org.middleheaven.reflection.ReflectionException;
 
 /**
  * Implements a {@link ProducingWiringPoint} using a {@link Constructor}.
  */
 public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 
-	private Constructor<?> constructor;
+	private ReflectedConstructor<?> constructor;
 
 
 	/**
@@ -22,7 +27,7 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 	 * @param specification the constructor wiring specification.
 	 * @param paramsSpecifications the params wiring specifications.
 	 */
-	public ConstructorWiringPoint(Constructor<?> constructor, WiringSpecification specification,WiringSpecification[] paramsSpecifications) {
+	public ConstructorWiringPoint(ReflectedConstructor<?> constructor, WiringSpecification specification, Enumerable<WiringSpecification> paramsSpecifications) {
 		super(specification , paramsSpecifications);
 
 		if (Modifier.isPrivate(constructor.getModifiers())){
@@ -41,22 +46,20 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 	@SuppressWarnings("unchecked")
 	public <T> T produceWith(InstanceFactory factory){
 		try {
-			constructor.setAccessible(true);
-
-			WiringSpecification[] paramsSpecifications = this.getParamsSpecifications();
-			int length = paramsSpecifications.length;
-
-			Object[] params = new Object[length];
-			final Class<?>[] parameterTypes = constructor.getParameterTypes();
 			
-			for (int i=0;i< length; i++){
+			final Enumerable<ReflectedParameter> parameters = constructor.getParameters();
+			Object[] params = new Object[parameters.size()];
+
+			for( Pair<ReflectedParameter,WiringSpecification>  pair : constructor.getParameters().join(this.getParamsSpecifications()))
+			{
+				ReflectedParameter parameter = pair.left();
+				WiringSpecification specs = pair.right();
 				
+				WiringTarget target = new ParameterWiringTarget(parameter.getType(),  constructor.getDeclaringClass(), null);
 				
-				WiringTarget target = new ParameterWiringTarget(parameterTypes[i],  constructor.getDeclaringClass(), null);
-				
-				params[i] = factory.getInstance(WiringQuery.search(paramsSpecifications[i]).on(target));
-				if (params[i] == null){ // wired constructor params are always mandatory even if configured otherwise 
-					throw new WiringSpecificationNotSatisfiedException(this.constructor.getDeclaringClass(), paramsSpecifications[i]);
+				params[parameter.getIndex()] = factory.getInstance(WiringQuery.search(specs).on(target));
+				if (params[parameter.getIndex()] == null){ // wired constructor params are always mandatory even if configured otherwise 
+					throw new WiringSpecificationNotSatisfiedException(this.constructor.getDeclaringClass().getReflectedType(), specs);
 				}
 			}
 
@@ -64,7 +67,7 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 		} catch (BindingException e){
 			throw e;
 		} catch (Exception e) {
-			throw ReflectionException.manage(e,constructor.getDeclaringClass());
+			throw ReflectionException.manage(e);
 		}
 	}
 
@@ -83,13 +86,12 @@ public final class ConstructorWiringPoint extends AbstractProducingWiringPoint {
 			thisSpecification = thisSpecification.merge(other.getSpecification());
 		}
 		
-		Mergeable[] a = 	this.getParamsSpecifications();
-		Mergeable[] b = 	other.getParamsSpecifications();
+		Mergeable[] a = 	this.getParamsSpecifications().asArray();
+		Mergeable[] b = 	other.getParamsSpecifications().asArray();
 		
 		Mergeable[] c  = CollectionUtils.merge(a,b);
 		
-
-		return new ConstructorWiringPoint (this.constructor, thisSpecification, (WiringSpecification[]) c);
+		return new ConstructorWiringPoint (this.constructor, thisSpecification, Enumerables.asEnumerable(c).cast(WiringSpecification.class));
 		
 	}
 

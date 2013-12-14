@@ -8,7 +8,6 @@ package org.middleheaven.core.wiring;
  */
 public class PropertyResolver implements Resolver {
 
-
 	private final HashPropertyManager propertyManager = new HashPropertyManager("properties.scope");
 	
 	private final PropertyManagers propertyManagers;
@@ -25,7 +24,7 @@ public class PropertyResolver implements Resolver {
 		Object name = query.getParam("name");
 
 		if (name instanceof String){
-			Object obj = propertyManagers.getProperty((String) name, query.getTarget().getType());
+			Object obj = propertyManagers.getProperty((String) name, query.getTarget().getType().getReflectedType());
 			
 			if (query.getContract().isAssignableFrom(obj.getClass())){
 				return query.getContract().cast(obj);
@@ -34,7 +33,7 @@ public class PropertyResolver implements Resolver {
 			}
 		}
 
-		throw new CannotResolveException(query.getContract(), String.valueOf(name));
+		throw new CannotResolveException(query.getContract().getName(), String.valueOf(name));
 	}
 
 	public void setProperty(String name, Object value){

@@ -2,10 +2,10 @@ package org.middleheaven.global.text.writeout;
 
 import java.util.Locale;
 
-import org.middleheaven.core.reflection.NoSuchClassReflectionException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.culture.Culture;
 import org.middleheaven.global.text.Formatter;
+import org.middleheaven.reflection.NoSuchClassReflectionException;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 
 /**
  * A {@link Formatter} that translates a number form to the correspondent writeout form.

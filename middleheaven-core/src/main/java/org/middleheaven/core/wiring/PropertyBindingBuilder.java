@@ -3,6 +3,7 @@ package org.middleheaven.core.wiring;
 import java.lang.annotation.Annotation;
 
 
+
 public class PropertyBindingBuilder<T>  {
 
 	protected Binding binding;

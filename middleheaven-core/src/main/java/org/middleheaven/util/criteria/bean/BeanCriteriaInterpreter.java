@@ -3,7 +3,7 @@
  */
 package org.middleheaven.util.criteria.bean;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.classification.LogicComposedPredicate;
 import org.middleheaven.util.criteria.Criteria;
 import org.middleheaven.util.criteria.Criterion;

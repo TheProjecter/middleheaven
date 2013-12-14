@@ -40,8 +40,6 @@ public class WiringProfilesTestCase extends MiddleHeavenTestCase {
 
 		final WiringService wiringService = this.getWiringService();
 
-		
-
 		DictionaryService eDic = wiringService.getInstance(DictionaryService.class);
 
 		assertEquals("ge", eDic.getLang());

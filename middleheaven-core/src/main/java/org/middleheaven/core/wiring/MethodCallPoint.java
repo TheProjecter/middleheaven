@@ -3,7 +3,7 @@
  */
 package org.middleheaven.core.wiring;
 
-import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.reflection.ReflectedMethod;
 
 
 /**
@@ -12,9 +12,9 @@ import org.middleheaven.core.reflection.MethodHandler;
 public class MethodCallPoint implements PostCreatePoint, PreDestroiPoint {
 
 	
-	private MethodHandler method;
+	private ReflectedMethod method;
 	
-	public MethodCallPoint (MethodHandler method){
+	public MethodCallPoint (ReflectedMethod method){
 		this.method = method;
 	}
 	

@@ -12,7 +12,7 @@ public final class SharedScope extends AbstractScopePool {
 	
 	@Override
 	public  Object getInScope(ResolutionContext context, WiringQuery query, Resolver resolver) {
-		Key key = Key.keyFor(query.getContract(), query.getParams());
+		Key key = Key.keyFor(query.getContract().getName(), query.getParams());
 		
 		Object obj = objects.get(key);
 		

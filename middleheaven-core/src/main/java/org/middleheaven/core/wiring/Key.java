@@ -5,30 +5,30 @@ import java.util.Map;
 import org.middleheaven.collections.CollectionUtils;
 
 
-class Key {
+final class Key {
 
-	private Class targetClass;
+	private String targetClassName;
 	private Map<String, Object> params;
 
 	public String toString(){
-		return targetClass.getName() + "[" + params.toString() + "]";
+		return targetClassName + "[" + params.toString() + "]";
 	}
 	
 	public static  Key keyFor(Class<?> targetClass, Map<String, Object> params) {
-		return new Key(targetClass,params);
+		return new Key(targetClass.getName(),params);
 	}
 	
-	private Key(Class<?> targetClass, Map<String, Object> params) {
-		this.targetClass = targetClass;
+	public static  Key keyFor(String targetClassName, Map<String, Object> params) {
+		return new Key(targetClassName,params);
+	}
+	
+	private Key(String targetClassName, Map<String, Object> params) {
+		this.targetClassName = targetClassName;
 		this.params = params;	
 	}
 	
 	public int hashCode(){
-		return targetClass==null ? 0 :  targetClass.getName().hashCode();
-	}
-	
-	public Class<?> getTargetClass(){
-		return targetClass;
+		return targetClassName==null ? 0 :  targetClassName.hashCode();
 	}
 	
 	public boolean equals(Object other){
@@ -36,7 +36,7 @@ class Key {
 	}
 	
 	private boolean equalsOther(Key other){
-		return (other.targetClass == this.targetClass ||  other.targetClass.getName().equals(this.targetClass.getName())) &&
+		return  other.targetClassName.equals(this.targetClassName) &&
 		 	CollectionUtils.equalContents(this.params, other.params);
 
 	}

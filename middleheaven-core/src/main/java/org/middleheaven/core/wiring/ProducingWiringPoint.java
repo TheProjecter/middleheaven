@@ -3,6 +3,8 @@
  */
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.collections.enumerable.Enumerable;
+
 /**
  * A wiring point that produces or obtains an object.
  */
@@ -12,7 +14,7 @@ public interface ProducingWiringPoint extends WiringPoint {
 	
 	public WiringSpecification getSpecification();
 
-	public WiringSpecification[] getParamsSpecifications();
+	public Enumerable<WiringSpecification> getParamsSpecifications();
 
 	/**
 	 * Execute the production, creating a new object

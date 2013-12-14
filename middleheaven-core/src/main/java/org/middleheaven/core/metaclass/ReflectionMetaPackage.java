@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.inspection.Introspector;
 
 /**
  * MetaPackage based on a reflection of {@link Package}.

@@ -15,11 +15,11 @@ import java.util.jar.Manifest;
 
 import org.middleheaven.collections.ParamsMap;
 import org.middleheaven.collections.enumerable.Enumerable;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.io.IO;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.JarFile;
 import org.middleheaven.io.repository.ManagedFile;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.Version;
 import org.middleheaven.util.function.Function;

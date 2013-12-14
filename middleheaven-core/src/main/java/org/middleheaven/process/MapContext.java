@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.middleheaven.collections.TransformedIterator;
-import org.middleheaven.collections.enumerable.AbstractEnumerableAdapter;
+import org.middleheaven.collections.enumerable.AbstractEnumerable;
 import org.middleheaven.collections.enumerable.FastCountEnumerable;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 public class MapContext extends AbstractAttributeContext {
 
@@ -69,7 +69,7 @@ public class MapContext extends AbstractAttributeContext {
 		return new MapScopedAttributesResolutionStrategy(scope);
 	}
 
-	private class MapScopedAttributesResolutionStrategy extends AbstractEnumerableAdapter<Attribute> implements ScopedAttributesResolutionStrategy , FastCountEnumerable {
+	private class MapScopedAttributesResolutionStrategy extends AbstractEnumerable<Attribute> implements ScopedAttributesResolutionStrategy , FastCountEnumerable {
 
 		private ContextScope scope;
 		
@@ -98,7 +98,7 @@ public class MapContext extends AbstractAttributeContext {
 		@Override
 		public Iterator<Attribute> iterator() {
 			
-			return TransformedIterator.transform(contextMap.get(scope).entrySet().iterator(), new Mapper<Attribute, Map.Entry<String, Object>>(){
+			return TransformedIterator.transform(contextMap.get(scope).entrySet().iterator(), new Function<Attribute, Map.Entry<String, Object>>(){
 
 				@Override
 				public Attribute apply(Entry<String, Object> next) {

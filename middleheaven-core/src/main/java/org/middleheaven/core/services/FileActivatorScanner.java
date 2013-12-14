@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import org.middleheaven.core.annotations.Wire;
 import org.middleheaven.core.bootstrap.activation.AbstractActivatorScanner;
 import org.middleheaven.core.bootstrap.activation.ActivatorScanner;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.WiringService;
 import org.middleheaven.io.IO;
 import org.middleheaven.io.ManagedIOException;
@@ -27,6 +26,7 @@ import org.middleheaven.io.repository.watch.StandardWatchEvent;
 import org.middleheaven.io.repository.watch.WatchEvent;
 import org.middleheaven.io.repository.watch.WatchEventChannel;
 import org.middleheaven.logging.Logger;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.function.Block;
 
 /**
@@ -141,7 +141,7 @@ public class FileActivatorScanner extends AbstractActivatorScanner {
 					if(className!=null && !className.isEmpty()){
 						try{
 							// TODO must instantiate ? 
-							Class<? extends ServiceActivator> type = Introspector.of(ServiceActivator.class).load(className,cloader).getIntrospected();
+							Class<? extends ServiceActivator> type = Introspector.of(ServiceActivator.class).load(className,cloader).getIntrospected().getReflectedType();
 							ServiceActivator activator = wiringService.getInstance(type);
 
 							String activatorName = activator.getClass().getName();

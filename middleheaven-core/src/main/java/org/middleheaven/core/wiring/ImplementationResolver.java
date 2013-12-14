@@ -23,7 +23,7 @@ public class ImplementationResolver implements Resolver {
 	 */
 	@Override
 	public Object resolve(ResolutionContext context, WiringQuery query) {
-		return context.getInstanceFactory().getInstance(WiringQuery.search(implementationBean.getType()));
+		return context.getInstanceFactory().getInstance(WiringQuery.search(implementationBean.getType().getReflectedType()));
 	}
 
 }

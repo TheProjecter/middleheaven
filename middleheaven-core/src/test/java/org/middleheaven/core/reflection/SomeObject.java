@@ -6,5 +6,9 @@ public class SomeObject implements SomeInterface {
 	public void someMethod() {
 		//no-op
 	}
+	
+	public void someOtherMethod(String s , int i) {
+		//no-op
+	}
 
 }

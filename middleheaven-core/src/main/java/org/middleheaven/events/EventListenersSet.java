@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
+import org.middleheaven.reflection.inspection.Introspector;
 
 /**
  * 

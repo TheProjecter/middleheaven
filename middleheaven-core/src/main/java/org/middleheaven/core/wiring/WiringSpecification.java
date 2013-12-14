@@ -6,15 +6,17 @@ import java.util.Map;
 
 import org.middleheaven.collections.CollectionUtils;
 import org.middleheaven.collections.Mergeable;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.Reflector;
 
 /**
  * Maintains data about the wiring contract to be fulfill by the wiring context.  
  *
  * @param <T> the type that must be retrieved
  */
-public class WiringSpecification implements Mergeable<WiringSpecification> {
+public final class WiringSpecification implements Mergeable<WiringSpecification> {
 
-	private Class<?> contract;
+	private ReflectedClass<?> contract;
 	private Map<String, Object> params;
 	private boolean shareable = true;
 	private boolean required = true;
@@ -24,10 +26,10 @@ public class WiringSpecification implements Mergeable<WiringSpecification> {
 	}
 
 	public static WiringSpecification search(Class<?> contract, Map<String,Object> params) {
-		return new WiringSpecification(contract, params);
+		return new WiringSpecification(Reflector.getReflector().reflect(contract), params);
 	}
 
-	private WiringSpecification(Class<?> contract, Map<String, Object> params) {
+	protected WiringSpecification(ReflectedClass<?> contract, Map<String, Object> params) {
 		this.contract = contract;
 		this.params = params;
 
@@ -45,7 +47,7 @@ public class WiringSpecification implements Mergeable<WiringSpecification> {
 		return params.get(key);
 	}
 
-	public Class<?> getContract() {
+	public ReflectedClass<?> getContract() {
 		return contract;
 	}
 

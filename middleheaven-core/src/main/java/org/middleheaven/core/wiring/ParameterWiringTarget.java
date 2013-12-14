@@ -3,6 +3,8 @@
  */
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.reflection.ReflectedClass;
+
 /**
  * 
  */
@@ -10,8 +12,8 @@ class ParameterWiringTarget implements WiringTarget {
 
 	
 	private Object instance;
-	private Class<?> type;
-	private Class<?> declaringType;
+	private ReflectedClass<?> type;
+	private ReflectedClass<?> declaringType;
 
 	public ParameterWiringTarget (){
 		
@@ -22,7 +24,7 @@ class ParameterWiringTarget implements WiringTarget {
 	 * @param declaringClass
 	 * @param object
 	 */
-	public ParameterWiringTarget(Class<?> type, Class<?> declaringType,Object instance ) {
+	public ParameterWiringTarget(ReflectedClass<?> type, ReflectedClass<?> declaringType,Object instance ) {
 		this.instance = instance;
 		this.type = type;
 		this.declaringType = declaringType;
@@ -32,7 +34,7 @@ class ParameterWiringTarget implements WiringTarget {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?> getType() {
+	public ReflectedClass<?> getType() {
 		return type;
 	}
 
@@ -40,7 +42,7 @@ class ParameterWiringTarget implements WiringTarget {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?> getDeclaringType() {
+	public ReflectedClass<?> getDeclaringType() {
 		return declaringType;
 	}
 

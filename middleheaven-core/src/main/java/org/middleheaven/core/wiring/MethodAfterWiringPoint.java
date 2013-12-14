@@ -4,7 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.reflection.ReflectedMethod;
 
 
 /**
@@ -12,9 +13,9 @@ import org.middleheaven.core.reflection.MethodHandler;
  */
 public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements AfterWiringPoint{
 
-	private MethodHandler method;
+	private ReflectedMethod method;
 	private WiringSpecification methodSpecification;
-	private List<WiringSpecification> paramsSpecifications;
+	private Enumerable<WiringSpecification> paramsSpecifications;
 
 	//	public WiringSpecification<?> getMethodSpecification() {
 	//		return methodSpecification;
@@ -25,7 +26,7 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 	//	}
 
 	
-	public List<WiringSpecification> getSpecifications(){
+	public Enumerable<WiringSpecification> getSpecifications(){
 		return paramsSpecifications;
 	}
 	
@@ -36,11 +37,11 @@ public class MethodAfterWiringPoint extends AbstractMethodWiringPoint implements
 	 * @param methodSpecification the wiring specification of the method. 
 	 * @param paramsSpecifications the wiring specification for each method parameter.
 	 */
-	public MethodAfterWiringPoint(MethodHandler method, WiringSpecification methodSpecification, WiringSpecification[] paramsSpecifications) {
+	public MethodAfterWiringPoint(ReflectedMethod method, WiringSpecification methodSpecification, Enumerable<WiringSpecification> paramsSpecifications) {
 		super();
 		this.method = method;
 		this.methodSpecification = methodSpecification;
-		this.paramsSpecifications = Arrays.asList(paramsSpecifications);
+		this.paramsSpecifications = paramsSpecifications;
 	}
 
 

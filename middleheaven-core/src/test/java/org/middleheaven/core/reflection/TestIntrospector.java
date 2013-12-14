@@ -1,14 +1,23 @@
 package org.middleheaven.core.reflection;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 
 import org.junit.Test;
 import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.core.annotations.Publish;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.logging.LogBookFactory;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.NotReadablePropertyException;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.Reflector;
+import org.middleheaven.reflection.inspection.Introspector;
 
 
 public class TestIntrospector {
@@ -18,7 +27,7 @@ public class TestIntrospector {
 		
 		SomeBean sb = new SomeBean();
 		
-		PropertyHandler pa = Introspector.of(SomeBean.class).inspect().properties().named("list").retrive();
+		ReflectedProperty pa = Introspector.of(SomeBean.class).inspect().properties().named("list").retrive();
 		
 		pa.setValue(sb, new LinkedList());
 		
@@ -27,7 +36,6 @@ public class TestIntrospector {
 		pa = Introspector.of(SomeBean.class).inspect().properties().named("name").retrive();
 		
 		pa.setValue(sb, "A");
-		
 	
 		pa.getValue(sb);
 
@@ -37,20 +45,36 @@ public class TestIntrospector {
 	@Test
 	public void testInterfaces(){
 		
-		Enumerable<Class<?>> i = Introspector.of(SomeObject.class).getImplementedInterfaces();
+		final ReflectedClass<SomeObject> type = Reflector.getReflector().reflect(SomeObject.class);
+		Enumerable<ReflectedClass<?>> i = type.getInterfaces();
 		
 		assertEquals(1, i.size());
 		
-		i = Introspector.of(SomeObject.class).getDeclaredInterfaces();
-		
-		assertEquals(1, i.size());
 	}
 	
+	@Test
+	public void testMethodParameters(){
+		ReflectedMethod method = Reflector.getReflector().reflect(SomeObject.class).getMethod("someOtherMethod", String.class, int.class);
+		
+		assertEquals(method.getParameters(), method.getParameters());
+	}
 	
 	@Test
 	public void testAnnotationsInParents(){
 		
-		Enumerable<MethodHandler> all = Introspector.of(SomeObject.class).inspect()
+		Enumerable<ReflectedMethod> methods =  Reflector.getReflector().reflect(LogBookFactory.class).inspect().methods().notInheritFromObject().beingStatic(false).searchHierarchy().retriveAll();
+
+		boolean found = false;
+		for (ReflectedMethod method : methods){
+
+			if (method.isAnnotationPresent(Publish.class)){
+				found = true;
+			}
+		}
+		
+		assertTrue(found);
+		
+		Enumerable<ReflectedMethod> all = Reflector.getReflector().reflect(SomeObject.class).inspect()
 		.methods()
 		.notInheritFromObject()
 		.annotatedWith(Wire.class).retriveAll();

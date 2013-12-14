@@ -3,6 +3,7 @@
  */
 package org.middleheaven.core.wiring;
 
+import org.middleheaven.reflection.ReflectedClass;
 import org.middleheaven.util.Maybe;
 
 
@@ -18,5 +19,5 @@ public interface InstanceFactory {
 	 * @param specification
 	 * @return
 	 */
-	public Maybe<Object> peekCyclickProxy(Class<?> contract);
+	public Maybe<Object> peekCyclickProxy(ReflectedClass<?> contract);
 }

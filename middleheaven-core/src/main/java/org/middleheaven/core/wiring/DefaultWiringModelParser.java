@@ -21,10 +21,14 @@ import org.middleheaven.core.annotations.Publish;
 import org.middleheaven.core.annotations.Qualifier;
 import org.middleheaven.core.annotations.ScopeSpecification;
 import org.middleheaven.core.annotations.Wire;
-import org.middleheaven.core.reflection.MemberAccess;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.MemberAccess;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedConstructor;
+import org.middleheaven.reflection.ReflectedField;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.Reflector;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.Maybe;
 import org.middleheaven.util.function.Block;
 
@@ -90,21 +94,19 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 
 	@Override
-	public <T> void readBeanModel(Class<T> type, final BeanDependencyModel model) {
+	public <T> void readBeanModel(Class<T> classType, final BeanDependencyModel model) {
 
-		
+		ReflectedClass<T> type = Reflector.getReflector().reflect(classType);
 		if(!type.equals(model.getBeanClass())){
 			throw new IllegalArgumentException("Model type " + model.getBeanClass() + " does not must match " + type.getName());
 		}
 		
-		ClassIntrospector<T> introspector = Introspector.of(type);
-
-		final Enumerable<Class<?>> interfaces = Introspector.of(type).getDeclaredInterfaces();
+		final Enumerable<ReflectedClass<?>> interfaces = type.getDeclaredInterfaces();
 
 
 		ProfilesBag profiles = new ProfilesBag();
 
-		for (Annotation a : introspector.getAnnotations()){
+		for (Annotation a : type.getAnnotations()){
 
 			if (a.annotationType().isAnnotationPresent(ScopeSpecification.class)){
 
@@ -133,7 +135,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 		model.setProfiles(profiles);
 
 
-		for (Class i : interfaces){
+		for (ReflectedClass<?> i : interfaces){
 			for (Annotation a : i.getAnnotations()){
 
 				if (a.annotationType().isAnnotationPresent(ScopeSpecification.class)){
@@ -150,9 +152,9 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 		// find publish points
 
 
-		Enumerable<MethodHandler> methods =  introspector.inspect().methods().notInheritFromObject().beingStatic(false).searchHierarchy().retriveAll();
+		Enumerable<ReflectedMethod> methods =  type.inspect().methods().notInheritFromObject().beingStatic(false).searchHierarchy().retriveAll();
 
-		for (MethodHandler method : methods){
+		for (ReflectedMethod method : methods){
 
 			if (method.isAnnotationPresent(Publish.class)){
 
@@ -220,7 +222,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 		if(model.getScopes().isEmpty()){
 
 			if (model.getPublishPoints().isEmpty()) {
-				if (introspector.isAnnotationPresent(Component.class)){
+				if (type.isAnnotationPresent(Component.class)){
 					model.addScope("shared");
 				}
 				model.addScope("default");
@@ -236,10 +238,10 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 			// read @Factory
 
-			Enumerable<MethodHandler> candidates = introspector.inspect().methods().beingStatic(true).annotatedWith(Factory.class).retriveAll();
+			Enumerable<ReflectedMethod> candidates = type.inspect().methods().beingStatic(true).annotatedWith(Factory.class).retriveAll();
 
 			if (candidates.isEmpty()) {
-				readConstructorProducingPoint(type, model, introspector);
+				readConstructorProducingPoint(type, model);
 			} else if ( candidates.size() > 1){
 				throw new ConfigurationException("Multiple static factory methods found for " + type + ". Annotate only one method with @" + Factory.class.getSimpleName());
 			} 
@@ -247,21 +249,21 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 		// injection points
 
-		introspector.inspect().fields().beingStatic(false).searchHierarchy().annotatedWith(annotations).retriveAll()
-		.forEach(new Block<Field>(){
+		type.inspect().fields().beingStatic(false).searchHierarchy().annotatedWith(annotations).retriveAll()
+		.forEach(new Block<ReflectedField>(){
 
 			@Override
-			public void apply(Field f) {
+			public void apply(ReflectedField f) {
 				model.addAfterWiringPoint(new FieldAfterWiringPoint(f,readParamsSpecification(f)));
 			}
 
 		} );
 
-		introspector.inspect().methods().beingStatic(false).searchHierarchy().annotatedWith(annotations).retriveAll()
-		.forEach(new Block<MethodHandler>(){
+		type.inspect().methods().beingStatic(false).searchHierarchy().annotatedWith(annotations).retriveAll()
+		.forEach(new Block<ReflectedMethod>(){
 
 			@Override
-			public void apply(MethodHandler method) {
+			public void apply(ReflectedMethod method) {
 				model.addAfterWiringPoint(new MethodAfterWiringPoint(method, null, readParamsSpecification(method)));
 			}
 
@@ -303,23 +305,22 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 			}
 		}
 	}
-	private <T> void readConstructorProducingPoint(Class<T> type,
-			final BeanDependencyModel model, ClassIntrospector<T> introspector) {
+	private <T> void readConstructorProducingPoint(ReflectedClass<T> type, final BeanDependencyModel model) {
 		// constructor
-		Enumerable<Constructor<T>> constructors = introspector.inspect()
+		Enumerable<ReflectedConstructor<T>> constructors = type.inspect()
 				.constructors().withAccess(MemberAccess.PUBLIC).annotathedWith(annotations).retriveAll();
 
 		if (constructors.isEmpty()){
 			// search all constructors
-			constructors = introspector.inspect().constructors().withAccess(MemberAccess.PUBLIC).retriveAll();
-			if (constructors.size()>1 && !Introspector.of(type).isEnhanced()){
+			constructors = type.inspect().constructors().withAccess(MemberAccess.PUBLIC).retriveAll();
+			if (constructors.size()>1 && !type.isEnhanced()){
 				throw new ConfigurationException("Multiple constructors found for " + type + ". Annotate only one with @" + Wire.class.getSimpleName());
 			} 
 		} else if (constructors.size()>1){
 			throw new ConfigurationException("Only one constructor may be annotated with @" + Wire.class.getSimpleName());
 		} 
 
-		Constructor<T> constructor  = constructors.getFirst();
+		ReflectedConstructor<T> constructor  = constructors.getFirst();
 
 		if (constructor != null){
 			model.setProducingWiringPoint(new ConstructorWiringPoint(constructor,null,readParamsSpecification(constructor)));
@@ -363,7 +364,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 	}
 
-	protected WiringSpecification parseAnnotations(Annotation[] annnnotations ,Class<?> type){
+	protected WiringSpecification parseAnnotations(Enumerable<Annotation> annnnotations ,ReflectedClass<?> type){
 
 
 		boolean isParamRequired = true;
@@ -384,7 +385,7 @@ public class DefaultWiringModelParser extends AbstractAnnotationBasedWiringModel
 
 		}
 
-		WiringSpecification spec = WiringSpecification.search(type,params);
+		WiringSpecification spec = WiringSpecification.search(type.getReflectedType(),params);
 
 		spec.setRequired(isParamRequired);
 		spec.setShareable(isParamShareable);

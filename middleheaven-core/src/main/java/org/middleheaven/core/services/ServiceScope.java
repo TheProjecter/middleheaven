@@ -26,6 +26,7 @@ public class ServiceScope extends AbstractScopePool {
 		this.serviceRegistryContext = serviceRegistryContext;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object getInScope(ResolutionContext context, WiringQuery query, Resolver resolver) {
 
@@ -34,7 +35,7 @@ public class ServiceScope extends AbstractScopePool {
 		}
 
 		try{
-			return  serviceRegistryContext.getService(query.getContract(), query.getParams());
+			return  serviceRegistryContext.getService(query.getContract().getReflectedType(), query.getParams());
 
 		} catch (ServiceNotAvailableException e){
 			
@@ -44,11 +45,12 @@ public class ServiceScope extends AbstractScopePool {
 				if(object ==null){
 					return null;
 				}
-				
-				serviceRegistryContext.register(query.getContract(),object  , query.getParams());
+			
+				Class contract = query.getContract().getReflectedType();
+				serviceRegistryContext.register(contract , query.getContract().cast(object)  , query.getParams());
 				this.fireObjectAdded(object);
 				
-				return serviceRegistryContext.getService(query.getContract(), query.getParams());
+				return serviceRegistryContext.getService(contract, query.getParams());
 			} catch (Exception e2){
 				throw e;
 			}

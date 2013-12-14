@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.middleheaven.reflection.ReflectedClass;
+
 /**
  * 
  */
@@ -28,7 +30,7 @@ class DependendableBean {
 
 		Collection<DependendableBean> result = new ArrayList<DependendableBean>(model.getContractTypes().size());
 
-		for (Class<?> contract : model.getContractTypes()){
+		for (ReflectedClass<?> contract : model.getContractTypes()){
 
 
 			DependendableBean bean = new DependendableBean(contract);
@@ -90,11 +92,11 @@ class DependendableBean {
 	 * @param bean
 	 * @return
 	 */
-	public static Collection<DependendableBean> fromPublishing(BeanDependencyModel ppModel , PublishPoint pp, Class<?> publishingType) {
+	public static Collection<DependendableBean> fromPublishing(BeanDependencyModel ppModel , PublishPoint pp, ReflectedClass<?> publishingType) {
 
 		Collection<DependendableBean> result = new ArrayList<DependendableBean>(ppModel.getContractTypes().size());
 
-		for (Class<?> contract : ppModel.getContractTypes()){
+		for (ReflectedClass<?> contract : ppModel.getContractTypes()){
 
 			DependendableBean bean = new DependendableBean(contract);
 
@@ -118,7 +120,7 @@ class DependendableBean {
 
 		Collection<DependendableBean> result = new ArrayList<DependendableBean>(interfaceBean.getContractTypes().size());
 
-		for (Class<?> contract : interfaceBean.getContractTypes()){
+		for (ReflectedClass<?> contract : interfaceBean.getContractTypes()){
 			DependendableBean bean = new DependendableBean(contract);
 
 			bean.scope = implementationBean.getScope();
@@ -137,11 +139,11 @@ class DependendableBean {
 	}
 
 	private List<DependencyRelation> relations = new LinkedList<DependencyRelation>();
-	private Class<?> type;
+	private ReflectedClass<?> type;
 	private String scope;
 	private Resolver resolver;
 
-	private DependendableBean (Class<?> type){
+	private DependendableBean (ReflectedClass<?> type){
 		this.type = type;
 	}
 
@@ -149,7 +151,7 @@ class DependendableBean {
 		return scope;
 	}
 
-	public Class<?> getType(){
+	public ReflectedClass<?> getType(){
 		return type;
 	}
 

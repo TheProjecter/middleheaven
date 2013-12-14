@@ -3,7 +3,7 @@ package org.middleheaven.core.metaclass;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.PropertyNotFoundException;
+import org.middleheaven.reflection.PropertyNotFoundException;
 
 /**
  * MetaBean that adds properties to another MetaBean.

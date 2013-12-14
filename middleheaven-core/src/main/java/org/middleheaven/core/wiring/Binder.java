@@ -1,6 +1,6 @@
 package org.middleheaven.core.wiring;
 
-import org.middleheaven.core.reflection.ClassSet;
+import org.middleheaven.reflection.ClassSet;
 
 
 public interface Binder {

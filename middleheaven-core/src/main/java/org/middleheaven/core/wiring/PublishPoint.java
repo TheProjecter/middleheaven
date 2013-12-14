@@ -1,13 +1,15 @@
 package org.middleheaven.core.wiring;
 
-import java.util.List;
 import java.util.Map;
+
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.reflection.ReflectedClass;
 
 public interface PublishPoint extends WiringPoint {
 
-	public List<WiringSpecification> getSpecifications();
+	public Enumerable<WiringSpecification> getSpecifications();
 	
-	public Class<?> getPublishedType();
+	public ReflectedClass<?> getPublishedType();
 	
 	public Object getObject(InstanceFactory factory, Object publisherObject);
 	

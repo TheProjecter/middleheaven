@@ -3,7 +3,7 @@
  */
 package org.middleheaven.core.wiring;
 
-import org.middleheaven.collections.CollectionUtils;
+import org.middleheaven.collections.enumerable.Enumerable;
 
 
 /**
@@ -13,12 +13,12 @@ public abstract class AbstractProducingWiringPoint implements ProducingWiringPoi
 
 	
 	private WiringSpecification methodSpecification;
-	private WiringSpecification[] paramsSpecifications;
+	private Enumerable<WiringSpecification> paramsSpecifications;
 	
 	
-	protected AbstractProducingWiringPoint (WiringSpecification methodSpecification,WiringSpecification[] paramsSpecifications){
+	protected AbstractProducingWiringPoint (WiringSpecification methodSpecification,Enumerable<WiringSpecification> paramsSpecifications){
 		this.methodSpecification = methodSpecification;
-		this.paramsSpecifications = CollectionUtils.duplicateArray(paramsSpecifications);
+		this.paramsSpecifications = paramsSpecifications;
 	}
 	
 	/**
@@ -35,8 +35,8 @@ public abstract class AbstractProducingWiringPoint implements ProducingWiringPoi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public WiringSpecification[] getParamsSpecifications() {
-		return CollectionUtils.duplicateArray(paramsSpecifications);
+	public Enumerable<WiringSpecification> getParamsSpecifications() {
+		return paramsSpecifications;
 	}
 	
 

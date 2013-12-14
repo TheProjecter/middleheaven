@@ -1,28 +1,28 @@
 package org.middleheaven.core.wiring;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.collections.enumerable.Enumerable;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedMethod;
 
 
 public final class MethodPublishPoint extends AbstractMethodWiringPoint implements PublishPoint {
 
-	private MethodHandler method;
+	private ReflectedMethod method;
 	private Map<String, Object> params;
-	private List<WiringSpecification> paramsSpecifications;
+	private Enumerable<WiringSpecification> paramsSpecifications;
 	private String scope;
 
-	public MethodPublishPoint(MethodHandler method , Map<String,Object> params, String scope,  WiringSpecification[] paramsSpecifications) {
+	public MethodPublishPoint(ReflectedMethod method , Map<String,Object> params, String scope,  Enumerable<WiringSpecification> paramsSpecifications) {
 		this.method = method;
 		this.params = params;
 		this.scope = scope;
-		this.paramsSpecifications = Arrays.asList(paramsSpecifications);
+		this.paramsSpecifications = paramsSpecifications;
 	}
 
 	
-	public List<WiringSpecification> getSpecifications(){
+	public Enumerable<WiringSpecification> getSpecifications(){
 		return paramsSpecifications;
 	}
 	
@@ -34,7 +34,7 @@ public final class MethodPublishPoint extends AbstractMethodWiringPoint implemen
 	}
 
 	@Override
-	public Class<?> getPublishedType() {
+	public ReflectedClass<?> getPublishedType() {
 		return method.getReturnType();
 	}
 
