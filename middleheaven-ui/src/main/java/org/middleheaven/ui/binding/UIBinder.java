@@ -7,12 +7,13 @@ import static org.middleheaven.util.SafeCastUtils.safeCast;
 
 import java.lang.reflect.Field;
 
-import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.WiringService;
+import org.middleheaven.reflection.ClassSet;
+import org.middleheaven.reflection.ReflectedField;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.ReflectionException;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.UIClient;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.UISearch;
@@ -49,22 +50,17 @@ public final class UIBinder {
 
 				final Object driver = wiring.getInstance(c);
 
-				for (Field field : introspector.inspect().fields().annotatedWith(UIBind.class).retriveAll()){
-					field.setAccessible(true);
-					UIBind fieldBind = field.getAnnotation(UIBind.class);
+				for (ReflectedField field : introspector.inspect().fields().annotatedWith(UIBind.class).retriveAll()){
+	
+					Maybe<UIBind> fieldBind = field.getAnnotation(UIBind.class);
 
-					UIComponent fieldComponent = UISearch.absolute(client).search(fieldBind.value()).first();
+					UIComponent fieldComponent = UISearch.absolute(client).search(fieldBind.get().value()).first();
 
-					try {
-						field.set(driver, fieldComponent);
-					} catch (IllegalArgumentException e) {
-						throw ReflectionException.manage(e, field.getDeclaringClass());
-					} catch (IllegalAccessException e) {
-						throw ReflectionException.manage(e, field.getDeclaringClass());
-					}
+					field.set(driver, fieldComponent);
+	
 				}
 				
-				for (MethodHandler method : introspector.inspect().methods().notInheritFromObject().annotatedWith(UIActionBind.class).retriveAll()){
+				for (ReflectedMethod method : introspector.inspect().methods().notInheritFromObject().annotatedWith(UIActionBind.class).retriveAll()){
 					UIActionBind methodBind = method.getAnnotation(UIActionBind.class).get();
 
 					UIComponent fieldComponent = UISearch.absolute(client).search(methodBind.value()).first();

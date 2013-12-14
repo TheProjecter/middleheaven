@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.middleheaven.core.metaclass.MetaBean;
 import org.middleheaven.core.metaclass.ReflectionBean;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.domain.criteria.EntityCriteria;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
@@ -15,6 +14,7 @@ import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.query.QueryExecuter;
 import org.middleheaven.domain.query.QueryParametersBag;
 import org.middleheaven.events.EventListenersSet;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.criteria.ReadStrategy;
 
 

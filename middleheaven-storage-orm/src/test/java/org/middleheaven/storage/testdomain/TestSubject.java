@@ -12,6 +12,7 @@ import org.middleheaven.model.annotations.Entity;
 import org.middleheaven.model.annotations.Id;
 import org.middleheaven.model.annotations.OneToMany;
 import org.middleheaven.quantity.money.CentsMoney;
+import org.middleheaven.quantity.money.Money;
 import org.middleheaven.storage.annotations.Column;
 import org.middleheaven.storage.annotations.Dataset;
 import org.middleheaven.storage.annotations.Transient;

@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 import org.middleheaven.util.Splitter;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.function.Function;
@@ -240,7 +240,7 @@ public class UISearch {
 			@SuppressWarnings("rawtypes")
 			private boolean matchType(UIComponent c) {
 				if(!StringUtils.isEmptyOrBlank(type)){
-					Class t = ClassIntrospector.loadFrom( UIClient.class.getPackage().getName() + "." + type).getIntrospected();
+					Class t = ClassIntrospector.loadFrom( UIClient.class.getPackage().getName() + "." + type).getIntrospected().getReflectedType();
 					return c.isType(t);
 				}
 				

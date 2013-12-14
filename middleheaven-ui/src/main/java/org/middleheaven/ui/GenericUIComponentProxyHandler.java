@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.PropertyBagProxyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.PropertyBagProxyHandler;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.property.Property;
 
 class GenericUIComponentProxyHandler extends PropertyBagProxyHandler {
@@ -30,7 +30,7 @@ class GenericUIComponentProxyHandler extends PropertyBagProxyHandler {
 	@Override
 	public Object invoke(Object proxy, Object[] args, MethodDelegator delegator)	throws Throwable {
 		
-		MethodHandler m = Introspector.of(GenericUIComponent.class).inspect().methods()
+		ReflectedMethod m = Introspector.of(GenericUIComponent.class).inspect().methods()
 			.named(delegator.getName())
 			.withParametersType(delegator.getInvoked().getParameterTypes())
 			.retrive();

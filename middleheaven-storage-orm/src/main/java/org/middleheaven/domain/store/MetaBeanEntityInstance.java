@@ -4,13 +4,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.middleheaven.collections.enumerable.Enumerable;
-import org.middleheaven.collections.enumerable.TransformedEnumerable;
 import org.middleheaven.core.metaclass.ListenableMetaBean;
 import org.middleheaven.core.metaclass.MetaBean;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.util.QualifiedName;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.identity.Identity;
 
 /**
@@ -20,9 +19,9 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 
 	private final MetaBean bean;
 	private final EntityModel model;
-	
+
 	private StorableState state = StorableState.FILLED;
-	
+
 	/**
 	 * 
 	 * Constructor.
@@ -37,15 +36,15 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 			}
 		};
 	}
-	
+
 	public String toString(){
 		return String.valueOf(bean);
 	}
-	
+
 	public MetaBean getBean(){
 		return bean;
 	}
-	
+
 	@Override
 	public StorableState getStorableState() {
 		return state;
@@ -55,27 +54,27 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 	public void setStorableState(StorableState state) {
 		this.state = state;
 	}
-	
+
 	@Override
 	public Identity getIdentity() {
 		return (Identity)this.bean.get(model.identityFieldModel().getName().getDesignation());
 	}
-	
+
 	@Override
 	public void setIdentity(Identity id) {
 		this.bean.set(model.identityFieldModel().getName().getDesignation(), id);
 	}
-	
+
 	/**
 	 * 
 	 * {@inheritDoc}
 	 */
 	public void copyFrom(EntityInstance other){
-		
+
 		for (EntityInstanceField field : other.getFields()){
 			this.bean.set(field.getModel().getName().getDesignation(), field.getValue());
 		}
-		
+
 	}
 
 	@Override
@@ -106,11 +105,11 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 			public void add(Object item) {
 				@SuppressWarnings("unchecked")
 				Collection<Object> collection = (Collection<Object>) getValue();
-				
+
 				if ( collection == null){
 					collection = new LinkedList<Object>();
 				}
-				
+
 				collection.add(item);
 			}
 
@@ -118,28 +117,23 @@ public final class MetaBeanEntityInstance implements EntityInstance {
 			public void remove(Object item) {
 				@SuppressWarnings("unchecked")
 				Collection<Object> collection = (Collection<Object>) getValue();
-				
+
 				if ( collection != null){
 					collection.remove(item);
 				}
 			}
-			
+
 		};
 	}
 
 	@Override
 	public Enumerable<EntityInstanceField> getFields() {
-		return TransformedEnumerable.<EntityFieldModel,EntityInstanceField >transform(
-				model.fields(),
-				new Mapper<EntityInstanceField,EntityFieldModel>(){
-
-					@Override
-					public EntityInstanceField apply(EntityFieldModel fieldModel) {
-						return getField(fieldModel.getName().getDesignation());
-					}
-					
+		return model.fields().cast(EntityFieldModel.class).map(new Function<EntityInstanceField,EntityFieldModel>(){
+				@Override
+				public EntityInstanceField apply( EntityFieldModel fieldModel) {
+					return getField(fieldModel.getName().getDesignation());
 				}
-		);
+		});
 	}
 
 

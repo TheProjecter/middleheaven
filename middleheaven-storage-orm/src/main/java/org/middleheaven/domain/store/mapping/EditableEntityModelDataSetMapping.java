@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.domain.store.EntityInstance;
 import org.middleheaven.domain.store.EntityManagerProxyHandler;
 import org.middleheaven.domain.store.MetaBeanEntityInstance;
@@ -17,6 +16,7 @@ import org.middleheaven.persistance.DataStoreSchemaName;
 import org.middleheaven.persistance.HashDataRow;
 import org.middleheaven.persistance.SimpleDataColumn;
 import org.middleheaven.persistance.model.DataColumnModel;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 import org.middleheaven.storage.annotations.DatasetInheritance;
 
 /**
@@ -30,12 +30,12 @@ class EditableEntityModelDataSetMapping implements EntityModelDataSetMapping {
 	private DatasetInheritance inherintance;
 	private EntityInstanceTypeMapper type;
 	
-	private Map<String, EntityInstanceTypeMapper>  mappers = new HashMap<String, EntityInstanceTypeMapper>();
+	private Map<String, EntityInstanceTypeMapper>  Functions = new HashMap<String, EntityInstanceTypeMapper>();
 	
 	
 	
-	public void addInstanceMapper(String name, EntityInstanceTypeMapper mapper){
-		this.mappers.put(name, mapper);
+	public void addInstanceFunction(String name, EntityInstanceTypeMapper Function){
+		this.Functions.put(name, Function);
 	}
 	
 	/**

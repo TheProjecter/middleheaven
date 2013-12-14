@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 
-import org.middleheaven.core.reflection.ReflectionException;
+import org.middleheaven.reflection.ReflectionException;
 
 
 /**
@@ -47,7 +47,7 @@ public class BindedProperty<T extends Serializable> extends AbstractProperty<T> 
 					try {
 						evt.getAddListenerMethod().invoke(bean, p.listener);
 					} catch (Exception e) {
-						throw ReflectionException.manage(e, bean.getClass());
+						throw ReflectionException.manage(e);
 					} 
 				}
 			}
@@ -104,7 +104,7 @@ public class BindedProperty<T extends Serializable> extends AbstractProperty<T> 
 		try {
 			return (T) descriptor.getReadMethod().invoke(target, new Object[0]);
 		} catch (Exception e) {
-			throw ReflectionException.manage(e, target.getClass());
+			throw ReflectionException.manage(e);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class BindedProperty<T extends Serializable> extends AbstractProperty<T> 
 			try {
 				descriptor.getWriteMethod().invoke(target, new Object[]{value});
 			} catch (Exception e) {
-				throw ReflectionException.manage(e, target.getClass());
+				throw ReflectionException.manage(e);
 			}
 			
 			fireChange( oldValue, value);

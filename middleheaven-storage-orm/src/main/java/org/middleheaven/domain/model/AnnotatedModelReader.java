@@ -10,12 +10,6 @@ import java.util.Map;
 import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.metaclass.MetaClass;
 import org.middleheaven.core.metaclass.ReflectionMetaClass;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.ReflectionException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.EnumIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.logging.Logger;
 import org.middleheaven.model.annotations.Discriminator;
 import org.middleheaven.model.annotations.DiscriminatorValue;
@@ -38,6 +32,13 @@ import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
 import org.middleheaven.quantity.time.CalendarDate;
 import org.middleheaven.quantity.time.CalendarDateTime;
 import org.middleheaven.quantity.time.TimePoint;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.ReflectionException;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.EnumIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.storage.annotations.Transient;
 import org.middleheaven.storage.annotations.Unique;
 import org.middleheaven.util.Maybe;
@@ -93,12 +94,12 @@ public class AnnotatedModelReader implements DomainModelReader {
 		if (maybeInherintance.isAbsent()){
 			
 			// look in super
-			Maybe<Class> maybeRoot = classInstrospector.getRootParent();
+			Maybe<ReflectedClass<?>> maybeRoot = classInstrospector.getIntrospected().getRootParent();
 			
 			if (maybeRoot.isAbsent()){
 				em.setInheritanceStrategy(InheritanceStrategy.NO_INHERITANCE);
 			} else {
-				rootModel = context.getEditableModelOf(maybeRoot.get());
+				rootModel = context.getEditableModelOf(maybeRoot.get().getReflectedType());
 				
 				rootModel.copyFieldTo(em);
 				em.setInheritanceStrategy(rootModel.getInheritanceStrategy());
@@ -121,13 +122,13 @@ public class AnnotatedModelReader implements DomainModelReader {
 			rootModel.addDescriminatorValue(type, maybeDiscriminatorValue.get().value());
 		}
 		
-		Enumerable<PropertyHandler> propertyAccessors = Introspector.of(type).inspect().properties().retriveAll();
+		Enumerable<ReflectedProperty> propertyAccessors = Introspector.of(type).inspect().properties().retriveAll();
 
 		if (propertyAccessors.isEmpty()){
 			throw new ModelingException("No public properties found for entity " + type.getName() + ".");
 		} else {
 
-			for (PropertyHandler pa : propertyAccessors){
+			for (ReflectedProperty pa : propertyAccessors){
 
 				if (!em.hasField(pa.getName())){
 					processField(pa,em, context);
@@ -148,20 +149,20 @@ public class AnnotatedModelReader implements DomainModelReader {
 		
 		// find @DescriminatorValue
 		
-		MethodHandler m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
+		ReflectedMethod m = Introspector.of(enumType).inspect().methods().annotatedWith(Discriminator.class).retrive();
 		
 		if (m == null){
 			throw new IllegalModelStateException("Enum type " + enumType.getName() + " must have a method anotated with @Discriminator");
 		}
 		
-		EditableEnumModel model = context.getEnumModel(enumType, m.getReturnType());
+		EditableEnumModel model = context.getEnumModel(enumType, m.getReturnType().getReflectedType());
 		
 		for (Object value : EnumIntrospector.of(enumType).getValues()){
 			
 			try {
 				model.addValueMaping(value, m.invoke(value));
 			} catch (IllegalArgumentException e) {
-				throw ReflectionException.manage(e, enumType);
+				throw ReflectionException.manage(e);
 			}
 		}
 		
@@ -183,7 +184,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 		return new ReflectionMetaClass(type);
 	}
 
-	private void processField (PropertyHandler pa ,EditableDomainEntityModel em, EntityModelBuildContext builder){
+	private void processField (ReflectedProperty pa ,EditableDomainEntityModel em, EntityModelBuildContext builder){
 
 	
 		final QualifiedName fieldQualifiedName = QualifiedName.qualify(em.getEntityName(), pa.getName());
@@ -199,17 +200,17 @@ public class AnnotatedModelReader implements DomainModelReader {
 			em.addField(fm);
 		}
 		
-		fm.setTransient(pa.isAnnotadedWith(Transient.class) || !pa.isWritable());
-		fm.setVersion( pa.isAnnotadedWith(Version.class));
-		fm.setUnique( pa.isAnnotadedWith(Unique.class));
-		fm.setNullable(!pa.isAnnotadedWith(NotNull.class));
-		fm.setDiscriminator(!pa.isAnnotadedWith(Discriminator.class));
+		fm.setTransient(pa.isAnnotationPresent(Transient.class) || !pa.isWritable());
+		fm.setVersion( pa.isAnnotationPresent(Version.class));
+		fm.setUnique( pa.isAnnotationPresent(Unique.class));
+		fm.setNullable(!pa.isAnnotationPresent(NotNull.class));
+		fm.setDiscriminator(!pa.isAnnotationPresent(Discriminator.class));
 		
-		Class<?> valueType = pa.getValueType();
+		Class<?> valueType = pa.getValueType().getReflectedType();
 
 		fm.setValueType(valueType);
 
-		if(pa.isAnnotadedWith(Id.class)){
+		if(pa.isAnnotationPresent(Id.class)){
 			Id key = pa.getAnnotation(Id.class).get();
 
 			fm.setIdentity(true);
@@ -227,14 +228,14 @@ public class AnnotatedModelReader implements DomainModelReader {
 			
 			fm.setDataTypeModel(model);
 			
-		} else if (pa.isAnnotadedWith(ManyToOne.class)){
+		} else if (pa.isAnnotationPresent(ManyToOne.class)){
 
 			ManyToOne ref = pa.getAnnotation(ManyToOne.class).get();
 			String fieldName = ref.targetIdentityField();
 
 			mapAsManyToOne(fm,fieldName,valueType,builder);
 
-		} else if (pa.isAnnotadedWith(OneToOne.class)){
+		} else if (pa.isAnnotationPresent(OneToOne.class)){
 			fm.setDataType(DataType.ONE_TO_ONE);
 			OneToOne ref = pa.getAnnotation(OneToOne.class).get();
 			String fieldName = ref.targetIdentityField();
@@ -256,7 +257,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 			fm.setDataTypeModel(model);
 
 
-		} else if (pa.isAnnotadedWith(OneToMany.class)){
+		} else if (pa.isAnnotationPresent(OneToMany.class)){
 			fm.setDataType( DataType.ONE_TO_MANY);
 			OneToMany ref = pa.getAnnotation(OneToMany.class).get();
 
@@ -269,7 +270,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 
 
 
-		} else if (pa.isAnnotadedWith(ManyToMany.class)){
+		} else if (pa.isAnnotationPresent(ManyToMany.class)){
 			fm.setDataType(DataType.MANY_TO_MANY);
 			ManyToMany ref = pa.getAnnotation(ManyToMany.class).get();
 
@@ -282,7 +283,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 
 		} else if( pa.getValueType().isEnum()) {
 			fm.setDataType(DataType.ENUM);
-		} else if (Collection.class.isAssignableFrom(pa.getValueType())){
+		} else if (pa.getValueType().isSubTypeOf(Collection.class)){
 			fm.setDataType( DataType.ONE_TO_MANY);
 		}
 
@@ -294,24 +295,24 @@ public class AnnotatedModelReader implements DomainModelReader {
 
 				fm.setDataTypeModel(model);
 
-				if(pa.isAnnotadedWith(EmailAddress.class)){
+				if(pa.isAnnotationPresent(EmailAddress.class)){
 					model.setEmailAddress(true);
 					model.setMaxLength(255);
 					model.setMinLength(0);
 
-				} else if(pa.isAnnotadedWith(Length.class)){
+				} else if(pa.isAnnotationPresent(Length.class)){
 					Length ref = pa.getAnnotation(Length.class).get();
 					model.setMaxLength(ref.max());
 					model.setMinLength(ref.min());
 				}
 
-				if(pa.isAnnotadedWith(NotEmpty.class)){
+				if(pa.isAnnotationPresent(NotEmpty.class)){
 					model.setEmptyable(false);
 				}
 
 
 
-				if(pa.isAnnotadedWith(Url.class)){
+				if(pa.isAnnotationPresent(Url.class)){
 					model.setUrl(true);
 				}
 
@@ -323,13 +324,13 @@ public class AnnotatedModelReader implements DomainModelReader {
 				fm.setDataType(DataType.DECIMAL);
 			} else if (matchTypes(valueType,CalendarDateTime.class)){
 				fm.setDataType(DataType.DATETIME);
-				if (pa.isAnnotadedWith(Temporal.class)){
+				if (pa.isAnnotationPresent(Temporal.class)){
 					fm.setDataType(pa.getAnnotation(Temporal.class).get().value());
 				} 
 			} else if (matchTypes(valueType,CalendarDate.class)){
 				fm.setDataType(DataType.DATE);
 			} else if (matchTypes(valueType, Date.class,Calendar.class)){
-				if (pa.isAnnotadedWith(Temporal.class)){
+				if (pa.isAnnotationPresent(Temporal.class)){
 					fm.setDataType(pa.getAnnotation(Temporal.class).get().value());
 				} else {
 					logger.warn(

@@ -7,9 +7,6 @@ import java.util.Map;
 
 import org.middleheaven.collections.enumerable.Enumerable;
 import org.middleheaven.core.annotations.Shared;
-import org.middleheaven.core.reflection.NoSuchClassReflectionException;
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.wiring.BindConfiguration;
 import org.middleheaven.core.wiring.Binder;
 import org.middleheaven.core.wiring.WiringService;
@@ -18,6 +15,9 @@ import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.io.xml.XMLException;
 import org.middleheaven.io.xml.XMLObjectContructor;
 import org.middleheaven.io.xml.XMLUtils;
+import org.middleheaven.reflection.NoSuchClassReflectionException;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UILayout;
 import org.middleheaven.ui.layout.UIBorderLayoutManager;
@@ -26,7 +26,7 @@ import org.middleheaven.ui.property.Property;
 import org.middleheaven.util.Maybe;
 import org.middleheaven.util.StringUtils;
 import org.middleheaven.util.coersion.TypeCoercing;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.function.Predicate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -95,9 +95,9 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 			type = "CommandSet";
 		}
 		try {
-			return Introspector.of(UIComponent.class).load("org.middleheaven.ui.UI" + StringUtils.capitalizeFirst(type)).getIntrospected();
+			return Introspector.of(UIComponent.class).load("org.middleheaven.ui.UI" + StringUtils.capitalizeFirst(type)).getIntrospected().getReflectedType();
 		} catch (NoSuchClassReflectionException e) {
-			return Introspector.of(UIComponent.class).load("org.middleheaven.ui.components.UI" + StringUtils.capitalizeFirst(type)).getIntrospected();
+			return Introspector.of(UIComponent.class).load("org.middleheaven.ui.components.UI" + StringUtils.capitalizeFirst(type)).getIntrospected().getReflectedType();
 		}
 	}
 
@@ -237,27 +237,27 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 	private Enumerable<Property> getProperties(Class<UIComponent> uiTypeClass, final UIComponent component){
 		return Introspector.of(uiTypeClass).inspect().properties().retriveAll()
 				.filter(new PropertyHandlerPredicate())
-				.map(new PropertyHandlerPredicateMapper(component));
+				.map(new PropertyHandlerPredicateFunction(component));
 	}
 
-	private static class PropertyHandlerPredicate implements Predicate<PropertyHandler>{
+	private static class PropertyHandlerPredicate implements Predicate<ReflectedProperty>{
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Boolean apply(PropertyHandler obj) {
-			return Property.class.isAssignableFrom(obj.getValueType());
+		public Boolean apply(ReflectedProperty obj) {
+			return obj.getValueType().isSubTypeOf(Property.class);
 		}
 		
 	}
 	
-	private static class PropertyHandlerPredicateMapper implements Mapper<Property, PropertyHandler>{
+	private static class PropertyHandlerPredicateFunction implements Function<Property, ReflectedProperty>{
 
 		private final UIComponent component;
 
 		
-		public PropertyHandlerPredicateMapper(UIComponent component) {
+		public PropertyHandlerPredicateFunction(UIComponent component) {
 			super();
 			this.component = component;
 		}
@@ -267,7 +267,7 @@ public class XMLUIComponentBuilder extends XMLObjectContructor<UIEnvironment> im
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Property apply(PropertyHandler obj) {
+		public Property apply(ReflectedProperty obj) {
 			Property  p = (Property)obj.getValue(component);
 
 			if (p == null){

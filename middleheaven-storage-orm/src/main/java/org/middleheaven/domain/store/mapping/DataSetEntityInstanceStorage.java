@@ -64,19 +64,19 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 	private DataService dataPersistanceService;
 	private DomainModel domaiModel;
-	private DomainModelDataSetTypeMapper mapper;
+	private DomainModelDataSetTypeMapper Function;
 
 	/**
 	 * 
 	 * Constructor.
 	 * @param dataPersistanceService
 	 * @param domainModel
-	 * @param mapper
+	 * @param Function
 	 */
-	public DataSetEntityInstanceStorage (DataService dataPersistanceService , DomainModel domainModel, DomainModelDataSetTypeMapper mapper){
+	public DataSetEntityInstanceStorage (DataService dataPersistanceService , DomainModel domainModel, DomainModelDataSetTypeMapper Function){
 		this.dataPersistanceService = dataPersistanceService;
 		this.domaiModel = domainModel;
-		this.mapper = mapper;
+		this.Function = Function;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 			EntityModel entityModel = this.getStoreManager().getDomainModel().getModelFor(criteria.getTargetClass().getName());
 
-			final EntityModelDataSetMapping mapping = mapper.getMappingFor(entityModel);
+			final EntityModelDataSetMapping mapping = Function.getMappingFor(entityModel);
 
 			DataStoreSchemaName schemaName = mapping.getSchemaName();
 
@@ -114,7 +114,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 		try {
 			EntityModel entityModel = this.getStoreManager().getDomainModel().getModelFor(criteria.getTargetClass().getName());
 
-			final EntityModelDataSetMapping mapping = mapper.getMappingFor(entityModel);
+			final EntityModelDataSetMapping mapping = Function.getMappingFor(entityModel);
 
 			DataStoreSchemaName schemaName = mapping.getSchemaName();
 
@@ -156,7 +156,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 		EntityModel baseModel = domaiModel.getModelFor(criteria.getTargetClass().getName());
 
-		EntityModelDataSetMapping sourceMapping = this.mapper.getMappingFor(baseModel);
+		EntityModelDataSetMapping sourceMapping = this.Function.getMappingFor(baseModel);
 
 
 		List<RelatedDataSet> relatedDS = new LinkedList<RelatedDataSet>();
@@ -222,7 +222,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 				EntityModel joinModel = domaiModel.getModelFor(junction.getTargetType().getName());
 
 
-				EntityModelDataSetMapping sourceMapping = this.mapper.getMappingFor(joinModel);
+				EntityModelDataSetMapping sourceMapping = this.Function.getMappingFor(joinModel);
 
 				Collection<DataSetModel> targetDataSets = resolveDataSetModelsFromMapping(sourceMapping);
 
@@ -233,7 +233,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 						rd.setSourceDataSetModel(source);
 						rd.setTargetDataSetModel(target);
 
-						QualifiedName name = mapper.getEntityFieldTypeMapper(
+						QualifiedName name = Function.getEntityFieldTypeMapper(
 								junction.getFieldName()
 						).getColumns()[0].getName(); // 0 == key ?
 
@@ -276,8 +276,8 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 		for (EntityFieldModel fm : baseModel.fields()){
 			if (!fm.isTransient()){
-				EntityFieldTypeMapper currentFieldMapper = mapper.getEntityFieldTypeMapper(fm.getName());
-				DataColumnModel currentFieldColumn = currentFieldMapper.getColumns()[0];
+				EntityFieldTypeMapper currentFieldFunction = Function.getEntityFieldTypeMapper(fm.getName());
+				DataColumnModel currentFieldColumn = currentFieldFunction.getColumns()[0];
 
 				if (fm.getDataType().isToOneReference()){
 
@@ -289,9 +289,9 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 				
 					EntityModel targetModel = domaiModel.getModelFor(refModel.getTargetType().getName());
 
-					EntityFieldTypeMapper targetFieldMapper = mapper.getEntityFieldTypeMapper(targetModel.identityFieldModel().getName());
+					EntityFieldTypeMapper targetFieldFunction = Function.getEntityFieldTypeMapper(targetModel.identityFieldModel().getName());
 
-					DataColumnModel targetFieldColumn = targetFieldMapper.getColumns()[0];
+					DataColumnModel targetFieldColumn = targetFieldFunction.getColumns()[0];
 
 					RelatedDataSet rd = new RelatedDataSet( new LogicConstraint(LogicOperator.and()), RelationOperator.INNER_JOIN);
 
@@ -335,7 +335,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 			for (OrderingCriterion ordering : criteria.ordering()){
 
-				DataColumnModel[] columns = mapper.getEntityFieldTypeMapper(ordering.getFieldName()).getColumns();
+				DataColumnModel[] columns = Function.getEntityFieldTypeMapper(ordering.getFieldName()).getColumns();
 
 				OrderConstraint orderConstraint = new ColumnOrderConstraint(columns[0].getName() , !ordering.isDescendant());
 
@@ -406,7 +406,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 		private void interpretFieldValueCriterion(final LogicConstraint constraint,
 				final FieldValueCriterion f) {
 			
-			final EntityFieldTypeMapper entityFieldTypeMapper = mapper.getEntityFieldTypeMapper(f.getFieldName());
+			final EntityFieldTypeMapper entityFieldTypeMapper = Function.getEntityFieldTypeMapper(f.getFieldName());
 			
 			if (entityFieldTypeMapper == null){
 				throw new IllegalModelStateException("There is not field " + f.getFieldName());
@@ -423,7 +423,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 				EntityModel entityModel = i.getEntityModel();
 
-				final EntityModelDataSetMapping mapping = mapper.getMappingFor(entityModel);
+				final EntityModelDataSetMapping mapping = Function.getMappingFor(entityModel);
 
 				DataStoreSchema schema = dataPersistanceService.getDataStoreSchema(mapping.getSchemaName());
 
@@ -481,7 +481,7 @@ public class DataSetEntityInstanceStorage extends AbstractEntityInstanceStorage 
 
 
 		protected Sequence<Long> getSeedSequence(EntityInstance instance){
-			final EntityModelDataSetMapping mapping = mapper.getMappingFor(instance.getEntityModel());
+			final EntityModelDataSetMapping mapping = Function.getMappingFor(instance.getEntityModel());
 
 			return dataPersistanceService.getDataStoreSchema(mapping.getSchemaName()).getSequence(mapping.getDataSetName());
 

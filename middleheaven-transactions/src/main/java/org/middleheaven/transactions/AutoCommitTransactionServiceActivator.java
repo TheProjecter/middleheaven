@@ -1,16 +1,10 @@
 package org.middleheaven.transactions;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.middleheaven.collections.enumerable.Enumerable;
-import org.middleheaven.core.reflection.InterceptorProxyHandler;
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.MethodHandler;
-import org.middleheaven.core.reflection.WrapperProxy;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.core.services.ServiceActivator;
 import org.middleheaven.core.services.ServiceContext;
 import org.middleheaven.core.services.ServiceSpecification;
@@ -20,7 +14,12 @@ import org.middleheaven.core.wiring.InterceptorChain;
 import org.middleheaven.core.wiring.WiringConnector;
 import org.middleheaven.core.wiring.WiringInterceptor;
 import org.middleheaven.core.wiring.WiringService;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.reflection.InterceptorProxyHandler;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ReflectedClass;
+import org.middleheaven.reflection.ReflectedMethod;
+import org.middleheaven.reflection.WrapperProxy;
+import org.middleheaven.util.function.Function;
 
 public class AutoCommitTransactionServiceActivator extends ServiceActivator {
 
@@ -127,13 +126,13 @@ public class AutoCommitTransactionServiceActivator extends ServiceActivator {
 		}
 
 		@SuppressWarnings("unchecked")
-		public Object proxyfy (final Object original, Class<?> type){
+		public Object proxyfy (final Object original, ReflectedClass<?> type){
 
 			if (!type.isInterface()){
 				return original;
 			}
 
-			Enumerable<MethodHandler> all = Introspector.of(original.getClass()).inspect()
+			Enumerable<ReflectedMethod> all = type.inspect()
 					.methods()
 					.notInheritFromObject()
 					.annotatedWith(Transactional.class).retriveAll();
@@ -142,16 +141,16 @@ public class AutoCommitTransactionServiceActivator extends ServiceActivator {
 				return original;
 			} else {
 
-				final Set<String> names = all.map(new Mapper<String,MethodHandler>(){
+				final Set<String> names = all.map(new Function<String,ReflectedMethod>(){
 
 					@Override
-					public String apply(MethodHandler obj) {
+					public String apply(ReflectedMethod obj) {
 						return obj.getName();
 					}
 
 				}).into(new HashSet<String>());
 
-				return Introspector.of(type).newProxyInstance(new AutoTransactionProxyHandler(original, names), WrapperProxy.class);
+				return type.newProxyInstance(new AutoTransactionProxyHandler(original, names), WrapperProxy.class);
 			}
 		}
 

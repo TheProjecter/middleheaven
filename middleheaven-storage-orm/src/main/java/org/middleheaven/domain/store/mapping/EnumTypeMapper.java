@@ -13,8 +13,6 @@ import org.middleheaven.storage.types.TypeMapper;
  */
 public class EnumTypeMapper implements TypeMapper {
 
-	
-	
 	private EnumModel enumModel;
 
 	public EnumTypeMapper(EnumModel enumModel){

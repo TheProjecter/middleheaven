@@ -12,8 +12,6 @@ import java.util.Set;
 
 import org.middleheaven.core.metaclass.MetaBean;
 import org.middleheaven.core.metaclass.MetaClass;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.store.EntityInstance;
@@ -23,6 +21,8 @@ import org.middleheaven.domain.store.MetaBeanEntityInstance;
 import org.middleheaven.domain.store.StorableState;
 import org.middleheaven.persistance.DataRow;
 import org.middleheaven.persistance.model.DataColumnModel;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.storage.types.TypeMapper;
 import org.middleheaven.util.QualifiedName;
 
@@ -80,9 +80,9 @@ public class EntityInstanceTypeMapper implements TypeMapper {
 
 		for (EntityInstanceField f : instance.getFields()){
 			if (!f.getModel().isTransient()){
-				EntityFieldTypeMapper mapper = this.fieldTypes.get(f.getModel().getName());
+				EntityFieldTypeMapper Function = this.fieldTypes.get(f.getModel().getName());
 
-				Object value = mapper.read(row,aggregateParent, columns);
+				Object value = Function.read(row,aggregateParent, columns);
 
 				if (value instanceof EntityInstance){
 
@@ -121,18 +121,18 @@ public class EntityInstanceTypeMapper implements TypeMapper {
 			if (parent == null){
 				for (EntityInstanceField f : instance.getFields()){
 					if (!f.getModel().isTransient()){
-						EntityFieldTypeMapper mapper = this.fieldTypes.get(f.getModel().getName());
+						EntityFieldTypeMapper Function = this.fieldTypes.get(f.getModel().getName());
 
-						mapper.write(object, f.getValue(), row, mapper.getColumns());
+						Function.write(object, f.getValue(), row, Function.getColumns());
 					}
 				}
 			} else {
 
 				EntityFieldModel fm = instance.getEntityModel().identityFieldModel();
 
-				EntityFieldTypeMapper mapper = this.fieldTypes.get(fm.getName());
+				EntityFieldTypeMapper Function = this.fieldTypes.get(fm.getName());
 
-				mapper.write(object,instance.getIdentity(), row, columns);
+				Function.write(object,instance.getIdentity(), row, columns);
 
 			}
 

@@ -35,7 +35,7 @@ import org.apache.lucene.util.ThreadInterruptedException;
 import org.middleheaven.io.ManagedIOException;
 import org.middleheaven.io.repository.ManagedFile;
 import org.middleheaven.quantity.time.EpocTimePoint;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.function.Predicate;
 
 /**
@@ -137,7 +137,7 @@ public abstract class ManagedFileDirectory extends Directory {
 			return file.getType().isFile();
 		}
     	
-    }).map(new Mapper<String, ManagedFile>(){
+    }).map(new Function<String, ManagedFile>(){
 
 		@Override
 		public String apply(ManagedFile obj) {

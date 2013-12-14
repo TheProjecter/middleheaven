@@ -15,9 +15,9 @@ import org.middleheaven.persistance.DataService;
  */
 public class DatasetDomainStoreManager extends AbstractEntityInstanceStoreManager {
 
-	public static DatasetDomainStoreManager manage(DataService dataService, DomainModel domainModel, DomainModelDataSetTypeMapper dmMapper){
+	public static DatasetDomainStoreManager manage(DataService dataService, DomainModel domainModel, DomainModelDataSetTypeMapper dmFunction){
 
-		DataSetEntityInstanceStorage objectStorage = new DataSetEntityInstanceStorage(dataService, domainModel , dmMapper);
+		DataSetEntityInstanceStorage objectStorage = new DataSetEntityInstanceStorage(dataService, domainModel , dmFunction);
 
 		
 		return new DatasetDomainStoreManager(objectStorage, domainModel);

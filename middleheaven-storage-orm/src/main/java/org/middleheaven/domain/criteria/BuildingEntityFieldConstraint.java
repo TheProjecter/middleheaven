@@ -5,7 +5,7 @@ package org.middleheaven.domain.criteria;
 
 import java.util.Arrays;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.util.QualifiedName;
 import org.middleheaven.util.criteria.AbstractBuildingConstraint;
 

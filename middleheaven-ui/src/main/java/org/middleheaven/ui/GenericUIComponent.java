@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.global.text.LocalizableText;
 import org.middleheaven.global.text.ParsableFormatter;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.components.UICommand;
 import org.middleheaven.ui.components.UIContainer;
 import org.middleheaven.ui.components.UIField;

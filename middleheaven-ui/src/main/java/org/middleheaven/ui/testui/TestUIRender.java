@@ -1,6 +1,6 @@
 package org.middleheaven.ui.testui;
 
-import org.middleheaven.core.reflection.inspection.Introspector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.ui.UIComponent;
 import org.middleheaven.ui.rendering.RenderingContext;
 import org.middleheaven.ui.rendering.UIRender;

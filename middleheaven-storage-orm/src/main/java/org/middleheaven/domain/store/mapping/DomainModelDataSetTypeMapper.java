@@ -18,8 +18,8 @@ public interface DomainModelDataSetTypeMapper {
 	 */
 	EntityModelDataSetMapping getMappingFor(EntityModel entityModel);
 
-	public void registerTypeMapper(TypeMapper typeMapper);
-	public void unregisterTypeMapper(TypeMapper typeMapper);
+	public void registerTypeMapper(TypeMapper TypeMapper);
+	public void unregisterTypeMapper(TypeMapper TypeMapper);
 	
 	/**
 	 * @param fieldName

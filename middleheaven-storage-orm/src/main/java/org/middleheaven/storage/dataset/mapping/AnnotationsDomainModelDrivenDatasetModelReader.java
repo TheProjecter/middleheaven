@@ -3,9 +3,6 @@
  */
 package org.middleheaven.storage.dataset.mapping;
 
-import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.domain.model.DataType;
 import org.middleheaven.domain.model.DefaultReferenceDataTypeModel;
 import org.middleheaven.domain.model.DomainModel;
@@ -13,6 +10,9 @@ import org.middleheaven.domain.model.EntityModel;
 import org.middleheaven.domain.model.EnumModel;
 import org.middleheaven.domain.model.FieldModel;
 import org.middleheaven.persistance.model.ColumnValueType;
+import org.middleheaven.reflection.ClassSet;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 import org.middleheaven.storage.annotations.Column;
 import org.middleheaven.storage.annotations.Dataset;
 import org.middleheaven.storage.annotations.Indexed;
@@ -103,15 +103,15 @@ DatasetRepositoryModelReader {
 
 		dsModel.setHardName(hardDatasetName);
 
-		introspector.inspect().properties().each(new Block<PropertyHandler>(){
+		introspector.inspect().properties().each(new Block<ReflectedProperty>(){
 
 			@Override
-			public void apply(PropertyHandler object) {
+			public void apply(ReflectedProperty object) {
 				EditableDatasetColumnModel columnModel = dsModel.getColumn(object.getName()); 
 
 				FieldModel fieldModel = entityModel.fieldModel(QualifiedName.qualify(entityName, object.getName()));
 
-				if (!fieldModel.isTransient() && !fieldModel.getDataType().isToManyReference() && !object.isAnnotadedWith(Transient.class)) {
+				if (!fieldModel.isTransient() && !fieldModel.getDataType().isToManyReference() && !object.isAnnotationPresent(Transient.class)) {
 
 					if (columnModel == null){
 						columnModel = new HashDatasetColumnModel();
@@ -136,7 +136,7 @@ DatasetRepositoryModelReader {
 
 					columnModel.setVersion(fieldModel.isVersion()); 
 					columnModel.setKey(fieldModel.isIdentity());
-					columnModel.setIndexed(object.isAnnotadedWith(Indexed.class) || fieldModel.isDiscriminator() || columnModel.isKey());
+					columnModel.setIndexed(object.isAnnotationPresent(Indexed.class) || fieldModel.isDiscriminator() || columnModel.isKey());
 					columnModel.setUnique(fieldModel.isUnique());
 					columnModel.setUniqueGroupName(fieldModel.getUniqueGroup());
 

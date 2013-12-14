@@ -3,7 +3,7 @@
  */
 package org.middleheaven.ui.binding;
 
-import org.middleheaven.core.reflection.MethodHandler;
+import org.middleheaven.reflection.ReflectedMethod;
 import org.middleheaven.ui.CommandListener;
 import org.middleheaven.ui.events.UIActionEvent;
 
@@ -13,10 +13,10 @@ import org.middleheaven.ui.events.UIActionEvent;
 public final class MethodCommandListener implements CommandListener {
 
 	
-	private MethodHandler method;
+	private ReflectedMethod method;
 	private Object target;
 	
-	public MethodCommandListener (MethodHandler method, Object target){
+	public MethodCommandListener (ReflectedMethod method, Object target){
 		this.method = method;
 		this.target = target;
 	}

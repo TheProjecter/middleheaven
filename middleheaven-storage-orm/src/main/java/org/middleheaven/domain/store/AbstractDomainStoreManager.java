@@ -9,7 +9,7 @@ import java.util.Set;
 import org.middleheaven.collections.enumerable.Enumerables;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.util.function.Block;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 import org.middleheaven.util.identity.Identity;
 
 /**
@@ -175,7 +175,7 @@ public abstract class AbstractDomainStoreManager implements DomainStoreManager {
 		flatten(p,all);
 
 
-		Enumerables.asEnumerable(all).map(new Mapper<StoreAction, EntityInstance>(){
+		Enumerables.asEnumerable(all).map(new Function<StoreAction, EntityInstance>(){
 
 			@Override
 			public StoreAction apply(EntityInstance s) {

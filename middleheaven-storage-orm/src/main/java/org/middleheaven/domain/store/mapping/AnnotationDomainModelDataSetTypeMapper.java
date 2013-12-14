@@ -8,10 +8,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.middleheaven.core.reflection.PropertyHandler;
-import org.middleheaven.core.reflection.PropertyNotFoundException;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
-import org.middleheaven.core.reflection.inspection.Introspector;
 import org.middleheaven.domain.model.DomainModel;
 import org.middleheaven.domain.model.EntityFieldModel;
 import org.middleheaven.domain.model.EntityModel;
@@ -26,6 +22,10 @@ import org.middleheaven.persistance.model.ColumnValueType;
 import org.middleheaven.persistance.model.DataColumnModel;
 import org.middleheaven.persistance.model.DataColumnModelBean;
 import org.middleheaven.persistance.model.EditableDataSet;
+import org.middleheaven.reflection.ReflectedProperty;
+import org.middleheaven.reflection.PropertyNotFoundException;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
+import org.middleheaven.reflection.inspection.Introspector;
 import org.middleheaven.storage.annotations.Column;
 import org.middleheaven.storage.annotations.Columns;
 import org.middleheaven.storage.annotations.Dataset;
@@ -62,15 +62,15 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 	/**
 	 * 
 	 * @param domainModel
-	 * @param dataMapper 
+	 * @param dataFunction 
 	 * @return
 	 */
 	public static AnnotationDomainModelDataSetTypeMapper newInstance(DataStoreSchemaName dataStoreSchemaName, DomainModel domainModel ){
-		AnnotationDomainModelDataSetTypeMapper mapper = new AnnotationDomainModelDataSetTypeMapper(domainModel,dataStoreSchemaName);
+		AnnotationDomainModelDataSetTypeMapper Function = new AnnotationDomainModelDataSetTypeMapper(domainModel,dataStoreSchemaName);
 
-		mapper.initialize();
+		Function.initialize();
 
-		return mapper;
+		return Function;
 	}
 
 	private AnnotationDomainModelDataSetTypeMapper(DomainModel domainModel, DataStoreSchemaName dataStoreSchemaName){
@@ -163,7 +163,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 		EntityInstanceTypeMapper type = new EntityInstanceTypeMapper(model);
 
-		mapping.addInstanceMapper(model.getEntityName(), type);
+		mapping.addInstanceFunction(model.getEntityName(), type);
 
 		EditableDataSet dsModel = new EditableDataSet(); 
 
@@ -173,7 +173,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 			if (!field.isTransient() && !field.getDataType().isToManyReference()){
 				try {
-					PropertyHandler pa = model.getEntityClass().getPropertyAcessor(field.getName().getDesignation());
+					ReflectedProperty pa = model.getEntityClass().getPropertyAcessor(field.getName().getDesignation());
 
 					TypeMapper fieldType = readFieldTypeMapper(pa, field, queue);
 
@@ -202,7 +202,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 	 * @param field
 	 * @param mapping 
 	 */
-	private DataColumnModel[] readColumns(EditableDataSet dsModel, PropertyHandler pa, EntityFieldModel field, EditableEntityModelDataSetMapping mapping) {
+	private DataColumnModel[] readColumns(EditableDataSet dsModel, ReflectedProperty pa, EntityFieldModel field, EditableEntityModelDataSetMapping mapping) {
 
 		Column[] all;
 
@@ -214,7 +214,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 			if (maybeColumn.isAbsent()){
 
-				if (pa.isAnnotadedWith(Transient.class)) {
+				if (pa.isAnnotationPresent(Transient.class)) {
 					all = new Column[0];
 				} else {
 
@@ -240,15 +240,15 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 			cm.setName(QualifiedName.qualify(dsModel.getName(), c.hardName()));
 			cm.setDataSetModel(dsModel);
-			cm.setNullable(!pa.isAnnotadedWith(NotNull.class));
+			cm.setNullable(!pa.isAnnotationPresent(NotNull.class));
 			cm.setPrecision(c.precision());
 			cm.setSize(c.length());
 
 			cm.setType(this.mapColumnTypeFromEntityField(field));
 
-			cm.setVersion(!pa.isAnnotadedWith(Version.class));
+			cm.setVersion(!pa.isAnnotationPresent(Version.class));
 
-			if (pa.isAnnotadedWith(Id.class)){
+			if (pa.isAnnotationPresent(Id.class)){
 				cm.setPrimaryKeyGroup("key");
 			}
 
@@ -330,7 +330,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 	 * @param queue 
 	 * @return
 	 */
-	private TypeMapper readFieldTypeMapper(PropertyHandler pa, EntityFieldModel field, Map<String, EntityModel> queue) {
+	private TypeMapper readFieldTypeMapper(ReflectedProperty pa, EntityFieldModel field, Map<String, EntityModel> queue) {
 
 
 		Maybe<Type> tm = pa.getAnnotation(Type.class);
@@ -340,7 +340,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 		}
 
 		if (domainModel.containsModelFor(pa.getValueType().getName())){
-			// it is an entity. return its typemapper
+			// it is an entity. return its TypeMapper
 
 			EntityModelDataSetMapping map = this.mappings.get(pa.getValueType().getSimpleName().toLowerCase());
 
@@ -353,7 +353,7 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 		} else if (pa.getValueType().isEnum()) {
 		
-				Maybe<EnumModel> model = domainModel.getEmumModel((Class<? extends Enum>)pa.getValueType());
+				Maybe<EnumModel> model = domainModel.getEmumModel((Class<? extends Enum>)pa.getValueType().getReflectedType());
 				
 				if (model.isAbsent()){
 					throw new IllegalModelStateException("No model defined for enum " + pa.getValueType());
@@ -365,8 +365,8 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 
 			String typeName;
 
-			final ClassIntrospector<?> introspector = Introspector.of(pa.getValueType());
-			if (introspector.isPrimitive()){
+			final ClassIntrospector<?> introspector = Introspector.of(pa.getValueType().getReflectedType());
+			if (introspector.getIntrospected().isPrimitive()){
 				typeName = introspector.getPrimitiveWrapper().getName();
 			} else {
 				typeName = pa.getValueType().getName();
@@ -433,8 +433,8 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void registerTypeMapper(TypeMapper typeMapper) {
-		this.types.put(typeMapper.getMappedClassName(), typeMapper);
+	public void registerTypeMapper(TypeMapper TypeMapper) {
+		this.types.put(TypeMapper.getMappedClassName(), TypeMapper);
 	}
 
 
@@ -443,8 +443,8 @@ public final class AnnotationDomainModelDataSetTypeMapper implements DomainModel
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void unregisterTypeMapper(TypeMapper typeMapper) {
-		this.types.remove(typeMapper.getMappedClassName());
+	public void unregisterTypeMapper(TypeMapper TypeMapper) {
+		this.types.remove(TypeMapper.getMappedClassName());
 	}
 
 	/**

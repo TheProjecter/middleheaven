@@ -10,7 +10,7 @@ import org.middleheaven.text.indexing.DocumentField;
 import org.middleheaven.text.indexing.DocumentFieldModel;
 import org.middleheaven.text.indexing.DocumentModel;
 import org.middleheaven.text.indexing.IndexableDocument;
-import org.middleheaven.util.function.Mapper;
+import org.middleheaven.util.function.Function;
 
 public class LuceneDocumentAdapter implements IndexableDocument {
 
@@ -62,7 +62,7 @@ public class LuceneDocumentAdapter implements IndexableDocument {
 	@Override
 	public Iterator<DocumentField> iterator() {
 		
-		return TransformedCollection.transform(model.getFields(), new Mapper<DocumentField,DocumentFieldModel>(){
+		return TransformedCollection.transform(model.getFields(), new Function<DocumentField,DocumentFieldModel>(){
 
 			@Override
 			public DocumentField apply(DocumentFieldModel obj) {

@@ -4,10 +4,10 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.middleheaven.core.metaclass.ReflectionMetaClass;
-import org.middleheaven.core.reflection.ClassSet;
-import org.middleheaven.core.reflection.inspection.ClassIntrospector;
 import org.middleheaven.model.AbstractModelBuilder;
 import org.middleheaven.persistance.db.mapping.IllegalModelStateException;
+import org.middleheaven.reflection.ClassSet;
+import org.middleheaven.reflection.inspection.ClassIntrospector;
 
 /**
  * 
@@ -28,7 +28,7 @@ public final class DomainModelBuilder extends AbstractModelBuilder<EntityModel, 
 		for (Class c : classes){
 			if (isDomainAbstraction(c)){
 				// inheritance needs to process the parent first
-				if (ClassIntrospector.of(c).getRootParent().isAbsent()){
+				if (ClassIntrospector.of(c).getIntrospected().getRootParent().isAbsent()){
 					stack.addFirst(c);
 				} else {
 					stack.addLast(c);

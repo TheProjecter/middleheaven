@@ -3,8 +3,8 @@
  */
 package org.middleheaven.ui.testui;
 
-import org.middleheaven.core.reflection.MethodDelegator;
-import org.middleheaven.core.reflection.ProxyHandler;
+import org.middleheaven.reflection.MethodDelegator;
+import org.middleheaven.reflection.ProxyHandler;
 
 /**
  * 
