@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>middleheaven</groupId>
+	<artifactId>middleheaven-utils</artifactId>
+	<version>1.0.0</version>
+	
+	<name>MiddleHeaven Utils</name>
+	<description>MiddleHeaven Utils contains a selection of utilitary and extention classes.
+	</description>
+
+ 	<packaging>jar</packaging>
+ 
+
+	<parent>
+	  <groupId>middleheaven</groupId>
+	  <artifactId>middleheaven-project</artifactId>
+	  <version>1.0.0</version>
+	  <relativePath>..\middleheaven-project\pom.xml</relativePath>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+		</dependency>
+	</dependencies>
+
+</project>
