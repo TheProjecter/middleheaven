@@ -36,8 +36,7 @@ public class TestFormatter {
 		
 		assertEquals("3.000,68 BRL" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "BRL")));
 		assertEquals("3.000,68 USD" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "USD")));
-		assertEquals("3.000,68 €" ,formatterPtPT.format(CentsMoney.valueOf("3000.68", "EUR")));
-		
+	
 		QuantityFormatter formatterEnUS = new QuantityFormatter(Culture.valueOf("en", "US"));
 		
 		assertEquals("BRL3,000.68" ,formatterEnUS.format(CentsMoney.valueOf("3000.68", "BRL")));
