@@ -12,62 +12,36 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.middleheaven.aas.AccessControlService;
 import org.middleheaven.aas.RolePermission;
 import org.middleheaven.process.MapContext;
 import org.middleheaven.process.web.HttpProcessException;
 import org.middleheaven.process.web.UrlPattern;
-import org.middleheaven.process.web.server.AbstractSecureHttpProcessor;
 import org.middleheaven.process.web.server.HttpProcessorConfig;
 import org.middleheaven.process.web.server.HttpServerContext;
-import org.middleheaven.process.web.server.HttpServerSignatureStorePolicy;
 import org.middleheaven.process.web.server.Outcome;
 import org.middleheaven.process.web.server.ServletWebContext;
 import org.middleheaven.process.web.server.action.TerminalOutcome;
-import org.middleheaven.process.web.server.action.URLOutcome;
 import org.middleheaven.ui.UIEnvironment;
 import org.middleheaven.ui.UIService;
 import org.middleheaven.ui.binding.UIBinder;
 import org.middleheaven.ui.layout.UIClientLayoutConstraint;
 import org.middleheaven.ui.layout.UIClientLayoutManager;
+import org.middleheaven.ui.web.UIClientRenderingProcessor;
 import org.middleheaven.web.aas.UrlAccessPermissionsManager;
 
 /**
  * 
  */
-public class VaadinClientRenderingProcessor extends AbstractSecureHttpProcessor{
+public class VaadinClientRenderingProcessor extends UIClientRenderingProcessor{
 
 	private VaadinApplicationServletAdapter adapter;
 	private String baseProcessorID;
-	private final URLOutcome loginOutcome;
-	private URLOutcome deniedOutcome;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void init(HttpProcessorConfig config) {
-		
-		// add adicional processor por VAADIN
-		
-		if (baseProcessorID == null){
-			baseProcessorID = config.getProcessorId();
-			
-			config.getRegisteredService().registerHttpProcessor(baseProcessorID + "_VAADIN", this, UrlPattern.matchSimplePattern("/VAADIN/*"));
-			config.getRegisteredService().registerHttpProcessor(baseProcessorID + "_UIDL", this, UrlPattern.matchSimplePattern("/UIDL"));
-		}
-		
-		
-	}
 	
 	public VaadinClientRenderingProcessor(	
 			String root, 
-			UrlAccessPermissionsManager permissionsManager,
-			AccessControlService accessControlService,
-			HttpServerSignatureStorePolicy storePolicy, 
+			UrlAccessPermissionsManager permissionsManager, 
 			UIService uiService, UIEnvironment env, UIBinder binder){
-		super(permissionsManager, accessControlService, storePolicy);
-	
+		
 		permissionsManager.restrict(UrlPattern.matchSimplePattern("/VAADIN/*"), RolePermission.any());
 		permissionsManager.restrict(UrlPattern.matchSimplePattern("/UIDL/*"), RolePermission.any());
 		
@@ -88,15 +62,6 @@ public class VaadinClientRenderingProcessor extends AbstractSecureHttpProcessor{
 		
 		UIClientLayoutManager manager = (UIClientLayoutManager) env.getClient().getUIContainerLayout().getLayoutManager();
 		
-		loginOutcome = URLOutcome.forUrl(root +  "/" + manager.getComponentId(UIClientLayoutConstraint.LOGIN) + ".html").byRedirecting();
-		
-		if (manager.getComponentId(UIClientLayoutConstraint.ACCESS_DENIED) != null){
-			deniedOutcome = URLOutcome.forUrl(root +  "/" + manager.getComponentId(UIClientLayoutConstraint.ACCESS_DENIED) + ".html").byRedirecting();
-		} else {
-			deniedOutcome = loginOutcome;
-		}
-		 
-		
 		manager.getComponentId(UIClientLayoutConstraint.MAIN);
 	}
 	
@@ -104,7 +69,24 @@ public class VaadinClientRenderingProcessor extends AbstractSecureHttpProcessor{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Outcome doSuccessProcess(HttpServerContext context) throws HttpProcessException {
+	public void init(HttpProcessorConfig config) {
+		
+		// add adicional processor por VAADIN
+		
+		if (baseProcessorID == null){
+			baseProcessorID = config.getProcessorId();
+			
+			config.getRegisteredService().registerHttpProcessor(baseProcessorID + "_VAADIN", this, UrlPattern.matchSimplePattern("/VAADIN/*"));
+			config.getRegisteredService().registerHttpProcessor(baseProcessorID + "_UIDL", this, UrlPattern.matchSimplePattern("/UIDL"));
+		}
+
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Outcome doProcess(HttpServerContext context) throws HttpProcessException {
 		
 		try {
 			ServletWebContext servletContext = (ServletWebContext) context;
@@ -118,31 +100,6 @@ public class VaadinClientRenderingProcessor extends AbstractSecureHttpProcessor{
 		
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Outcome doSecureDenied(HttpServerContext context) throws HttpProcessException {
-		return deniedOutcome;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Outcome doSecureLogin(HttpServerContext context) throws HttpProcessException {
-		return loginOutcome;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Outcome doSecureFail(HttpServerContext context) throws HttpProcessException {
-		return doSecureDenied(context);
-	}
-
-	
 	private static class DummyServletConfigInvocationHandler implements InvocationHandler {
 
 		/**
