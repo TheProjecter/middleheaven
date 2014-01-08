@@ -365,8 +365,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 		return filterChain.getOutcome();
 	}
 
-
-	private  class FilterChain extends AbstractInterruptableChain<HttpFilter> implements HttpFilterChain {
+	private class FilterChain extends AbstractInterruptableChain<HttpFilter> implements HttpFilterChain {
 
 		HttpProcessor processor;
 
@@ -407,11 +406,7 @@ public abstract class AbstractHttpServerService implements HttpServerService {
 	}
 
 	private String addContextPath(String ctx, String url){
-		if (url.startsWith("/")){
-			return ctx.concat(url);
-		} else {
-			return url;
-		}
+		 return url.startsWith("/") ? ctx.concat(url) : url;
 	}
 
 

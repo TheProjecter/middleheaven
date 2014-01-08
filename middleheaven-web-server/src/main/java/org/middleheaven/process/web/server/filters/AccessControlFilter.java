@@ -33,7 +33,6 @@ public class AccessControlFilter implements HttpFilter{
 	private Outcome failureOutcome;
 	private Outcome loginOutcome;
 	private Outcome accessDeniedOutcome;
-	private Outcome successOutcome;
 	
 	public AccessControlFilter(
 			AccessPermissionsManager<HttpUrl> permissionsManager,
@@ -41,8 +40,7 @@ public class AccessControlFilter implements HttpFilter{
 			HttpServerSignatureStorePolicy storePolicy, 
 			Outcome loginOutcome,
 			Outcome failureOutcome,
-			Outcome accessDeniedOutcome,
-			Outcome successOutcome
+			Outcome accessDeniedOutcome
 			){
 		this.permissionsManager = permissionsManager;
 		this.storePolicy = storePolicy;
@@ -50,7 +48,6 @@ public class AccessControlFilter implements HttpFilter{
 		this.failureOutcome = failureOutcome;
 		this.loginOutcome = loginOutcome;
 		this.accessDeniedOutcome = accessDeniedOutcome;
-		this.successOutcome = successOutcome;
 	}
 
 	private void letPass(HttpServerContext context, HttpFilterChain chain, AccessRequest request){
@@ -155,15 +152,9 @@ public class AccessControlFilter implements HttpFilter{
 			
 			if (redirectCookie != null){ // read redirect cookie
 				RedirectAfterCookie rc = new RedirectAfterCookie(redirectCookie);
-				chain.interruptWithOutcome(rc.asOutcome());
-
-			} else if (successOutcome.getParameterizedURL().equals(context.getRequestUrl().getContexlesPathAndFileName())) {
-				// already on correct url
-
-				letPass(context,chain, accessRequest);
+				chain.interruptWithOutcome(rc.asOutcome());	
 			} else {
-				chain.interruptWithOutcome(successOutcome);
-
+				letPass(context,chain, accessRequest);
 			}
 		}
 

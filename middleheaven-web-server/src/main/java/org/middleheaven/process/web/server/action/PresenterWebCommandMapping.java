@@ -29,7 +29,7 @@ import org.middleheaven.reflection.MethodFilters;
 import org.middleheaven.reflection.ReflectedClass;
 import org.middleheaven.reflection.ReflectedMethod;
 import org.middleheaven.reflection.ReflectedParameter;
-import org.middleheaven.reflection.inspection.Introspector;
+import org.middleheaven.reflection.Reflector;
 import org.middleheaven.util.Hash;
 import org.middleheaven.util.coersion.TypeCoercing;
 import org.middleheaven.util.function.Block;
@@ -47,7 +47,7 @@ import org.middleheaven.web.annotations.Put;
  */
 public class PresenterWebCommandMapping implements WebCommandMapping {
 
-	private final Class<?> controllerClass;
+	private final ReflectedClass<?> controllerClass;
 	private Object controllerObject;
 	private final List<ActionInterceptor> interceptors = new LinkedList<ActionInterceptor>();
 	private final Map<String, Map<OutcomeStatus, OutcomeResolver>> outcomes = new HashMap<String, Map<OutcomeStatus, OutcomeResolver>>();
@@ -99,11 +99,11 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 			actionOutcome.put(status,new FixedOutcomeResolver(new Outcome(status,HttpStatusCode.NOT_IMPLEMENTED)));
 		}
 
-		this.controllerClass = presenterClass;
+		this.controllerClass = Reflector.getReflector().reflect(presenterClass);
 
 		// each method on the presenter that is not a getter or a setter is an action
 		// only public not property methods
-		Introspector.of(presenterClass).inspect().methods().notInheritFromObject().match(MethodFilters.publicInstanceNonProperty())
+		this.controllerClass.inspect().methods().notInheritFromObject().match(MethodFilters.publicInstanceNonProperty())
 		.each(new Block<ReflectedMethod>(){
 
 			@Override
@@ -184,7 +184,7 @@ public class PresenterWebCommandMapping implements WebCommandMapping {
 	public Outcome execute(HttpServerContext context) {
 
 		if (controllerObject == null){
-			controllerObject = ServiceRegistry.getService(WiringService.class).getInstance(controllerClass);
+			controllerObject = ServiceRegistry.getService(WiringService.class).getInstance(controllerClass.getReflectedType());
 		}
 
 		ListInterceptorChain chain = new ListInterceptorChain(this.interceptors){

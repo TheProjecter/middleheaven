@@ -111,21 +111,10 @@ public class StandardHtmlClientRenderingProcessor extends UIClientRenderingProce
 				
 				return new TerminalOutcome();
 			}
-			
-		
-		
 
-	
-			
 		} catch (Exception e) {
 			throw new HttpProcessException(e);
 		} 
-
-
-
-
-
-
 
 	}
 
