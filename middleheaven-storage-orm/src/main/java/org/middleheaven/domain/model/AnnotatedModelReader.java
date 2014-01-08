@@ -157,7 +157,7 @@ public class AnnotatedModelReader implements DomainModelReader {
 		
 		EditableEnumModel model = context.getEnumModel(enumType, m.getReturnType().getReflectedType());
 		
-		for (Object value : EnumIntrospector.of(enumType).getValues()){
+		for (Object value : EnumIntrospector.ofEnum(enumType).getValues()){
 			
 			try {
 				model.addValueMaping(value, m.invoke(value));
