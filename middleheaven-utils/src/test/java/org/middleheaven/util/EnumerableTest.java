@@ -45,8 +45,8 @@ public class EnumerableTest {
 		Enumerable<Number> d = x.concat(b);
 		assertTrue(CollectionUtils.equalContents(u.into(new ArrayList<Number>()),d.into(new ArrayList<Number>())));
 		
-		
-		d = x.concat(Enumerables.safeCast(b));
+		Enumerable<Number> z = Enumerables.<Number, Integer>safeCast(b);
+		d = x.concat(z);
 		assertTrue(CollectionUtils.equalContents(u.into(new ArrayList<Number>()),d.into(new ArrayList<Number>())));
 		
 		

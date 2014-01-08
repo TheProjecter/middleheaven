@@ -39,14 +39,6 @@ public class TimeTest {
 
 	
 	@Test
-	public void testPeriodUnits(){
-		
-		Period period = Period.nanoseconds(20);
-		
-		assertEquals("(20 ± 1) ns", period.toString());
-	}
-	
-	@Test
 	public void testDurationCalculation(){
 
 		CalendarDate a = CalendarDate.date(2013, 1, 1);

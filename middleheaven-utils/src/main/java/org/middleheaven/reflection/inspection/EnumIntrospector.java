@@ -10,7 +10,7 @@ public class EnumIntrospector<E> extends ClassIntrospector<E>{
 		super(Reflector.getReflector().reflect(type));
 	}
 
-	public static <E extends Enum> EnumIntrospector of(Class<E> type) {
+	public static <E extends Enum> EnumIntrospector<E> ofEnum(Class<E> type) {
 		return new EnumIntrospector<E>(type);
 	}
 	
